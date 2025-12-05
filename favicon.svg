@@ -11,7 +11,7 @@
    inkscape:export-xdpi="600"
    inkscape:export-ydpi="600"
    inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
-   sodipodi:docname="logo without background"
+   sodipodi:docname="logo without background2"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -71,7 +71,7 @@
          offset="0"
          id="stop50883" />
       <stop
-         style="stop-color:#010005;stop-opacity:1;"
+         style="stop-color:#010005;stop-opacity:0;"
          offset="1"
          id="stop50885" />
     </linearGradient>
