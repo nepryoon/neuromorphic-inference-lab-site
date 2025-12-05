@@ -2,16 +2,16 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="70mm"
-   height="70.000008mm"
-   viewBox="0 0 70 70.000008"
+   width="80mm"
+   height="80mm"
+   viewBox="0 0 80 80"
    version="1.1"
    id="svg5"
-   inkscape:export-filename="../../../../../../../home/luca/neuromorphic-inference-lab-site/favicon.svg"
+   inkscape:export-filename="../../../../../../../home/luca/neuromorphic-inference-lab-site/round.svg"
    inkscape:export-xdpi="600"
    inkscape:export-ydpi="600"
    inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
-   sodipodi:docname="logo without background2"
+   sodipodi:docname="logo without background3"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -36,7 +36,7 @@
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="layer3" />
   <defs
      id="defs2">
     <linearGradient
@@ -71,7 +71,7 @@
          offset="0"
          id="stop50883" />
       <stop
-         style="stop-color:#010005;stop-opacity:0;"
+         style="stop-color:#010005;stop-opacity:1;"
          offset="1"
          id="stop50885" />
     </linearGradient>
@@ -96,10 +96,31 @@
        gradientUnits="userSpaceOnUse" />
   </defs>
   <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Layer 3"
+     transform="translate(-11.731178,-37.895869)">
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke:#24d2d3;stroke-width:0;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       id="path26133"
+       cx="41.232731"
+       cy="73.586678"
+       r="40"
+       transform="translate(10.498447,4.3091923)" />
+    <ellipse
+       style="display:inline;opacity:1;fill:#24d2d3;fill-opacity:1;stroke:#24d2d3;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       id="path7865"
+       cx="80.375687"
+       cy="45.919792"
+       rx="5.7921052"
+       ry="5.6069083"
+       transform="rotate(26.3657)" />
+  </g>
+  <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-5.3813446,-38.53683)">
+     transform="translate(-1.2327306,-33.586677)">
     <path
        style="color:#000000;fill:#0e4e51;fill-opacity:0;stroke-width:7.4;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
        d="M 25.064582,48.126068 53.926095,62.027879 50.355102,44.977923 57.481087,76.210401 68.584802,62.788012 48.609247,87.832463 66.026346,88.144974 33.991251,88.142416 44.606304,101.9545 24.634748,76.906859 20.454404,93.817734 27.585377,62.586396 11.75752,69.861829 40.621252,55.964627 Z"
@@ -115,19 +136,5 @@
        height="70"
        x="5.3813448"
        y="38.536831" />
-  </g>
-  <g
-     inkscape:groupmode="layer"
-     id="layer3"
-     inkscape:label="Layer 3"
-     transform="translate(-15.879792,-42.846022)">
-    <ellipse
-       style="display:inline;opacity:1;fill:#24d2d3;fill-opacity:1;stroke:#24d2d3;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
-       id="path7865"
-       cx="80.375687"
-       cy="45.919792"
-       rx="5.7921052"
-       ry="5.6069083"
-       transform="rotate(26.3657)" />
   </g>
 </svg>
