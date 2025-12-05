@@ -1,0 +1,91 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #0b1020;
+  color: #f5f5f5;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.site-header {
+  background: radial-gradient(circle at top, #243b80, #070a14);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.tagline {
+  margin: 0.3rem 0 1rem 0;
+  color: #c2c8ff;
+}
+
+.nav {
+  margin-bottom: 0.5rem;
+}
+
+.nav a {
+  margin-right: 1rem;
+  text-decoration: none;
+  color: #e0e3ff;
+  font-size: 0.95rem;
+}
+
+.nav a:hover {
+  text-decoration: underline;
+}
+
+.card {
+  background: #111628;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.card h2 {
+  margin-top: 0;
+}
+
+.log-entry {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+.log-entry h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+  color: #d3d8ff;
+}
+
+.log-entry p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.small {
+  font-size: 0.85rem;
+  color: #b4b7d9;
+}
+
+.site-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 2rem;
+  padding: 1rem 0 2rem 0;
+  font-size: 0.85rem;
+  color: #9ca0c7;
+  text-align: center;
+}
+
