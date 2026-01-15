@@ -1,1 +1,328 @@
+<!-- /evidence/index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Evidence Index — Neuromorphic Inference Lab</title>
+  <meta name="description" content="Evidence-based competence: every skill links to live demos and exact source code." />
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    :root{
+      --bg:#0b0f17; --text:#e7ecf5; --muted:#a7b1c6; --line:rgba(231,236,245,.12);
+      --radius:16px; --shadow:0 10px 35px rgba(0,0,0,.35);
+      --accent:#7c5cff; --accent2:#2dd4bf;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --max:1100px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;font-family:var(--sans);background:var(--bg);color:var(--text)
+    }
+    a{color:inherit;text-decoration:none}
+    a:hover{opacity:.92}
+    .wrap{max-width:var(--max);margin:0 auto;padding:22px 18px}
+    header{
+      position:sticky;top:0;z-index:20;background:rgba(11,15,23,.72);
+      backdrop-filter: blur(10px);border-bottom:1px solid var(--line);
+    }
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{font-weight:800;display:flex;align-items:center;gap:10px}
+    .dot{
+      width:10px;height:10px;border-radius:50%;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      box-shadow:0 10px 25px rgba(124,92,255,.22);
+    }
+    nav a{
+      color:var(--muted);font-weight:700;padding:8px 10px;border-radius:12px;border:1px solid transparent
+    }
+    nav a:hover{border-color:var(--line);background:rgba(255,255,255,.03);color:var(--text)}
+
+    h1{margin:18px 0 6px;font-size:32px;letter-spacing:-.4px}
+    .sub{margin:0 0 16px;color:var(--muted);line-height:1.65;max-width:80ch}
+
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:7px 10px;border-radius:999px;border:1px solid var(--line);
+      background:rgba(255,255,255,.03);color:var(--muted);
+      font-weight:800;font-size:12px;
+    }
+
+    .toc{
+      margin-top:14px;
+      border:1px solid var(--line);border-radius:var(--radius);
+      background:rgba(255,255,255,.02);
+      padding:14px;
+      display:flex;flex-wrap:wrap;gap:8px;
+    }
+    .chip{
+      font-size:13px;padding:9px 11px;border-radius:999px;
+      border:1px solid var(--line);background:rgba(255,255,255,.02);
+      font-weight:800;color:var(--text);
+    }
+    .chip.secondary{color:var(--muted)}
+
+    .section{
+      margin-top:14px;
+      border:1px solid var(--line);border-radius:var(--radius);
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .section h2{margin:0 0 8px;font-size:18px;letter-spacing:.2px}
+    .meta{color:var(--muted);line-height:1.6;margin:0 0 12px}
+
+    .evidence-grid{
+      display:grid;grid-template-columns: 1fr 1fr;gap:10px;
+    }
+    @media (max-width: 900px){.evidence-grid{grid-template-columns:1fr}}
+    .ev{
+      border:1px solid var(--line);border-radius:var(--radius);
+      background:rgba(255,255,255,.02);
+      padding:12px;
+    }
+    .ev .k{color:var(--muted);font-weight:900;font-size:12px}
+    .ev .v{margin-top:7px;font-weight:800}
+    .ev a{ text-decoration: underline; }
+
+    .note{
+      margin-top:14px;border:1px solid var(--line);border-radius:var(--radius);
+      padding:14px;background:rgba(255,255,255,.02);color:var(--muted);line-height:1.6
+    }
+    .mono{font-family:var(--mono)}
+    footer{
+      margin-top:26px;border-top:1px solid var(--line);
+      padding:18px 0 30px;color:var(--muted);font-size:13px;
+      display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center
+    }
+    .anchor{scroll-margin-top:90px}
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="/" aria-label="Home">
+        <span class="dot" aria-hidden="true"></span>
+        <span>Neuromorphic Inference Lab</span>
+      </a>
+      <nav aria-label="Primary">
+        <a href="/demos">Demos</a>
+        <a href="/evidence">Evidence</a>
+        <a href="/about">About</a>
+        <a href="/research">Research</a>
+        <a href="https://github.com/nepryoon" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <span class="pill">Evidence-based competence • Skill → Proof</span>
+    <h1>Evidence Index</h1>
+    <p class="sub">
+      Every skill listed in the CV must have a clickable proof.
+      For each skill below you’ll find at least: a <strong>live page</strong> on this domain and the <strong>exact source code</strong> on GitHub.
+    </p>
+
+    <!-- Table of contents -->
+    <div class="toc" aria-label="Evidence table of contents">
+      <a class="chip" href="#python">Python</a>
+      <a class="chip" href="#sql">SQL</a>
+      <a class="chip" href="#docker">Docker</a>
+      <a class="chip" href="#aws">AWS</a>
+      <a class="chip" href="#kubernetes">Kubernetes</a>
+      <a class="chip" href="#cicd">CI/CD</a>
+      <a class="chip" href="#react">React / JS</a>
+      <a class="chip" href="#pytorch">PyTorch</a>
+      <a class="chip" href="#sklearn">scikit-learn</a>
+      <a class="chip" href="#tensorflow">TensorFlow</a>
+      <a class="chip" href="#numpy">NumPy</a>
+      <a class="chip" href="#matplotlib">Matplotlib</a>
+      <a class="chip secondary" href="#roadmap">Roadmap</a>
+    </div>
+
+    <!-- PYTHON -->
+    <section class="section anchor" id="python">
+      <h2>Python</h2>
+      <p class="meta">Backend services, pipelines, scheduled jobs, data validation, model inference.</p>
+      <div class="evidence-grid">
+        <div class="ev">
+          <div class="k">Live</div>
+          <div class="v"><a href="/demos/edgepulse">EdgePulse — case study (system loop)</a></div>
+        </div>
+        <div class="ev">
+          <div class="k">Code</div>
+          <div class="v"><a href="https://github.com/nepryoon/edgepulse" target="_blank" rel="noopener">nepryoon/edgepulse</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SQL -->
+    <section class="section anchor" id="sql">
+      <h2>SQL</h2>
+      <p class="meta">System-of-record storage, analytics-friendly outputs, schema thinking, traceability.</p>
+      <div class="evidence-grid">
+        <div class="ev">
+          <div class="k">Live</div>
+          <div class="v"><a href="/demos/edgepulse#architecture">EdgePulse — storage as system-of-record</a></div>
+        </div>
+        <div class="ev">
+          <div class="k">Code</div>
+          <div class="v"><a href="https://github.com/nepryoon/edgepulse" target="_blank" rel="noopener">EdgePulse repo (SQL storage)</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOCKER -->
+    <section class="section anchor" id="docker">
+      <h2>Docker</h2>
+      <p class="meta">Reproducible runs, portable environments, production-like local execution.</p>
+      <div class="evidence-grid">
+        <div class="ev">
+          <div class="k">Live</div>
+          <div class="v"><a href="/demos/edgepulse#mlops">EdgePulse — container-first operability</a></div>
+        </div>
+        <div class="ev">
+          <div class="k">Code</div>
+          <div class="v"><a href="https://github.com/nepryoon/edgepulse" target="_blank" rel="noopener">EdgePulse repo (containerization)</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AWS -->
+    <section class="section anchor" id="aws">
+      <h2>AWS</h2>
+      <p class="meta">Deployable patterns (storage + scheduled jobs + alerting), cost-aware architecture.</p>
+      <div class="evidence-grid">
+        <div class="ev">
+          <div class="k">Live</div>
+          <div class="v"><a href="/demos/edgepulse#solution">EdgePulse — deployment-ready system pattern</a></div>
+        </div>
+        <div class="ev">
+          <div class="k">Code</div>
+          <div class="v"><a href="https://github.com/nepryoon/edgepulse" target="_blank" rel="noopener">EdgePulse repo (AWS-ready components)</a></div>
+        </div>
+      </div>
+      <div class="note">
+        When we add a dedicated “AWS deploy” folder or doc section in the repo, this becomes a very strong MLOps signal.
+      </div>
+    </section>
+
+    <!-- KUBERNETES -->
+    <section class="section anchor" id="kubernetes">
+      <h2>Kubernetes</h2>
+      <p class="meta">Planned proof: one showcase will include manifests/helm + autoscaling notes.</p>
+      <div class="evidence-grid">
+        <div class="ev">
+          <div class="k">Live</div>
+          <div class="v"><a href="/demos">Planned — Tabular Risk / Churn (serving + monitoring)</a></div>
+        </div>
+        <div class="ev">
+          <div class="k">Code</div>
+          <div class="v"><a href="/demos">Coming soon — k8s manifests in the showcase repo</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CI/CD -->
+    <section class="section anchor" id="cicd">
+      <h2>CI/CD</h2>
+      <p class="meta">Automated quality gates, reproducible builds, release tags (build provenance).</p>
+      <div class="evidence-grid">
+        <div class="ev">
+          <div class="k">Live</div>
+          <div class="v"><a href="/">This site is deployed via Cloudflare Pages (git-driven)</a></div>
+        </div>
+        <div class="ev">
+          <div class="k">Code</div>
+          <div class="v"><a href="https://github.com/nepryoon/neuromorphic-inference-lab-site" target="_blank" rel="noopener">Site repo (CI/deploy source)</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REACT / JS -->
+    <section class="section anchor" id="react">
+      <h2>React / JavaScript</h2>
+      <p class="meta">Planned proof: interactive demos (RAG + Visual Inspector) with real UX.</p>
+      <div class="evidence-grid">
+        <div class="ev">
+          <div class="k">Live</div>
+          <div class="v"><a href="/demos/rag-copilot">RAG Copilot — planned interactive UI</a></div>
+        </div>
+        <div class="ev">
+          <div class="k">Code</div>
+          <div class="v"><a href="/demos">Coming soon — repo with UI + API</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PYTORCH -->
+    <section class="section anchor" id="pytorch">
+      <h2>PyTorch</h2>
+      <p class="meta">Planned proof: Visual Inspector showcase (training + inference + packaging).</p>
+      <div class="evidence-grid">
+        <div class="ev">
+          <div class="k">Live</div>
+          <div class="v"><a href="/demos/visual-inspector">Visual Inspector — planned</a></div>
+        </div>
+        <div class="ev">
+          <div class="k">Code</div>
+          <div class="v"><a href="/demos">Coming soon — nil-visual-inspector repo</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKLEARN -->
+    <section class="section anchor" id="sklearn">
+      <h2>scikit-learn</h2>
+      <p class="meta">Baseline models, tabular pipelines, evaluation, explainability (planned extension).</p>
+      <div class="evidence-grid">
+        <div class="ev">
+          <div class="k">Live</div>
+          <div class="v"><a href="/demos/tabular-risk">Tabular Risk / Churn — planned</a></div>
+        </div>
+        <div class="ev">
+          <div class="k">Code</div>
+          <div class="v"><a href="/demos">Coming soon — nil-tabular-risk repo</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TENSORFLOW -->
+    <section class="section anchor" id="tensorflow">
+      <h2>TensorFlow</h2>
+      <p class="meta">Planned proof: used in exactly one showcase to avoid “ATS-listing”.</p>
+      <div class="evidence-grid">
+        <div class="ev">
+          <div class="k">Live</div>
+          <div class="v"><a href="/demos/visual-inspector">Candidate showcase: Visual Inspector</a></div>
+        </div>
+        <div class="ev">
+          <div class="k">Code</div>
+          <div class="v"><a href="/demos">Coming soon — TensorFlow module in that repo</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NUMPY -->
+    <section class="section anchor" id="numpy">
+      <h2>NumPy</h2>
+      <p class="meta">Core data transforms, metrics, and numerical glue in ML systems.</p>
+      <div class="evidence-grid">
+        <div class="ev">
+          <div class="k">Live</div>
+          <div class="v"><a href="/demos/edgepulse#metrics">EdgePulse — metrics & evaluation placeholders</a></div>
+        </div>
+        <div class="ev">
+          <div class="k">Code</div>
+          <div class="v"><a href="https://github.com/nepryoon/edgepulse" target="_blank" rel="noopener">EdgePulse repo (numerical utilities)</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MATPLOTLIB -->
+    <section class="section anchor" id="matplotlib">
+      <h2>Matplotlib</h2>
+      <p class="meta">Planned proof: automated reports
 
