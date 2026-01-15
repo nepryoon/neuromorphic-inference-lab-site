@@ -1,1 +1,329 @@
+<!-- /demos/edgepulse/index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EdgePulse — Case Study | Neuromorphic Inference Lab</title>
+  <meta name="description" content="EdgePulse case study: edge ingest → storage → scheduled ML scoring → alerting → dashboard. Live docs + source code." />
+  <link rel="stylesheet" href="/style.css" />
 
+  <style>
+    :root{
+      --bg:#0b0f17; --text:#e7ecf5; --muted:#a7b1c6; --line:rgba(231,236,245,.12);
+      --card:rgba(255,255,255,.03); --card2:rgba(255,255,255,.02);
+      --radius:16px; --shadow:0 10px 35px rgba(0,0,0,.35);
+      --accent:#7c5cff; --accent2:#2dd4bf;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --max: 1100px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--text)}
+    a{color:inherit;text-decoration:none}
+    a:hover{opacity:.92}
+    .wrap{max-width:var(--max);margin:0 auto;padding:22px 18px}
+    header{
+      position:sticky;top:0;z-index:20;
+      background:rgba(11,15,23,.72);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid var(--line);
+    }
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{font-weight:800;display:flex;align-items:center;gap:10px}
+    .dot{
+      width:10px;height:10px;border-radius:50%;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      box-shadow:0 10px 25px rgba(124,92,255,.22);
+    }
+    nav a{
+      color:var(--muted);font-weight:700;padding:8px 10px;border-radius:12px;border:1px solid transparent
+    }
+    nav a:hover{border-color:var(--line);background:rgba(255,255,255,.03);color:var(--text)}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:7px 10px;border-radius:999px;border:1px solid var(--line);
+      background:rgba(255,255,255,.03);color:var(--muted);
+      font-weight:800;font-size:12px;
+    }
+    h1{margin:14px 0 8px;font-size:34px;letter-spacing:-.4px}
+    .sub{margin:0;color:var(--muted);line-height:1.65;max-width:70ch}
+    .hero{
+      margin-top:18px;
+      display:grid;grid-template-columns:1.15fr .85fr;gap:12px;
+    }
+    @media (max-width: 900px){.hero{grid-template-columns:1fr}}
+    .card{
+      border:1px solid var(--line);border-radius:var(--radius);
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      padding:11px 14px;border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      font-weight:800;color:var(--text);font-size:14px;
+    }
+    .btn.primary{
+      border-color: rgba(124,92,255,.65);
+      background: linear-gradient(135deg, rgba(124,92,255,.22), rgba(45,212,191,.12));
+    }
+    .kv{
+      display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+    }
+    .stat{
+      border:1px solid var(--line);border-radius:var(--radius);
+      background:rgba(255,255,255,.02);padding:12px
+    }
+    .stat .k{color:var(--muted);font-weight:800;font-size:12px}
+    .stat .v{margin-top:8px;font-family:var(--mono);font-weight:800;font-size:13px}
+    .section{margin-top:14px}
+    .section h2{margin:0 0 10px;font-size:17px;letter-spacing:.2px}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width: 900px){.grid2{grid-template-columns:1fr}}
+    .list{margin:0;padding-left:18px;color:var(--muted);line-height:1.7}
+    .mono{font-family:var(--mono)}
+    .codebox{
+      border:1px solid var(--line);border-radius:var(--radius);
+      background:rgba(255,255,255,.02);
+      padding:14px;font-family:var(--mono);font-size:12px;color:#cfd6e6;
+      overflow:auto;
+      white-space:pre;
+    }
+    .mini-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .mini{
+      font-size:13px;padding:9px 11px;border-radius:12px;
+      border:1px solid var(--line);background:rgba(255,255,255,.02);
+      font-weight:800;color:var(--text);
+    }
+    .mini.secondary{color:var(--muted)}
+    footer{
+      margin-top:26px;border-top:1px solid var(--line);
+      padding:18px 0 30px;color:var(--muted);font-size:13px;
+      display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center
+    }
+    .anchor{scroll-margin-top:90px}
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="/" aria-label="Home">
+        <span class="dot" aria-hidden="true"></span>
+        <span>Neuromorphic Inference Lab</span>
+      </a>
+      <nav aria-label="Primary">
+        <a href="/demos">Demos</a>
+        <a href="/evidence">Evidence</a>
+        <a href="/about">About</a>
+        <a href="/research">Research</a>
+        <a href="https://github.com/nepryoon" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <span class="pill">Case Study • Live Docs + Source Code</span>
+    <h1>EdgePulse</h1>
+    <p class="sub">
+      A production-minded reference system for operational AI:
+      <strong>edge ingest → storage → scheduled ML scoring → alerting → dashboard</strong>.
+      This page is the “live documentation” on the domain; the repository is the exact implementation.
+    </p>
+
+    <section class="hero" aria-label="Hero content">
+      <div class="card">
+        <h2 class="anchor" id="problem">Problem</h2>
+        <ul class="list">
+          <li>Edge/field data arrives continuously, often noisy or incomplete.</li>
+          <li>You need reliable storage + traceability, not just a notebook.</li>
+          <li>Scoring must run on schedule (or triggers) with predictable cost.</li>
+          <li>Alerts and dashboards must be actionable and auditable.</li>
+        </ul>
+
+        <div class="cta">
+          <a class="btn primary" href="https://github.com/nepryoon/edgepulse" target="_blank" rel="noopener">View Source (GitHub)</a>
+          <a class="btn" href="/evidence">Evidence Index</a>
+          <a class="btn" href="/demos">Back to Demos</a>
+        </div>
+
+        <div class="mini-links">
+          <a class="mini secondary" href="#architecture">Architecture</a>
+          <a class="mini secondary" href="#mlops">MLOps</a>
+          <a class="mini secondary" href="#metrics">Metrics</a>
+          <a class="mini secondary" href="#verification">How to verify</a>
+        </div>
+      </div>
+
+      <aside class="card" aria-label="At a glance">
+        <div class="kv">
+          <div class="stat">
+            <div class="k">Scope</div>
+            <div class="v">End-to-end system</div>
+          </div>
+          <div class="stat">
+            <div class="k">Core loop</div>
+            <div class="v">Ingest → Score → Alert</div>
+          </div>
+          <div class="stat">
+            <div class="k">Guarantee</div>
+            <div class="v">Reproducible runs</div>
+          </div>
+          <div class="stat">
+            <div class="k">Proof</div>
+            <div class="v">Live + Code</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2 class="anchor" id="stack">Stack signals</h2>
+          <div class="mini-links">
+            <a class="mini" href="/evidence#python">Python</a>
+            <a class="mini" href="/evidence#sql">SQL</a>
+            <a class="mini" href="/evidence#docker">Docker</a>
+            <a class="mini" href="/evidence#aws">AWS</a>
+            <a class="mini" href="/evidence#cicd">CI/CD</a>
+          </div>
+          <p class="sub" style="margin-top:10px">
+            (These anchors will become your CV hyperlinks.)
+          </p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section card anchor" id="solution" aria-label="Solution">
+      <h2>Solution</h2>
+      <p class="sub">
+        EdgePulse focuses on “operational readiness”: stable ingestion, storage, scheduled scoring jobs,
+        alerting, and a lightweight dashboard view. The goal is not just “a model”, but a system you can run,
+        monitor, and evolve.
+      </p>
+
+      <div class="grid2" style="margin-top:12px">
+        <div>
+          <h2 style="font-size:15px;margin:0 0 8px">Key capabilities</h2>
+          <ul class="list">
+            <li>Ingestion pipeline with validation and traceability.</li>
+            <li>Central storage as system-of-record (data lineage).</li>
+            <li>Scheduled scoring jobs (batch/near-real-time pattern).</li>
+            <li>Alerting workflow (thresholds + context).</li>
+            <li>Dashboard-ready outputs (for ops + analysts).</li>
+          </ul>
+        </div>
+        <div>
+          <h2 style="font-size:15px;margin:0 0 8px">Neuromorphic angle (without the academia trap)</h2>
+          <ul class="list">
+            <li>Efficiency-first inference: cost/latency trade-offs are explicit.</li>
+            <li>Robustness under imperfect inputs and operational constraints.</li>
+            <li>Observability as a first-class requirement (not an afterthought).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section card anchor" id="architecture" aria-label="Architecture">
+      <h2>Architecture</h2>
+      <p class="sub">
+        This is the conceptual flow (high level). We’ll refine with a real diagram later; this is already good enough
+        for recruiter comprehension and technical interviews.
+      </p>
+
+      <div class="codebox" aria-label="Architecture diagram">
+[Edge / Field Sources]
+        |
+        v
+[Ingestion API / Collector] ---> [Validation + Normalization]
+        |
+        v
+[System of Record: Storage (SQL)]
+        |
+        +--> [Scheduled Scoring Job] ---> [Scored Outputs]
+        |               |
+        |               v
+        |          [Alerting Rules] ---> [Notifications]
+        |
+        v
+[Dashboard / Views]  (Ops + Analyst friendly)
+      </div>
+
+      <div class="mini-links">
+        <a class="mini" href="https://github.com/nepryoon/edgepulse" target="_blank" rel="noopener">Repo: edgepulse</a>
+        <a class="mini secondary" href="#mlops">Next: MLOps</a>
+      </div>
+    </section>
+
+    <section class="section card anchor" id="mlops" aria-label="MLOps">
+      <h2>MLOps & Operability</h2>
+      <div class="grid2">
+        <div>
+          <h2 style="font-size:15px;margin:0 0 8px">What’s included</h2>
+          <ul class="list">
+            <li>Reproducible runs (config + deterministic pipeline behavior where possible).</li>
+            <li>Container-first packaging (portable execution environment).</li>
+            <li>Clear separation: ingest / scoring / alerting / views.</li>
+            <li>Documentation as product: this page + README in repo.</li>
+          </ul>
+        </div>
+        <div>
+          <h2 style="font-size:15px;margin:0 0 8px">What we’ll add next</h2>
+          <ul class="list">
+            <li>CI checks and release tags for “build provenance”.</li>
+            <li>Basic monitoring: job success rate, runtime, data quality signals.</li>
+            <li>One-click local run instructions (compose / scripts) surfaced in the repo.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section card anchor" id="metrics" aria-label="Metrics">
+      <h2>Metrics</h2>
+      <p class="sub">
+        This section is intentionally written to be “fillable” as you mature the system.
+        Start with a baseline (even manual), then automate.
+      </p>
+
+      <div class="grid2" style="margin-top:10px">
+        <div>
+          <h2 style="font-size:15px;margin:0 0 8px">System metrics</h2>
+          <ul class="list">
+            <li>Ingestion throughput (events/min) and error rate.</li>
+            <li>Job runtime (p50/p95) and success rate.</li>
+            <li>End-to-end latency (ingest → available in dashboard).</li>
+            <li>Cost proxy (if deployed) per day / per run.</li>
+          </ul>
+        </div>
+        <div>
+          <h2 style="font-size:15px;margin:0 0 8px">Model metrics</h2>
+          <ul class="list">
+            <li>Baseline performance (e.g., accuracy/AUC or anomaly hit-rate).</li>
+            <li>Stability over time (drift indicators).</li>
+            <li>Calibration / confidence behavior (where relevant).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section card anchor" id="verification" aria-label="Verification">
+      <h2>How to verify (fast audit)</h2>
+      <p class="sub">
+        Recruiter/engineer should be able to audit you in 2 minutes.
+        This is the exact path we want them to follow.
+      </p>
+
+      <ol class="list">
+        <li>
+          Open the repository:
+          <a href="https://github.com/nepryoon/edgepulse" target="_blank" rel="noopener" style="text-decoration:underline;">
+            github.com/nepryoon/edgepulse
+          </a>
+        </li>
+        <li>Read README: architecture + how to run locally.</li>
+        <li>Check that the system is container-friendly and the pieces are separated (ingest/scoring/alerting).</li>
+        <li>Return to <a href="/evidence" style="text-decoration:underline;">Evidence Index</a> to map skills → proofs.</li>
+      </ol>
+
+      <div class="m
