@@ -114,11 +114,21 @@
       Next: we’ll publish <strong>/demos/edgepulse</strong> as a complete case study (Problem → Solution → Architecture → Metrics → Links),
       then we’ll build the other demos one by one.
     </div>
+    <footer aria-label="Footer">
+      <div>
+        <span class="mono">neuromorphicinference.com</span> ·
+        <a href="/demos" style="text-decoration:underline;">Demos</a> ·
+        <a href="/evidence" style="text-decoration:underline;">Evidence</a> ·
+        <a href="https://github.com/nepryoon" target="_blank" rel="noopener" style="text-decoration:underline;">@nepryoon</a>
+      </div>
 
+      <!-- Build provenance placeholder: next step we’ll wire Cloudflare Pages commit SHA into this -->
+      <div class="mono" id="build-info">
+        Deployed from: <span id="build-sha">unknown</span> (<span id="build-branch">main</span>)
+      </div>
+    </footer>
   </main>
-    <div class="mono" id="build-info">
-    Deployed from: <span id="build-sha">unknown</span> (<span id="build-branch">main</span>)
-    </div>
+
   <script src="/build-info.js" defer></script>
 </body>
 </html>
