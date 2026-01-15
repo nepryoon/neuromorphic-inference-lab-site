@@ -1,1 +1,181 @@
+<!-- /research/index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Research Archive — Neuromorphic Inference Lab</title>
+  <meta name="description" content="Research archive: background notes and experiments (SNN / neuromorphic inference) kept for continuity." />
+  <link rel="stylesheet" href="/style.css" />
+
+  <style>
+    :root{
+      --bg:#0b0f17; --text:#e7ecf5; --muted:#a7b1c6; --line:rgba(231,236,245,.12);
+      --radius:16px; --shadow:0 10px 35px rgba(0,0,0,.35);
+      --accent:#7c5cff; --accent2:#2dd4bf;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --max:1100px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--text)}
+    a{color:inherit;text-decoration:none}
+    a:hover{opacity:.92}
+    .wrap{max-width:var(--max);margin:0 auto;padding:22px 18px}
+
+    header{
+      position:sticky;top:0;z-index:20;
+      background:rgba(11,15,23,.72);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid var(--line);
+    }
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{font-weight:800;display:flex;align-items:center;gap:10px}
+    .dot{
+      width:10px;height:10px;border-radius:50%;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      box-shadow:0 10px 25px rgba(124,92,255,.22);
+    }
+    nav a{
+      color:var(--muted);font-weight:700;padding:8px 10px;border-radius:12px;border:1px solid transparent
+    }
+    nav a:hover{border-color:var(--line);background:rgba(255,255,255,.03);color:var(--text)}
+
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:7px 10px;border-radius:999px;border:1px solid var(--line);
+      background:rgba(255,255,255,.03);color:var(--muted);
+      font-weight:800;font-size:12px;
+    }
+    h1{margin:18px 0 6px;font-size:32px;letter-spacing:-.4px}
+    .sub{margin:0 0 16px;color:var(--muted);line-height:1.65;max-width:90ch}
+
+    .grid{
+      margin-top:14px;
+      display:grid;grid-template-columns:1fr 1fr;gap:12px;
+    }
+    @media (max-width: 900px){.grid{grid-template-columns:1fr}}
+    .card{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .card h2{margin:0 0 10px;font-size:18px;letter-spacing:.2px}
+    .card p{margin:0 0 12px;color:var(--muted);line-height:1.65}
+    .list{margin:0;padding-left:18px;color:var(--muted);line-height:1.7}
+    .mini-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .mini{
+      font-size:13px;padding:9px 11px;border-radius:12px;
+      border:1px solid var(--line);background:rgba(255,255,255,.02);
+      font-weight:800;color:var(--text);
+    }
+    .mini.secondary{color:var(--muted)}
+    .mono{font-family:var(--mono)}
+    .note{
+      margin-top:12px;border:1px solid var(--line);border-radius:var(--radius);
+      padding:14px;background:rgba(255,255,255,.02);color:var(--muted);line-height:1.6
+    }
+    footer{
+      margin-top:26px;border-top:1px solid var(--line);
+      padding:18px 0 30px;color:var(--muted);font-size:13px;
+      display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="/" aria-label="Home">
+        <span class="dot" aria-hidden="true"></span>
+        <span>Neuromorphic Inference Lab</span>
+      </a>
+      <nav aria-label="Primary">
+        <a href="/demos">Demos</a>
+        <a href="/evidence">Evidence</a>
+        <a href="/about">About</a>
+        <a href="/research">Research</a>
+        <a href="https://github.com/nepryoon" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <span class="pill">Archive • Background work • Continuity</span>
+    <h1>Research Archive</h1>
+    <p class="sub">
+      This section preserves the original research-oriented identity of the Lab (SNN / neuromorphic inference).
+      It’s intentionally separated from the <a href="/demos" style="text-decoration:underline;">Demos</a> area,
+      where the portfolio shows applied AI systems ready for production contexts.
+    </p>
+
+    <div class="grid">
+      <section class="card">
+        <h2>What you’ll find here</h2>
+        <ul class="list">
+          <li>Notes and experiments on neuromorphic / spiking approaches.</li>
+          <li>Background concepts and reading log.</li>
+          <li>Prototypes that informed the applied system design mindset.</li>
+        </ul>
+
+        <div class="mini-links">
+          <a class="mini" href="https://github.com/nepryoon/neuromorphic-inference-lab" target="_blank" rel="noopener">Research Repo</a>
+          <a class="mini secondary" href="/demos">Applied Demos</a>
+        </div>
+
+        <div class="note">
+          Goal: keep continuity without letting research framing dominate the first impression.
+        </div>
+      </section>
+
+      <aside class="card">
+        <h2>How it connects to the applied work</h2>
+        <p>
+          The “neuromorphic” signature in the applied portfolio is not “SNN-only”.
+          It’s the discipline of making inference efficient and reliable:
+          explicit trade-offs, robustness under constraints, and observability.
+        </p>
+        <ul class="list">
+          <li><strong>Efficiency-first inference</strong>: latency/cost budgets.</li>
+          <li><strong>Robustness</strong>: failure modes & imperfect inputs.</li>
+          <li><strong>Operability</strong>: reproducibility, monitoring hooks.</li>
+        </ul>
+
+        <div class="mini-links">
+          <a class="mini" href="/evidence">Evidence Index</a>
+          <a class="mini secondary" href="/demos/edgepulse">EdgePulse Case Study</a>
+        </div>
+      </aside>
+    </div>
+
+    <section class="card" style="margin-top:12px">
+      <h2>Quick links</h2>
+      <div class="mini-links">
+        <a class="mini" href="/demos">Demos</a>
+        <a class="mini" href="/evidence">Evidence</a>
+        <a class="mini" href="/about">About</a>
+        <a class="mini secondary" href="https://github.com/nepryoon" target="_blank" rel="noopener">GitHub Profile</a>
+      </div>
+      <div class="note">
+        Next upgrade: add a small curated list (3–5) of “best notes” in the research repo README
+        and link them from here.
+      </div>
+    </section>
+
+    <footer aria-label="Footer">
+      <div>
+        <span class="mono">neuromorphicinference.com</span> ·
+        <a href="/demos" style="text-decoration:underline;">Demos</a> ·
+        <a href="/evidence" style="text-decoration:underline;">Evidence</a> ·
+        <a href="https://github.com/nepryoon" target="_blank" rel="noopener" style="text-decoration:underline;">@nepryoon</a>
+      </div>
+      <div class="mono" id="build-info">
+        Deployed from: <span id="build-sha">unknown</span> (<span id="build-branch">main</span>)
+      </div>
+    </footer>
+  </main>
+</body>
+</html>
 
