@@ -1,96 +1,376 @@
-<!DOCTYPE html>
+<!-- /index.html  (HOME) -->
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Neuromorphic Inference Lab</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Long-term research on neuromorphic architectures, spiking neural networks, and active inference.">
-  <link rel="stylesheet" href="style.css">
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.svg">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Neuromorphic Inference Lab — Applied AI Systems</title>
+  <meta name="description" content="Applied AI systems: Data → Model → Deployment. Efficiency-first inference, reliability, observability." />
+  <meta name="theme-color" content="#0b0f17" />
+
+  <!-- If you already have a root stylesheet, keep this absolute path -->
+  <link rel="stylesheet" href="/style.css" />
+
+  <!-- Minimal, self-contained styling (safe even if /style.css exists) -->
+  <style>
+    :root{
+      --bg:#0b0f17; --card:#121a2a; --card2:#0f1626; --text:#e7ecf5;
+      --muted:#a7b1c6; --line:rgba(231,236,245,.12);
+      --accent:#7c5cff; --accent2:#2dd4bf;
+      --shadow: 0 10px 35px rgba(0,0,0,.35);
+      --radius:16px;
+      --max:1100px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:var(--sans); background:radial-gradient(1200px 800px at 20% 10%, rgba(124,92,255,.22), transparent 60%),
+      radial-gradient(900px 600px at 85% 25%, rgba(45,212,191,.16), transparent 55%),
+      var(--bg);
+      color:var(--text);
+    }
+    a{color:inherit; text-decoration:none}
+    a:hover{opacity:.92}
+    .wrap{max-width:var(--max); margin:0 auto; padding:22px 18px}
+    header{
+      position:sticky; top:0; z-index:20;
+      backdrop-filter: blur(10px);
+      background:rgba(11,15,23,.72);
+      border-bottom:1px solid var(--line);
+    }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:16px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+    .logo{
+      width:34px; height:34px; border-radius:10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow:0 10px 25px rgba(124,92,255,.22);
+    }
+    nav ul{
+      list-style:none; padding:0; margin:0;
+      display:flex; gap:14px; flex-wrap:wrap;
+      color:var(--muted); font-weight:600;
+    }
+    nav a{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:9px 10px; border-radius:12px;
+      border:1px solid transparent;
+    }
+    nav a:hover{
+      border-color:var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--text);
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--muted);
+      font-weight:600;
+      font-size:13px;
+    }
+    .hero{
+      padding:46px 0 26px;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    @media (max-width: 860px){
+      .hero{grid-template-columns: 1fr; padding-top:28px}
+    }
+    .hero-card{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:22px;
+    }
+    h1{
+      margin:12px 0 10px;
+      font-size:44px; line-height:1.08;
+      letter-spacing:-.6px;
+    }
+    @media (max-width: 520px){
+      h1{font-size:36px}
+    }
+    .sub{
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.6;
+      margin:0 0 18px;
+    }
+    .cta-row{display:flex; flex-wrap:wrap; gap:10px; margin-top:10px}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:8px;
+      padding:11px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      font-weight:700;
+      color:var(--text);
+    }
+    .btn.primary{
+      border-color: rgba(124,92,255,.65);
+      background: linear-gradient(135deg, rgba(124,92,255,.22), rgba(45,212,191,.12));
+    }
+    .btn:hover{transform: translateY(-1px)}
+    .kpi{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:10px;
+      align-content:start;
+    }
+    @media (max-width: 860px){
+      .kpi{grid-template-columns: repeat(2, 1fr)}
+    }
+    .stat{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      border-radius:var(--radius);
+      padding:14px;
+    }
+    .stat .label{color:var(--muted); font-weight:700; font-size:13px}
+    .stat .value{font-family:var(--mono); font-weight:800; margin-top:8px}
+    .section{padding:18px 0 6px}
+    .section h2{
+      margin:0 0 10px;
+      font-size:18px;
+      letter-spacing:.2px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:12px;
+    }
+    @media (max-width: 860px){
+      .grid{grid-template-columns: 1fr}
+    }
+    .card{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(18,26,42,.75), rgba(15,22,38,.55));
+      border-radius:var(--radius);
+      padding:16px;
+    }
+    .card .top{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+      margin-bottom:10px;
+    }
+    .tag{
+      font-size:12px; font-weight:800;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color:var(--muted);
+      background:rgba(255,255,255,.02);
+      white-space:nowrap;
+    }
+    .card h3{margin:0 0 6px; font-size:16px}
+    .card p{margin:0 0 12px; color:var(--muted); line-height:1.55}
+    .card .links{display:flex; flex-wrap:wrap; gap:8px}
+    .mini{
+      font-size:13px;
+      padding:9px 11px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      color:var(--text);
+      font-weight:700;
+    }
+    .mini.secondary{color:var(--muted)}
+    .footer{
+      margin-top:26px;
+      border-top:1px solid var(--line);
+      padding:18px 0 30px;
+      color:var(--muted);
+      font-size:13px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .mono{font-family:var(--mono)}
+  </style>
 </head>
+
 <body>
-<header class="site-header">
-  <div class="container">
-    <div class="brand">
-      <img src="logo2.svg" alt="Neuromorphic Inference Lab logo" class="logo">
-      <div>
-        <p class="tagline">Brain-inspired agents that reason under uncertainty on neuromorphic hardware</p>
-      </div>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="/" aria-label="Neuromorphic Inference Lab Home">
+        <span class="logo" aria-hidden="true"></span>
+        <span>Neuromorphic Inference Lab</span>
+      </a>
+
+      <nav aria-label="Primary">
+        <ul>
+          <li><a href="/demos">Demos</a></li>
+          <li><a href="/evidence">Evidence</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/research">Research</a></li>
+          <li><a href="https://github.com/nepryoon" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </nav>
     </div>
+  </header>
 
-    <nav class="nav">
-      <a href="#about">About</a>
-      <a href="#log">Research log</a>
-      <a href="#roadmap">Roadmap</a>
-      <a href="#links">Links</a>
-    </nav>
-  </div>
-</header>
+  <main class="wrap">
+    <section class="hero" aria-label="Hero">
+      <div class="hero-card">
+        <span class="pill">Applied AI Systems • Data → Model → Deployment</span>
 
-  <main class="container">
-    <section id="about" class="card">
-      <h2>Vision</h2>
-      <p>
-        Neuromorphic Inference Lab is a long-term research initiative exploring how
-        <strong>brain-inspired architectures</strong> and
-        <strong>spiking neural networks (SNNs)</strong> can support
-        <strong>autonomous agents that reason and act under uncertainty</strong>.
-      </p>
-      <p>
-        The project focuses on:
-      </p>
-      <ul>
-        <li>Neuromorphic hardware and realistic simulators</li>
-        <li>Probabilistic and active-inference–based algorithms</li>
-        <li>Methods for using neuromorphic processors as first-class computational substrates for learning, prediction and decision-making</li>
-      </ul>
+        <h1>Production-first AI, built for real constraints.</h1>
+
+        <p class="sub">
+          Neuromorphic here means <strong>efficiency-first inference</strong>: latency, cost, robustness, and observability —
+          applied to practical problems across <strong>NLP</strong>, <strong>Computer Vision</strong>, and <strong>Tabular / Forecasting</strong>.
+        </p>
+
+        <div class="cta-row">
+          <a class="btn primary" href="/demos">View Demos</a>
+          <a class="btn" href="/evidence">Evidence Index</a>
+          <a class="btn" href="/research">Research Archive</a>
+        </div>
+      </div>
+
+      <div class="kpi" aria-label="Focus Areas">
+        <div class="stat">
+          <div class="label">Focus</div>
+          <div class="value">Inference &amp; Serving</div>
+        </div>
+        <div class="stat">
+          <div class="label">Mindset</div>
+          <div class="value">Reliability</div>
+        </div>
+        <div class="stat">
+          <div class="label">Delivery</div>
+          <div class="value">End-to-End</div>
+        </div>
+        <div class="stat">
+          <div class="label">Proof</div>
+          <div class="value">Live + Code</div>
+        </div>
+      </div>
     </section>
 
-    <section id="log" class="card">
-      <h2>Research log</h2>
-      <p>This section collects key insights, experiments, and references over time.</p>
+    <section class="section" aria-label="Showcases">
+      <h2>Showcases</h2>
 
-      <article class="log-entry">
-        <h3>2025-12-05 — Initial project setup</h3>
-        <p>Created the Neuromorphic Inference Lab project structure and the first public website to document future discoveries.</p>
-      </article>
+      <div class="grid">
+        <!-- 1) EdgePulse (real repo exists; demo page can be created later) -->
+        <article class="card">
+          <div class="top">
+            <h3>EdgePulse</h3>
+            <span class="tag">LIVE / CASE STUDY</span>
+          </div>
+          <p>
+            Edge ingest → storage → scheduled ML scoring → alerting → dashboard.
+            A production-minded reference system for “real-world” constraints.
+          </p>
+          <div class="links">
+            <a class="mini" href="/demos/edgepulse">Live / Docs</a>
+            <a class="mini secondary" href="https://github.com/nepryoon/edgepulse" target="_blank" rel="noopener">Code</a>
+          </div>
+        </article>
 
-      <article class="log-entry">
-        <h3>2025-12-05 — First notes on spiking neural networks</h3>
-        <p>Reviewed basic neuron models and coding schemes (rate coding vs temporal coding) and planned initial experiments with SNN simulators.</p>
-      </article>
+        <!-- 2) RAG Copilot -->
+        <article class="card">
+          <div class="top">
+            <h3>RAG Copilot</h3>
+            <span class="tag">COMING SOON</span>
+          </div>
+          <p>
+            RAG chatbot with citations, eval set, guardrails, and latency/cost controls.
+            Built as a full-stack demo: UI + API + deploy.
+          </p>
+          <div class="links">
+            <a class="mini" href="/demos/rag-copilot">Live / Docs</a>
+            <a class="mini secondary" href="/demos" aria-label="See roadmap in demos">Roadmap</a>
+          </div>
+        </article>
 
+        <!-- 3) Forecast Studio -->
+        <article class="card">
+          <div class="top">
+            <h3>Forecast Studio</h3>
+            <span class="tag">COMING SOON</span>
+          </div>
+          <p>
+            From SQL/CSV to forecast dashboard: backtesting, scheduled scoring, automated reporting.
+            Designed for analyst-to-production workflows.
+          </p>
+          <div class="links">
+            <a class="mini" href="/demos/forecast-studio">Live / Docs</a>
+            <a class="mini secondary" href="/demos">Roadmap</a>
+          </div>
+        </article>
+
+        <!-- 4) Tabular Risk -->
+        <article class="card">
+          <div class="top">
+            <h3>Tabular Risk / Churn</h3>
+            <span class="tag">COMING SOON</span>
+          </div>
+          <p>
+            Business scoring with explainability + data quality checks + drift monitoring.
+            A DS-production demo with operability baked in.
+          </p>
+          <div class="links">
+            <a class="mini" href="/demos/tabular-risk">Live / Docs</a>
+            <a class="mini secondary" href="/demos">Roadmap</a>
+          </div>
+        </article>
+      </div>
     </section>
 
-    <section id="roadmap" class="card">
-      <h2>High-level roadmap</h2>
-      <ul>
-        <li><strong>Phase 0 – Foundations:</strong> Build core understanding of SNNs, generative models, and active inference.</li>
-        <li><strong>Phase 1 – Simulated agents:</strong> Implement simple SNN-based agents in toy environments.</li>
-        <li><strong>Phase 2 – Active inference on SNNs:</strong> Prototype active-inference–style agents with spiking architectures.</li>
-        <li><strong>Phase 3 – Towards hardware:</strong> Explore deployment on neuromorphic platforms or realistic simulators.</li>
-        <li><strong>Phase 4 – Research outputs:</strong> Consolidate tools and experiments into research-grade artefacts.</li>
-      </ul>
+    <section class="section" aria-label="How to verify">
+      <h2>Evidence-based competence</h2>
+      <div class="card">
+        <p style="margin:0; color:var(--muted); line-height:1.6;">
+          Every skill and project is backed by <strong>two proofs</strong>:
+          a <strong>live page</strong> on this domain and the <strong>exact source code</strong> on GitHub.
+          Start from <a href="/evidence" style="text-decoration:underline;">Evidence Index</a> to audit capabilities quickly.
+        </p>
+      </div>
     </section>
 
-    <section id="links" class="card">
-      <h2>Links</h2>
-      <ul>
-        <li><a href="https://github.com/nepryoon/neuromorphic-inference-lab" target="_blank" rel="noopener">Code & experiments (GitHub)</a></li>
-        <li><a href="mailto:neuromorphicinference@gmail.com">Contact</a></li>
-      </ul>
-      <p class="small">
-        This site is a living research notebook. Expect it to evolve as new ideas, experiments, and references are added.
-      </p>
-    </section>
+    <footer class="footer" aria-label="Footer">
+      <div>
+        <span class="mono">neuromorphicinference.com</span> ·
+        <a href="https://github.com/nepryoon" target="_blank" rel="noopener" style="text-decoration:underline;">@nepryoon</a>
+      </div>
+
+      <!-- Build provenance placeholder:
+           Next step: populate these from Cloudflare Pages build variables (commit SHA / branch). -->
+      <div class="mono" id="build-info" aria-label="Build provenance">
+        Deployed from: <span id="build-sha">unknown</span> (<span id="build-branch">main</span>)
+      </div>
+    </footer>
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <p>&copy; 2025 Neuromorphic Inference Lab — All rights reserved</p>
-    </div>
-  </footer>
+  <!-- Optional: remove if you don't want this placeholder behavior.
+       Later you can replace these with real values injected at build time. -->
+  <script>
+    // Placeholder only. You can delete this script now.
+    // In a later step we’ll wire Cloudflare Pages commit/branch into the HTML at build time.
+    (function(){
+      const shaEl = document.getElementById('build-sha');
+      const brEl = document.getElementById('build-branch');
+      if (!shaEl || !brEl) return;
+      // If you ever manually set window.BUILD_SHA / BUILD_BRANCH, they'll show here.
+      if (window.BUILD_SHA) shaEl.textContent = String(window.BUILD_SHA).slice(0, 12);
+      if (window.BUILD_BRANCH) brEl.textContent = String(window.BUILD_BRANCH);
+    })();
+  </script>
 </body>
 </html>
-
