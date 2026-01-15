@@ -326,4 +326,40 @@
         <li>Return to <a href="/evidence" style="text-decoration:underline;">Evidence Index</a> to map skills → proofs.</li>
       </ol>
 
-      <div class="m
+      <div class="mini-links">
+        <a class="mini" href="/evidence#docker">Evidence: Docker</a>
+        <a class="mini" href="/evidence#sql">Evidence: SQL</a>
+        <a class="mini" href="/evidence#aws">Evidence: AWS</a>
+        <a class="mini" href="/evidence#cicd">Evidence: CI/CD</a>
+      </div>
+    </section>
+
+    <footer aria-label="Footer">
+      <div>
+        <span class="mono">neuromorphicinference.com</span> ·
+        <a href="/demos" style="text-decoration:underline;">Demos</a> ·
+        <a href="/evidence" style="text-decoration:underline;">Evidence</a> ·
+        <a href="https://github.com/nepryoon" target="_blank" rel="noopener" style="text-decoration:underline;">@nepryoon</a>
+      </div>
+
+      <!-- Build provenance placeholder: next step we’ll wire Cloudflare Pages commit SHA into this -->
+      <div class="mono" id="build-info">
+        Deployed from: <span id="build-sha">unknown</span> (<span id="build-branch">main</span>)
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // Placeholder only. Later we’ll inject real values from Cloudflare build variables.
+    (function(){
+      const shaEl = document.getElementById('build-sha');
+      const brEl = document.getElementById('build-branch');
+      if (!shaEl || !brEl) return;
+      if (window.BUILD_SHA) shaEl.textContent = String(window.BUILD_SHA).slice(0, 12);
+      if (window.BUILD_BRANCH) brEl.textContent = String(window.BUILD_BRANCH);
+    })();
+  </script>
+  <script src="/build-info.js" defer></script>
+</body>
+</html>
+
