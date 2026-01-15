@@ -324,5 +324,55 @@
     <!-- MATPLOTLIB -->
     <section class="section anchor" id="matplotlib">
       <h2>Matplotlib</h2>
-      <p class="meta">Planned proof: automated reports
+      <p class="meta">Planned proof: automated reports for forecasting/backtesting.</p>
+      <div class="evidence-grid">
+        <div class="ev">
+          <div class="k">Live</div>
+          <div class="v"><a href="/demos/forecast-studio">Forecast Studio — planned</a></div>
+        </div>
+        <div class="ev">
+          <div class="k">Code</div>
+          <div class="v"><a href="/demos">Coming soon — report generation in repo</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROADMAP -->
+    <section class="section anchor" id="roadmap">
+      <h2>Roadmap (next evidence upgrades)</h2>
+      <p class="meta">We’ll convert “planned” sections into live proofs in this order:</p>
+      <ol class="meta" style="margin:0;padding-left:18px;line-height:1.7">
+        <li>Publish build provenance (commit SHA) in footer + demo headers.</li>
+        <li>RAG Copilot: React UI + Python API + deploy + eval.</li>
+        <li>Tabular Risk: scoring + explainability + drift + batch runs.</li>
+        <li>Visual Inspector: PyTorch/TensorFlow (pick one as primary) + inference packaging.</li>
+        <li>Kubernetes: add manifests/helm to one showcase (platform-grade signal).</li>
+      </ol>
+    </section>
+
+    <footer aria-label="Footer">
+      <div>
+        <span class="mono">neuromorphicinference.com</span> ·
+        <a href="/demos" style="text-decoration:underline;">Demos</a> ·
+        <a href="https://github.com/nepryoon" target="_blank" rel="noopener" style="text-decoration:underline;">@nepryoon</a>
+      </div>
+      <div class="mono" id="build-info">
+        Deployed from: <span id="build-sha">unknown</span> (<span id="build-branch">main</span>)
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // Placeholder only. Later we’ll inject real values from Cloudflare build variables.
+    (function(){
+      const shaEl = document.getElementById('build-sha');
+      const brEl = document.getElementById('build-branch');
+      if (!shaEl || !brEl) return;
+      if (window.BUILD_SHA) shaEl.textContent = String(window.BUILD_SHA).slice(0, 12);
+      if (window.BUILD_BRANCH) brEl.textContent = String(window.BUILD_BRANCH);
+    })();
+  </script>
+  <script src="/build-info.js" defer></script>
+</body>
+</html>
 
