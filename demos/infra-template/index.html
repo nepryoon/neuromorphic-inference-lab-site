@@ -1,0 +1,164 @@
+<!-- /demos/infra-template/index.html (STEP 2) -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ML Infra Template — Live Docs | Neuromorphic Inference Lab</title>
+  <meta name="description" content="ML Infra Template: a reusable template for production-minded ML repos (Docker, CI/CD, quality gates, provenance)." />
+  <link rel="stylesheet" href="/style.css" />
+
+  <style>
+    :root{
+      --bg:#0b0f17;--text:#e7ecf5;--muted:#a7b1c6;--line:rgba(231,236,245,.12);
+      --radius:16px;--shadow:0 10px 35px rgba(0,0,0,.35);
+      --accent:#7c5cff;--accent2:#2dd4bf;
+      --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      --sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      --max:1100px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--text)}
+    a{color:inherit;text-decoration:none}
+    a:hover{opacity:.92}
+    .wrap{max-width:var(--max);margin:0 auto;padding:22px 18px}
+
+    header{
+      position:sticky;top:0;z-index:20;
+      background:rgba(11,15,23,.72);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--line);
+    }
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{font-weight:800;display:flex;align-items:center;gap:10px}
+    .dot{
+      width:10px;height:10px;border-radius:50%;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      box-shadow:0 10px 25px rgba(124,92,255,.22)
+    }
+    nav a{color:var(--muted);font-weight:700;padding:8px 10px;border-radius:12px;border:1px solid transparent}
+    nav a:hover{border-color:var(--line);background:rgba(255,255,255,.03);color:var(--text)}
+
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:7px 10px;border-radius:999px;border:1px solid var(--line);
+      background:rgba(255,255,255,.03);color:var(--muted);
+      font-weight:800;font-size:12px;
+    }
+    h1{margin:14px 0 8px;font-size:34px;letter-spacing:-.4px}
+    .sub{margin:0;color:var(--muted);line-height:1.65;max-width:95ch}
+
+    .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      padding:11px 14px;border-radius:14px;border:1px solid var(--line);
+      background:rgba(255,255,255,.03);font-weight:800
+    }
+    .btn.primary{
+      border-color:rgba(124,92,255,.65);
+      background:linear-gradient(135deg, rgba(124,92,255,.22), rgba(45,212,191,.12));
+    }
+
+    .grid{margin-top:14px;display:grid;grid-template-columns:1.1fr .9fr;gap:12px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+
+    .card{
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .card h2{margin:0 0 10px;font-size:18px}
+    .list{margin:0;padding-left:18px;color:var(--muted);line-height:1.7}
+    .note{
+      margin-top:12px;border:1px solid var(--line);border-radius:var(--radius);
+      padding:14px;background:rgba(255,255,255,.02);color:var(--muted);line-height:1.6
+    }
+
+    .mono{font-family:var(--mono)}
+    footer{
+      margin-top:26px;border-top:1px solid var(--line);
+      padding:18px 0 30px;color:var(--muted);font-size:13px;
+      display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="/" aria-label="Home">
+        <span class="dot" aria-hidden="true"></span><span>Neuromorphic Inference Lab</span>
+      </a>
+      <nav aria-label="Primary">
+        <a href="/demos">Demos</a>
+        <a href="/evidence">Evidence</a>
+        <a href="/about">About</a>
+        <a href="/research">Research</a>
+        <a href="https://github.com/nepryoon" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <span class="pill">Demo • Live docs (template repo)</span>
+    <h1>ML Infra Template</h1>
+    <p class="sub">
+      A reusable template for production-minded ML repos: <strong>quality gates</strong>, <strong>Docker</strong>,
+      <strong>CI/CD</strong>, and <strong>release/provenance</strong>. This is the “portfolio backbone” that makes the
+      rest of the demos credible and scalable.
+    </p>
+
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener">View Source (GitHub)</a>
+      <a class="btn" href="/evidence#cicd">Evidence: CI/CD</a>
+      <a class="btn" href="/evidence#docker">Evidence: Docker</a>
+      <a class="btn" href="/demos">Back to Demos</a>
+    </div>
+
+    <div class="grid">
+      <section class="card">
+        <h2>What it includes (planned baseline)</h2>
+        <ul class="list">
+          <li>Standard repo layout (api / ui / data / docs).</li>
+          <li>Quality gates: formatting, linting, unit tests.</li>
+          <li>Docker-first execution (local parity).</li>
+          <li>CI pipeline: build + test + artifact conventions.</li>
+          <li>Release tags + provenance pattern (what code produced what output).</li>
+        </ul>
+
+        <div class="note">
+          This template will be reused by RAG Copilot / Tabular Risk / Forecast Studio to keep them consistent and “operable”.
+        </div>
+      </section>
+
+      <aside class="card">
+        <h2>How to use (workflow)</h2>
+        <ol class="list">
+          <li>Start a new demo repo from this template.</li>
+          <li>Implement the minimal feature + tests.</li>
+          <li>Ship via CI and tag releases to lock provenance.</li>
+        </ol>
+
+        <div class="note">
+          Repo: <a href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener" style="text-decoration:underline;">nil-infra-template</a><br />
+          Evidence anchors: <a href="/evidence#cicd" style="text-decoration:underline;">CI/CD</a> ·
+          <a href="/evidence#docker" style="text-decoration:underline;">Docker</a>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      <div class="mono">
+        neuromorphicinference.com · <a href="/evidence" style="text-decoration:underline;">Evidence</a>
+      </div>
+      <div class="mono" id="build-info">
+        Deployed from: <span id="build-sha">unknown</span> (<span id="build-branch">main</span>)
+      </div>
+    </footer>
+  </main>
+
+  <script src="/build-info.js" defer></script>
+</body>
+</html>
