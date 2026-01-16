@@ -1,51 +1,45 @@
-<!-- /demos/visual-inspector/index.html (UPDATED) -->
+<!-- /demos/index.html (STEP 1: Live + Code for every demo) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Visual Inspector — Live Docs | Neuromorphic Inference Lab</title>
-  <meta name="description" content="Visual Inspector: image classification + explainability + production inference packaging." />
+  <title>Demos — Neuromorphic Inference Lab</title>
+  <meta name="description" content="Interactive demos and case studies: Live + Code." />
   <link rel="stylesheet" href="/style.css" />
   <style>
-    :root{
-      --bg:#0b0f17;--text:#e7ecf5;--muted:#a7b1c6;--line:rgba(231,236,245,.12);
-      --radius:16px;--shadow:0 10px 35px rgba(0,0,0,.35);
-      --accent:#7c5cff;--accent2:#2dd4bf;
-      --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-      --sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      --max:1100px;
-    }
+    :root{--bg:#0b0f17;--text:#e7ecf5;--muted:#a7b1c6;--line:rgba(231,236,245,.12);--radius:16px;--shadow:0 10px 35px rgba(0,0,0,.35);--sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;}
     *{box-sizing:border-box}
     body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--text)}
-    a{color:inherit;text-decoration:none} a:hover{opacity:.92}
-    .wrap{max-width:var(--max);margin:0 auto;padding:22px 18px}
-    header{position:sticky;top:0;z-index:20;background:rgba(11,15,23,.72);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    a{color:inherit;text-decoration:none}
+    a:hover{opacity:.92}
+    .wrap{max-width:1100px;margin:0 auto;padding:22px 18px}
+    header{border-bottom:1px solid var(--line);background:rgba(11,15,23,.72);backdrop-filter:blur(10px);position:sticky;top:0;z-index:20}
+    .nav{display:flex;justify-content:space-between;align-items:center;gap:16px}
     .brand{font-weight:800;display:flex;align-items:center;gap:10px}
-    .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 10px 25px rgba(124,92,255,.22)}
+    .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#7c5cff,#2dd4bf);box-shadow:0 10px 25px rgba(124,92,255,.22)}
     nav a{color:var(--muted);font-weight:700;padding:8px 10px;border-radius:12px;border:1px solid transparent}
     nav a:hover{border-color:var(--line);background:rgba(255,255,255,.03);color:var(--text)}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--muted);font-weight:800;font-size:12px}
-    h1{margin:14px 0 8px;font-size:34px;letter-spacing:-.4px}
-    .sub{margin:0;color:var(--muted);line-height:1.65;max-width:90ch}
-    .grid{margin-top:14px;display:grid;grid-template-columns:1.1fr .9fr;gap:12px}
-    @media(max-width:900px){.grid{grid-template-columns:1fr}}
-    .card{border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));box-shadow:var(--shadow);padding:16px}
-    .card h2{margin:0 0 10px;font-size:18px}
-    .list{margin:0;padding-left:18px;color:var(--muted);line-height:1.7}
-    .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03);font-weight:800}
-    .btn.primary{border-color:rgba(124,92,255,.65);background:linear-gradient(135deg, rgba(124,92,255,.22), rgba(45,212,191,.12))}
-    .note{margin-top:12px;border:1px solid var(--line);border-radius:var(--radius);padding:14px;background:rgba(255,255,255,.02);color:var(--muted);line-height:1.6}
-    .mono{font-family:var(--mono)}
+    h1{margin:18px 0 6px;font-size:32px;letter-spacing:-.4px}
+    .sub{margin:0 0 16px;color:var(--muted);line-height:1.6;max-width:85ch}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    @media (max-width:860px){.grid{grid-template-columns:1fr}}
+    .card{border:1px solid var(--line);background:linear-gradient(180deg, rgba(18,26,42,.75), rgba(15,22,38,.55));border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+    .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}
+    .tag{font-size:12px;font-weight:800;padding:6px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:rgba(255,255,255,.02);white-space:nowrap}
+    .links{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .btn{font-size:13px;padding:9px 11px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.02);font-weight:800}
+    .btn.secondary{color:var(--muted)}
+    .note{margin-top:18px;border:1px solid var(--line);border-radius:var(--radius);padding:14px;background:rgba(255,255,255,.02);color:var(--muted);line-height:1.6}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
     footer{margin-top:26px;border-top:1px solid var(--line);padding:18px 0 30px;color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
   </style>
 </head>
+
 <body>
   <header>
     <div class="wrap nav">
-      <a class="brand" href="/"><span class="dot" aria-hidden="true"></span><span>Neuromorphic Inference Lab</span></a>
+      <a class="brand" href="/"><span class="dot" aria-hidden="true"></span>Neuromorphic Inference Lab</a>
       <nav>
         <a href="/demos">Demos</a>
         <a href="/evidence">Evidence</a>
@@ -57,48 +51,112 @@
   </header>
 
   <main class="wrap">
-    <span class="pill">Demo • Live docs (implementation in progress)</span>
-    <h1>Visual Inspector</h1>
+    <h1>Demos & Case Studies</h1>
     <p class="sub">
-      Image classification with <strong>explainability</strong> (e.g., Grad-CAM) and production-oriented
-      <strong>inference packaging</strong> (CPU-first, GPU optional).
+      Every project is backed by two proofs: a <strong>live page</strong> on this domain and the <strong>exact source code</strong> on GitHub.
     </p>
 
-    <div class="cta">
-      <a class="btn primary" href="https://github.com/nepryoon/nil-visual-inspector" target="_blank" rel="noopener">View Source (GitHub)</a>
-      <a class="btn" href="/evidence#pytorch">Evidence: PyTorch</a>
-      <a class="btn" href="/demos">Back to Demos</a>
-    </div>
-
     <div class="grid">
+      <!-- 1) EdgePulse -->
       <section class="card">
-        <h2>What it demonstrates</h2>
-        <ul class="list">
-          <li>Upload image → prediction + confidence.</li>
-          <li>Explainability view (heatmaps) + failure cases gallery.</li>
-          <li>Regression tests on a dataset snapshot (no silent degradation).</li>
-          <li>Performance notes: latency/model-size trade-offs.</li>
-        </ul>
-        <div class="note">
-          Next milestone: a minimal live upload → predict → explain flow on this page.
+        <div class="top">
+          <h3 style="margin:0">EdgePulse</h3>
+          <span class="tag">LIVE / CASE STUDY</span>
+        </div>
+        <p style="margin:0;color:var(--muted);line-height:1.55">
+          Edge ingest → storage → scheduled ML scoring → alerting → dashboard. Production-minded reference system.
+        </p>
+        <div class="links">
+          <a class="btn" href="/demos/edgepulse">Live / Docs</a>
+          <a class="btn secondary" href="https://github.com/nepryoon/edgepulse" target="_blank" rel="noopener">Code</a>
         </div>
       </section>
 
-      <aside class="card">
-        <h2>Framework choice</h2>
-        <ul class="list">
-          <li>Primary: <strong>PyTorch</strong> (recommended).</li>
-          <li>Optional: <strong>TensorFlow</strong> as a limited module (no keyword-only listing).</li>
-        </ul>
-        <div class="note">
-          Repo: <a href="https://github.com/nepryoon/nil-visual-inspector" target="_blank" rel="noopener" style="text-decoration:underline;">nil-visual-inspector</a>
+      <!-- 2) RAG Copilot -->
+      <section class="card">
+        <div class="top">
+          <h3 style="margin:0">RAG Copilot</h3>
+          <span class="tag">LIVE DOCS</span>
         </div>
-      </aside>
+        <p style="margin:0;color:var(--muted);line-height:1.55">
+          RAG chatbot with citations, eval set, guardrails, and latency/cost controls (UI + API + deploy).
+        </p>
+        <div class="links">
+          <a class="btn" href="/demos/rag-copilot">Live / Docs</a>
+          <a class="btn secondary" href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener">Code</a>
+        </div>
+      </section>
+
+      <!-- 3) Forecast Studio -->
+      <section class="card">
+        <div class="top">
+          <h3 style="margin:0">Forecast Studio</h3>
+          <span class="tag">LIVE DOCS</span>
+        </div>
+        <p style="margin:0;color:var(--muted);line-height:1.55">
+          From SQL/CSV to forecast dashboard: backtesting, scheduled scoring, reporting automation.
+        </p>
+        <div class="links">
+          <a class="btn" href="/demos/forecast-studio">Live / Docs</a>
+          <a class="btn secondary" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener">Code</a>
+        </div>
+      </section>
+
+      <!-- 4) Tabular Risk -->
+      <section class="card">
+        <div class="top">
+          <h3 style="margin:0">Tabular Risk / Churn</h3>
+          <span class="tag">LIVE DOCS</span>
+        </div>
+        <p style="margin:0;color:var(--muted);line-height:1.55">
+          Business scoring with explainability, data quality checks, and drift monitoring (DS production).
+        </p>
+        <div class="links">
+          <a class="btn" href="/demos/tabular-risk">Live / Docs</a>
+          <a class="btn secondary" href="https://github.com/nepryoon/nil-tabular-risk" target="_blank" rel="noopener">Code</a>
+        </div>
+      </section>
+
+      <!-- 5) Visual Inspector -->
+      <section class="card">
+        <div class="top">
+          <h3 style="margin:0">Visual Inspector</h3>
+          <span class="tag">LIVE DOCS</span>
+        </div>
+        <p style="margin:0;color:var(--muted);line-height:1.55">
+          Image classification with explainability (e.g., Grad-CAM) and production-oriented inference packaging.
+        </p>
+        <div class="links">
+          <a class="btn" href="/demos/visual-inspector">Live / Docs</a>
+          <a class="btn secondary" href="https://github.com/nepryoon/nil-visual-inspector" target="_blank" rel="noopener">Code</a>
+        </div>
+      </section>
+
+      <!-- 6) ML Infra Template -->
+      <section class="card">
+        <div class="top">
+          <h3 style="margin:0">ML Infra Template</h3>
+          <span class="tag">LIVE DOCS</span>
+        </div>
+        <p style="margin:0;color:var(--muted);line-height:1.55">
+          Reusable template repo for quality gates (lint/test), Docker, CI, and release tags (build provenance).
+        </p>
+        <div class="links">
+          <a class="btn" href="/evidence#cicd">Live / Docs</a>
+          <a class="btn secondary" href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener">Code</a>
+        </div>
+      </section>
+    </div>
+
+    <div class="note">
+      Next: we’ll create <strong>/demos/infra-template</strong> (a dedicated live docs page) so the Infra Template also has a stable URL under /demos.
+      Then we move to Step 2.
     </div>
 
     <footer>
       <div class="mono">
-        neuromorphicinference.com · <a href="/evidence" style="text-decoration:underline;">Evidence</a>
+        neuromorphicinference.com · <a href="/evidence" style="text-decoration:underline;">Evidence</a> ·
+        <a href="https://github.com/nepryoon" target="_blank" rel="noopener" style="text-decoration:underline;">@nepryoon</a>
       </div>
       <div class="mono" id="build-info">
         Deployed from: <span id="build-sha">unknown</span> (<span id="build-branch">main</span>)
@@ -109,4 +167,3 @@
   <script src="/build-info.js" defer></script>
 </body>
 </html>
-
