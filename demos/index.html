@@ -3,272 +3,141 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Demos | Neuromorphic Inference Lab</title>
-  <meta name="description" content="Applied AI demos: RAG Copilot, forecasting dashboard, document classifier, and computer vision. Live links and source code included." />
+  <title>Visual Inspector | Neuromorphic Inference Lab</title>
+  <meta name="description" content="Visual Inspector: upload an image, inspect basic properties locally, and optionally call an API endpoint." />
 
   <style>
     :root{
-      --bg: #070A12;
-      --surface: rgba(255,255,255,.06);
-      --surface2: rgba(255,255,255,.08);
-      --border: rgba(255,255,255,.12);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.68);
-      --accent: #64FFDA;
-      --accent2: #7C5CFF;
-      --danger: #FF4D6D;
-      --ok: #43FBA4;
-      --warn: #FFCE57;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius: 18px;
-      --max: 1100px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --bg:#070A12;--surface:rgba(255,255,255,.06);--border:rgba(255,255,255,.12);
+      --text:rgba(255,255,255,.92);--muted:rgba(255,255,255,.68);
+      --accent:#64FFDA;--accent2:#7C5CFF;--ok:#43FBA4;--warn:#FFCE57;--danger:#FF4D6D;
+      --shadow:0 10px 30px rgba(0,0,0,.35);--radius:18px;--max:1100px;
+      --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      --sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
     }
-
-    *{ box-sizing: border-box; }
-    html, body{ height: 100%; }
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
     body{
-      margin: 0;
-      font-family: var(--sans);
-      color: var(--text);
+      margin:0;font-family:var(--sans);color:var(--text);line-height:1.55;
       background:
         radial-gradient(900px 600px at 20% 10%, rgba(124,92,255,.18), transparent 55%),
         radial-gradient(900px 600px at 80% 20%, rgba(100,255,218,.14), transparent 55%),
         radial-gradient(700px 450px at 40% 80%, rgba(124,92,255,.12), transparent 60%),
         var(--bg);
-      line-height: 1.55;
     }
-
-    a{ color: inherit; text-decoration: none; }
-    a:hover{ text-decoration: underline; text-underline-offset: 3px; }
-
-    .wrap{
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 20px 18px 46px;
-    }
+    a{color:inherit;text-decoration:none;}
+    a:hover{text-decoration:underline;text-underline-offset:3px;}
+    .wrap{max-width:var(--max);margin:0 auto;padding:20px 18px 46px;}
 
     header{
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      backdrop-filter: blur(10px);
-      background: linear-gradient(to bottom, rgba(7,10,18,.82), rgba(7,10,18,.50));
-      border-bottom: 1px solid rgba(255,255,255,.06);
+      position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);
+      background:linear-gradient(to bottom, rgba(7,10,18,.82), rgba(7,10,18,.50));
+      border-bottom:1px solid rgba(255,255,255,.06);
     }
-    .nav{
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-    }
-    .brand{
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      letter-spacing: .2px;
-    }
+    .nav{max-width:var(--max);margin:0 auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px;}
     .logo{
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
+      width:34px;height:34px;border-radius:10px;
       background:
         radial-gradient(circle at 30% 30%, rgba(100,255,218,.95), rgba(100,255,218,.15) 58%, transparent 60%),
         radial-gradient(circle at 70% 70%, rgba(124,92,255,.9), rgba(124,92,255,.18) 55%, transparent 57%),
         rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 8px 22px rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow:0 8px 22px rgba(0,0,0,.25);
     }
-    nav ul{
-      list-style: none;
-      display: flex;
-      gap: 10px;
-      padding: 0;
-      margin: 0;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
+    nav ul{list-style:none;display:flex;gap:10px;padding:0;margin:0;flex-wrap:wrap;justify-content:flex-end;}
     .pill{
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      color: var(--muted);
-      font-size: 14px;
+      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);color:var(--muted);font-size:14px;
     }
-    .pill.active{
-      color: var(--text);
-      border-color: rgba(100,255,218,.35);
-      background: rgba(100,255,218,.08);
-    }
+    .pill.active{color:var(--text);border-color:rgba(100,255,218,.35);background:rgba(100,255,218,.08);}
 
     .hero{
-      margin-top: 22px;
-      padding: 22px;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
+      margin-top:22px;padding:22px;border-radius:var(--radius);border:1px solid var(--border);
+      background:linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow:var(--shadow);position:relative;overflow:hidden;
     }
     .hero:before{
-      content:"";
-      position:absolute;
-      inset:-2px;
+      content:"";position:absolute;inset:-2px;
       background:
         radial-gradient(420px 260px at 10% 20%, rgba(100,255,218,.20), transparent 55%),
         radial-gradient(420px 260px at 90% 40%, rgba(124,92,255,.18), transparent 60%);
-      pointer-events:none;
-      filter: blur(1px);
+      pointer-events:none;filter:blur(1px);
     }
-    .hero > *{ position: relative; }
+    .hero>*{position:relative;}
+    h1{margin:0 0 8px;font-size:clamp(28px,4vw,42px);line-height:1.12;letter-spacing:.2px;}
+    .subtitle{margin:0;color:var(--muted);max-width:92ch;}
 
-    h1{
-      margin: 0 0 8px;
-      font-size: clamp(28px, 4vw, 42px);
-      line-height: 1.12;
-      letter-spacing: .2px;
-    }
-    .subtitle{
-      margin: 0;
-      color: var(--muted);
-      max-width: 92ch;
-    }
-
-    .row{
-      margin-top: 14px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
+    .rowWrap{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
     .btn{
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      font-weight: 600;
-      font-size: 14px;
-      box-shadow: 0 10px 20px rgba(0,0,0,.18);
-      cursor: pointer;
+      display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);
+      color:var(--text);font-weight:600;font-size:14px;box-shadow:0 10px 20px rgba(0,0,0,.18);cursor:pointer;
     }
-    .btn:hover{ background: rgba(255,255,255,.08); text-decoration: none; }
+    .btn:hover{background:rgba(255,255,255,.08);text-decoration:none;}
     .btn.primary{
-      border-color: rgba(100,255,218,.40);
-      background: linear-gradient(135deg, rgba(100,255,218,.18), rgba(124,92,255,.12));
+      border-color:rgba(100,255,218,.40);
+      background:linear-gradient(135deg, rgba(100,255,218,.18), rgba(124,92,255,.12));
     }
+    .btn.ghost{background:transparent;border-color:rgba(255,255,255,.10);box-shadow:none;}
+    .btn:disabled{opacity:.6;cursor:not-allowed;}
+
     .kbd{
-      font-family: var(--mono);
-      font-size: 12px;
-      padding: 2px 8px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.25);
-      border-radius: 999px;
-      color: rgba(255,255,255,.78);
+      font-family:var(--mono);font-size:12px;padding:2px 8px;border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.25);border-radius:999px;color:rgba(255,255,255,.78);
     }
-
     .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      font-size: 12px;
-      color: rgba(255,255,255,.78);
-      font-family: var(--mono);
-      white-space: nowrap;
+      display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);
+      font-size:12px;color:rgba(255,255,255,.78);font-family:var(--mono);white-space:nowrap;
     }
-    .badge.ok{
-      border-color: rgba(67,251,164,.35);
-      background: rgba(67,251,164,.10);
-      color: rgba(255,255,255,.90);
+    .badge.ok{border-color:rgba(67,251,164,.35);background:rgba(67,251,164,.10);color:rgba(255,255,255,.90);}
+    .badge.bad{border-color:rgba(255,77,109,.35);background:rgba(255,77,109,.10);color:rgba(255,255,255,.90);}
+    .badge.warn{border-color:rgba(255,206,87,.30);background:rgba(255,206,87,.10);color:rgba(255,255,255,.90);}
+
+    .grid{margin-top:16px;display:grid;gap:12px;grid-template-columns:1.2fr .8fr;align-items:start;}
+    @media (max-width:980px){.grid{grid-template-columns:1fr;}}
+    .card{border-radius:var(--radius);border:1px solid var(--border);background:rgba(255,255,255,.05);box-shadow:0 10px 24px rgba(0,0,0,.22);padding:16px;}
+    .card h2{margin:0 0 8px;font-size:18px;letter-spacing:.2px;}
+    .muted{color:var(--muted);}
+    .small{font-size:14px;}
+    .mono{font-family:var(--mono);}
+    .divider{height:1px;background:rgba(255,255,255,.08);margin:14px 0;}
+
+    .toggle{
+      display:inline-flex;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);padding:6px;border-radius:999px;
     }
-    .badge.bad{
-      border-color: rgba(255,77,109,.35);
-      background: rgba(255,77,109,.10);
-      color: rgba(255,255,255,.90);
+    .toggle button{
+      border:0;background:transparent;color:rgba(255,255,255,.75);
+      padding:8px 10px;border-radius:999px;cursor:pointer;font-weight:700;font-size:12px;
+    }
+    .toggle button.active{
+      color:rgba(255,255,255,.92);
+      background:linear-gradient(135deg, rgba(100,255,218,.16), rgba(124,92,255,.12));
+      border:1px solid rgba(100,255,218,.30);
     }
 
-    .divider{
-      height: 1px;
-      background: rgba(255,255,255,.08);
-      margin: 16px 0;
+    .drop{
+      border-radius:14px;border:1px dashed rgba(255,255,255,.18);
+      background:rgba(0,0,0,.16);padding:14px;
+      display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+    }
+    input[type="file"]{
+      color:rgba(255,255,255,.78);
     }
 
-    .grid{
-      margin-top: 16px;
-      display: grid;
-      gap: 12px;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    .preview{
+      border-radius:14px;border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);overflow:hidden;
+      display:flex;align-items:center;justify-content:center;min-height:240px;
     }
-
-    .card{
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      box-shadow: 0 10px 24px rgba(0,0,0,.22);
-      padding: 16px;
-      display:flex;
-      flex-direction: column;
-      gap: 10px;
-      min-height: 240px;
+    .preview img{max-width:100%;max-height:360px;display:block;}
+    pre{
+      margin:10px 0 0;padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.25);overflow:auto;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.82);
     }
-    .card h2{
-      margin: 0;
-      font-size: 18px;
-      letter-spacing: .2px;
-    }
-    .muted{ color: var(--muted); }
-    .small{ font-size: 14px; }
-    .mono{ font-family: var(--mono); }
-
-    .tags{
-      display:flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 2px;
-    }
-    .tag{
-      display:inline-flex;
-      align-items:center;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.18);
-      font-size: 12px;
-      color: rgba(255,255,255,.80);
-      font-family: var(--mono);
-    }
-
-    .actions{
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: auto;
-      padding-top: 6px;
-    }
-
-    footer{
-      margin-top: 24px;
-      color: rgba(255,255,255,.55);
-      font-size: 13px;
-    }
+    footer{margin-top:24px;color:rgba(255,255,255,.55);font-size:13px;}
   </style>
 </head>
 
@@ -279,7 +148,6 @@
       <span class="logo" aria-hidden="true"></span>
       <span>Neuromorphic Inference Lab</span>
     </a>
-
     <nav aria-label="Main navigation">
       <ul>
         <li><a class="pill" href="/">Home</a></li>
@@ -292,134 +160,177 @@
 
 <main class="wrap">
   <section class="hero">
-    <h1>Demos</h1>
+    <h1>Visual Inspector</h1>
     <p class="subtitle">
-      A set of small applications focused on applied AI and delivery: user-facing pages, APIs, and reproducible builds.
-      Each demo links to a live endpoint where available, and to the corresponding repository.
+      Upload an image and inspect basic properties locally. An optional API mode can be used for deployed inference.
     </p>
 
-    <div class="row">
-      <a class="btn primary" href="/evidence/">Evidence</a>
-      <a class="btn" href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">
-        Live API <span class="kbd">/health</span>
-      </a>
-      <a class="btn" href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">
-        Build info <span class="kbd">/version</span>
-      </a>
-      <button class="btn" id="btnCheck">Check endpoints</button>
-      <span class="badge" id="bHealth">health: unknown</span>
-      <span class="badge" id="bVersion">version: unknown</span>
+    <div class="rowWrap">
+      <a class="btn primary" href="/evidence/#frontend">Evidence anchor <span class="kbd">#frontend</span></a>
+      <a class="btn" href="https://github.com/nepryoon/nil-visual-inspector" target="_blank" rel="noopener noreferrer">GitHub</a>
+
+      <span class="toggle" role="group" aria-label="Mode selector">
+        <button id="modeLocal" class="active" type="button">Local</button>
+        <button id="modeApi" type="button">API</button>
+      </span>
+      <span class="badge warn" id="bMode">mode: local</span>
+      <span class="badge" id="bStatus">status: idle</span>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h2>Try it</h2>
+      <p class="muted small">
+        Local mode calculates simple statistics (dimensions, average brightness, dominant channel). API mode expects
+        <span class="mono">POST /vision/predict</span> (optional).
+      </p>
+
+      <div class="drop">
+        <div class="small" style="color:rgba(255,255,255,.85);font-weight:700;">Choose an image</div>
+        <input id="file" type="file" accept="image/*" />
+        <button class="btn primary" id="btnRun" type="button">Analyse</button>
+        <button class="btn" id="btnClear" type="button">Clear</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="preview" id="preview"><div class="muted small">No image loaded</div></div>
+
+      <div class="divider"></div>
+
+      <h2>Output</h2>
+      <pre id="out">{}</pre>
     </div>
 
-    <div class="divider"></div>
-    <p class="muted small mono" id="versionPreview">Version preview: —</p>
+    <aside class="card">
+      <h2>Links</h2>
+      <div class="small" style="display:grid;gap:10px;">
+        <a class="btn" style="justify-content:space-between;" href="/evidence/#frontend"><span>Evidence</span><span class="kbd">#frontend</span></a>
+        <a class="btn" style="justify-content:space-between;" href="https://github.com/nepryoon/nil-visual-inspector" target="_blank" rel="noopener noreferrer"><span>Repository</span><span class="kbd">GitHub</span></a>
+      </div>
+
+      <div class="divider"></div>
+
+      <h2>Notes</h2>
+      <p class="muted small" style="margin:0;">
+        The local analysis is intentionally lightweight. When API mode is enabled, this page can act as a thin client.
+      </p>
+    </aside>
   </section>
 
-  <section class="grid" aria-label="Demo cards">
-
-    <article class="card">
-      <h2>RAG Copilot</h2>
-      <p class="muted small">
-        Ask questions across a curated knowledge base and receive an answer with citations.
-        The demo page provides a simple client for <span class="mono">POST /rag/ask</span>.
-      </p>
-      <div class="tags">
-        <span class="tag">FastAPI</span>
-        <span class="tag">Containers</span>
-        <span class="tag">AWS (ALB/ECS)</span>
-        <span class="tag">RAG</span>
-      </div>
-      <div class="actions">
-        <a class="btn primary" href="/demos/rag-copilot/">Open demo</a>
-        <a class="btn" href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">/health</a>
-        <a class="btn" href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">/version</a>
-        <a class="btn" href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">GitHub (app)</a>
-        <a class="btn" href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener noreferrer">GitHub (infra)</a>
-      </div>
-    </article>
-
-    <article class="card">
-      <h2>Tabular Forecast Dashboard</h2>
-      <p class="muted small">
-        Forecasting on tabular data with feature engineering, training, and a small dashboard for inspection.
-      </p>
-      <div class="tags">
-        <span class="tag">Python</span>
-        <span class="tag">SQL</span>
-        <span class="tag">Scikit-learn</span>
-        <span class="tag">Visualisation</span>
-      </div>
-      <div class="actions">
-        <a class="btn" href="/demos/forecast-dashboard/">Open demo</a>
-        <a class="btn" href="/evidence/#forecast-dashboard">Evidence</a>
-      </div>
-    </article>
-
-    <article class="card">
-      <h2>Document Classifier</h2>
-      <p class="muted small">
-        Text classification and extraction with evaluation and error analysis, packaged behind a small API.
-      </p>
-      <div class="tags">
-        <span class="tag">NLP</span>
-        <span class="tag">Pipeline</span>
-        <span class="tag">Evaluation</span>
-        <span class="tag">Serving</span>
-      </div>
-      <div class="actions">
-        <a class="btn" href="/demos/doc-classifier/">Open demo</a>
-        <a class="btn" href="/evidence/#doc-classifier">Evidence</a>
-      </div>
-    </article>
-
-    <article class="card">
-      <h2>Vision Classifier</h2>
-      <p class="muted small">
-        Image classification with a small inference service and reproducible packaging.
-      </p>
-      <div class="tags">
-        <span class="tag">PyTorch</span>
-        <span class="tag">Computer Vision</span>
-        <span class="tag">Docker</span>
-        <span class="tag">CI</span>
-      </div>
-      <div class="actions">
-        <a class="btn" href="/demos/vision-classifier/">Open demo</a>
-        <a class="btn" href="/evidence/#vision-classifier">Evidence</a>
-      </div>
-    </article>
-
-  </section>
-
-  <footer>
-    <div>© <span id="year"></span> Neuromorphic Inference Lab — Demos</div>
-  </footer>
+  <footer>© <span id="year"></span> Neuromorphic Inference Lab — Visual Inspector</footer>
 </main>
 
 <script>
   const API_BASE = "https://api.neuromorphicinference.com";
-  const yearEl = document.getElementById("year");
-  yearEl.textContent = new Date().getFullYear();
 
-  const els = {
-    btnCheck: document.getElementById("btnCheck"),
-    bHealth: document.getElementById("bHealth"),
-    bVersion: document.getElementById("bVersion"),
-    versionPreview: document.getElementById("versionPreview"),
+  const el = {
+    year: document.getElementById("year"),
+    file: document.getElementById("file"),
+    btnRun: document.getElementById("btnRun"),
+    btnClear: document.getElementById("btnClear"),
+    preview: document.getElementById("preview"),
+    out: document.getElementById("out"),
+    bStatus: document.getElementById("bStatus"),
+    bMode: document.getElementById("bMode"),
+    modeLocal: document.getElementById("modeLocal"),
+    modeApi: document.getElementById("modeApi"),
   };
 
-  function setBadge(el, text, state) {
-    el.textContent = text;
-    el.classList.remove("ok", "bad");
-    if (state === "ok") el.classList.add("ok");
-    if (state === "bad") el.classList.add("bad");
+  el.year.textContent = new Date().getFullYear();
+
+  let mode = "local";
+  let imgEl = null;
+
+  function setMode(next) {
+    mode = next;
+    el.modeLocal.classList.toggle("active", mode === "local");
+    el.modeApi.classList.toggle("active", mode === "api");
+    el.bMode.textContent = `mode: ${mode}`;
+    el.bMode.classList.remove("ok","bad","warn");
+    el.bMode.classList.add("warn");
   }
 
-  async function fetchWithTimeout(url, ms = 3500) {
+  function setBadge(text, state) {
+    el.bStatus.textContent = text;
+    el.bStatus.classList.remove("ok","bad","warn");
+    if (state) el.bStatus.classList.add(state);
+  }
+
+  function showPreview(src) {
+    el.preview.innerHTML = "";
+    imgEl = new Image();
+    imgEl.alt = "Uploaded image preview";
+    imgEl.onload = () => {};
+    imgEl.src = src;
+    el.preview.appendChild(imgEl);
+  }
+
+  function clearAll() {
+    el.file.value = "";
+    el.preview.innerHTML = `<div class="muted small">No image loaded</div>`;
+    el.out.textContent = "{}";
+    imgEl = null;
+    setBadge("status: idle", null);
+  }
+
+  function localAnalyse(image) {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    const w = image.naturalWidth;
+    const h = image.naturalHeight;
+
+    const maxSide = 640;
+    const scale = Math.min(1, maxSide / Math.max(w, h));
+    canvas.width = Math.max(1, Math.round(w * scale));
+    canvas.height = Math.max(1, Math.round(h * scale));
+
+    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+    const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = img.data;
+
+    let r = 0, g = 0, b = 0;
+    for (let i = 0; i < data.length; i += 4) {
+      r += data[i];
+      g += data[i+1];
+      b += data[i+2];
+    }
+
+    const n = data.length / 4;
+    const avgR = r / n;
+    const avgG = g / n;
+    const avgB = b / n;
+    const brightness = (0.2126*avgR + 0.7152*avgG + 0.0722*avgB) / 255;
+
+    let dominant = "red";
+    if (avgG >= avgR && avgG >= avgB) dominant = "green";
+    if (avgB >= avgR && avgB >= avgG) dominant = "blue";
+
+    const label = brightness > 0.62 ? "bright" : (brightness < 0.35 ? "dark" : "balanced");
+
+    return {
+      mode: "local",
+      input: { width: w, height: h },
+      resized: { width: canvas.width, height: canvas.height },
+      stats: {
+        avg_rgb: { r: Math.round(avgR), g: Math.round(avgG), b: Math.round(avgB) },
+        brightness: Number(brightness.toFixed(3)),
+        dominant_channel: dominant
+      },
+      output: { label }
+    };
+  }
+
+  async function fetchWithTimeout(url, opts = {}, ms = 12000) {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), ms);
     try {
-      const res = await fetch(url, { signal: ctrl.signal, headers: { "Accept": "application/json" } });
+      const res = await fetch(url, {
+        ...opts,
+        signal: ctrl.signal,
+        headers: { "Accept":"application/json", ...(opts.headers || {}) }
+      });
       clearTimeout(t);
       return res;
     } catch (e) {
@@ -428,38 +339,65 @@
     }
   }
 
-  async function check() {
-    setBadge(els.bHealth, "health: checking…", null);
-    setBadge(els.bVersion, "version: checking…", null);
-    els.versionPreview.textContent = "Version preview: checking…";
-
-    try {
-      const r = await fetchWithTimeout(`${API_BASE}/health`, 3500);
-      setBadge(els.bHealth, r.ok ? "health: 200 OK" : `health: ${r.status}`, r.ok ? "ok" : "bad");
-    } catch {
-      setBadge(els.bHealth, "health: down/timeout", "bad");
+  async function run() {
+    if (!imgEl) {
+      setBadge("status: no image", "warn");
+      el.out.textContent = JSON.stringify({ error: "Please load an image first." }, null, 2);
+      return;
     }
 
+    setBadge("status: running…", "warn");
+    el.btnRun.disabled = true;
+
     try {
-      const r = await fetchWithTimeout(`${API_BASE}/version`, 3500);
-      if (!r.ok) {
-        setBadge(els.bVersion, `version: ${r.status}`, "bad");
-        els.versionPreview.textContent = "Version preview: unavailable";
-        return;
+      const t0 = performance.now();
+      let result;
+
+      if (mode === "local") {
+        result = localAnalyse(imgEl);
+      } else {
+        const blob = await (await fetch(imgEl.src)).blob();
+        const form = new FormData();
+        form.append("file", blob, "image.png");
+
+        const r = await fetchWithTimeout(`${API_BASE}/vision/predict`, {
+          method: "POST",
+          body: form
+        });
+
+        const text = await r.text();
+        const data = (() => { try { return JSON.parse(text); } catch { return { raw: text }; } })();
+        if (!r.ok) throw new Error(`API error (HTTP ${r.status}): ${data?.detail || text}`);
+
+        result = { mode: "api", response: data };
       }
-      const data = await r.json();
-      setBadge(els.bVersion, "version: 200 OK", "ok");
-      const v = data?.version ?? "unknown";
-      const sha = data?.git_sha ?? "unknown";
-      els.versionPreview.textContent = `Version preview: version=${v} | git_sha=${sha}`;
-    } catch {
-      setBadge(els.bVersion, "version: down/timeout", "bad");
-      els.versionPreview.textContent = "Version preview: unavailable";
+
+      const t1 = performance.now();
+      result.latency_ms = Math.round(t1 - t0);
+
+      el.out.textContent = JSON.stringify(result, null, 2);
+      setBadge("status: done", "ok");
+    } catch (e) {
+      el.out.textContent = JSON.stringify({ error: String(e?.message || e) }, null, 2);
+      setBadge("status: error", "bad");
+    } finally {
+      el.btnRun.disabled = false;
     }
   }
 
-  els.btnCheck.addEventListener("click", check);
-  window.addEventListener("load", () => setTimeout(check, 250));
+  el.modeLocal.addEventListener("click", () => setMode("local"));
+  el.modeApi.addEventListener("click", () => setMode("api"));
+
+  el.file.addEventListener("change", () => {
+    const f = el.file.files && el.file.files[0];
+    if (!f) return;
+    const url = URL.createObjectURL(f);
+    showPreview(url);
+    setBadge("status: image loaded", null);
+  });
+
+  el.btnRun.addEventListener("click", run);
+  el.btnClear.addEventListener("click", clearAll);
 </script>
 </body>
 </html>
