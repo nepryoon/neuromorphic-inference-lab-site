@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="it">
+<html lang="en-GB">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Demos | Neuromorphic Inference Lab</title>
-  <meta name="description" content="Demos pratiche: AI applicata + messa in produzione. Chatbot RAG, forecasting tabellare, computer vision e analytics." />
+  <meta name="description" content="Applied AI demos: RAG Copilot, forecasting dashboard, document classifier, and computer vision. Live links and source code included." />
 
   <style>
     :root{
@@ -18,9 +18,9 @@
       --accent2: #7C5CFF;
       --danger: #FF4D6D;
       --ok: #43FBA4;
+      --warn: #FFCE57;
       --shadow: 0 10px 30px rgba(0,0,0,.35);
       --radius: 18px;
-      --radius2: 14px;
       --max: 1100px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
@@ -131,6 +131,7 @@
       filter: blur(1px);
     }
     .hero > *{ position: relative; }
+
     h1{
       margin: 0 0 8px;
       font-size: clamp(28px, 4vw, 42px);
@@ -140,11 +141,11 @@
     .subtitle{
       margin: 0;
       color: var(--muted);
-      max-width: 86ch;
+      max-width: 92ch;
     }
 
-    .heroRow{
-      margin-top: 16px;
+    .row{
+      margin-top: 14px;
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
@@ -170,7 +171,6 @@
       border-color: rgba(100,255,218,.40);
       background: linear-gradient(135deg, rgba(100,255,218,.18), rgba(124,92,255,.12));
     }
-
     .kbd{
       font-family: var(--mono);
       font-size: 12px;
@@ -179,60 +179,6 @@
       background: rgba(0,0,0,.25);
       border-radius: 999px;
       color: rgba(255,255,255,.78);
-    }
-
-    .grid{
-      margin-top: 16px;
-      display: grid;
-      gap: 12px;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    }
-
-    .card{
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      box-shadow: 0 10px 24px rgba(0,0,0,.22);
-      padding: 16px;
-      display:flex;
-      flex-direction: column;
-      gap: 10px;
-      min-height: 220px;
-    }
-
-    .card h2{
-      margin: 0;
-      font-size: 18px;
-      letter-spacing: .2px;
-    }
-
-    .muted{ color: var(--muted); }
-    .small{ font-size: 14px; }
-
-    .tags{
-      display:flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 2px;
-    }
-    .tag{
-      display:inline-flex;
-      align-items:center;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.18);
-      font-size: 12px;
-      color: rgba(255,255,255,.80);
-      font-family: var(--mono);
-    }
-
-    .actions{
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: auto;
-      padding-top: 6px;
     }
 
     .badge{
@@ -265,16 +211,63 @@
       margin: 16px 0;
     }
 
+    .grid{
+      margin-top: 16px;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .card{
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      box-shadow: 0 10px 24px rgba(0,0,0,.22);
+      padding: 16px;
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 240px;
+    }
+    .card h2{
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: .2px;
+    }
+    .muted{ color: var(--muted); }
+    .small{ font-size: 14px; }
+    .mono{ font-family: var(--mono); }
+
+    .tags{
+      display:flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      font-size: 12px;
+      color: rgba(255,255,255,.80);
+      font-family: var(--mono);
+    }
+
+    .actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: auto;
+      padding-top: 6px;
+    }
+
     footer{
       margin-top: 24px;
       color: rgba(255,255,255,.55);
       font-size: 13px;
-    }
-    .mono{ font-family: var(--mono); }
-
-    @media (max-width: 520px){
-      .nav{ padding: 12px 14px; }
-      .wrap{ padding: 18px 14px 42px; }
     }
   </style>
 </head>
@@ -299,25 +292,23 @@
 
 <main class="wrap">
   <section class="hero">
-    <h1>Applied AI Demos</h1>
+    <h1>Demos</h1>
     <p class="subtitle">
-      Dalla teoria alla produzione: demo pensate per mostrare <strong>problem solving</strong>,
-      <strong>full-stack</strong> e <strong>deploy</strong>. Ogni demo è collegata a codice e (quando disponibile) endpoint live.
+      A set of small applications focused on applied AI and delivery: user-facing pages, APIs, and reproducible builds.
+      Each demo links to a live endpoint where available, and to the corresponding repository.
     </p>
 
-    <div class="heroRow">
-      <a class="btn primary" href="/evidence/">Evidence page</a>
+    <div class="row">
+      <a class="btn primary" href="/evidence/">Evidence</a>
       <a class="btn" href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">
         Live API <span class="kbd">/health</span>
       </a>
       <a class="btn" href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">
         Build info <span class="kbd">/version</span>
       </a>
-      <button class="btn" id="btnCheck">
-        Check endpoints <span class="kbd">now</span>
-      </button>
-      <span class="badge" id="badgeHealth">health: unknown</span>
-      <span class="badge" id="badgeVersion">version: unknown</span>
+      <button class="btn" id="btnCheck">Check endpoints</button>
+      <span class="badge" id="bHealth">health: unknown</span>
+      <span class="badge" id="bVersion">version: unknown</span>
     </div>
 
     <div class="divider"></div>
@@ -326,65 +317,48 @@
 
   <section class="grid" aria-label="Demo cards">
 
-    <!-- RAG Copilot -->
     <article class="card">
-      <h2>RAG Copilot (API live)</h2>
+      <h2>RAG Copilot</h2>
       <p class="muted small">
-        Backend FastAPI containerizzato e deployato su ECS Fargate dietro ALB.
-        Punto di partenza per un chatbot RAG con retrieval + prompt orchestration.
+        Ask questions across a curated knowledge base and receive an answer with citations.
+        The demo page provides a simple client for <span class="mono">POST /rag/ask</span>.
       </p>
       <div class="tags">
         <span class="tag">FastAPI</span>
-        <span class="tag">Docker</span>
+        <span class="tag">Containers</span>
         <span class="tag">AWS (ALB/ECS)</span>
         <span class="tag">RAG</span>
       </div>
       <div class="actions">
-        <a class="btn primary" href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">
-          Open live /health
-        </a>
-        <a class="btn" href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">
-          Open live /version
-        </a>
-        <a class="btn" href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">
-          GitHub (app)
-        </a>
-        <a class="btn" href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener noreferrer">
-          GitHub (infra)
-        </a>
+        <a class="btn primary" href="/demos/rag-copilot/">Open demo</a>
+        <a class="btn" href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">/health</a>
+        <a class="btn" href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">/version</a>
+        <a class="btn" href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">GitHub (app)</a>
+        <a class="btn" href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener noreferrer">GitHub (infra)</a>
       </div>
     </article>
 
-    <!-- Tabular Forecast -->
     <article class="card">
       <h2>Tabular Forecast Dashboard</h2>
       <p class="muted small">
-        Forecasting su dati tabellari con pipeline di feature engineering + training + serving.
-        Demo ideale per ruoli Data Analyst / ML Engineer orientati a KPI e decisioni.
+        Forecasting on tabular data with feature engineering, training, and a small dashboard for inspection.
       </p>
       <div class="tags">
         <span class="tag">Python</span>
         <span class="tag">SQL</span>
         <span class="tag">Scikit-learn</span>
-        <span class="tag">Dashboard</span>
+        <span class="tag">Visualisation</span>
       </div>
       <div class="actions">
-        <a class="btn" href="/evidence/" title="Collega qui la demo quando pronta">
-          Demo (coming soon)
-        </a>
-        <a class="btn" href="https://github.com/nepryoon" target="_blank" rel="noopener noreferrer"
-           title="Sostituisci con la repo reale (es. https://github.com/nepryoon/<repo> )">
-          GitHub (replace link)
-        </a>
+        <a class="btn" href="/demos/forecast-dashboard/">Open demo</a>
+        <a class="btn" href="/evidence/#forecast-dashboard">Evidence</a>
       </div>
     </article>
 
-    <!-- CV / NLP -->
     <article class="card">
-      <h2>NLP: CV / Document Classifier</h2>
+      <h2>Document Classifier</h2>
       <p class="muted small">
-        Classificazione e parsing di documenti (CV, PDF testuali, email) con metriche, error analysis e serving.
-        Ottimo per mostrare NLP pratico e integrazione in workflow.
+        Text classification and extraction with evaluation and error analysis, packaged behind a small API.
       </p>
       <div class="tags">
         <span class="tag">NLP</span>
@@ -393,37 +367,25 @@
         <span class="tag">Serving</span>
       </div>
       <div class="actions">
-        <a class="btn" href="/evidence/" title="Collega qui la demo quando pronta">
-          Demo (coming soon)
-        </a>
-        <a class="btn" href="https://github.com/nepryoon" target="_blank" rel="noopener noreferrer"
-           title="Sostituisci con la repo reale (es. https://github.com/nepryoon/<repo> )">
-          GitHub (replace link)
-        </a>
+        <a class="btn" href="/demos/doc-classifier/">Open demo</a>
+        <a class="btn" href="/evidence/#doc-classifier">Evidence</a>
       </div>
     </article>
 
-    <!-- Computer Vision -->
     <article class="card">
-      <h2>Computer Vision Classifier</h2>
+      <h2>Vision Classifier</h2>
       <p class="muted small">
-        Classificazione immagini con modello addestrato + inference API + metriche.
-        Focus: riproducibilità, packaging e deploy.
+        Image classification with a small inference service and reproducible packaging.
       </p>
       <div class="tags">
         <span class="tag">PyTorch</span>
-        <span class="tag">CV</span>
-        <span class="tag">CI/CD</span>
+        <span class="tag">Computer Vision</span>
         <span class="tag">Docker</span>
+        <span class="tag">CI</span>
       </div>
       <div class="actions">
-        <a class="btn" href="/evidence/" title="Collega qui la demo quando pronta">
-          Demo (coming soon)
-        </a>
-        <a class="btn" href="https://github.com/nepryoon" target="_blank" rel="noopener noreferrer"
-           title="Sostituisci con la repo reale (es. https://github.com/nepryoon/<repo> )">
-          GitHub (replace link)
-        </a>
+        <a class="btn" href="/demos/vision-classifier/">Open demo</a>
+        <a class="btn" href="/evidence/#vision-classifier">Evidence</a>
       </div>
     </article>
 
@@ -436,14 +398,15 @@
 
 <script>
   const API_BASE = "https://api.neuromorphicinference.com";
-  const els = {
-    badgeHealth: document.getElementById("badgeHealth"),
-    badgeVersion: document.getElementById("badgeVersion"),
-    versionPreview: document.getElementById("versionPreview"),
-    btnCheck: document.getElementById("btnCheck"),
-  };
+  const yearEl = document.getElementById("year");
+  yearEl.textContent = new Date().getFullYear();
 
-  document.getElementById("year").textContent = new Date().getFullYear();
+  const els = {
+    btnCheck: document.getElementById("btnCheck"),
+    bHealth: document.getElementById("bHealth"),
+    bVersion: document.getElementById("bVersion"),
+    versionPreview: document.getElementById("versionPreview"),
+  };
 
   function setBadge(el, text, state) {
     el.textContent = text;
@@ -466,35 +429,31 @@
   }
 
   async function check() {
-    setBadge(els.badgeHealth, "health: checking…", null);
-    setBadge(els.badgeVersion, "version: checking…", null);
+    setBadge(els.bHealth, "health: checking…", null);
+    setBadge(els.bVersion, "version: checking…", null);
     els.versionPreview.textContent = "Version preview: checking…";
 
-    // /health
     try {
       const r = await fetchWithTimeout(`${API_BASE}/health`, 3500);
-      if (r.ok) setBadge(els.badgeHealth, "health: 200 OK", "ok");
-      else setBadge(els.badgeHealth, `health: ${r.status}`, "bad");
+      setBadge(els.bHealth, r.ok ? "health: 200 OK" : `health: ${r.status}`, r.ok ? "ok" : "bad");
     } catch {
-      setBadge(els.badgeHealth, "health: down/timeout", "bad");
+      setBadge(els.bHealth, "health: down/timeout", "bad");
     }
 
-    // /version
     try {
       const r = await fetchWithTimeout(`${API_BASE}/version`, 3500);
       if (!r.ok) {
-        setBadge(els.badgeVersion, `version: ${r.status}`, "bad");
+        setBadge(els.bVersion, `version: ${r.status}`, "bad");
         els.versionPreview.textContent = "Version preview: unavailable";
         return;
       }
       const data = await r.json();
-      setBadge(els.badgeVersion, "version: 200 OK", "ok");
-
+      setBadge(els.bVersion, "version: 200 OK", "ok");
       const v = data?.version ?? "unknown";
       const sha = data?.git_sha ?? "unknown";
       els.versionPreview.textContent = `Version preview: version=${v} | git_sha=${sha}`;
     } catch {
-      setBadge(els.badgeVersion, "version: down/timeout", "bad");
+      setBadge(els.bVersion, "version: down/timeout", "bad");
       els.versionPreview.textContent = "Version preview: unavailable";
     }
   }
