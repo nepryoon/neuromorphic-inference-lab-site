@@ -4,11 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tabular Risk | Neuromorphic Inference Lab</title>
-  <meta name="description" content="Tabular Risk: a simple tabular scoring demo with transparent feature contributions and an optional API mode." />
+  <meta name="description" content="Tabular Risk: score a tabular input locally with a transparent explanation, and optionally call an API endpoint." />
 
   <style>
     :root{
-      --bg:#070A12;--surface:rgba(255,255,255,.06);--border:rgba(255,255,255,.12);
+      --bg:#070A12;--surface:rgba(255,255,255,.06);--surface2:rgba(255,255,255,.08);--border:rgba(255,255,255,.12);
       --text:rgba(255,255,255,.92);--muted:rgba(255,255,255,.68);
       --accent:#64FFDA;--accent2:#7C5CFF;--ok:#43FBA4;--warn:#FFCE57;--danger:#FF4D6D;
       --shadow:0 10px 30px rgba(0,0,0,.35);--radius:18px;--max:1100px;
@@ -104,13 +104,43 @@
     .mono{font-family:var(--mono);}
     .divider{height:1px;background:rgba(255,255,255,.08);margin:14px 0;}
 
+    label{font-size:13px;color:rgba(255,255,255,.82);font-weight:800;letter-spacing:.2px;}
+    input{
+      width:100%;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      padding:10px 12px;
+      outline:none;
+      font-family:var(--sans);
+    }
+    input:focus{
+      border-color:rgba(100,255,218,.35);
+      box-shadow:0 0 0 4px rgba(100,255,218,.08);
+    }
+
+    .formGrid{display:grid;gap:10px;grid-template-columns:1fr 1fr;}
+    @media (max-width:700px){.formGrid{grid-template-columns:1fr;}}
+
+    .samples{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.16);
+      font-size:12px;color:rgba(255,255,255,.82);
+      cursor:pointer;user-select:none;
+    }
+    .chip:hover{background:rgba(255,255,255,.06);}
+
     .toggle{
       display:inline-flex;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.12);
       background:rgba(0,0,0,.18);padding:6px;border-radius:999px;
     }
     .toggle button{
       border:0;background:transparent;color:rgba(255,255,255,.75);
-      padding:8px 10px;border-radius:999px;cursor:pointer;font-weight:700;font-size:12px;
+      padding:8px 10px;border-radius:999px;cursor:pointer;font-weight:800;font-size:12px;
     }
     .toggle button.active{
       color:rgba(255,255,255,.92);
@@ -118,32 +148,35 @@
       border:1px solid rgba(100,255,218,.30);
     }
 
-    .form{
-      display:grid;gap:10px;grid-template-columns:1fr 1fr;
+    .scoreBox{
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      padding:14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
     }
-    @media (max-width:720px){.form{grid-template-columns:1fr;}}
-    .field label{display:block;font-weight:800;font-size:12px;letter-spacing:.3px;text-transform:uppercase;color:rgba(255,255,255,.78);margin-bottom:6px;}
-    .field input{
-      width:100%;border-radius:12px;border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.25);color:var(--text);padding:10px 10px;outline:none;
-      font-family:var(--mono);
+    .scoreNum{font-size:34px;font-weight:900;letter-spacing:.4px;}
+    .scoreLabel{font-family:var(--mono);color:rgba(255,255,255,.75);}
+
+    .barWrap{display:grid;gap:10px;margin-top:10px;}
+    .barRow{display:grid;grid-template-columns:150px 1fr 80px;gap:10px;align-items:center;}
+    @media (max-width:740px){.barRow{grid-template-columns:1fr;}}
+    .bar{
+      height:10px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.06);overflow:hidden;
     }
-    .field input:focus{border-color:rgba(100,255,218,.35);box-shadow:0 0 0 4px rgba(100,255,218,.08);}
+    .bar > span{display:block;height:100%;width:50%;background:linear-gradient(90deg, rgba(100,255,218,.85), rgba(124,92,255,.70));}
+    .barNeg > span{background:linear-gradient(90deg, rgba(255,206,87,.75), rgba(255,77,109,.70));}
 
     pre{
       margin:10px 0 0;padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);
       background:rgba(0,0,0,.25);overflow:auto;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.82);
     }
 
-    .bar{
-      height:10px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.22);overflow:hidden;
-    }
-    .bar > div{
-      height:100%;
-      background:linear-gradient(90deg, rgba(100,255,218,.85), rgba(124,92,255,.85));
-      width:0%;
-    }
     footer{margin-top:24px;color:rgba(255,255,255,.55);font-size:13px;}
   </style>
 </head>
@@ -169,11 +202,11 @@
   <section class="hero">
     <h1>Tabular Risk</h1>
     <p class="subtitle">
-      A transparent scoring demo for tabular inputs. Local mode provides a lightweight baseline with feature contributions.
+      Score a small tabular input with a transparent explanation. Local mode runs in the browser; API mode can call an optional endpoint.
     </p>
 
     <div class="rowWrap">
-      <a class="btn primary" href="/evidence/#python">Evidence anchor <span class="kbd">#python</span></a>
+      <a class="btn primary" href="/evidence/#tabular-risk">Evidence anchor <span class="kbd">#tabular-risk</span></a>
       <a class="btn" href="https://github.com/nepryoon/nil-tabular-risk" target="_blank" rel="noopener noreferrer">GitHub</a>
 
       <span class="toggle" role="group" aria-label="Mode selector">
@@ -189,40 +222,62 @@
     <div class="card">
       <h2>Try it</h2>
       <p class="muted small">
-        Fill in a few fields and calculate a score. API mode expects <span class="mono">POST /tabular/score</span> (optional).
+        Local mode calculates a score and feature contributions. API mode expects <span class="mono">POST /tabular/score</span> (optional).
       </p>
 
-      <div class="form">
-        <div class="field">
+      <div class="samples" aria-label="Sample profiles">
+        <span class="chip" data-profile="low">Low risk</span>
+        <span class="chip" data-profile="mid">Mid risk</span>
+        <span class="chip" data-profile="high">High risk</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="formGrid">
+        <div>
           <label for="age">Age</label>
-          <input id="age" type="number" min="18" max="100" value="37" />
+          <input id="age" type="number" min="18" max="90" value="37" />
         </div>
-        <div class="field">
+        <div>
           <label for="tenure">Tenure (months)</label>
           <input id="tenure" type="number" min="0" max="240" value="24" />
         </div>
-        <div class="field">
+        <div>
           <label for="balance">Balance</label>
-          <input id="balance" type="number" min="0" step="100" value="3500" />
+          <input id="balance" type="number" min="0" max="50000" value="3500" />
         </div>
-        <div class="field">
+        <div>
           <label for="salary">Salary</label>
-          <input id="salary" type="number" min="0" step="100" value="2600" />
+          <input id="salary" type="number" min="0" max="20000" value="2600" />
+        </div>
+      </div>
+
+      <div class="rowWrap">
+        <button class="btn primary" id="btnRun" type="button">Run</button>
+        <button class="btn" id="btnClear" type="button">Clear</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <h2>Score</h2>
+      <div class="scoreBox">
+        <div>
+          <div class="scoreNum" id="scoreNum">—</div>
+          <div class="scoreLabel" id="scoreLabel">label: —</div>
+        </div>
+        <div>
+          <span class="badge" id="bScoreMeta">meta: —</span>
         </div>
       </div>
 
       <div class="divider"></div>
 
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-        <button class="btn primary" id="btnScore" type="button">Score</button>
-        <button class="btn" id="btnReset" type="button">Reset</button>
-        <span class="badge" id="bScore">risk: —</span>
-      </div>
+      <h2>Feature contributions</h2>
+      <p class="muted small" style="margin:0;">
+        Contributions are relative and intended to be easy to read.
+      </p>
 
-      <div class="divider"></div>
-
-      <div class="small muted" style="margin-bottom:8px;">Risk score</div>
-      <div class="bar" aria-label="Risk score bar"><div id="barFill"></div></div>
+      <div class="barWrap" id="bars"></div>
 
       <div class="divider"></div>
 
@@ -231,20 +286,33 @@
     </div>
 
     <aside class="card">
-      <h2>Overview</h2>
-      <ul class="small" style="margin:10px 0 0;padding-left:18px;color:rgba(255,255,255,.82);">
-        <li>Baseline scoring with explicit weights.</li>
-        <li>Per-feature contributions to support interpretability.</li>
-        <li>Optional API mode for deployed inference.</li>
-      </ul>
+      <h2>Links</h2>
+      <div class="small" style="display:grid;gap:10px;">
+        <a class="btn" style="justify-content:space-between;" href="/evidence/#tabular-risk"><span>Evidence</span><span class="kbd">#tabular-risk</span></a>
+        <a class="btn" style="justify-content:space-between;" href="https://github.com/nepryoon/nil-tabular-risk" target="_blank" rel="noopener noreferrer"><span>Repository</span><span class="kbd">GitHub</span></a>
+        <a class="btn" style="justify-content:space-between;" href="/evidence/#python"><span>Related</span><span class="kbd">#python</span></a>
+      </div>
 
       <div class="divider"></div>
 
-      <h2>Links</h2>
-      <div class="small" style="display:grid;gap:10px;">
-        <a class="btn" style="justify-content:space-between;" href="/evidence/#python"><span>Evidence</span><span class="kbd">#python</span></a>
-        <a class="btn" style="justify-content:space-between;" href="https://github.com/nepryoon/nil-tabular-risk" target="_blank" rel="noopener noreferrer"><span>Repository</span><span class="kbd">GitHub</span></a>
-      </div>
+      <h2>API contract (optional)</h2>
+      <pre>{
+  "age": 37,
+  "tenure": 24,
+  "balance": 3500,
+  "salary": 2600
+}</pre>
+
+      <pre>{
+  "score": 42,
+  "label": "low|medium|high",
+  "contrib": { "age": 0.12, "tenure": -0.08, "balance": 0.16, "salary": -0.05 },
+  "meta": { "latency_ms": 22, "version": "0.0.x", "git_sha": "..." }
+}</pre>
+
+      <p class="muted small" style="margin:10px 0 0;">
+        If API mode fails, local mode remains available.
+      </p>
     </aside>
   </section>
 
@@ -260,13 +328,15 @@
     tenure: document.getElementById("tenure"),
     balance: document.getElementById("balance"),
     salary: document.getElementById("salary"),
-    btnScore: document.getElementById("btnScore"),
-    btnReset: document.getElementById("btnReset"),
+    btnRun: document.getElementById("btnRun"),
+    btnClear: document.getElementById("btnClear"),
     out: document.getElementById("out"),
+    bars: document.getElementById("bars"),
+    scoreNum: document.getElementById("scoreNum"),
+    scoreLabel: document.getElementById("scoreLabel"),
+    bScoreMeta: document.getElementById("bScoreMeta"),
     bStatus: document.getElementById("bStatus"),
     bMode: document.getElementById("bMode"),
-    bScore: document.getElementById("bScore"),
-    barFill: document.getElementById("barFill"),
     modeLocal: document.getElementById("modeLocal"),
     modeApi: document.getElementById("modeApi"),
   };
@@ -284,7 +354,7 @@
     el.bMode.classList.add("warn");
   }
 
-  function setStatus(text, state) {
+  function setBadge(text, state) {
     el.bStatus.textContent = text;
     el.bStatus.classList.remove("ok","bad","warn");
     if (state) el.bStatus.classList.add(state);
@@ -294,51 +364,97 @@
     return 1 / (1 + Math.exp(-x));
   }
 
-  function clamp01(x) {
-    return Math.max(0, Math.min(1, x));
+  function clamp(n, lo, hi) {
+    return Math.max(lo, Math.min(hi, n));
   }
 
   function localScore(x) {
-    // Lightweight baseline: explicit weights for transparency.
-    // Normalise inputs to roughly comparable ranges.
-    const z = {
-      age: (x.age - 40) / 12,
-      tenure: (x.tenure - 24) / 18,
-      balance: (x.balance - 3000) / 2000,
-      salary: (x.salary - 2500) / 1200
-    };
+    // A compact, transparent scoring function (demo-only).
+    // Values are centred around typical ranges for readability.
+    const z0 = -0.25;
 
-    // Coefficients: chosen only for demonstrative behaviour.
     const w = {
-      bias: -0.2,
-      age: 0.15,
-      tenure: -0.35,
-      balance: 0.40,
-      salary: -0.25
+      age:  0.020,
+      tenure: -0.030,
+      balance: 0.00022,
+      salary: -0.00030
     };
 
-    const contributions = {
-      age: w.age * z.age,
-      tenure: w.tenure * z.tenure,
-      balance: w.balance * z.balance,
-      salary: w.salary * z.salary
+    const centred = {
+      age: x.age - 40,
+      tenure: x.tenure - 24,
+      balance: x.balance - 2000,
+      salary: x.salary - 2500
     };
 
-    const logit = w.bias + contributions.age + contributions.tenure + contributions.balance + contributions.salary;
-    const p = sigmoid(logit);
-
-    const ranked = Object.entries(contributions)
-      .map(([k,v]) => ({ feature: k, contribution: Number(v.toFixed(4)) }))
-      .sort((a,b) => Math.abs(b.contribution) - Math.abs(a.contribution));
-
-    return {
-      mode: "local",
-      inputs: x,
-      normalised: Object.fromEntries(Object.entries(z).map(([k,v]) => [k, Number(v.toFixed(4))])),
-      score: Number(p.toFixed(4)),
-      logit: Number(logit.toFixed(4)),
-      contributions: ranked
+    const contrib = {
+      age: w.age * centred.age,
+      tenure: w.tenure * centred.tenure,
+      balance: w.balance * centred.balance,
+      salary: w.salary * centred.salary
     };
+
+    const z = z0 + contrib.age + contrib.tenure + contrib.balance + contrib.salary;
+    const p = sigmoid(z);
+    const score = Math.round(p * 100);
+
+    let label = "medium";
+    if (score < 35) label = "low";
+    if (score >= 65) label = "high";
+
+    return { score, label, contrib, meta: { z: Number(z.toFixed(4)), p: Number(p.toFixed(4)) } };
+  }
+
+  function normaliseContrib(contrib) {
+    const entries = Object.entries(contrib);
+    const maxAbs = Math.max(1e-9, ...entries.map(([,v]) => Math.abs(v)));
+    const scaled = {};
+    entries.forEach(([k,v]) => { scaled[k] = v / maxAbs; });
+    return { scaled, maxAbs };
+  }
+
+  function renderBars(contrib) {
+    el.bars.innerHTML = "";
+    const { scaled } = normaliseContrib(contrib);
+
+    const rows = [
+      ["age", "Age"],
+      ["tenure", "Tenure"],
+      ["balance", "Balance"],
+      ["salary", "Salary"],
+    ];
+
+    rows.forEach(([k, label]) => {
+      const v = scaled[k] || 0;
+      const pct = Math.round(Math.abs(v) * 100);
+
+      const row = document.createElement("div");
+      row.className = "barRow";
+
+      const left = document.createElement("div");
+      left.className = "small";
+      left.style.color = "rgba(255,255,255,.85)";
+      left.style.fontWeight = "800";
+      left.textContent = label;
+
+      const mid = document.createElement("div");
+      mid.className = "bar" + (v < 0 ? " barNeg" : "");
+      const fill = document.createElement("span");
+      fill.style.width = `${clamp(pct, 0, 100)}%`;
+      mid.appendChild(fill);
+
+      const right = document.createElement("div");
+      right.className = "mono small";
+      right.style.color = "rgba(255,255,255,.75)";
+      right.style.textAlign = "right";
+      right.textContent = `${v < 0 ? "-" : "+"}${pct}%`;
+
+      row.appendChild(left);
+      row.appendChild(mid);
+      row.appendChild(right);
+
+      el.bars.appendChild(row);
+    });
   }
 
   async function fetchWithTimeout(url, opts = {}, ms = 12000) {
@@ -358,78 +474,110 @@
     }
   }
 
-  async function score() {
-    setStatus("status: scoring…", "warn");
-    el.btnScore.disabled = true;
+  function getInput() {
+    return {
+      age: Number(el.age.value || 0),
+      tenure: Number(el.tenure.value || 0),
+      balance: Number(el.balance.value || 0),
+      salary: Number(el.salary.value || 0),
+    };
+  }
+
+  function setScoreUI(score, label, metaText) {
+    el.scoreNum.textContent = Number.isFinite(score) ? String(score) : "—";
+    el.scoreLabel.textContent = `label: ${label || "—"}`;
+    el.bScoreMeta.textContent = metaText || "meta: —";
+  }
+
+  async function run() {
+    const x = getInput();
+
+    setBadge("status: running…", "warn");
+    el.btnRun.disabled = true;
 
     try {
-      const x = {
-        age: Number(el.age.value),
-        tenure: Number(el.tenure.value),
-        balance: Number(el.balance.value),
-        salary: Number(el.salary.value)
-      };
-
       const t0 = performance.now();
       let result;
 
       if (mode === "local") {
-        result = localScore(x);
+        const r = localScore(x);
+        result = { mode: "local", input: x, ...r };
       } else {
         const r = await fetchWithTimeout(`${API_BASE}/tabular/score`, {
           method: "POST",
           headers: { "Content-Type":"application/json" },
           body: JSON.stringify(x)
         });
-
         const text = await r.text();
         const data = (() => { try { return JSON.parse(text); } catch { return { raw: text }; } })();
         if (!r.ok) throw new Error(`API error (HTTP ${r.status}): ${data?.detail || text}`);
-
-        result = { mode: "api", response: data };
+        result = { mode: "api", input: x, response: data };
       }
 
       const t1 = performance.now();
-      result.latency_ms = Math.round(t1 - t0);
+      const latency = Math.round(t1 - t0);
 
-      el.out.textContent = JSON.stringify(result, null, 2);
-
-      const p = mode === "local" ? result.score : (result.response?.score ?? null);
-      if (typeof p === "number") {
-        const pct = Math.round(clamp01(p) * 100);
-        el.bScore.textContent = `risk: ${pct}%`;
-        el.barFill.style.width = `${pct}%`;
+      if (mode === "local") {
+        setScoreUI(result.score, result.label, `meta: latency_ms=${latency} | z=${result.meta.z} | p=${result.meta.p}`);
+        renderBars(result.contrib);
       } else {
-        el.bScore.textContent = "risk: n/a";
-        el.barFill.style.width = "0%";
+        const score = result?.response?.score;
+        const label = result?.response?.label;
+        const contrib = result?.response?.contrib;
+        setScoreUI(score, label, `meta: latency_ms=${latency}`);
+        if (contrib && typeof contrib === "object") renderBars(contrib);
+        else el.bars.innerHTML = `<div class="muted small">No contributions returned.</div>`;
       }
 
-      setStatus("status: done", "ok");
+      result.latency_ms = latency;
+      el.out.textContent = JSON.stringify(result, null, 2);
+      setBadge("status: done", "ok");
     } catch (e) {
       el.out.textContent = JSON.stringify({ error: String(e?.message || e) }, null, 2);
-      el.bScore.textContent = "risk: error";
-      el.barFill.style.width = "0%";
-      setStatus("status: error", "bad");
+      setBadge("status: error", "bad");
+      setScoreUI("—", "—", "meta: —");
+      el.bars.innerHTML = "";
     } finally {
-      el.btnScore.disabled = false;
+      el.btnRun.disabled = false;
     }
   }
 
-  function reset() {
+  function clearAll() {
     el.age.value = 37;
     el.tenure.value = 24;
     el.balance.value = 3500;
     el.salary.value = 2600;
     el.out.textContent = "{}";
-    el.bScore.textContent = "risk: —";
-    el.barFill.style.width = "0%";
-    setStatus("status: idle", null);
+    el.bars.innerHTML = "";
+    setScoreUI("—", "—", "meta: —");
+    setBadge("status: idle", null);
   }
+
+  const profiles = {
+    low:  { age: 32, tenure: 48, balance: 1200, salary: 3200 },
+    mid:  { age: 45, tenure: 18, balance: 5400, salary: 2400 },
+    high: { age: 58, tenure: 6,  balance: 12000, salary: 1800 },
+  };
+
+  document.querySelectorAll(".chip").forEach(ch => {
+    ch.addEventListener("click", () => {
+      const k = ch.getAttribute("data-profile") || "mid";
+      const p = profiles[k] || profiles.mid;
+      el.age.value = p.age;
+      el.tenure.value = p.tenure;
+      el.balance.value = p.balance;
+      el.salary.value = p.salary;
+      setBadge("status: sample loaded", null);
+    });
+  });
 
   el.modeLocal.addEventListener("click", () => setMode("local"));
   el.modeApi.addEventListener("click", () => setMode("api"));
-  el.btnScore.addEventListener("click", score);
-  el.btnReset.addEventListener("click", reset);
+  el.btnRun.addEventListener("click", run);
+  el.btnClear.addEventListener("click", clearAll);
+
+  // initial
+  clearAll();
 </script>
 </body>
 </html>
