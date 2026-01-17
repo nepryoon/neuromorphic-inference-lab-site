@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Document Classifier | Neuromorphic Inference Lab</title>
+  <meta name="description" content="Document classification demo: paste text, run a local baseline classifier, and inspect the decision with highlighted cues. Optional live API toggle." />
+
+  <style>
+    :root{
+      --bg: #070A12;
+      --surface: rgba(255,255,255,.06);
+      --border: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --accent: #64FFDA;
+      --accent2: #7C5CFF;
+      --danger: #FF4D6D;
+      --ok: #43FBA4;
+      --warn: #FFCE57;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+      --max: 1100px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+
+    *{ box-sizing: border-box; }
+    html, body{ height: 100%; }
+    body{
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 600px at 20% 10%, rgba(124,92,255,.18), transparent 55%),
+        radial-gradient(900px 600px at 80% 20%, rgba(100,255,218,.14), transparent 55%),
+        radial-gradient(700px 450px at 40% 80%, rgba(124,92,255,.12), transparent 60%),
+        var(--bg);
+      line-height: 1.55;
+    }
+
+    a{ color: inherit; text-decoration: none; }
+    a:hover{ text-decoration: underline; text-underline-offset: 3px; }
+
+    .wrap{ max-width: var(--max); margin: 0 auto; padding: 20px 18px 46px; }
+
+    header{
+      position: sticky; top: 0; z-index: 10;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(to bottom, rgba(7,10,18,.82), rgba(7,10,18,.50));
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .nav{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .brand{ display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .2px; }
+    .logo{
+      width: 34px; height: 34px; border-radius: 10px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(100,255,218,.95), rgba(100,255,218,.15) 58%, transparent 60%),
+        radial-gradient(circle at 70% 70%, rgba(124,92,255,.9), rgba(124,92,255,.18) 55%, transparent 57%),
+        rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 8px 22px rgba(0,0,0,.25);
+    }
+    nav ul{ list-style: none; display: flex; gap: 10px; padding: 0; margin: 0; flex-wrap: wrap; justify-content: flex-end; }
+    .pill{
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 12px; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      color: var(--muted); font-size: 14px;
+    }
+    .pill.active{
+      color: var(--text);
+      border-color: rgba(100,255,218,.35);
+      background: rgba(100,255,218,.08);
+    }
+
+    .hero{
+      margin-top: 22px;
+      padding: 22px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(420px 260px at 10% 20%, rgba(100,255,218,.20), transparent 55%),
+        radial-gradient(420px 260px at 90% 40%, rgba(124,92,255,.18), transparent 60%);
+      pointer-events:none;
+      filter: blur(1px);
+    }
+    .hero > *{ position: relative; }
+
+    h1{ margin: 0 0 8px; font-size: clamp(28px, 4vw, 42px); line-height: 1.12; letter-spacing: .2px; }
+    .subtitle{ margin: 0; color: var(--muted); max-width: 92ch; }
+
+    .row{ margin-top: 14px; display:flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+    .btn{
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 10px 20px rgba(0,0,0,.18);
+      cursor: pointer;
+    }
+    .btn:hover{ background: rgba(255,255,255,.08); text-decoration: none; }
+    .btn.primary{
+      border-color: rgba(100,255,218,.40);
+      background: linear-gradient(135deg, rgba(100,255,218,.18), rgba(124,92,255,.12));
+    }
+
+    .kbd{
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 2px 8px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.25);
+      border-radius: 999px;
+      color: rgba(255,255,255,.78);
+    }
+
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 6px 10px; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      font-size: 12px;
+      color: rgba(255,255,255,.78);
+      font-family: var(--mono);
+      white-space: nowrap;
+    }
+    .badge.ok{ border-color: rgba(67,251,164,.35); background: rgba(67,251,164,.10); color: rgba(255,255,255,.90); }
+    .badge.bad{ border-color: rgba(255,77,109,.35); background: rgba(255,77,109,.10); color: rgba(255,255,255,.90); }
+    .badge.warn{ border-color: rgba(255,206,87,.30); background: rgba(255,206,87,.10); color: rgba(255,255,255,.90); }
+
+    .grid{ margin-top: 16px; display: grid; gap: 12px; grid-template-columns: 1.15fr 0.85fr; align-items: start; }
+    @media (max-width: 980px){ .grid{ grid-template-columns: 1fr; } }
+
+    .card{
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      box-shadow: 0 10px 24px rgba(0,0,0,.22);
+      padding: 16px;
+    }
+    .card h2{ margin: 0 0 8px; font-size: 18px; letter-spacing: .2px; }
+
+    .muted{ color: var(--muted); }
+    .small{ font-size: 14px; }
+    .mono{ font-family: var(--mono); }
+
+    .divider{ height: 1px; background: rgba(255,255,255,.08); margin: 14px 0; }
+
+    textarea{
+      width: 100%;
+      min-height: 200px;
+      resize: vertical;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+      padding: 12px 12px;
+      font-family: var(--sans);
+      font-size: 14px;
+      outline: none;
+    }
+    textarea:focus{
+      border-color: rgba(100,255,218,.35);
+      box-shadow: 0 0 0 4px rgba(100,255,218,.08);
+    }
+
+    .controls{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .selectRow{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    @media (max-width: 700px){ .selectRow{ grid-template-columns: 1fr; } }
+
+    select{
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.25);
+      color: rgba(255,255,255,.90);
+      padding: 10px 10px;
+      outline: none;
+      font-family: var(--sans);
+      font-size: 14px;
+    }
+    select:focus{
+      border-color: rgba(100,255,218,.35);
+      box-shadow: 0 0 0 4px rgba(100,255,218,.08);
+    }
+
+    .output{
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+    }
+    .output h3{ margin: 0 0 10px 0; font-size: 16px; letter-spacing: .2px; }
+
+    .pillRow{
+      display:flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;
+    }
+    .cue{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      font-size: 12px;
+      color: rgba(255,255,255,.82);
+      font-family: var(--mono);
+    }
+
+    .highlight{
+      background: rgba(255,206,87,.16);
+      border: 1px solid rgba(255,206,87,.25);
+      padding: 0 2px;
+      border-radius: 6px;
+    }
+
+    pre{
+      margin: 10px 0 0;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.25);
+      overflow: auto;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,.82);
+    }
+
+    footer{ margin-top: 24px; color: rgba(255,255,255,.55); font-size: 13px; }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="nav">
+    <a class="brand" href="/" aria-label="Neuromorphic Inference Lab Home">
+      <span class="logo" aria-hidden="true"></span>
+      <span>Neuromorphic Inference Lab</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <ul>
+        <li><a class="pill" href="/">Home</a></li>
+        <li><a class="pill active" href="/demos/">Demos</a></li>
+        <li><a class="pill" href="/evidence/">Evidence</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>Document Classifier</h1>
+    <p class="subtitle">
+      Paste text, choose a label set, and run a transparent baseline classifier. The page highlights cues that influenced the decision.
+      A live API can be connected later if desired.
+    </p>
+
+    <div class="row">
+      <a class="btn primary" href="/demos/">Back to Demos</a>
+      <a class="btn" href="/evidence/#doc-classifier">Evidence <span class="kbd">#doc-classifier</span></a>
+      <a class="btn" href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">Live API <span class="kbd">/health</span></a>
+      <a class="btn" href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">Build info <span class="kbd">/version</span></a>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h2>Try it</h2>
+      <p class="muted small">
+        The local mode uses a simple keyword scoring baseline. It is intended for quick inspection and iteration.
+      </p>
+
+      <div class="selectRow">
+        <div>
+          <label class="small" style="color: rgba(255,255,255,.82); font-weight: 700;">Label set</label>
+          <select id="labelSet">
+            <option value="support" selected>Support ticket (Support / Billing / Technical / Account)</option>
+            <option value="legal">Legal & compliance (Contract / Privacy / Policy / Dispute)</option>
+            <option value="ops">Operations (Incident / Change / Request / Routine)</option>
+          </select>
+        </div>
+        <div class="controls" style="justify-content:flex-end; margin-top: 22px;">
+          <label class="badge warn" style="cursor:pointer; user-select:none;">
+            <input id="useApi" type="checkbox" style="margin-right:8px;" />
+            use live API (optional)
+          </label>
+        </div>
+      </div>
+
+      <div style="margin-top: 10px;">
+        <label for="text" class="small" style="color: rgba(255,255,255,.82); font-weight: 700;">Text</label>
+        <textarea id="text" placeholder="Paste your text here…">Hi, I was charged twice for my subscription this month.
+Could you please check the invoice and issue a refund? Thanks.</textarea>
+      </div>
+
+      <div class="controls">
+        <button class="btn primary" id="btnClassify">Classify</button>
+        <button class="btn" id="btnExample">Load example</button>
+        <button class="btn" id="btnClear">Clear</button>
+        <span class="badge" id="bState">state: idle</span>
+        <span class="badge warn" id="bMode">mode: local</span>
+      </div>
+
+      <div class="output" id="out" style="display:none;">
+        <h3>Result</h3>
+        <div class="mono" id="resultLine">—</div>
+
+        <div class="divider"></div>
+
+        <h3 style="margin:0 0 10px 0; font-size: 16px;">Cues</h3>
+        <div class="pillRow" id="cues"></div>
+
+        <div class="divider"></div>
+
+        <h3 style="margin:0 0 10px 0; font-size: 16px;">Annotated text</h3>
+        <div class="small" id="annotated" style="white-space: pre-wrap;"></div>
+
+        <div class="divider"></div>
+        <h3 style="margin:0 0 10px 0; font-size: 16px;">Scores</h3>
+        <pre id="scores"></pre>
+      </div>
+
+      <div class="output" id="errBox" style="display:none; border-color: rgba(255,77,109,.35); background: rgba(255,77,109,.08);">
+        <h3 style="margin:0 0 8px 0;">Error</h3>
+        <div class="small" id="errMsg" style="white-space: pre-wrap;"></div>
+      </div>
+    </div>
+
+    <aside class="card">
+      <h2>API schema (optional)</h2>
+      <p class="muted small">
+        If you later deploy a service, the UI will attempt <span class="mono">POST /doc/classify</span> when the toggle is enabled.
+        If unavailable, it falls back to local mode.
+      </p>
+
+      <pre>{
+  "text": "…",
+  "label_set": "support",
+  "top_k": 3
+}</pre>
+
+      <pre>{
+  "label": "Billing",
+  "confidence": 0.86,
+  "cues": ["invoice", "refund", "charged"],
+  "scores": { "Billing": 6, "Support": 1, "Technical": 0, "Account": 0 },
+  "meta": { "mode": "api|local", "version": "0.0.x", "git_sha": "…" }
+}</pre>
+
+      <div class="divider"></div>
+
+      <h2>Notes</h2>
+      <ul class="small" style="margin:10px 0 0; padding-left:18px; color: rgba(255,255,255,.82);">
+        <li>Baselines are useful for sanity checks and quick iteration.</li>
+        <li>When moving to ML, keep evaluation and error analysis close to the data.</li>
+        <li>For production, prefer a stable contract and a clear confidence signal.</li>
+      </ul>
+    </aside>
+  </section>
+
+  <footer>
+    <div>© <span id="year"></span> Neuromorphic Inference Lab — Document Classifier</div>
+  </footer>
+</main>
+
+<script>
+  const API_BASE = "https://api.neuromorphicinference.com";
+
+  const ui = {
+    year: document.getElementById("year"),
+    labelSet: document.getElementById("labelSet"),
+    useApi: document.getElementById("useApi"),
+    text: document.getElementById("text"),
+    btnClassify: document.getElementById("btnClassify"),
+    btnExample: document.getElementById("btnExample"),
+    btnClear: document.getElementById("btnClear"),
+    bState: document.getElementById("bState"),
+    bMode: document.getElementById("bMode"),
+    out: document.getElementById("out"),
+    errBox: document.getElementById("errBox"),
+    errMsg: document.getElementById("errMsg"),
+    resultLine: document.getElementById("resultLine"),
+    cues: document.getElementById("cues"),
+    annotated: document.getElementById("annotated"),
+    scores: document.getElementById("scores"),
+  };
+
+  ui.year.textContent = new Date().getFullYear();
+
+  function setBadge(el, text, state) {
+    el.textContent = text;
+    el.classList.remove("ok", "bad", "warn");
+    if (state) el.classList.add(state);
+  }
+
+  function showError(msg) {
+    ui.errMsg.textContent = msg;
+    ui.errBox.style.display = "block";
+  }
+
+  function hideError() {
+    ui.errMsg.textContent = "";
+    ui.errBox.style.display = "none";
+  }
+
+  function showOutput(){ ui.out.style.display = "block"; }
+  function hideOutput(){
+    ui.out.style.display = "none";
+    ui.resultLine.textContent = "—";
+    ui.cues.innerHTML = "";
+    ui.annotated.textContent = "";
+    ui.scores.textContent = "";
+  }
+
+  const DICTS = {
+    support: {
+      labels: ["Support", "Billing", "Technical", "Account"],
+      lex: {
+        Support: ["help", "issue", "problem", "question", "support", "please", "thanks"],
+        Billing: ["invoice", "refund", "charged", "charge", "billing", "payment", "subscription", "card", "receipt"],
+        Technical: ["error", "bug", "crash", "stack", "timeout", "latency", "api", "endpoint", "deployment", "server", "logs"],
+        Account: ["login", "password", "account", "access", "locked", "reset", "username", "2fa", "verification"]
+      }
+    },
+    legal: {
+      labels: ["Contract", "Privacy", "Policy", "Dispute"],
+      lex: {
+        Contract: ["agreement", "contract", "terms", "clause", "liability", "termination", "renewal"],
+        Privacy: ["gdpr", "privacy", "personal data", "data subject", "processing", "consent", "retention"],
+        Policy: ["policy", "acceptable use", "compliance", "audit", "governance", "risk"],
+        Dispute: ["dispute", "complaint", "breach", "claim", "damages", "arbitration", "notice"]
+      }
+    },
+    ops: {
+      labels: ["Incident", "Change", "Request", "Routine"],
+      lex: {
+        Incident: ["incident", "outage", "degraded", "down", "sev", "impact", "restore", "mitigation"],
+        Change: ["change", "release", "deploy", "maintenance", "rollback", "migration", "version"],
+        Request: ["request", "need", "please provide", "can you", "access", "approval", "provision"],
+        Routine: ["daily", "weekly", "routine", "report", "status", "checklist", "monitoring"]
+      }
+    }
+  };
+
+  function normalise(text){
+    return text.toLowerCase().replace(/\s+/g, " ").trim();
+  }
+
+  function scoreText(text, dict){
+    const t = normalise(text);
+    const scores = {};
+    const cues = new Set();
+
+    dict.labels.forEach(label => {
+      scores[label] = 0;
+      (dict.lex[label] || []).forEach(kw => {
+        const needle = kw.toLowerCase();
+        const hit = t.includes(needle);
+        if (hit) {
+          scores[label] += needle.split(" ").length; // tiny bias for multi-word cues
+          cues.add(needle);
+        }
+      });
+    });
+
+    return { scores, cues: Array.from(cues).slice(0, 12) };
+  }
+
+  function pickLabel(scores){
+    const entries = Object.entries(scores).sort((a,b) => b[1] - a[1]);
+    const [bestLabel, bestScore] = entries[0] || ["Unknown", 0];
+    const secondScore = entries[1]?.[1] ?? 0;
+
+    const raw = bestScore <= 0 ? 0.25 : (bestScore / (bestScore + secondScore + 2));
+    const confidence = Math.max(0.25, Math.min(0.95, raw));
+
+    return { label: bestLabel, confidence, ranking: entries };
+  }
+
+  function annotate(text, cues){
+    if (!cues.length) return text;
+    let out = text;
+    // Highlight longer cues first to avoid partial overlaps
+    const ordered = cues.slice().sort((a,b) => b.length - a.length);
+    ordered.forEach(kw => {
+      const re = new RegExp(escapeRegExp(kw), "ig");
+      out = out.replace(re, m => `<span class="highlight">${m}</span>`);
+    });
+    return out;
+  }
+
+  function escapeRegExp(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+
+  async function fetchWithTimeout(url, opts = {}, ms = 9000) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), ms);
+    try {
+      const res = await fetch(url, {
+        ...opts,
+        signal: ctrl.signal,
+        headers: {
+          "Accept": "application/json",
+          ...(opts.headers || {})
+        }
+      });
+      clearTimeout(t);
+      return res;
+    } catch (e) {
+      clearTimeout(t);
+      throw e;
+    }
+  }
+
+  async function tryApi(payload){
+    const r = await fetchWithTimeout(`${API_BASE}/doc/classify`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }, 9000);
+
+    if (!r.ok) {
+      const txt = await r.text().catch(() => "");
+      throw new Error(`API returned HTTP ${r.status}${txt ? `: ${txt}` : ""}`);
+    }
+    return r.json();
+  }
+
+  function renderCues(cues){
+    ui.cues.innerHTML = "";
+    if (!cues.length) {
+      const span = document.createElement("div");
+      span.className = "muted small";
+      span.textContent = "No cues detected for the selected label set.";
+      ui.cues.appendChild(span);
+      return;
+    }
+    cues.forEach(c => {
+      const el = document.createElement("span");
+      el.className = "cue";
+      el.textContent = c;
+      ui.cues.appendChild(el);
+    });
+  }
+
+  async function classify(){
+    hideError();
+    hideOutput();
+    setBadge(ui.bState, "state: working…", "warn");
+
+    try {
+      const rawText = (ui.text.value || "").trim();
+      if (rawText.length < 10) {
+        throw new Error("Please provide a bit more text (at least 10 characters).");
+      }
+
+      const setKey = ui.labelSet.value;
+      const dict = DICTS[setKey];
+      if (!dict) throw new Error("Unknown label set.");
+
+      const payload = { text: rawText, label_set: setKey, top_k: 3 };
+
+      let label, confidence, cues, scores, mode;
+
+      if (ui.useApi.checked) {
+        try {
+          const data = await tryApi(payload);
+          label = data?.label ?? "Unknown";
+          confidence = Number(data?.confidence ?? 0.5);
+          cues = Array.isArray(data?.cues) ? data.cues : [];
+          scores = data?.scores ?? {};
+          mode = "api";
+        } catch (e) {
+          // Fall back to local baseline
+          const local = scoreText(rawText, dict);
+          const pick = pickLabel(local.scores);
+          label = pick.label;
+          confidence = pick.confidence;
+          cues = local.cues;
+          scores = local.scores;
+          mode = "local (fallback)";
+        }
+      } else {
+        const local = scoreText(rawText, dict);
+        const pick = pickLabel(local.scores);
+        label = pick.label;
+        confidence = pick.confidence;
+        cues = local.cues;
+        scores = local.scores;
+        mode = "local";
+      }
+
+      ui.resultLine.textContent = `label=${label} | confidence=${Math.round(confidence*100)}% | mode=${mode}`;
+      renderCues(cues);
+      ui.annotated.innerHTML = annotate(rawText, cues);
+      ui.scores.textContent = JSON.stringify(scores, null, 2);
+
+      setBadge(ui.bState, "state: done", "ok");
+      setBadge(ui.bMode, `mode: ${mode}`, mode.startsWith("api") ? "ok" : "warn");
+      showOutput();
+
+    } catch (e) {
+      showError(e?.message || String(e));
+      setBadge(ui.bState, "state: error", "bad");
+    }
+  }
+
+  ui.btnClassify.addEventListener("click", classify);
+
+  ui.btnExample.addEventListener("click", () => {
+    ui.labelSet.value = "support";
+    ui.text.value = [
+      "Hello,",
+      "",
+      "I cannot log in to my account. The reset password link keeps expiring and I am locked out.",
+      "Could you help me regain access? I also need to update my billing address once I am back in.",
+      "",
+      "Thanks."
+    ].join("\n");
+    hideError(); hideOutput();
+    setBadge(ui.bState, "state: idle", null);
+  });
+
+  ui.btnClear.addEventListener("click", () => {
+    ui.text.value = "";
+    hideError(); hideOutput();
+    setBadge(ui.bState, "state: idle", null);
+  });
+
+  window.addEventListener("load", () => setBadge(ui.bState, "state: idle", null));
+</script>
+</body>
+</html>
