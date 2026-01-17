@@ -4,54 +4,37 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Forecast Studio | Neuromorphic Inference Lab</title>
-  <meta name="description" content="Forecast Studio: a lightweight forecasting demo with a local baseline and an optional API mode." />
+  <meta name="description" content="Forecast Studio: explore lightweight forecasting locally and optionally call an API endpoint." />
 
   <style>
     :root{
-      --bg:#070A12;
-      --surface:rgba(255,255,255,.06);
-      --surface2:rgba(255,255,255,.08);
-      --border:rgba(255,255,255,.12);
-      --text:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.68);
-      --accent:#64FFDA;
-      --accent2:#7C5CFF;
-      --ok:#43FBA4;
-      --warn:#FFCE57;
-      --danger:#FF4D6D;
-      --shadow:0 10px 30px rgba(0,0,0,.35);
-      --radius:18px;
-      --max:1100px;
+      --bg:#070A12;--surface:rgba(255,255,255,.06);--surface2:rgba(255,255,255,.08);--border:rgba(255,255,255,.12);
+      --text:rgba(255,255,255,.92);--muted:rgba(255,255,255,.68);
+      --accent:#64FFDA;--accent2:#7C5CFF;--ok:#43FBA4;--warn:#FFCE57;--danger:#FF4D6D;
+      --shadow:0 10px 30px rgba(0,0,0,.35);--radius:18px;--max:1100px;
       --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
       --sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
     }
     *{box-sizing:border-box;}
     html,body{height:100%;}
     body{
-      margin:0;
-      font-family:var(--sans);
-      color:var(--text);
+      margin:0;font-family:var(--sans);color:var(--text);line-height:1.55;
       background:
         radial-gradient(900px 600px at 20% 10%, rgba(124,92,255,.18), transparent 55%),
         radial-gradient(900px 600px at 80% 20%, rgba(100,255,218,.14), transparent 55%),
         radial-gradient(700px 450px at 40% 80%, rgba(124,92,255,.12), transparent 60%),
         var(--bg);
-      line-height:1.55;
     }
     a{color:inherit;text-decoration:none;}
     a:hover{text-decoration:underline;text-underline-offset:3px;}
     .wrap{max-width:var(--max);margin:0 auto;padding:20px 18px 46px;}
 
     header{
-      position:sticky;top:0;z-index:10;
-      backdrop-filter:blur(10px);
+      position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);
       background:linear-gradient(to bottom, rgba(7,10,18,.82), rgba(7,10,18,.50));
       border-bottom:1px solid rgba(255,255,255,.06);
     }
-    .nav{
-      max-width:var(--max);margin:0 auto;padding:14px 18px;
-      display:flex;align-items:center;justify-content:space-between;gap:14px;
-    }
+    .nav{max-width:var(--max);margin:0 auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;}
     .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px;}
     .logo{
       width:34px;height:34px;border-radius:10px;
@@ -64,24 +47,15 @@
     }
     nav ul{list-style:none;display:flex;gap:10px;padding:0;margin:0;flex-wrap:wrap;justify-content:flex-end;}
     .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 12px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.04);
-      color:var(--muted);font-size:14px;
+      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);color:var(--muted);font-size:14px;
     }
-    .pill.active{
-      color:var(--text);
-      border-color:rgba(100,255,218,.35);
-      background:rgba(100,255,218,.08);
-    }
+    .pill.active{color:var(--text);border-color:rgba(100,255,218,.35);background:rgba(100,255,218,.08);}
 
     .hero{
-      margin-top:22px;padding:22px;border-radius:var(--radius);
-      border:1px solid var(--border);
+      margin-top:22px;padding:22px;border-radius:var(--radius);border:1px solid var(--border);
       background:linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      box-shadow:var(--shadow);
-      position:relative;overflow:hidden;
+      box-shadow:var(--shadow);position:relative;overflow:hidden;
     }
     .hero:before{
       content:"";position:absolute;inset:-2px;
@@ -96,13 +70,9 @@
 
     .rowWrap{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
     .btn{
-      display:inline-flex;align-items:center;gap:10px;
-      padding:10px 14px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.06);
-      color:var(--text);font-weight:600;font-size:14px;
-      box-shadow:0 10px 20px rgba(0,0,0,.18);
-      cursor:pointer;
+      display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);
+      color:var(--text);font-weight:600;font-size:14px;box-shadow:0 10px 20px rgba(0,0,0,.18);cursor:pointer;
     }
     .btn:hover{background:rgba(255,255,255,.08);text-decoration:none;}
     .btn.primary{
@@ -113,58 +83,65 @@
     .btn:disabled{opacity:.6;cursor:not-allowed;}
 
     .kbd{
-      font-family:var(--mono);font-size:12px;padding:2px 8px;
-      border:1px solid rgba(255,255,255,.14);
+      font-family:var(--mono);font-size:12px;padding:2px 8px;border:1px solid rgba(255,255,255,.14);
       background:rgba(0,0,0,.25);border-radius:999px;color:rgba(255,255,255,.78);
     }
     .badge{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:6px 10px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06);
-      font-size:12px;color:rgba(255,255,255,.78);
-      font-family:var(--mono);white-space:nowrap;
+      display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);
+      font-size:12px;color:rgba(255,255,255,.78);font-family:var(--mono);white-space:nowrap;
     }
     .badge.ok{border-color:rgba(67,251,164,.35);background:rgba(67,251,164,.10);color:rgba(255,255,255,.90);}
     .badge.bad{border-color:rgba(255,77,109,.35);background:rgba(255,77,109,.10);color:rgba(255,255,255,.90);}
     .badge.warn{border-color:rgba(255,206,87,.30);background:rgba(255,206,87,.10);color:rgba(255,255,255,.90);}
 
-    .grid{margin-top:16px;display:grid;gap:12px;grid-template-columns:1.25fr .75fr;align-items:start;}
+    .grid{margin-top:16px;display:grid;gap:12px;grid-template-columns:1.2fr .8fr;align-items:start;}
     @media (max-width:980px){.grid{grid-template-columns:1fr;}}
-    .card{
-      border-radius:var(--radius);
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.05);
-      box-shadow:0 10px 24px rgba(0,0,0,.22);
-      padding:16px;
-    }
+    .card{border-radius:var(--radius);border:1px solid var(--border);background:rgba(255,255,255,.05);box-shadow:0 10px 24px rgba(0,0,0,.22);padding:16px;}
     .card h2{margin:0 0 8px;font-size:18px;letter-spacing:.2px;}
     .muted{color:var(--muted);}
     .small{font-size:14px;}
     .mono{font-family:var(--mono);}
     .divider{height:1px;background:rgba(255,255,255,.08);margin:14px 0;}
 
-    textarea{
-      width:100%;min-height:140px;resize:vertical;
-      border-radius:14px;border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.25);color:var(--text);
-      padding:12px;font-family:var(--mono);outline:none;
+    label{font-size:13px;color:rgba(255,255,255,.82);font-weight:800;letter-spacing:.2px;}
+    input, select, textarea{
+      width:100%;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      padding:10px 12px;
+      outline:none;
+      font-family:var(--sans);
     }
-    textarea:focus{
+    textarea{min-height:110px;resize:vertical;}
+    input:focus, select:focus, textarea:focus{
       border-color:rgba(100,255,218,.35);
       box-shadow:0 0 0 4px rgba(100,255,218,.08);
     }
 
-    .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px;}
-    .toggle{
-      display:inline-flex;gap:8px;align-items:center;
+    .formGrid{display:grid;gap:10px;grid-template-columns:1fr 1fr;}
+    @media (max-width:700px){.formGrid{grid-template-columns:1fr;}}
+
+    .samples{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.18);
-      padding:6px;border-radius:999px;
+      background:rgba(0,0,0,.16);
+      font-size:12px;color:rgba(255,255,255,.82);
+      cursor:pointer;user-select:none;
+    }
+    .chip:hover{background:rgba(255,255,255,.06);}
+
+    .toggle{
+      display:inline-flex;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);padding:6px;border-radius:999px;
     }
     .toggle button{
       border:0;background:transparent;color:rgba(255,255,255,.75);
-      padding:8px 10px;border-radius:999px;cursor:pointer;font-weight:700;font-size:12px;
+      padding:8px 10px;border-radius:999px;cursor:pointer;font-weight:800;font-size:12px;
     }
     .toggle button.active{
       color:rgba(255,255,255,.92);
@@ -172,15 +149,19 @@
       border:1px solid rgba(100,255,218,.30);
     }
 
-    .spark{
-      width:100%;height:140px;border-radius:14px;
+    canvas{
+      width:100%;
+      height:260px;
+      border-radius:14px;
       border:1px solid rgba(255,255,255,.10);
       background:rgba(0,0,0,.18);
-      display:flex;align-items:center;justify-content:center;
-      overflow:hidden;
+      display:block;
     }
-    .spark svg{width:100%;height:100%;}
-    .note{font-size:12px;color:rgba(255,255,255,.70);}
+
+    pre{
+      margin:10px 0 0;padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.25);overflow:auto;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.82);
+    }
 
     footer{margin-top:24px;color:rgba(255,255,255,.55);font-size:13px;}
   </style>
@@ -207,20 +188,19 @@
   <section class="hero">
     <h1>Forecast Studio</h1>
     <p class="subtitle">
-      A compact forecasting playground for tabular/time-series data. It includes a local baseline and an optional API mode.
+      Explore a lightweight forecasting workflow. Local mode runs in the browser; API mode can call an optional endpoint.
     </p>
 
     <div class="rowWrap">
-      <a class="btn primary" href="/evidence/#sql">Evidence anchor <span class="kbd">#sql</span></a>
+      <a class="btn primary" href="/evidence/#forecast-studio">Evidence anchor <span class="kbd">#forecast-studio</span></a>
       <a class="btn" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener noreferrer">GitHub</a>
-      <button class="btn ghost" id="btnLoadSample" type="button">Load sample</button>
-      <span class="badge" id="bStatus">status: idle</span>
 
       <span class="toggle" role="group" aria-label="Mode selector">
         <button id="modeLocal" class="active" type="button">Local</button>
         <button id="modeApi" type="button">API</button>
       </span>
       <span class="badge warn" id="bMode">mode: local</span>
+      <span class="badge" id="bStatus">status: idle</span>
     </div>
   </section>
 
@@ -228,65 +208,90 @@
     <div class="card">
       <h2>Try it</h2>
       <p class="muted small">
-        Paste a single column of numbers (one value per line). The local mode uses a simple moving-average baseline.
+        Enter a numeric series (comma-separated). Local mode supports a simple baseline. API mode expects
+        <span class="mono">POST /forecast/predict</span> (optional).
       </p>
 
-      <textarea id="series" spellcheck="false" placeholder="Example:
-120
-118
-123
-130
-129
-132
-..."></textarea>
-
-      <div class="controls">
-        <label class="small muted" for="horizon" style="display:flex;align-items:center;gap:8px;">
-          Horizon
-          <input id="horizon" type="number" min="1" max="30" value="7"
-                 style="width:84px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.25);color:var(--text);padding:8px 10px;outline:none;" />
-        </label>
-
-        <label class="small muted" for="window" style="display:flex;align-items:center;gap:8px;">
-          Window
-          <input id="window" type="number" min="1" max="20" value="3"
-                 style="width:84px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.25);color:var(--text);padding:8px 10px;outline:none;" />
-        </label>
-
-        <button class="btn primary" id="btnRun" type="button">Run</button>
-        <button class="btn" id="btnClear" type="button">Clear</button>
+      <div class="samples" aria-label="Sample series">
+        <span class="chip" data-series="120,118,123,130,128,132,136,134,140,145,147,150">Trend</span>
+        <span class="chip" data-series="50,54,58,62,61,59,55,52,49,50,53,57,61">Seasonal-ish</span>
+        <span class="chip" data-series="80,79,81,78,82,83,81,80,79,81,82,84">Stable</span>
       </div>
 
       <div class="divider"></div>
 
-      <div class="spark" id="spark">
-        <div class="muted small">Chart will appear here</div>
+      <div style="display:grid;gap:10px;">
+        <div>
+          <label for="series">Series</label>
+          <textarea id="series" placeholder="e.g. 120,118,123,130,128"></textarea>
+        </div>
+
+        <div class="formGrid">
+          <div>
+            <label for="method">Method</label>
+            <select id="method">
+              <option value="moving_average" selected>Moving average</option>
+              <option value="naive">Naïve (last value)</option>
+            </select>
+          </div>
+          <div>
+            <label for="horizon">Horizon</label>
+            <input id="horizon" type="number" min="1" max="60" value="7" />
+          </div>
+          <div>
+            <label for="window">Window</label>
+            <input id="window" type="number" min="1" max="60" value="3" />
+          </div>
+          <div>
+            <label for="holdout">Holdout (for metrics)</label>
+            <input id="holdout" type="number" min="1" max="60" value="4" />
+          </div>
+        </div>
+
+        <div class="rowWrap" style="margin-top:0;">
+          <button class="btn primary" id="btnRun" type="button">Run</button>
+          <button class="btn" id="btnClear" type="button">Clear</button>
+          <span class="badge" id="bMetrics">metrics: —</span>
+        </div>
       </div>
+
+      <div class="divider"></div>
+
+      <h2>Chart</h2>
+      <canvas id="chart" width="900" height="360" aria-label="Series chart"></canvas>
 
       <div class="divider"></div>
 
       <h2>Output</h2>
       <pre id="out">{}</pre>
-      <div class="note" style="margin-top:8px;">
-        API mode expects <span class="mono">POST /forecast/predict</span> (optional). Local mode is always available.
-      </div>
     </div>
 
     <aside class="card">
-      <h2>Overview</h2>
-      <ul class="small" style="margin:10px 0 0;padding-left:18px;color:rgba(255,255,255,.82);">
-        <li>Input parsing and validation for quick iteration.</li>
-        <li>Baseline forecast for a transparent reference.</li>
-        <li>Optional API mode for deployed inference.</li>
-      </ul>
+      <h2>Links</h2>
+      <div class="small" style="display:grid;gap:10px;">
+        <a class="btn" style="justify-content:space-between;" href="/evidence/#forecast-studio"><span>Evidence</span><span class="kbd">#forecast-studio</span></a>
+        <a class="btn" style="justify-content:space-between;" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener noreferrer"><span>Repository</span><span class="kbd">GitHub</span></a>
+        <a class="btn" style="justify-content:space-between;" href="/evidence/#sql"><span>Related</span><span class="kbd">#sql</span></a>
+      </div>
 
       <div class="divider"></div>
 
-      <h2>Links</h2>
-      <div class="small" style="display:grid;gap:10px;">
-        <a class="btn" style="justify-content:space-between;" href="/evidence/#sql"><span>Evidence</span><span class="kbd">#sql</span></a>
-        <a class="btn" style="justify-content:space-between;" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener noreferrer"><span>Repository</span><span class="kbd">GitHub</span></a>
-      </div>
+      <h2>API contract (optional)</h2>
+      <pre>{
+  "series": [120, 118, 123, 130],
+  "horizon": 7,
+  "window": 3,
+  "method": "moving_average|naive"
+}</pre>
+
+      <pre>{
+  "forecast": [131.3, 132.0, 132.4],
+  "meta": { "latency_ms": 35, "version": "0.0.x", "git_sha": "..." }
+}</pre>
+
+      <p class="muted small" style="margin:10px 0 0;">
+        If API mode fails, local mode remains available.
+      </p>
     </aside>
   </section>
 
@@ -299,28 +304,24 @@
   const el = {
     year: document.getElementById("year"),
     series: document.getElementById("series"),
+    method: document.getElementById("method"),
     horizon: document.getElementById("horizon"),
     window: document.getElementById("window"),
+    holdout: document.getElementById("holdout"),
     btnRun: document.getElementById("btnRun"),
     btnClear: document.getElementById("btnClear"),
-    btnLoadSample: document.getElementById("btnLoadSample"),
+    out: document.getElementById("out"),
+    chart: document.getElementById("chart"),
     bStatus: document.getElementById("bStatus"),
     bMode: document.getElementById("bMode"),
+    bMetrics: document.getElementById("bMetrics"),
     modeLocal: document.getElementById("modeLocal"),
     modeApi: document.getElementById("modeApi"),
-    out: document.getElementById("out"),
-    spark: document.getElementById("spark"),
   };
 
   el.year.textContent = new Date().getFullYear();
 
   let mode = "local";
-
-  function setBadge(text, state) {
-    el.bStatus.textContent = text;
-    el.bStatus.classList.remove("ok","bad","warn");
-    if (state) el.bStatus.classList.add(state);
-  }
 
   function setMode(next) {
     mode = next;
@@ -328,73 +329,135 @@
     el.modeApi.classList.toggle("active", mode === "api");
     el.bMode.textContent = `mode: ${mode}`;
     el.bMode.classList.remove("ok","bad","warn");
-    el.bMode.classList.add(mode === "api" ? "warn" : "warn");
+    el.bMode.classList.add("warn");
+  }
+
+  function setBadge(text, state) {
+    el.bStatus.textContent = text;
+    el.bStatus.classList.remove("ok","bad","warn");
+    if (state) el.bStatus.classList.add(state);
   }
 
   function parseSeries(text) {
-    const rows = text.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-    const vals = rows.map((s, i) => {
-      const v = Number(s.replace(",", "."));
-      if (!Number.isFinite(v)) throw new Error(`Invalid number at line ${i + 1}: "${s}"`);
-      return v;
+    const raw = text.split(",").map(s => s.trim()).filter(Boolean);
+    const nums = raw.map(x => Number(x));
+    if (!nums.length) return { ok: false, error: "Please provide at least one number." };
+    if (nums.some(n => !Number.isFinite(n))) return { ok: false, error: "Series contains non-numeric values." };
+    return { ok: true, series: nums };
+  }
+
+  function movingAverageForecast(series, horizon, window) {
+    const out = [];
+    const buf = series.slice();
+    for (let i = 0; i < horizon; i++) {
+      const w = Math.max(1, Math.min(window, buf.length));
+      const tail = buf.slice(buf.length - w);
+      const avg = tail.reduce((a,b) => a + b, 0) / w;
+      out.push(avg);
+      buf.push(avg);
+    }
+    return out;
+  }
+
+  function naiveForecast(series, horizon) {
+    const last = series[series.length - 1];
+    return Array.from({ length: horizon }, () => last);
+  }
+
+  function metrics(yTrue, yPred) {
+    const n = Math.min(yTrue.length, yPred.length);
+    if (n <= 0) return null;
+    let mae = 0, mse = 0, mape = 0, mapeCount = 0;
+    for (let i = 0; i < n; i++) {
+      const e = yTrue[i] - yPred[i];
+      mae += Math.abs(e);
+      mse += e * e;
+      if (yTrue[i] !== 0) { mape += Math.abs(e / yTrue[i]); mapeCount++; }
+    }
+    mae /= n;
+    const rmse = Math.sqrt(mse / n);
+    const mapePct = mapeCount ? (mape / mapeCount) * 100 : null;
+    return { mae, rmse, mape_pct: mapePct };
+  }
+
+  function drawChart(series, forecast) {
+    const ctx = el.chart.getContext("2d");
+    const W = el.chart.width, H = el.chart.height;
+    ctx.clearRect(0, 0, W, H);
+
+    // background
+    ctx.fillStyle = "rgba(0,0,0,.14)";
+    ctx.fillRect(0,0,W,H);
+
+    const all = series.concat(forecast || []);
+    const min = Math.min(...all);
+    const max = Math.max(...all);
+    const pad = 36;
+
+    const xScale = (i) => {
+      const n = Math.max(2, all.length);
+      return pad + (i * (W - pad*2) / (n - 1));
+    };
+    const yScale = (v) => {
+      const denom = (max - min) || 1;
+      return (H - pad) - ((v - min) * (H - pad*2) / denom);
+    };
+
+    // axes
+    ctx.strokeStyle = "rgba(255,255,255,.10)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad, pad);
+    ctx.lineTo(pad, H - pad);
+    ctx.lineTo(W - pad, H - pad);
+    ctx.stroke();
+
+    // series line
+    ctx.strokeStyle = "rgba(100,255,218,.85)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    series.forEach((v, i) => {
+      const x = xScale(i);
+      const y = yScale(v);
+      if (i === 0) ctx.moveTo(x,y);
+      else ctx.lineTo(x,y);
     });
-    if (vals.length < 3) throw new Error("Please provide at least 3 values.");
-    return vals;
-  }
+    ctx.stroke();
 
-  function mean(arr) {
-    return arr.reduce((a,b) => a + b, 0) / Math.max(1, arr.length);
-  }
-
-  function movingAverageForecast(values, window, horizon) {
-    const w = Math.max(1, Math.min(window, values.length));
-    const tail = values.slice(values.length - w);
-    const base = mean(tail);
-    const forecast = Array.from({length: horizon}, () => base);
-    return { forecast, baseline: "moving-average", window: w };
-  }
-
-  function sparkline(values, forecast) {
-    const all = values.concat(forecast);
-    const w = 600, h = 160, pad = 14;
-    const min = Math.min(...all), max = Math.max(...all);
-    const span = (max - min) || 1;
-
-    function x(i, n) {
-      return pad + (i * (w - pad*2)) / Math.max(1, n - 1);
-    }
-    function y(v) {
-      return pad + (h - pad*2) * (1 - (v - min) / span);
+    // forecast line
+    if (forecast && forecast.length) {
+      const offset = series.length - 1;
+      ctx.strokeStyle = "rgba(124,92,255,.85)";
+      ctx.setLineDash([6,4]);
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      forecast.forEach((v, i) => {
+        const idx = offset + i;
+        const x = xScale(idx);
+        const y = yScale(v);
+        if (i === 0) ctx.moveTo(xScale(offset), yScale(series[series.length - 1]));
+        ctx.lineTo(x,y);
+      });
+      ctx.stroke();
+      ctx.setLineDash([]);
     }
 
-    const n1 = values.length;
-    const n2 = all.length;
-
-    const path1 = values.map((v,i) => `${i===0 ? "M":"L"} ${x(i,n2).toFixed(2)} ${y(v).toFixed(2)}`).join(" ");
-    const path2 = all.map((v,i) => `${i===0 ? "M":"L"} ${x(i,n2).toFixed(2)} ${y(v).toFixed(2)}`).join(" ");
-
-    return `
-      <svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="Forecast chart">
-        <rect x="0" y="0" width="${w}" height="${h}" fill="rgba(0,0,0,.0)"></rect>
-        <path d="${path2}" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="2"></path>
-        <path d="${path1}" fill="none" stroke="rgba(100,255,218,.85)" stroke-width="2.5"></path>
-        <circle cx="${x(n1-1,n2)}" cy="${y(values[n1-1])}" r="4" fill="rgba(100,255,218,.95)"></circle>
-        <circle cx="${x(n1,n2)}" cy="${y(all[n1])}" r="4" fill="rgba(124,92,255,.95)"></circle>
-      </svg>
-    `;
+    // label
+    ctx.fillStyle = "rgba(255,255,255,.70)";
+    ctx.font = "12px " + getComputedStyle(document.documentElement).getPropertyValue("--mono");
+    ctx.fillText("series", pad + 6, pad + 14);
+    ctx.fillStyle = "rgba(255,255,255,.55)";
+    ctx.fillText("forecast", pad + 6, pad + 30);
   }
 
-  async function fetchWithTimeout(url, opts = {}, ms = 9000) {
+  async function fetchWithTimeout(url, opts = {}, ms = 12000) {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), ms);
     try {
       const res = await fetch(url, {
         ...opts,
         signal: ctrl.signal,
-        headers: {
-          "Accept": "application/json",
-          ...(opts.headers || {})
-        }
+        headers: { "Accept":"application/json", ...(opts.headers || {}) }
       });
       clearTimeout(t);
       return res;
@@ -405,85 +468,128 @@
   }
 
   async function run() {
+    const parsed = parseSeries(el.series.value || "");
+    if (!parsed.ok) {
+      setBadge("status: invalid input", "warn");
+      el.out.textContent = JSON.stringify({ error: parsed.error }, null, 2);
+      return;
+    }
+
+    const horizon = Math.max(1, Math.min(60, Number(el.horizon.value || 7)));
+    const window = Math.max(1, Math.min(60, Number(el.window.value || 3)));
+    const holdout = Math.max(1, Math.min(60, Number(el.holdout.value || 4)));
+    const method = el.method.value;
+
+    const series = parsed.series;
+
     setBadge("status: running…", "warn");
     el.btnRun.disabled = true;
 
     try {
-      const values = parseSeries(el.series.value);
-      const horizon = Math.max(1, Math.min(30, Number(el.horizon.value) || 7));
-      const window = Math.max(1, Math.min(20, Number(el.window.value) || 3));
-
       const t0 = performance.now();
-
       let result;
+
       if (mode === "local") {
-        const r = movingAverageForecast(values, window, horizon);
-        result = {
-          mode: "local",
-          input_points: values.length,
-          horizon,
-          model: r.baseline,
-          window: r.window,
-          forecast: r.forecast
-        };
-        el.spark.innerHTML = sparkline(values, r.forecast);
-      } else {
-        const r = await fetchWithTimeout(`${API_BASE}/forecast/predict`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ series: values, horizon, window })
-        }, 12000);
+        const train = series.slice(0, Math.max(0, series.length - holdout));
+        const test = series.slice(Math.max(0, series.length - holdout));
 
-        const text = await r.text();
-        const data = (() => { try { return JSON.parse(text); } catch { return { raw: text }; } })();
-
-        if (!r.ok) {
-          throw new Error(`API error (HTTP ${r.status}): ${data?.detail || text}`);
+        if (train.length < 2) {
+          throw new Error("Not enough points for holdout. Reduce holdout or add more points.");
         }
 
-        result = {
-          mode: "api",
-          input_points: values.length,
+        let forecast;
+        if (method === "naive") forecast = naiveForecast(series, horizon);
+        else forecast = movingAverageForecast(series, horizon, window);
+
+        // one-step baseline for holdout evaluation
+        const predHoldout = [];
+        const buf = train.slice();
+        for (let i = 0; i < test.length; i++) {
+          let p = (method === "naive")
+            ? buf[buf.length - 1]
+            : movingAverageForecast(buf, 1, window)[0];
+          predHoldout.push(p);
+          buf.push(test[i]);
+        }
+
+        const m = metrics(test, predHoldout);
+        const meta = {
+          mode: "local",
+          method,
           horizon,
-          response: data
+          window,
+          holdout,
         };
 
-        const apiForecast = Array.isArray(data?.forecast) ? data.forecast : [];
-        if (apiForecast.length) el.spark.innerHTML = sparkline(values, apiForecast);
-        else el.spark.innerHTML = `<div class="muted small">No chart: API response did not include a forecast array.</div>`;
+        result = { series, forecast, evaluation: { test, pred: predHoldout, metrics: m }, meta };
+      } else {
+        const payload = { series, horizon, window, method };
+        const r = await fetchWithTimeout(`${API_BASE}/forecast/predict`, {
+          method: "POST",
+          headers: { "Content-Type":"application/json" },
+          body: JSON.stringify(payload)
+        });
+        const text = await r.text();
+        const data = (() => { try { return JSON.parse(text); } catch { return { raw: text }; } })();
+        if (!r.ok) throw new Error(`API error (HTTP ${r.status}): ${data?.detail || text}`);
+        result = { mode: "api", request: payload, response: data };
       }
 
       const t1 = performance.now();
-      result.latency_ms = Math.round(t1 - t0);
+      const latency = Math.round(t1 - t0);
 
+      // render
+      if (mode === "local") {
+        drawChart(result.series, result.forecast);
+        const m = result?.evaluation?.metrics;
+        if (m) {
+          const mae = m.mae.toFixed(2);
+          const rmse = m.rmse.toFixed(2);
+          const mape = (m.mape_pct == null) ? "n/a" : m.mape_pct.toFixed(1) + "%";
+          el.bMetrics.textContent = `metrics: MAE=${mae} | RMSE=${rmse} | MAPE=${mape}`;
+        } else {
+          el.bMetrics.textContent = "metrics: —";
+        }
+      } else {
+        const f = Array.isArray(result?.response?.forecast) ? result.response.forecast : [];
+        drawChart(series, f);
+        el.bMetrics.textContent = "metrics: —";
+      }
+
+      result.latency_ms = latency;
       el.out.textContent = JSON.stringify(result, null, 2);
       setBadge("status: done", "ok");
     } catch (e) {
       el.out.textContent = JSON.stringify({ error: String(e?.message || e) }, null, 2);
-      el.spark.innerHTML = `<div class="muted small" style="padding:12px;">${String(e?.message || e)}</div>`;
       setBadge("status: error", "bad");
     } finally {
       el.btnRun.disabled = false;
     }
   }
 
-  el.modeLocal.addEventListener("click", () => setMode("local"));
-  el.modeApi.addEventListener("click", () => setMode("api"));
-  el.btnRun.addEventListener("click", run);
-
-  el.btnClear.addEventListener("click", () => {
+  function clearAll() {
     el.series.value = "";
     el.out.textContent = "{}";
-    el.spark.innerHTML = `<div class="muted small">Chart will appear here</div>`;
+    el.bMetrics.textContent = "metrics: —";
+    drawChart([], []);
     setBadge("status: idle", null);
+  }
+
+  document.querySelectorAll(".chip").forEach(ch => {
+    ch.addEventListener("click", () => {
+      el.series.value = ch.getAttribute("data-series") || "";
+      setBadge("status: sample loaded", null);
+    });
   });
 
-  el.btnLoadSample.addEventListener("click", () => {
-    el.series.value = [
-      120,118,123,130,129,132,138,141,139,144,150,148,152,155,153,158
-    ].join("\n");
-    setBadge("status: sample loaded", null);
-  });
+  el.modeLocal.addEventListener("click", () => setMode("local"));
+  el.modeApi.addEventListener("click", () => setMode("api"));
+
+  el.btnRun.addEventListener("click", run);
+  el.btnClear.addEventListener("click", clearAll);
+
+  // initial
+  drawChart([], []);
 </script>
 </body>
 </html>
