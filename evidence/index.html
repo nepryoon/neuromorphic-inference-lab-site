@@ -1,396 +1,533 @@
-<!-- /evidence/index.html (FULL UPDATED) -->
 <!doctype html>
-<html lang="en">
+<html lang="it">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Evidence Index — Neuromorphic Inference Lab</title>
-  <meta name="description" content="Evidence-based competence: every skill links to live docs and exact source code." />
-  <link rel="stylesheet" href="/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Evidence | Neuromorphic Inference Lab</title>
+  <meta name="description" content="Evidence-based competence: demo live, endpoint verificabili e repository GitHub collegate al progetto Neuromorphic Inference Lab." />
 
   <style>
     :root{
-      --bg:#0b0f17; --text:#e7ecf5; --muted:#a7b1c6; --line:rgba(231,236,245,.12);
-      --radius:16px; --shadow:0 10px 35px rgba(0,0,0,.35);
-      --accent:#7c5cff; --accent2:#2dd4bf;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      --max:1100px;
+      --bg: #070A12;
+      --surface: rgba(255,255,255,.06);
+      --surface2: rgba(255,255,255,.08);
+      --border: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --accent: #64FFDA;
+      --accent2: #7C5CFF;
+      --danger: #FF4D6D;
+      --ok: #43FBA4;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+      --radius2: 14px;
+      --max: 1100px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--text)}
-    a{color:inherit;text-decoration:none}
-    a:hover{opacity:.92}
-    .wrap{max-width:var(--max);margin:0 auto;padding:22px 18px}
 
+    *{ box-sizing: border-box; }
+    html, body{ height: 100%; }
+    body{
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 600px at 20% 10%, rgba(124,92,255,.18), transparent 55%),
+        radial-gradient(900px 600px at 80% 20%, rgba(100,255,218,.14), transparent 55%),
+        radial-gradient(700px 450px at 40% 80%, rgba(124,92,255,.12), transparent 60%),
+        var(--bg);
+      line-height: 1.55;
+    }
+
+    a{ color: inherit; text-decoration: none; }
+    a:hover{ text-decoration: underline; text-underline-offset: 3px; }
+
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 20px 18px 46px;
+    }
+
+    /* Header */
     header{
-      position:sticky;top:0;z-index:20;
-      background:rgba(11,15,23,.72);
+      position: sticky;
+      top: 0;
+      z-index: 10;
       backdrop-filter: blur(10px);
-      border-bottom:1px solid var(--line);
+      background: linear-gradient(to bottom, rgba(7,10,18,.82), rgba(7,10,18,.50));
+      border-bottom: 1px solid rgba(255,255,255,.06);
     }
-    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
-    .brand{font-weight:800;display:flex;align-items:center;gap:10px}
-    .dot{
-      width:10px;height:10px;border-radius:50%;
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      box-shadow:0 10px 25px rgba(124,92,255,.22);
+    .nav{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
     }
-    nav a{
-      color:var(--muted);font-weight:700;padding:8px 10px;border-radius:12px;border:1px solid transparent
+    .brand{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: .2px;
     }
-    nav a:hover{border-color:var(--line);background:rgba(255,255,255,.03);color:var(--text)}
-
+    .logo{
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(100,255,218,.95), rgba(100,255,218,.15) 58%, transparent 60%),
+        radial-gradient(circle at 70% 70%, rgba(124,92,255,.9), rgba(124,92,255,.18) 55%, transparent 57%),
+        rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 8px 22px rgba(0,0,0,.25);
+    }
+    nav ul{
+      list-style: none;
+      display: flex;
+      gap: 10px;
+      padding: 0;
+      margin: 0;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
     .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:7px 10px;border-radius:999px;border:1px solid var(--line);
-      background:rgba(255,255,255,.03);color:var(--muted);
-      font-weight:800;font-size:12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-size: 14px;
     }
-    h1{margin:18px 0 6px;font-size:32px;letter-spacing:-.4px}
-    .sub{margin:0 0 16px;color:var(--muted);line-height:1.65;max-width:92ch}
+    .pill.active{
+      color: var(--text);
+      border-color: rgba(100,255,218,.35);
+      background: rgba(100,255,218,.08);
+    }
 
-    .toc{
-      margin-top:14px;
-      border:1px solid var(--line);border-radius:var(--radius);
-      background:rgba(255,255,255,.02);
-      padding:14px;
-      display:flex;flex-wrap:wrap;gap:8px;
+    /* Hero */
+    .hero{
+      margin-top: 22px;
+      padding: 22px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
     }
-    .chip{
-      font-size:13px;padding:9px 11px;border-radius:999px;
-      border:1px solid var(--line);background:rgba(255,255,255,.02);
-      font-weight:800;color:var(--text);
+    .hero:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(420px 260px at 10% 20%, rgba(100,255,218,.20), transparent 55%),
+        radial-gradient(420px 260px at 90% 40%, rgba(124,92,255,.18), transparent 60%);
+      pointer-events:none;
+      filter: blur(1px);
     }
-    .chip.secondary{color:var(--muted)}
+    .hero > *{ position: relative; }
+    h1{
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.12;
+      letter-spacing: .2px;
+    }
+    .subtitle{
+      margin: 0;
+      color: var(--muted);
+      max-width: 80ch;
+    }
+    .heroRow{
+      margin-top: 18px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .btn{
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 10px 20px rgba(0,0,0,.18);
+      cursor: pointer;
+    }
+    .btn:hover{ background: rgba(255,255,255,.08); text-decoration: none; }
+    .btn.primary{
+      border-color: rgba(100,255,218,.40);
+      background: linear-gradient(135deg, rgba(100,255,218,.18), rgba(124,92,255,.12));
+    }
+    .kbd{
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 2px 8px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.25);
+      border-radius: 999px;
+      color: rgba(255,255,255,.78);
+    }
 
-    .section{
-      margin-top:14px;
-      border:1px solid var(--line);border-radius:var(--radius);
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      box-shadow:var(--shadow);
-      padding:16px;
+    /* Cards */
+    .grid{
+      margin-top: 16px;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     }
-    .section h2{margin:0 0 8px;font-size:18px;letter-spacing:.2px}
-    .meta{color:var(--muted);line-height:1.6;margin:0 0 12px}
+    .card{
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      box-shadow: 0 10px 24px rgba(0,0,0,.22);
+      padding: 16px;
+    }
+    .card h2{
+      margin: 0 0 8px;
+      font-size: 18px;
+      letter-spacing: .2px;
+    }
+    .muted{ color: var(--muted); }
+    .small{ font-size: 14px; }
+    .list{
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      border-radius: var(--radius2);
+      padding: 10px 12px;
+    }
+    .left{
+      display:flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+    .code{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,.82);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .hint{
+      font-size: 12px;
+      color: rgba(255,255,255,.62);
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      font-size: 12px;
+      color: rgba(255,255,255,.78);
+      font-family: var(--mono);
+      white-space: nowrap;
+    }
+    .badge.ok{
+      border-color: rgba(67,251,164,.35);
+      background: rgba(67,251,164,.10);
+      color: rgba(255,255,255,.90);
+    }
+    .badge.bad{
+      border-color: rgba(255,77,109,.35);
+      background: rgba(255,77,109,.10);
+      color: rgba(255,255,255,.90);
+    }
 
-    .evidence-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    @media (max-width: 900px){.evidence-grid{grid-template-columns:1fr}}
-    .ev{
-      border:1px solid var(--line);border-radius:var(--radius);
-      background:rgba(255,255,255,.02);
-      padding:12px;
+    .divider{
+      height: 1px;
+      background: rgba(255,255,255,.08);
+      margin: 16px 0;
     }
-    .ev .k{color:var(--muted);font-weight:900;font-size:12px}
-    .ev .v{margin-top:7px;font-weight:800;line-height:1.5}
-    .ev a{ text-decoration: underline; }
-    .small{font-size:12px;color:var(--muted);font-weight:700;margin-top:8px;line-height:1.55}
 
-    .note{
-      margin-top:14px;border:1px solid var(--line);border-radius:var(--radius);
-      padding:14px;background:rgba(255,255,255,.02);color:var(--muted);line-height:1.6
-    }
-    .mono{font-family:var(--mono)}
     footer{
-      margin-top:26px;border-top:1px solid var(--line);
-      padding:18px 0 30px;color:var(--muted);font-size:13px;
-      display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center
+      margin-top: 24px;
+      color: rgba(255,255,255,.55);
+      font-size: 13px;
     }
-    .anchor{scroll-margin-top:90px}
+
+    .mono{ font-family: var(--mono); }
+
+    /* Mobile tweaks */
+    @media (max-width: 520px){
+      .nav{ padding: 12px 14px; }
+      .wrap{ padding: 18px 14px 42px; }
+      .row{ flex-direction: column; align-items: flex-start; }
+    }
   </style>
 </head>
 
 <body>
-  <header>
-    <div class="wrap nav">
-      <a class="brand" href="/" aria-label="Home">
-        <span class="dot" aria-hidden="true"></span>
-        <span>Neuromorphic Inference Lab</span>
-      </a>
-      <nav aria-label="Primary">
-        <a href="/demos">Demos</a>
-        <a href="/evidence">Evidence</a>
-        <a href="/about">About</a>
-        <a href="/research">Research</a>
-        <a href="https://github.com/nepryoon" target="_blank" rel="noopener">GitHub</a>
-      </nav>
-    </div>
-  </header>
+<header>
+  <div class="nav">
+    <a class="brand" href="/" aria-label="Neuromorphic Inference Lab Home">
+      <span class="logo" aria-hidden="true"></span>
+      <span>Neuromorphic Inference Lab</span>
+    </a>
 
-  <main class="wrap">
-    <span class="pill">Evidence-based competence • Skill → Proof</span>
-    <h1>Evidence Index</h1>
-    <p class="sub">
-      Everything here is designed to be <strong>auditable</strong>.
-      Each skill links to two proofs: <strong>Live docs</strong> on this domain and the <strong>exact source code</strong> on GitHub.
-      These anchors are intended to be reused directly in your CV (e.g., <span class="mono">/evidence#docker</span>).
+    <nav aria-label="Main navigation">
+      <ul>
+        <li><a class="pill" href="/">Home</a></li>
+        <li><a class="pill" href="/demos/">Demos</a></li>
+        <li><a class="pill active" href="/evidence/">Evidence</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>Evidence-based competence</h1>
+    <p class="subtitle">
+      Non “claim”, ma <strong>prove cliccabili</strong>: endpoint live, versioning e repository collegate.
+      Questa pagina è pensata per recruiter e hiring manager: verifiche in 30 secondi.
     </p>
 
-    <!-- Table of contents -->
-    <div class="toc" aria-label="Evidence table of contents">
-      <a class="chip" href="#python">Python</a>
-      <a class="chip" href="#sql">SQL</a>
-      <a class="chip" href="#docker">Docker</a>
-      <a class="chip" href="#aws">AWS</a>
-      <a class="chip" href="#kubernetes">Kubernetes</a>
-      <a class="chip" href="#cicd">CI/CD</a>
-      <a class="chip" href="#react">React / JS</a>
-      <a class="chip" href="#pytorch">PyTorch</a>
-      <a class="chip" href="#sklearn">scikit-learn</a>
-      <a class="chip" href="#tensorflow">TensorFlow</a>
-      <a class="chip" href="#numpy">NumPy</a>
-      <a class="chip" href="#matplotlib">Matplotlib</a>
-      <a class="chip secondary" href="#portfolio">Portfolio Infrastructure</a>
+    <div class="heroRow">
+      <button class="btn primary" id="btnCheck">
+        Check live endpoints <span class="kbd">/health</span> <span class="kbd">/version</span>
+      </button>
+
+      <a class="btn" href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">
+        Open GitHub repo (app)
+      </a>
+
+      <a class="btn" href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener noreferrer">
+        Open GitHub repo (infra)
+      </a>
+    </div>
+  </section>
+
+  <section class="grid" aria-label="Evidence cards">
+    <!-- Live API -->
+    <div class="card">
+      <h2>Live API</h2>
+      <p class="muted small">Endpoint verificabili in produzione (ALB + ECS Fargate).</p>
+
+      <ul class="list">
+        <li class="row">
+          <div class="left">
+            <div class="code">GET https://api.neuromorphicinference.com/health</div>
+            <div class="hint">Health check (must be 200)</div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <span class="badge" id="badgeHealth">unknown</span>
+            <a class="btn" style="padding:8px 12px;" href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">Open</a>
+          </div>
+        </li>
+
+        <li class="row">
+          <div class="left">
+            <div class="code">GET https://api.neuromorphicinference.com/version</div>
+            <div class="hint">Build fingerprint (APP_VERSION / GIT_SHA)</div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <span class="badge" id="badgeVersion">unknown</span>
+            <a class="btn" style="padding:8px 12px;" href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">Open</a>
+          </div>
+        </li>
+      </ul>
+
+      <div class="divider"></div>
+      <p class="muted small mono" id="versionPreview">Version preview: —</p>
     </div>
 
-    <!-- PYTHON -->
-    <section class="section anchor" id="python">
-      <h2>Python</h2>
-      <p class="meta">Backend services, pipelines, scheduled jobs, data validation, model inference.</p>
-      <div class="evidence-grid">
-        <div class="ev">
-          <div class="k">Live docs</div>
-          <div class="v"><a href="/demos/edgepulse">EdgePulse — end-to-end system (case study)</a></div>
-          <div class="small">Production-minded loop: ingest → store → score → alert → dashboard.</div>
-        </div>
-        <div class="ev">
-          <div class="k">Code</div>
-          <div class="v"><a href="https://github.com/nepryoon/edgepulse" target="_blank" rel="noopener">nepryoon/edgepulse</a></div>
-        </div>
-      </div>
-    </section>
+    <!-- Source code -->
+    <div class="card">
+      <h2>Source code</h2>
+      <p class="muted small">Repo collegate: implementazione + infrastruttura.</p>
 
-    <!-- SQL -->
-    <section class="section anchor" id="sql">
-      <h2>SQL</h2>
-      <p class="meta">System-of-record storage, analytics-friendly outputs, schema thinking, traceability.</p>
-      <div class="evidence-grid">
-        <div class="ev">
-          <div class="k">Live docs</div>
-          <div class="v"><a href="/demos/edgepulse#architecture">EdgePulse — storage as system-of-record</a></div>
-        </div>
-        <div class="ev">
-          <div class="k">Code</div>
-          <div class="v"><a href="https://github.com/nepryoon/edgepulse" target="_blank" rel="noopener">edgepulse (storage + pipeline)</a></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- DOCKER -->
-    <section class="section anchor" id="docker">
-      <h2>Docker</h2>
-      <p class="meta">Reproducible environments, local parity, portable deployment packaging.</p>
-      <div class="evidence-grid">
-        <div class="ev">
-          <div class="k">Live docs</div>
-          <div class="v"><a href="/demos/edgepulse#mlops">EdgePulse — container-first operability</a></div>
-        </div>
-        <div class="ev">
-          <div class="k">Code</div>
-          <div class="v">
-            <a href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener">nil-infra-template (standard Docker/CI patterns)</a><br />
-            <a href="https://github.com/nepryoon/edgepulse" target="_blank" rel="noopener">edgepulse (system packaging)</a>
+      <ul class="list">
+        <li class="row">
+          <div class="left">
+            <div class="code">github.com/nepryoon/nil-rag-copilot</div>
+            <div class="hint">API + app logic (FastAPI, container ready)</div>
           </div>
-        </div>
-      </div>
-    </section>
+          <a class="btn" style="padding:8px 12px;" href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">View</a>
+        </li>
 
-    <!-- AWS -->
-    <section class="section anchor" id="aws">
-      <h2>AWS</h2>
-      <p class="meta">Deployable patterns (storage + scheduled jobs + alerting), cost-aware architecture.</p>
-      <div class="evidence-grid">
-        <div class="ev">
-          <div class="k">Live docs</div>
-          <div class="v"><a href="/demos/edgepulse#solution">EdgePulse — deployment-ready system pattern</a></div>
-          <div class="small">Focus: operational constraints, predictable runs, auditable outputs.</div>
-        </div>
-        <div class="ev">
-          <div class="k">Code</div>
-          <div class="v"><a href="https://github.com/nepryoon/edgepulse" target="_blank" rel="noopener">edgepulse</a></div>
-          <div class="small">Next upgrade: add a dedicated “AWS deploy” doc/folder in the repo.</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- KUBERNETES -->
-    <section class="section anchor" id="kubernetes">
-      <h2>Kubernetes</h2>
-      <p class="meta">Planned proof: one showcase will include manifests/helm + autoscaling notes (platform-grade signal).</p>
-      <div class="evidence-grid">
-        <div class="ev">
-          <div class="k">Live docs</div>
-          <div class="v"><a href="/demos/tabular-risk">Tabular Risk / Churn — planned serving + monitoring</a></div>
-          <div class="small">This page will evolve from “docs” into a live demo.</div>
-        </div>
-        <div class="ev">
-          <div class="k">Code</div>
-          <div class="v">
-            <a href="https://github.com/nepryoon/nil-tabular-risk" target="_blank" rel="noopener">nil-tabular-risk (k8s target repo)</a><br />
-            <a href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener">nil-infra-template (deployment patterns)</a>
+        <li class="row">
+          <div class="left">
+            <div class="code">github.com/nepryoon/nil-infra-template</div>
+            <div class="hint">Infra blueprint (ALB, ECS, CI/CD ready)</div>
           </div>
-          <div class="small">Status: planned (no over-claiming).</div>
-        </div>
-      </div>
-    </section>
+          <a class="btn" style="padding:8px 12px;" href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener noreferrer">View</a>
+        </li>
+      </ul>
 
-    <!-- CI/CD -->
-    <section class="section anchor" id="cicd">
-      <h2>CI/CD</h2>
-      <p class="meta">Quality gates, reproducible builds, release tags, build provenance.</p>
-      <div class="evidence-grid">
-        <div class="ev">
-          <div class="k">Live docs</div>
-          <div class="v">
-            <a href="/" >This site is git-driven (Cloudflare Pages)</a><br />
-            <a href="/api/build">Build metadata endpoint (commit + branch)</a>
+      <div class="divider"></div>
+      <p class="muted small">
+        Focus: <strong>production mindset</strong> (deployable artifacts, versioning, observability).
+      </p>
+    </div>
+
+    <!-- Stack proof -->
+    <div class="card">
+      <h2>Deployment proof</h2>
+      <p class="muted small">Segnali concreti di messa in produzione.</p>
+
+      <ul class="list">
+        <li class="row">
+          <div class="left">
+            <div class="code">HTTPS + ACM certificate</div>
+            <div class="hint">TLS termination su ALB</div>
           </div>
-        </div>
-        <div class="ev">
-          <div class="k">Code</div>
-          <div class="v">
-            <a href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener">nil-infra-template (CI patterns)</a><br />
-            <a href="https://github.com/nepryoon/neuromorphic-inference-lab-site" target="_blank" rel="noopener">neuromorphic-inference-lab-site (deploy source)</a>
+          <span class="badge ok">enabled</span>
+        </li>
+
+        <li class="row">
+          <div class="left">
+            <div class="code">ECR image + immutable tag</div>
+            <div class="hint">Build “frozen” (no-only-latest)</div>
           </div>
-        </div>
-      </div>
-    </section>
+          <span class="badge" id="badgeFrozen">verify via /version</span>
+        </li>
 
-    <!-- REACT / JS -->
-    <section class="section anchor" id="react">
-      <h2>React / JavaScript</h2>
-      <p class="meta">Interactive UX for AI products (chat, upload flows, dashboards).</p>
-      <div class="evidence-grid">
-        <div class="ev">
-          <div class="k">Live docs</div>
-          <div class="v"><a href="/demos/rag-copilot">RAG Copilot — planned interactive UI</a></div>
-        </div>
-        <div class="ev">
-          <div class="k">Code</div>
-          <div class="v"><a href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener">nil-rag-copilot</a></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- PYTORCH -->
-    <section class="section anchor" id="pytorch">
-      <h2>PyTorch</h2>
-      <p class="meta">Training/inference packaging and CPU-first serving (GPU optional).</p>
-      <div class="evidence-grid">
-        <div class="ev">
-          <div class="k">Live docs</div>
-          <div class="v"><a href="/demos/visual-inspector">Visual Inspector — planned</a></div>
-        </div>
-        <div class="ev">
-          <div class="k">Code</div>
-          <div class="v"><a href="https://github.com/nepryoon/nil-visual-inspector" target="_blank" rel="noopener">nil-visual-inspector</a></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SKLEARN -->
-    <section class="section anchor" id="sklearn">
-      <h2>scikit-learn</h2>
-      <p class="meta">Baselines, tabular pipelines, evaluation, explainability scaffolding.</p>
-      <div class="evidence-grid">
-        <div class="ev">
-          <div class="k">Live docs</div>
-          <div class="v"><a href="/demos/tabular-risk">Tabular Risk / Churn — planned</a></div>
-        </div>
-        <div class="ev">
-          <div class="k">Code</div>
-          <div class="v"><a href="https://github.com/nepryoon/nil-tabular-risk" target="_blank" rel="noopener">nil-tabular-risk</a></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TENSORFLOW -->
-    <section class="section anchor" id="tensorflow">
-      <h2>TensorFlow</h2>
-      <p class="meta">Used intentionally in a limited scope (one showcase module) to avoid “keyword-only” listing.</p>
-      <div class="evidence-grid">
-        <div class="ev">
-          <div class="k">Live docs</div>
-          <div class="v"><a href="/demos/visual-inspector">Visual Inspector — framework notes</a></div>
-        </div>
-        <div class="ev">
-          <div class="k">Code</div>
-          <div class="v"><a href="https://github.com/nepryoon/nil-visual-inspector" target="_blank" rel="noopener">nil-visual-inspector</a></div>
-          <div class="small">Status: planned module (no over-claiming).</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- NUMPY -->
-    <section class="section anchor" id="numpy">
-      <h2>NumPy</h2>
-      <p class="meta">Numerical glue: transforms, metrics, lightweight utilities.</p>
-      <div class="evidence-grid">
-        <div class="ev">
-          <div class="k">Live docs</div>
-          <div class="v"><a href="/demos/edgepulse#metrics">EdgePulse — metrics section (fillable baseline)</a></div>
-        </div>
-        <div class="ev">
-          <div class="k">Code</div>
-          <div class="v"><a href="https://github.com/nepryoon/edgepulse" target="_blank" rel="noopener">edgepulse</a></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- MATPLOTLIB -->
-    <section class="section anchor" id="matplotlib">
-      <h2>Matplotlib</h2>
-      <p class="meta">Report artifacts (plots) for backtesting/evaluation and reproducible analysis outputs.</p>
-      <div class="evidence-grid">
-        <div class="ev">
-          <div class="k">Live docs</div>
-          <div class="v"><a href="/demos/forecast-studio">Forecast Studio — planned</a></div>
-        </div>
-        <div class="ev">
-          <div class="k">Code</div>
-          <div class="v"><a href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener">nil-forecast-studio</a></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- PORTFOLIO INFRA -->
-    <section class="section anchor" id="portfolio">
-      <h2>Portfolio Infrastructure</h2>
-      <p class="meta">Proof that the portfolio is operated like a product: stable URLs + provenance + bidirectional links.</p>
-      <div class="evidence-grid">
-        <div class="ev">
-          <div class="k">Live docs</div>
-          <div class="v">
-            <a href="/demos">Demos hub (stable routing)</a><br />
-            <a href="/api/build">/api/build (commit + branch)</a>
+        <li class="row">
+          <div class="left">
+            <div class="code">Health checks</div>
+            <div class="hint">ALB → Target Group → /health</div>
           </div>
-        </div>
-        <div class="ev">
-          <div class="k">Code</div>
-          <div class="v">
-            <a href="https://github.com/nepryoon/neuromorphic-inference-lab-site" target="_blank" rel="noopener">site repo</a><br />
-            <a href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener">infra template repo</a>
-          </div>
-        </div>
-      </div>
-      <div class="note">
-        Next upgrades: (1) add “Build Provenance” in each demo header linking to the exact repo tag/commit,
-        (2) add CI badges and release tags on each <span class="mono">nil-*</span> repo.
-      </div>
-    </section>
+          <span class="badge" id="badgeHC2">unknown</span>
+        </li>
+      </ul>
+    </div>
 
-    <footer aria-label="Footer">
-      <div>
-        <span class="mono">neuromorphicinference.com</span> ·
-        <a href="/demos" style="text-decoration:underline;">Demos</a> ·
-        <a href="https://github.com/nepryoon" target="_blank" rel="noopener" style="text-decoration:underline;">@nepryoon</a>
-      </div>
-      <div class="mono" id="build-info">
-        Deployed from: <span id="build-sha">unknown</span> (<span id="build-branch">main</span>)
-      </div>
-    </footer>
-  </main>
+    <!-- Notes -->
+    <div class="card">
+      <h2>How to evaluate fast</h2>
+      <p class="muted small">Checklist per hiring manager.</p>
+      <ol class="small" style="margin:10px 0 0; padding-left:18px; color: rgba(255,255,255,.78);">
+        <li>Apri <span class="mono">/health</span>: deve rispondere <span class="mono">200</span>.</li>
+        <li>Apri <span class="mono">/version</span>: deve mostrare <span class="mono">APP_VERSION</span> e <span class="mono">GIT_SHA</span>.</li>
+        <li>Apri le repo GitHub: README, architettura, deploy steps.</li>
+      </ol>
+      <div class="divider"></div>
+      <p class="muted small">
+        Nota: questa è la “spina dorsale” su cui aggiungo le demo (RAG, CV, tabular forecasting) mantenendo prove cliccabili.
+      </p>
+    </div>
+  </section>
 
-  <script src="/build-info.js" defer></script>
+  <footer>
+    <div>© <span id="year"></span> Neuromorphic Inference Lab — Evidence page</div>
+  </footer>
+</main>
+
+<script>
+  const API_BASE = "https://api.neuromorphicinference.com";
+  const els = {
+    badgeHealth: document.getElementById("badgeHealth"),
+    badgeVersion: document.getElementById("badgeVersion"),
+    badgeHC2: document.getElementById("badgeHC2"),
+    badgeFrozen: document.getElementById("badgeFrozen"),
+    versionPreview: document.getElementById("versionPreview"),
+    btnCheck: document.getElementById("btnCheck"),
+  };
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  function setBadge(el, text, state) {
+    el.textContent = text;
+    el.classList.remove("ok", "bad");
+    if (state === "ok") el.classList.add("ok");
+    if (state === "bad") el.classList.add("bad");
+  }
+
+  async function fetchWithTimeout(url, ms = 3500) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), ms);
+    try {
+      const res = await fetch(url, { signal: ctrl.signal, headers: { "Accept": "application/json" } });
+      clearTimeout(t);
+      return res;
+    } catch (e) {
+      clearTimeout(t);
+      throw e;
+    }
+  }
+
+  async function check() {
+    setBadge(els.badgeHealth, "checking…", null);
+    setBadge(els.badgeVersion, "checking…", null);
+    setBadge(els.badgeHC2, "checking…", null);
+    els.versionPreview.textContent = "Version preview: checking…";
+
+    // /health
+    try {
+      const r = await fetchWithTimeout(`${API_BASE}/health`, 3500);
+      if (r.ok) {
+        setBadge(els.badgeHealth, "200 OK", "ok");
+        setBadge(els.badgeHC2, "pass", "ok");
+      } else {
+        setBadge(els.badgeHealth, `${r.status}`, "bad");
+        setBadge(els.badgeHC2, "fail", "bad");
+      }
+    } catch {
+      setBadge(els.badgeHealth, "down/timeout", "bad");
+      setBadge(els.badgeHC2, "fail", "bad");
+    }
+
+    // /version
+    try {
+      const r = await fetchWithTimeout(`${API_BASE}/version`, 3500);
+      if (!r.ok) {
+        setBadge(els.badgeVersion, `${r.status}`, "bad");
+        els.versionPreview.textContent = "Version preview: unavailable";
+        return;
+      }
+
+      const data = await r.json();
+      setBadge(els.badgeVersion, "200 OK", "ok");
+
+      const v = data?.version ?? "unknown";
+      const sha = data?.git_sha ?? "unknown";
+      els.versionPreview.textContent = `Version preview: version=${v} | git_sha=${sha}`;
+
+      // "Frozen" heuristic: if git_sha looks real (not 'unknown') consider it frozen
+      if (sha && sha !== "unknown") setBadge(els.badgeFrozen, `frozen ✅ (${sha})`, "ok");
+      else setBadge(els.badgeFrozen, "not frozen (git_sha unknown)", "bad");
+
+    } catch {
+      setBadge(els.badgeVersion, "down/timeout", "bad");
+      els.versionPreview.textContent = "Version preview: unavailable";
+      setBadge(els.badgeFrozen, "verify via /version", null);
+    }
+  }
+
+  els.btnCheck.addEventListener("click", check);
+
+  // Auto-check once on load (non-blocking)
+  window.addEventListener("load", () => {
+    // slight delay to ensure paint
+    setTimeout(check, 250);
+  });
+</script>
 </body>
 </html>
