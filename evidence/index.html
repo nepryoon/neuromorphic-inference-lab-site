@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Evidence | Neuromorphic Inference Lab</title>
-  <meta name="description" content="Evidence hub: live endpoints, repositories, and anchored references for projects and skills." />
+  <meta name="description" content="Evidence hub: live endpoints, repositories, and stable anchors referenced across projects and documentation." />
 
   <style>
     :root{
@@ -204,6 +204,11 @@
       background: rgba(255,77,109,.10);
       color: rgba(255,255,255,.90);
     }
+    .badge.warn{
+      border-color: rgba(255,206,87,.30);
+      background: rgba(255,206,87,.10);
+      color: rgba(255,255,255,.90);
+    }
 
     .divider{
       height: 1px;
@@ -250,6 +255,22 @@
     }
     .list li{ margin: 6px 0; }
 
+    .miniGrid{
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr 1fr;
+      margin-top: 10px;
+    }
+    @media (max-width: 900px){
+      .miniGrid{ grid-template-columns: 1fr; }
+    }
+    .mini{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      padding: 12px;
+    }
+
     pre{
       margin: 10px 0 0;
       padding: 12px;
@@ -292,8 +313,8 @@
   <section class="hero">
     <h1>Evidence</h1>
     <p class="subtitle">
-      A single place for live links, repositories, and anchors used across the site and documentation.
-      This page avoids duplication by grouping information by project and by capability.
+      A single hub for live links, repositories, and stable anchors referenced across the site and documents.
+      Project sections contain the concrete links; capability anchors remain stable for cross-referencing.
     </p>
 
     <div class="row">
@@ -307,13 +328,16 @@
       </a>
 
       <a class="btn" href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">
-        GitHub (app)
+        GitHub (RAG app)
+      </a>
+      <a class="btn" href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener noreferrer">
+        GitHub (infra)
       </a>
       <a class="btn" href="https://github.com/nepryoon/neuromorphic-inference-lab-site" target="_blank" rel="noopener noreferrer">
         GitHub (site)
       </a>
 
-      <button class="btn" id="btnCheck">Check endpoints</button>
+      <button class="btn" id="btnCheck" type="button">Check endpoints</button>
       <span class="badge" id="bHealth">health: unknown</span>
       <span class="badge" id="bVersion">version: unknown</span>
     </div>
@@ -339,7 +363,7 @@
           </ul>
         </div>
         <div>
-          <h3 style="margin:0 0 8px 0; font-size:16px;">Capabilities</h3>
+          <h3 style="margin:0 0 8px 0; font-size:16px;">Capabilities (stable anchors)</h3>
           <ul class="list">
             <li><a href="#python">Python</a></li>
             <li><a href="#fastapi">FastAPI</a></li>
@@ -352,64 +376,143 @@
       </div>
     </div>
 
+    <!-- Projects (canonical links live here) -->
+
     <div class="card anchor" id="rag-copilot">
       <h2>RAG Copilot</h2>
       <p class="muted small">
         Question answering across a curated knowledge base with citations. A small client is available as a web page.
       </p>
 
+      <div class="miniGrid">
+        <div class="mini">
+          <div class="muted small" style="margin-bottom:8px;">Live</div>
+          <ul class="list">
+            <li>Demo page: <a href="/demos/rag-copilot/">/demos/rag-copilot/</a></li>
+            <li>API base: <a href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">api.neuromorphicinference.com</a></li>
+          </ul>
+        </div>
+        <div class="mini">
+          <div class="muted small" style="margin-bottom:8px;">Repositories</div>
+          <ul class="list">
+            <li>App: <a href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">nil-rag-copilot</a></li>
+            <li>Infra: <a href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener noreferrer">nil-infra-template</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <p class="muted small" style="margin:0 0 8px 0;">Related anchors:</p>
       <ul class="list">
-        <li>Demo page: <a href="/demos/rag-copilot/">/demos/rag-copilot/</a></li>
-        <li>API base: <a href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">api.neuromorphicinference.com</a></li>
-        <li>Repository (app): <a href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">nil-rag-copilot</a></li>
-        <li>Repository (infra): <a href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener noreferrer">nil-infra-template</a></li>
+        <li><a href="#python">#python</a>, <a href="#fastapi">#fastapi</a>, <a href="#containers">#containers</a>, <a href="#aws-ecs">#aws-ecs</a>, <a href="#frontend">#frontend</a></li>
       </ul>
 
       <pre>curl -s https://api.neuromorphicinference.com/health
 curl -s https://api.neuromorphicinference.com/version</pre>
 
-      <pre>curl -s -X POST https://api.neuromorphicinference.com/rag/ask \
+      <pre>curl -s -X POST https://api.neAG_BASE/rag/ask \
   -H "Content-Type: application/json" \
   -d '{"question":"How is this deployed?","top_k":4}'</pre>
+
+      <!-- fix typo if pasted: replace "https://api.neuromorphicinference.com" below (kept separate to avoid accidental breaks) -->
+      <pre class="mono">NOTE: If you paste the curl above, ensure the URL starts with:
+https://api.neuromorphicinference.com/rag/ask</pre>
     </div>
 
     <div class="card anchor" id="forecast-dashboard">
       <h2>Tabular Forecast Dashboard</h2>
       <p class="muted small">
-        Forecasting over tabular data with feature engineering and evaluation. (Page and repository can be linked here as they are added.)
+        Forecasting over tabular/time-series data. The demo page provides a local baseline forecast and an optional API toggle.
       </p>
+
+      <div class="miniGrid">
+        <div class="mini">
+          <div class="muted small" style="margin-bottom:8px;">Live</div>
+          <ul class="list">
+            <li>Demo page: <a href="/demos/forecast-dashboard/">/demos/forecast-dashboard/</a></li>
+          </ul>
+        </div>
+        <div class="mini">
+          <div class="muted small" style="margin-bottom:8px;">Repository</div>
+          <ul class="list">
+            <li><a href="https://github.com/nepryoon/nil-forecast-dashboard" target="_blank" rel="noopener noreferrer">nil-forecast-dashboard</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <p class="muted small" style="margin:0 0 8px 0;">Related anchors:</p>
       <ul class="list">
-        <li>Planned demo page: <a href="/demos/forecast-dashboard/">/demos/forecast-dashboard/</a></li>
-        <li>Planned repository: <span class="mono">nil-forecast-dashboard</span></li>
+        <li><a href="#python">#python</a>, <a href="#sql">#sql</a></li>
       </ul>
     </div>
 
     <div class="card anchor" id="doc-classifier">
       <h2>Document Classifier</h2>
       <p class="muted small">
-        Text classification and extraction, with evaluation and error analysis. (Links can be added once the repository is published.)
+        Text classification with a transparent baseline in the browser and an optional API toggle.
       </p>
+
+      <div class="miniGrid">
+        <div class="mini">
+          <div class="muted small" style="margin-bottom:8px;">Live</div>
+          <ul class="list">
+            <li>Demo page: <a href="/demos/doc-classifier/">/demos/doc-classifier/</a></li>
+          </ul>
+        </div>
+        <div class="mini">
+          <div class="muted small" style="margin-bottom:8px;">Repository</div>
+          <ul class="list">
+            <li><a href="https://github.com/nepryoon/nil-doc-classifier" target="_blank" rel="noopener noreferrer">nil-doc-classifier</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <p class="muted small" style="margin:0 0 8px 0;">Related anchors:</p>
       <ul class="list">
-        <li>Planned demo page: <a href="/demos/doc-classifier/">/demos/doc-classifier/</a></li>
-        <li>Planned repository: <span class="mono">nil-doc-classifier</span></li>
+        <li><a href="#python">#python</a>, <a href="#frontend">#frontend</a></li>
       </ul>
     </div>
 
     <div class="card anchor" id="vision-classifier">
       <h2>Vision Classifier</h2>
       <p class="muted small">
-        Image classification with packaging and inference notes. (Links can be added once the repository is published.)
+        Image analysis/classification workflow with a local baseline in the browser and an optional API toggle.
       </p>
+
+      <div class="miniGrid">
+        <div class="mini">
+          <div class="muted small" style="margin-bottom:8px;">Live</div>
+          <ul class="list">
+            <li>Demo page: <a href="/demos/vision-classifier/">/demos/vision-classifier/</a></li>
+          </ul>
+        </div>
+        <div class="mini">
+          <div class="muted small" style="margin-bottom:8px;">Repository</div>
+          <ul class="list">
+            <li><a href="https://github.com/nepryoon/nil-vision-classifier" target="_blank" rel="noopener noreferrer">nil-vision-classifier</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <p class="muted small" style="margin:0 0 8px 0;">Related anchors:</p>
       <ul class="list">
-        <li>Planned demo page: <a href="/demos/vision-classifier/">/demos/vision-classifier/</a></li>
-        <li>Planned repository: <span class="mono">nil-vision-classifier</span></li>
+        <li><a href="#python">#python</a>, <a href="#frontend">#frontend</a></li>
       </ul>
     </div>
+
+    <!-- Capabilities (anchors remain stable; avoid repeating full link lists) -->
 
     <div class="card">
       <h2>Capabilities</h2>
       <p class="muted small">
-        Anchors below are intended as stable references from pages and documents.
+        The anchors below are intended as stable references. Each points to a small set of canonical examples above.
       </p>
 
       <div class="divider"></div>
@@ -417,7 +520,7 @@ curl -s https://api.neuromorphicinference.com/version</pre>
       <div class="anchor" id="python">
         <h3 style="margin:0 0 8px 0; font-size:16px;">Python</h3>
         <ul class="list">
-          <li>RAG API implementation: <a href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">nil-rag-copilot</a></li>
+          <li>See: <a href="#rag-copilot">RAG Copilot</a> (API), <a href="#forecast-dashboard">Forecast Dashboard</a></li>
         </ul>
       </div>
 
@@ -426,8 +529,8 @@ curl -s https://api.neuromorphicinference.com/version</pre>
       <div class="anchor" id="fastapi">
         <h3 style="margin:0 0 8px 0; font-size:16px;">FastAPI</h3>
         <ul class="list">
-          <li>Service endpoints: <a href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">/health</a>, <a href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">/version</a></li>
-          <li>Application repository: <a href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">nil-rag-copilot</a></li>
+          <li>See: <a href="#rag-copilot">RAG Copilot</a> (live endpoints and application repo)</li>
+          <li>Live checks: <a href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">/health</a>, <a href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">/version</a></li>
         </ul>
       </div>
 
@@ -436,7 +539,7 @@ curl -s https://api.neuromorphicinference.com/version</pre>
       <div class="anchor" id="containers">
         <h3 style="margin:0 0 8px 0; font-size:16px;">Containers</h3>
         <ul class="list">
-          <li>Container build and run instructions in: <a href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">nil-rag-copilot</a></li>
+          <li>See: <a href="#rag-copilot">RAG Copilot</a> (Dockerfile and containerised service)</li>
         </ul>
       </div>
 
@@ -445,8 +548,8 @@ curl -s https://api.neuromorphicinference.com/version</pre>
       <div class="anchor" id="aws-ecs">
         <h3 style="margin:0 0 8px 0; font-size:16px;">AWS (ECS/ALB/ECR)</h3>
         <ul class="list">
-          <li>Service endpoints: <a href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">/health</a>, <a href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">/version</a></li>
-          <li>Infrastructure templates: <a href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener noreferrer">nil-infra-template</a></li>
+          <li>See: <a href="#rag-copilot">RAG Copilot</a> (infra repo and live service)</li>
+          <li>Infra templates: <a href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener noreferrer">nil-infra-template</a></li>
         </ul>
       </div>
 
@@ -454,9 +557,9 @@ curl -s https://api.neuromorphicinference.com/version</pre>
 
       <div class="anchor" id="sql">
         <h3 style="margin:0 0 8px 0; font-size:16px;">SQL</h3>
-        <p class="muted small" style="margin:0;">
-          This anchor is reserved for the forecast dashboard and analytics demos where SQL queries and data modelling are shown.
-        </p>
+        <ul class="list">
+          <li>See: <a href="#forecast-dashboard">Tabular Forecast Dashboard</a> (analytics and evaluation workflow)</li>
+        </ul>
       </div>
 
       <div class="divider"></div>
@@ -468,6 +571,7 @@ curl -s https://api.neuromorphicinference.com/version</pre>
           <li>Demo pages: <a href="/demos/">/demos/</a></li>
         </ul>
       </div>
+
     </div>
 
   </section>
@@ -490,9 +594,8 @@ curl -s https://api.neuromorphicinference.com/version</pre>
 
   function setBadge(el, text, state) {
     el.textContent = text;
-    el.classList.remove("ok", "bad");
-    if (state === "ok") el.classList.add("ok");
-    if (state === "bad") el.classList.add("bad");
+    el.classList.remove("ok", "bad", "warn");
+    if (state) el.classList.add(state);
   }
 
   async function fetchWithTimeout(url, ms = 3500) {
@@ -509,8 +612,8 @@ curl -s https://api.neuromorphicinference.com/version</pre>
   }
 
   async function check() {
-    setBadge(els.bHealth, "health: checking…", null);
-    setBadge(els.bVersion, "version: checking…", null);
+    setBadge(els.bHealth, "health: checking…", "warn");
+    setBadge(els.bVersion, "version: checking…", "warn");
     els.versionPreview.textContent = "Version preview: checking…";
 
     try {
