@@ -1,169 +1,506 @@
-<!-- /demos/index.html (STEP 1: Live + Code for every demo) -->
 <!doctype html>
-<html lang="en">
+<html lang="it">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Demos — Neuromorphic Inference Lab</title>
-  <meta name="description" content="Interactive demos and case studies: Live + Code." />
-  <link rel="stylesheet" href="/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demos | Neuromorphic Inference Lab</title>
+  <meta name="description" content="Demos pratiche: AI applicata + messa in produzione. Chatbot RAG, forecasting tabellare, computer vision e analytics." />
+
   <style>
-    :root{--bg:#0b0f17;--text:#e7ecf5;--muted:#a7b1c6;--line:rgba(231,236,245,.12);--radius:16px;--shadow:0 10px 35px rgba(0,0,0,.35);--sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--text)}
-    a{color:inherit;text-decoration:none}
-    a:hover{opacity:.92}
-    .wrap{max-width:1100px;margin:0 auto;padding:22px 18px}
-    header{border-bottom:1px solid var(--line);background:rgba(11,15,23,.72);backdrop-filter:blur(10px);position:sticky;top:0;z-index:20}
-    .nav{display:flex;justify-content:space-between;align-items:center;gap:16px}
-    .brand{font-weight:800;display:flex;align-items:center;gap:10px}
-    .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#7c5cff,#2dd4bf);box-shadow:0 10px 25px rgba(124,92,255,.22)}
-    nav a{color:var(--muted);font-weight:700;padding:8px 10px;border-radius:12px;border:1px solid transparent}
-    nav a:hover{border-color:var(--line);background:rgba(255,255,255,.03);color:var(--text)}
-    h1{margin:18px 0 6px;font-size:32px;letter-spacing:-.4px}
-    .sub{margin:0 0 16px;color:var(--muted);line-height:1.6;max-width:85ch}
-    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-    @media (max-width:860px){.grid{grid-template-columns:1fr}}
-    .card{border:1px solid var(--line);background:linear-gradient(180deg, rgba(18,26,42,.75), rgba(15,22,38,.55));border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
-    .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}
-    .tag{font-size:12px;font-weight:800;padding:6px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:rgba(255,255,255,.02);white-space:nowrap}
-    .links{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-    .btn{font-size:13px;padding:9px 11px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.02);font-weight:800}
-    .btn.secondary{color:var(--muted)}
-    .note{margin-top:18px;border:1px solid var(--line);border-radius:var(--radius);padding:14px;background:rgba(255,255,255,.02);color:var(--muted);line-height:1.6}
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
-    footer{margin-top:26px;border-top:1px solid var(--line);padding:18px 0 30px;color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
+    :root{
+      --bg: #070A12;
+      --surface: rgba(255,255,255,.06);
+      --surface2: rgba(255,255,255,.08);
+      --border: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --accent: #64FFDA;
+      --accent2: #7C5CFF;
+      --danger: #FF4D6D;
+      --ok: #43FBA4;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+      --radius2: 14px;
+      --max: 1100px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+
+    *{ box-sizing: border-box; }
+    html, body{ height: 100%; }
+    body{
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 600px at 20% 10%, rgba(124,92,255,.18), transparent 55%),
+        radial-gradient(900px 600px at 80% 20%, rgba(100,255,218,.14), transparent 55%),
+        radial-gradient(700px 450px at 40% 80%, rgba(124,92,255,.12), transparent 60%),
+        var(--bg);
+      line-height: 1.55;
+    }
+
+    a{ color: inherit; text-decoration: none; }
+    a:hover{ text-decoration: underline; text-underline-offset: 3px; }
+
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 20px 18px 46px;
+    }
+
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(to bottom, rgba(7,10,18,.82), rgba(7,10,18,.50));
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .nav{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .brand{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+    .logo{
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(100,255,218,.95), rgba(100,255,218,.15) 58%, transparent 60%),
+        radial-gradient(circle at 70% 70%, rgba(124,92,255,.9), rgba(124,92,255,.18) 55%, transparent 57%),
+        rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 8px 22px rgba(0,0,0,.25);
+    }
+    nav ul{
+      list-style: none;
+      display: flex;
+      gap: 10px;
+      padding: 0;
+      margin: 0;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .pill{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .pill.active{
+      color: var(--text);
+      border-color: rgba(100,255,218,.35);
+      background: rgba(100,255,218,.08);
+    }
+
+    .hero{
+      margin-top: 22px;
+      padding: 22px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(420px 260px at 10% 20%, rgba(100,255,218,.20), transparent 55%),
+        radial-gradient(420px 260px at 90% 40%, rgba(124,92,255,.18), transparent 60%);
+      pointer-events:none;
+      filter: blur(1px);
+    }
+    .hero > *{ position: relative; }
+    h1{
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.12;
+      letter-spacing: .2px;
+    }
+    .subtitle{
+      margin: 0;
+      color: var(--muted);
+      max-width: 86ch;
+    }
+
+    .heroRow{
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn{
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 10px 20px rgba(0,0,0,.18);
+      cursor: pointer;
+    }
+    .btn:hover{ background: rgba(255,255,255,.08); text-decoration: none; }
+    .btn.primary{
+      border-color: rgba(100,255,218,.40);
+      background: linear-gradient(135deg, rgba(100,255,218,.18), rgba(124,92,255,.12));
+    }
+
+    .kbd{
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 2px 8px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.25);
+      border-radius: 999px;
+      color: rgba(255,255,255,.78);
+    }
+
+    .grid{
+      margin-top: 16px;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .card{
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      box-shadow: 0 10px 24px rgba(0,0,0,.22);
+      padding: 16px;
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 220px;
+    }
+
+    .card h2{
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: .2px;
+    }
+
+    .muted{ color: var(--muted); }
+    .small{ font-size: 14px; }
+
+    .tags{
+      display:flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      font-size: 12px;
+      color: rgba(255,255,255,.80);
+      font-family: var(--mono);
+    }
+
+    .actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: auto;
+      padding-top: 6px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      font-size: 12px;
+      color: rgba(255,255,255,.78);
+      font-family: var(--mono);
+      white-space: nowrap;
+    }
+    .badge.ok{
+      border-color: rgba(67,251,164,.35);
+      background: rgba(67,251,164,.10);
+      color: rgba(255,255,255,.90);
+    }
+    .badge.bad{
+      border-color: rgba(255,77,109,.35);
+      background: rgba(255,77,109,.10);
+      color: rgba(255,255,255,.90);
+    }
+
+    .divider{
+      height: 1px;
+      background: rgba(255,255,255,.08);
+      margin: 16px 0;
+    }
+
+    footer{
+      margin-top: 24px;
+      color: rgba(255,255,255,.55);
+      font-size: 13px;
+    }
+    .mono{ font-family: var(--mono); }
+
+    @media (max-width: 520px){
+      .nav{ padding: 12px 14px; }
+      .wrap{ padding: 18px 14px 42px; }
+    }
   </style>
 </head>
 
 <body>
-  <header>
-    <div class="wrap nav">
-      <a class="brand" href="/"><span class="dot" aria-hidden="true"></span>Neuromorphic Inference Lab</a>
-      <nav>
-        <a href="/demos">Demos</a>
-        <a href="/evidence">Evidence</a>
-        <a href="/about">About</a>
-        <a href="/research">Research</a>
-        <a href="https://github.com/nepryoon" target="_blank" rel="noopener">GitHub</a>
-      </nav>
-    </div>
-  </header>
+<header>
+  <div class="nav">
+    <a class="brand" href="/" aria-label="Neuromorphic Inference Lab Home">
+      <span class="logo" aria-hidden="true"></span>
+      <span>Neuromorphic Inference Lab</span>
+    </a>
 
-  <main class="wrap">
-    <h1>Demos & Case Studies</h1>
-    <p class="sub">
-      Every project is backed by two proofs: a <strong>live page</strong> on this domain and the <strong>exact source code</strong> on GitHub.
+    <nav aria-label="Main navigation">
+      <ul>
+        <li><a class="pill" href="/">Home</a></li>
+        <li><a class="pill active" href="/demos/">Demos</a></li>
+        <li><a class="pill" href="/evidence/">Evidence</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>Applied AI Demos</h1>
+    <p class="subtitle">
+      Dalla teoria alla produzione: demo pensate per mostrare <strong>problem solving</strong>,
+      <strong>full-stack</strong> e <strong>deploy</strong>. Ogni demo è collegata a codice e (quando disponibile) endpoint live.
     </p>
 
-    <div class="grid">
-      <!-- 1) EdgePulse -->
-      <section class="card">
-        <div class="top">
-          <h3 style="margin:0">EdgePulse</h3>
-          <span class="tag">LIVE / CASE STUDY</span>
-        </div>
-        <p style="margin:0;color:var(--muted);line-height:1.55">
-          Edge ingest → storage → scheduled ML scoring → alerting → dashboard. Production-minded reference system.
-        </p>
-        <div class="links">
-          <a class="btn" href="/demos/edgepulse">Live / Docs</a>
-          <a class="btn secondary" href="https://github.com/nepryoon/edgepulse" target="_blank" rel="noopener">Code</a>
-        </div>
-      </section>
-
-      <!-- 2) RAG Copilot -->
-      <section class="card">
-        <div class="top">
-          <h3 style="margin:0">RAG Copilot</h3>
-          <span class="tag">LIVE DOCS</span>
-        </div>
-        <p style="margin:0;color:var(--muted);line-height:1.55">
-          RAG chatbot with citations, eval set, guardrails, and latency/cost controls (UI + API + deploy).
-        </p>
-        <div class="links">
-          <a class="btn" href="/demos/rag-copilot">Live / Docs</a>
-          <a class="btn secondary" href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener">Code</a>
-        </div>
-      </section>
-
-      <!-- 3) Forecast Studio -->
-      <section class="card">
-        <div class="top">
-          <h3 style="margin:0">Forecast Studio</h3>
-          <span class="tag">LIVE DOCS</span>
-        </div>
-        <p style="margin:0;color:var(--muted);line-height:1.55">
-          From SQL/CSV to forecast dashboard: backtesting, scheduled scoring, reporting automation.
-        </p>
-        <div class="links">
-          <a class="btn" href="/demos/forecast-studio">Live / Docs</a>
-          <a class="btn secondary" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener">Code</a>
-        </div>
-      </section>
-
-      <!-- 4) Tabular Risk -->
-      <section class="card">
-        <div class="top">
-          <h3 style="margin:0">Tabular Risk / Churn</h3>
-          <span class="tag">LIVE DOCS</span>
-        </div>
-        <p style="margin:0;color:var(--muted);line-height:1.55">
-          Business scoring with explainability, data quality checks, and drift monitoring (DS production).
-        </p>
-        <div class="links">
-          <a class="btn" href="/demos/tabular-risk">Live / Docs</a>
-          <a class="btn secondary" href="https://github.com/nepryoon/nil-tabular-risk" target="_blank" rel="noopener">Code</a>
-        </div>
-      </section>
-
-      <!-- 5) Visual Inspector -->
-      <section class="card">
-        <div class="top">
-          <h3 style="margin:0">Visual Inspector</h3>
-          <span class="tag">LIVE DOCS</span>
-        </div>
-        <p style="margin:0;color:var(--muted);line-height:1.55">
-          Image classification with explainability (e.g., Grad-CAM) and production-oriented inference packaging.
-        </p>
-        <div class="links">
-          <a class="btn" href="/demos/visual-inspector">Live / Docs</a>
-          <a class="btn secondary" href="https://github.com/nepryoon/nil-visual-inspector" target="_blank" rel="noopener">Code</a>
-        </div>
-      </section>
-
-      <!-- 6) ML Infra Template -->
-      <section class="card">
-        <div class="top">
-          <h3 style="margin:0">ML Infra Template</h3>
-          <span class="tag">LIVE DOCS</span>
-        </div>
-        <p style="margin:0;color:var(--muted);line-height:1.55">
-          Reusable template repo for quality gates (lint/test), Docker, CI, and release tags (build provenance).
-        </p>
-        <div class="links">
-          <a class="btn" href="/evidence#cicd">Live / Docs</a>
-          <a class="btn secondary" href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener">Code</a>
-        </div>
-      </section>
+    <div class="heroRow">
+      <a class="btn primary" href="/evidence/">Evidence page</a>
+      <a class="btn" href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">
+        Live API <span class="kbd">/health</span>
+      </a>
+      <a class="btn" href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">
+        Build info <span class="kbd">/version</span>
+      </a>
+      <button class="btn" id="btnCheck">
+        Check endpoints <span class="kbd">now</span>
+      </button>
+      <span class="badge" id="badgeHealth">health: unknown</span>
+      <span class="badge" id="badgeVersion">version: unknown</span>
     </div>
 
-    <div class="note">
-      Next: we’ll create <strong>/demos/infra-template</strong> (a dedicated live docs page) so the Infra Template also has a stable URL under /demos.
-      Then we move to Step 2.
-    </div>
+    <div class="divider"></div>
+    <p class="muted small mono" id="versionPreview">Version preview: —</p>
+  </section>
 
-    <footer>
-      <div class="mono">
-        neuromorphicinference.com · <a href="/evidence" style="text-decoration:underline;">Evidence</a> ·
-        <a href="https://github.com/nepryoon" target="_blank" rel="noopener" style="text-decoration:underline;">@nepryoon</a>
-      </div>
-      <div class="mono" id="build-info">
-        Deployed from: <span id="build-sha">unknown</span> (<span id="build-branch">main</span>)
-      </div>
-    </footer>
-  </main>
+  <section class="grid" aria-label="Demo cards">
 
-  <script src="/build-info.js" defer></script>
+    <!-- RAG Copilot -->
+    <article class="card">
+      <h2>RAG Copilot (API live)</h2>
+      <p class="muted small">
+        Backend FastAPI containerizzato e deployato su ECS Fargate dietro ALB.
+        Punto di partenza per un chatbot RAG con retrieval + prompt orchestration.
+      </p>
+      <div class="tags">
+        <span class="tag">FastAPI</span>
+        <span class="tag">Docker</span>
+        <span class="tag">AWS (ALB/ECS)</span>
+        <span class="tag">RAG</span>
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">
+          Open live /health
+        </a>
+        <a class="btn" href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">
+          Open live /version
+        </a>
+        <a class="btn" href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">
+          GitHub (app)
+        </a>
+        <a class="btn" href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener noreferrer">
+          GitHub (infra)
+        </a>
+      </div>
+    </article>
+
+    <!-- Tabular Forecast -->
+    <article class="card">
+      <h2>Tabular Forecast Dashboard</h2>
+      <p class="muted small">
+        Forecasting su dati tabellari con pipeline di feature engineering + training + serving.
+        Demo ideale per ruoli Data Analyst / ML Engineer orientati a KPI e decisioni.
+      </p>
+      <div class="tags">
+        <span class="tag">Python</span>
+        <span class="tag">SQL</span>
+        <span class="tag">Scikit-learn</span>
+        <span class="tag">Dashboard</span>
+      </div>
+      <div class="actions">
+        <a class="btn" href="/evidence/" title="Collega qui la demo quando pronta">
+          Demo (coming soon)
+        </a>
+        <a class="btn" href="https://github.com/nepryoon" target="_blank" rel="noopener noreferrer"
+           title="Sostituisci con la repo reale (es. https://github.com/nepryoon/<repo> )">
+          GitHub (replace link)
+        </a>
+      </div>
+    </article>
+
+    <!-- CV / NLP -->
+    <article class="card">
+      <h2>NLP: CV / Document Classifier</h2>
+      <p class="muted small">
+        Classificazione e parsing di documenti (CV, PDF testuali, email) con metriche, error analysis e serving.
+        Ottimo per mostrare NLP pratico e integrazione in workflow.
+      </p>
+      <div class="tags">
+        <span class="tag">NLP</span>
+        <span class="tag">Pipeline</span>
+        <span class="tag">Evaluation</span>
+        <span class="tag">Serving</span>
+      </div>
+      <div class="actions">
+        <a class="btn" href="/evidence/" title="Collega qui la demo quando pronta">
+          Demo (coming soon)
+        </a>
+        <a class="btn" href="https://github.com/nepryoon" target="_blank" rel="noopener noreferrer"
+           title="Sostituisci con la repo reale (es. https://github.com/nepryoon/<repo> )">
+          GitHub (replace link)
+        </a>
+      </div>
+    </article>
+
+    <!-- Computer Vision -->
+    <article class="card">
+      <h2>Computer Vision Classifier</h2>
+      <p class="muted small">
+        Classificazione immagini con modello addestrato + inference API + metriche.
+        Focus: riproducibilità, packaging e deploy.
+      </p>
+      <div class="tags">
+        <span class="tag">PyTorch</span>
+        <span class="tag">CV</span>
+        <span class="tag">CI/CD</span>
+        <span class="tag">Docker</span>
+      </div>
+      <div class="actions">
+        <a class="btn" href="/evidence/" title="Collega qui la demo quando pronta">
+          Demo (coming soon)
+        </a>
+        <a class="btn" href="https://github.com/nepryoon" target="_blank" rel="noopener noreferrer"
+           title="Sostituisci con la repo reale (es. https://github.com/nepryoon/<repo> )">
+          GitHub (replace link)
+        </a>
+      </div>
+    </article>
+
+  </section>
+
+  <footer>
+    <div>© <span id="year"></span> Neuromorphic Inference Lab — Demos</div>
+  </footer>
+</main>
+
+<script>
+  const API_BASE = "https://api.neuromorphicinference.com";
+  const els = {
+    badgeHealth: document.getElementById("badgeHealth"),
+    badgeVersion: document.getElementById("badgeVersion"),
+    versionPreview: document.getElementById("versionPreview"),
+    btnCheck: document.getElementById("btnCheck"),
+  };
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  function setBadge(el, text, state) {
+    el.textContent = text;
+    el.classList.remove("ok", "bad");
+    if (state === "ok") el.classList.add("ok");
+    if (state === "bad") el.classList.add("bad");
+  }
+
+  async function fetchWithTimeout(url, ms = 3500) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), ms);
+    try {
+      const res = await fetch(url, { signal: ctrl.signal, headers: { "Accept": "application/json" } });
+      clearTimeout(t);
+      return res;
+    } catch (e) {
+      clearTimeout(t);
+      throw e;
+    }
+  }
+
+  async function check() {
+    setBadge(els.badgeHealth, "health: checking…", null);
+    setBadge(els.badgeVersion, "version: checking…", null);
+    els.versionPreview.textContent = "Version preview: checking…";
+
+    // /health
+    try {
+      const r = await fetchWithTimeout(`${API_BASE}/health`, 3500);
+      if (r.ok) setBadge(els.badgeHealth, "health: 200 OK", "ok");
+      else setBadge(els.badgeHealth, `health: ${r.status}`, "bad");
+    } catch {
+      setBadge(els.badgeHealth, "health: down/timeout", "bad");
+    }
+
+    // /version
+    try {
+      const r = await fetchWithTimeout(`${API_BASE}/version`, 3500);
+      if (!r.ok) {
+        setBadge(els.badgeVersion, `version: ${r.status}`, "bad");
+        els.versionPreview.textContent = "Version preview: unavailable";
+        return;
+      }
+      const data = await r.json();
+      setBadge(els.badgeVersion, "version: 200 OK", "ok");
+
+      const v = data?.version ?? "unknown";
+      const sha = data?.git_sha ?? "unknown";
+      els.versionPreview.textContent = `Version preview: version=${v} | git_sha=${sha}`;
+    } catch {
+      setBadge(els.badgeVersion, "version: down/timeout", "bad");
+      els.versionPreview.textContent = "Version preview: unavailable";
+    }
+  }
+
+  els.btnCheck.addEventListener("click", check);
+  window.addEventListener("load", () => setTimeout(check, 250));
+</script>
 </body>
 </html>
