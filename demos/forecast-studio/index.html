@@ -4,19 +4,17 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Forecast Studio | Neuromorphic Inference Lab</title>
-  <meta name="description" content="Forecast Studio: explore lightweight forecasting locally and optionally call an API endpoint." />
+  <meta name="description" content="Forecast Studio: paste a series, run a local forecast, and optionally call an API endpoint." />
 
   <style>
     :root{
-      --bg:#070A12;--surface:rgba(255,255,255,.06);--surface2:rgba(255,255,255,.08);--border:rgba(255,255,255,.12);
-      --text:rgba(255,255,255,.92);--muted:rgba(255,255,255,.68);
+      --bg:#070A12;--border:rgba(255,255,255,.12);--text:rgba(255,255,255,.92);--muted:rgba(255,255,255,.68);
       --accent:#64FFDA;--accent2:#7C5CFF;--ok:#43FBA4;--warn:#FFCE57;--danger:#FF4D6D;
       --shadow:0 10px 30px rgba(0,0,0,.35);--radius:18px;--max:1100px;
       --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
       --sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
     }
     *{box-sizing:border-box;}
-    html,body{height:100%;}
     body{
       margin:0;font-family:var(--sans);color:var(--text);line-height:1.55;
       background:
@@ -79,13 +77,22 @@
       border-color:rgba(100,255,218,.40);
       background:linear-gradient(135deg, rgba(100,255,218,.18), rgba(124,92,255,.12));
     }
-    .btn.ghost{background:transparent;border-color:rgba(255,255,255,.10);box-shadow:none;}
     .btn:disabled{opacity:.6;cursor:not-allowed;}
 
-    .kbd{
-      font-family:var(--mono);font-size:12px;padding:2px 8px;border:1px solid rgba(255,255,255,.14);
-      background:rgba(0,0,0,.25);border-radius:999px;color:rgba(255,255,255,.78);
+    .toggle{
+      display:inline-flex;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);padding:6px;border-radius:999px;
     }
+    .toggle button{
+      border:0;background:transparent;color:rgba(255,255,255,.75);
+      padding:8px 10px;border-radius:999px;cursor:pointer;font-weight:700;font-size:12px;
+    }
+    .toggle button.active{
+      color:rgba(255,255,255,.92);
+      background:linear-gradient(135deg, rgba(100,255,218,.16), rgba(124,92,255,.12));
+      border:1px solid rgba(100,255,218,.30);
+    }
+
     .badge{
       display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
       border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);
@@ -94,9 +101,13 @@
     .badge.ok{border-color:rgba(67,251,164,.35);background:rgba(67,251,164,.10);color:rgba(255,255,255,.90);}
     .badge.bad{border-color:rgba(255,77,109,.35);background:rgba(255,77,109,.10);color:rgba(255,255,255,.90);}
     .badge.warn{border-color:rgba(255,206,87,.30);background:rgba(255,206,87,.10);color:rgba(255,255,255,.90);}
+    .kbd{
+      font-family:var(--mono);font-size:12px;padding:2px 8px;border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.25);border-radius:999px;color:rgba(255,255,255,.78);
+    }
 
-    .grid{margin-top:16px;display:grid;gap:12px;grid-template-columns:1.2fr .8fr;align-items:start;}
-    @media (max-width:980px){.grid{grid-template-columns:1fr;}}
+    .grid{margin-top:16px;display:grid;gap:12px;grid-template-columns:1.15fr .85fr;align-items:start;}
+    @media (max-width: 980px){ .grid{grid-template-columns:1fr;} }
     .card{border-radius:var(--radius);border:1px solid var(--border);background:rgba(255,255,255,.05);box-shadow:0 10px 24px rgba(0,0,0,.22);padding:16px;}
     .card h2{margin:0 0 8px;font-size:18px;letter-spacing:.2px;}
     .muted{color:var(--muted);}
@@ -104,65 +115,62 @@
     .mono{font-family:var(--mono);}
     .divider{height:1px;background:rgba(255,255,255,.08);margin:14px 0;}
 
-    label{font-size:13px;color:rgba(255,255,255,.82);font-weight:800;letter-spacing:.2px;}
-    input, select, textarea{
+    textarea{
       width:100%;
+      min-height:130px;
+      resize:vertical;
       border-radius:14px;
       border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.18);
+      background:rgba(0,0,0,.22);
       color:var(--text);
-      padding:10px 12px;
+      padding:12px 12px;
+      font-family:var(--mono);
+      font-size:12px;
       outline:none;
-      font-family:var(--sans);
     }
-    textarea{min-height:110px;resize:vertical;}
-    input:focus, select:focus, textarea:focus{
+    textarea:focus{
       border-color:rgba(100,255,218,.35);
       box-shadow:0 0 0 4px rgba(100,255,218,.08);
     }
 
-    .formGrid{display:grid;gap:10px;grid-template-columns:1fr 1fr;}
-    @media (max-width:700px){.formGrid{grid-template-columns:1fr;}}
+    .controls{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:10px;
+      margin-top:10px;
+    }
+    @media (max-width: 820px){ .controls{grid-template-columns:1fr;} }
 
-    .samples{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
-    .chip{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 10px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.16);
-      font-size:12px;color:rgba(255,255,255,.82);
-      cursor:pointer;user-select:none;
-    }
-    .chip:hover{background:rgba(255,255,255,.06);}
-
-    .toggle{
-      display:inline-flex;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.18);padding:6px;border-radius:999px;
-    }
-    .toggle button{
-      border:0;background:transparent;color:rgba(255,255,255,.75);
-      padding:8px 10px;border-radius:999px;cursor:pointer;font-weight:800;font-size:12px;
-    }
-    .toggle button.active{
-      color:rgba(255,255,255,.92);
-      background:linear-gradient(135deg, rgba(100,255,218,.16), rgba(124,92,255,.12));
-      border:1px solid rgba(100,255,218,.30);
-    }
-
-    canvas{
+    select, input[type="number"]{
       width:100%;
-      height:260px;
+      padding:10px 10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.22);
+      color:var(--text);
+      outline:none;
+      font-family:var(--sans);
+    }
+
+    .plot{
+      margin-top:12px;
       border-radius:14px;
       border:1px solid rgba(255,255,255,.10);
       background:rgba(0,0,0,.18);
-      display:block;
+      padding:12px;
+      overflow:hidden;
     }
-
     pre{
-      margin:10px 0 0;padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.25);overflow:auto;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.82);
+      margin:10px 0 0;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.25);
+      overflow:auto;
+      font-family:var(--mono);
+      font-size:12px;
+      color:rgba(255,255,255,.82);
     }
-
     footer{margin-top:24px;color:rgba(255,255,255,.55);font-size:13px;}
   </style>
 </head>
@@ -176,8 +184,7 @@
     </a>
     <nav aria-label="Main navigation">
       <ul>
-        <li><a class="pill" href="/">Home</a></li>
-        <li><a class="pill active" href="/demos/">Demos</a></li>
+        <li><a class="pill" href="/demos/">Demos</a></li>
         <li><a class="pill" href="/evidence/">Evidence</a></li>
       </ul>
     </nav>
@@ -188,11 +195,11 @@
   <section class="hero">
     <h1>Forecast Studio</h1>
     <p class="subtitle">
-      Explore a lightweight forecasting workflow. Local mode runs in the browser; API mode can call an optional endpoint.
+      Paste a numeric series and generate a short-horizon forecast. Local methods run in the browser; API mode is optional.
     </p>
 
     <div class="rowWrap">
-      <a class="btn primary" href="/evidence/#forecast-studio">Evidence anchor <span class="kbd">#forecast-studio</span></a>
+      <a class="btn primary" href="/evidence/#forecast-studio">Evidence <span class="kbd">#forecast-studio</span></a>
       <a class="btn" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener noreferrer">GitHub</a>
 
       <span class="toggle" role="group" aria-label="Mode selector">
@@ -208,89 +215,78 @@
     <div class="card">
       <h2>Try it</h2>
       <p class="muted small">
-        Enter a numeric series (comma-separated). Local mode supports a simple baseline. API mode expects
-        <span class="mono">POST /forecast/predict</span> (optional).
+        Input format: one number per line, or comma-separated values. API mode expects <span class="mono">POST /forecast/predict</span> (optional).
       </p>
 
-      <div class="samples" aria-label="Sample series">
-        <span class="chip" data-series="120,118,123,130,128,132,136,134,140,145,147,150">Trend</span>
-        <span class="chip" data-series="50,54,58,62,61,59,55,52,49,50,53,57,61">Seasonal-ish</span>
-        <span class="chip" data-series="80,79,81,78,82,83,81,80,79,81,82,84">Stable</span>
-      </div>
+      <textarea id="series" aria-label="Time series input">120
+118
+121
+125
+124
+128
+130
+129
+133
+136
+135
+139</textarea>
 
-      <div class="divider"></div>
-
-      <div style="display:grid;gap:10px;">
+      <div class="controls" aria-label="Parameters">
         <div>
-          <label for="series">Series</label>
-          <textarea id="series" placeholder="e.g. 120,118,123,130,128"></textarea>
+          <label class="small" style="color:rgba(255,255,255,.82);font-weight:700;">Method</label>
+          <select id="method">
+            <option value="moving-average">Moving average</option>
+            <option value="exp-smoothing">Exponential smoothing</option>
+          </select>
         </div>
 
-        <div class="formGrid">
-          <div>
-            <label for="method">Method</label>
-            <select id="method">
-              <option value="moving_average" selected>Moving average</option>
-              <option value="naive">Naïve (last value)</option>
-            </select>
-          </div>
-          <div>
-            <label for="horizon">Horizon</label>
-            <input id="horizon" type="number" min="1" max="60" value="7" />
-          </div>
-          <div>
-            <label for="window">Window</label>
-            <input id="window" type="number" min="1" max="60" value="3" />
-          </div>
-          <div>
-            <label for="holdout">Holdout (for metrics)</label>
-            <input id="holdout" type="number" min="1" max="60" value="4" />
-          </div>
+        <div>
+          <label class="small" style="color:rgba(255,255,255,.82);font-weight:700;">Horizon</label>
+          <input id="horizon" type="number" min="1" max="24" step="1" value="6" />
         </div>
 
-        <div class="rowWrap" style="margin-top:0;">
-          <button class="btn primary" id="btnRun" type="button">Run</button>
-          <button class="btn" id="btnClear" type="button">Clear</button>
-          <span class="badge" id="bMetrics">metrics: —</span>
+        <div>
+          <label class="small" style="color:rgba(255,255,255,.82);font-weight:700;">Window / Alpha</label>
+          <input id="param" type="number" min="1" max="12" step="1" value="3" />
         </div>
       </div>
 
+      <div class="rowWrap" style="margin-top:12px;">
+        <button class="btn primary" id="btnRun" type="button">Forecast</button>
+        <button class="btn" id="btnClear" type="button">Reset</button>
+        <span class="badge" id="bMetric">MAE: —</span>
+      </div>
+
+      <div class="plot" id="plot" aria-label="Series plot"></div>
+
       <div class="divider"></div>
-
-      <h2>Chart</h2>
-      <canvas id="chart" width="900" height="360" aria-label="Series chart"></canvas>
-
-      <div class="divider"></div>
-
       <h2>Output</h2>
       <pre id="out">{}</pre>
+
+      <div class="divider"></div>
+      <h2>API schema (optional)</h2>
+      <pre>{
+  "series": [120,118,121,125],
+  "horizon": 6,
+  "method": "moving-average",
+  "param": 3
+}</pre>
     </div>
 
     <aside class="card">
       <h2>Links</h2>
       <div class="small" style="display:grid;gap:10px;">
         <a class="btn" style="justify-content:space-between;" href="/evidence/#forecast-studio"><span>Evidence</span><span class="kbd">#forecast-studio</span></a>
-        <a class="btn" style="justify-content:space-between;" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener noreferrer"><span>Repository</span><span class="kbd">GitHub</span></a>
+        <a class="btn" style="justify-content:space-between;" href="/evidence/#ml"><span>Related</span><span class="kbd">#ml</span></a>
         <a class="btn" style="justify-content:space-between;" href="/evidence/#sql"><span>Related</span><span class="kbd">#sql</span></a>
+        <a class="btn" style="justify-content:space-between;" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener noreferrer"><span>Repository</span><span class="kbd">GitHub</span></a>
       </div>
 
       <div class="divider"></div>
 
-      <h2>API contract (optional)</h2>
-      <pre>{
-  "series": [120, 118, 123, 130],
-  "horizon": 7,
-  "window": 3,
-  "method": "moving_average|naive"
-}</pre>
-
-      <pre>{
-  "forecast": [131.3, 132.0, 132.4],
-  "meta": { "latency_ms": 35, "version": "0.0.x", "git_sha": "..." }
-}</pre>
-
-      <p class="muted small" style="margin:10px 0 0;">
-        If API mode fails, local mode remains available.
+      <h2>Notes</h2>
+      <p class="muted small" style="margin:0;">
+        The page runs a small back-test (hold-out) to compute MAE. The forecast is intentionally lightweight and deterministic.
       </p>
     </aside>
   </section>
@@ -303,20 +299,19 @@
 
   const el = {
     year: document.getElementById("year"),
+    modeLocal: document.getElementById("modeLocal"),
+    modeApi: document.getElementById("modeApi"),
+    bMode: document.getElementById("bMode"),
+    bStatus: document.getElementById("bStatus"),
+    bMetric: document.getElementById("bMetric"),
     series: document.getElementById("series"),
     method: document.getElementById("method"),
     horizon: document.getElementById("horizon"),
-    window: document.getElementById("window"),
-    holdout: document.getElementById("holdout"),
+    param: document.getElementById("param"),
     btnRun: document.getElementById("btnRun"),
     btnClear: document.getElementById("btnClear"),
     out: document.getElementById("out"),
-    chart: document.getElementById("chart"),
-    bStatus: document.getElementById("bStatus"),
-    bMode: document.getElementById("bMode"),
-    bMetrics: document.getElementById("bMetrics"),
-    modeLocal: document.getElementById("modeLocal"),
-    modeApi: document.getElementById("modeApi"),
+    plot: document.getElementById("plot"),
   };
 
   el.year.textContent = new Date().getFullYear();
@@ -332,122 +327,130 @@
     el.bMode.classList.add("warn");
   }
 
-  function setBadge(text, state) {
+  function setStatus(text, state) {
     el.bStatus.textContent = text;
     el.bStatus.classList.remove("ok","bad","warn");
     if (state) el.bStatus.classList.add(state);
   }
 
   function parseSeries(text) {
-    const raw = text.split(",").map(s => s.trim()).filter(Boolean);
-    const nums = raw.map(x => Number(x));
-    if (!nums.length) return { ok: false, error: "Please provide at least one number." };
-    if (nums.some(n => !Number.isFinite(n))) return { ok: false, error: "Series contains non-numeric values." };
-    return { ok: true, series: nums };
+    const parts = text
+      .split(/[\n,]+/g)
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    const xs = parts.map(p => Number(p)).filter(n => Number.isFinite(n));
+    return xs;
+  }
+
+  function mean(arr) {
+    if (!arr.length) return 0;
+    return arr.reduce((a,b) => a+b, 0) / arr.length;
+  }
+
+  function mae(yTrue, yPred) {
+    if (!yTrue.length || yTrue.length !== yPred.length) return null;
+    const e = yTrue.map((v,i) => Math.abs(v - yPred[i]));
+    return mean(e);
   }
 
   function movingAverageForecast(series, horizon, window) {
-    const out = [];
-    const buf = series.slice();
+    const w = Math.max(1, Math.floor(window));
+    const forecasts = [];
+    const history = series.slice();
     for (let i = 0; i < horizon; i++) {
-      const w = Math.max(1, Math.min(window, buf.length));
-      const tail = buf.slice(buf.length - w);
-      const avg = tail.reduce((a,b) => a + b, 0) / w;
-      out.push(avg);
-      buf.push(avg);
+      const tail = history.slice(-w);
+      const f = mean(tail);
+      forecasts.push(f);
+      history.push(f);
     }
-    return out;
+    return forecasts;
   }
 
-  function naiveForecast(series, horizon) {
-    const last = series[series.length - 1];
-    return Array.from({ length: horizon }, () => last);
-  }
-
-  function metrics(yTrue, yPred) {
-    const n = Math.min(yTrue.length, yPred.length);
-    if (n <= 0) return null;
-    let mae = 0, mse = 0, mape = 0, mapeCount = 0;
-    for (let i = 0; i < n; i++) {
-      const e = yTrue[i] - yPred[i];
-      mae += Math.abs(e);
-      mse += e * e;
-      if (yTrue[i] !== 0) { mape += Math.abs(e / yTrue[i]); mapeCount++; }
+  function expSmoothingForecast(series, horizon, alpha) {
+    const a = Math.max(0.01, Math.min(0.99, alpha));
+    let level = series[0];
+    for (let i = 1; i < series.length; i++) {
+      level = a * series[i] + (1 - a) * level;
     }
-    mae /= n;
-    const rmse = Math.sqrt(mse / n);
-    const mapePct = mapeCount ? (mape / mapeCount) * 100 : null;
-    return { mae, rmse, mape_pct: mapePct };
+    // Flat forecast on the level
+    return Array.from({ length: horizon }, () => level);
   }
 
-  function drawChart(series, forecast) {
-    const ctx = el.chart.getContext("2d");
-    const W = el.chart.width, H = el.chart.height;
-    ctx.clearRect(0, 0, W, H);
+  function backtest(series, method, param) {
+    // Hold out last k points (min 3, max 6)
+    const k = Math.min(6, Math.max(3, Math.floor(series.length / 4)));
+    if (series.length < k + 4) return { mae: null, yTrue: [], yPred: [] };
 
-    // background
-    ctx.fillStyle = "rgba(0,0,0,.14)";
-    ctx.fillRect(0,0,W,H);
+    const train = series.slice(0, -k);
+    const yTrue = series.slice(-k);
 
+    let yPred;
+    if (method === "moving-average") {
+      const w = Math.max(1, Math.floor(param));
+      yPred = movingAverageForecast(train, k, w);
+    } else {
+      const a = param;
+      yPred = expSmoothingForecast(train, k, a);
+    }
+
+    return { mae: mae(yTrue, yPred), yTrue, yPred };
+  }
+
+  function renderPlot(series, forecast) {
+    // Minimal inline SVG
     const all = series.concat(forecast || []);
-    const min = Math.min(...all);
-    const max = Math.max(...all);
-    const pad = 36;
-
-    const xScale = (i) => {
-      const n = Math.max(2, all.length);
-      return pad + (i * (W - pad*2) / (n - 1));
-    };
-    const yScale = (v) => {
-      const denom = (max - min) || 1;
-      return (H - pad) - ((v - min) * (H - pad*2) / denom);
-    };
-
-    // axes
-    ctx.strokeStyle = "rgba(255,255,255,.10)";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(pad, pad);
-    ctx.lineTo(pad, H - pad);
-    ctx.lineTo(W - pad, H - pad);
-    ctx.stroke();
-
-    // series line
-    ctx.strokeStyle = "rgba(100,255,218,.85)";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    series.forEach((v, i) => {
-      const x = xScale(i);
-      const y = yScale(v);
-      if (i === 0) ctx.moveTo(x,y);
-      else ctx.lineTo(x,y);
-    });
-    ctx.stroke();
-
-    // forecast line
-    if (forecast && forecast.length) {
-      const offset = series.length - 1;
-      ctx.strokeStyle = "rgba(124,92,255,.85)";
-      ctx.setLineDash([6,4]);
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      forecast.forEach((v, i) => {
-        const idx = offset + i;
-        const x = xScale(idx);
-        const y = yScale(v);
-        if (i === 0) ctx.moveTo(xScale(offset), yScale(series[series.length - 1]));
-        ctx.lineTo(x,y);
-      });
-      ctx.stroke();
-      ctx.setLineDash([]);
+    if (all.length < 2) {
+      el.plot.innerHTML = `<div class="muted small">Not enough data to plot.</div>`;
+      return;
     }
 
-    // label
-    ctx.fillStyle = "rgba(255,255,255,.70)";
-    ctx.font = "12px " + getComputedStyle(document.documentElement).getPropertyValue("--mono");
-    ctx.fillText("series", pad + 6, pad + 14);
-    ctx.fillStyle = "rgba(255,255,255,.55)";
-    ctx.fillText("forecast", pad + 6, pad + 30);
+    const w = 860, h = 240, pad = 18;
+    const minY = Math.min(...all);
+    const maxY = Math.max(...all);
+    const span = (maxY - minY) || 1;
+
+    const toX = (i, n) => pad + (i * (w - 2*pad)) / (n - 1);
+    const toY = (v) => pad + (h - 2*pad) * (1 - (v - minY) / span);
+
+    const n1 = series.length;
+    const n2 = all.length;
+
+    const pathSeries = series.map((v,i) => `${i===0?"M":"L"} ${toX(i, n2)} ${toY(v)}`).join(" ");
+    const pathForecast = (forecast && forecast.length)
+      ? forecast.map((v,j) => {
+          const i = n1 - 1 + (j+1);
+          return `${j===0?"M":"L"} ${toX(n1-1, n2)} ${toY(series[n1-1])} L ${toX(i, n2)} ${toY(v)}`;
+        }).slice(-1)[0]
+      : "";
+
+    const forecastPoints = (forecast || []).map((v,j) => {
+      const i = n1 + j;
+      return `<circle cx="${toX(i, n2)}" cy="${toY(v)}" r="3" fill="rgba(100,255,218,.95)"></circle>`;
+    }).join("");
+
+    el.plot.innerHTML = `
+      <svg viewBox="0 0 ${w} ${h}" width="100%" height="auto" role="img" aria-label="Series and forecast plot">
+        <defs>
+          <linearGradient id="g1" x1="0" x2="1">
+            <stop offset="0" stop-color="rgba(124,92,255,.95)"/>
+            <stop offset="1" stop-color="rgba(45,212,191,.95)"/>
+          </linearGradient>
+        </defs>
+
+        <rect x="0" y="0" width="${w}" height="${h}" rx="14" fill="rgba(0,0,0,.10)" stroke="rgba(255,255,255,.08)"></rect>
+
+        <path d="${pathSeries}" fill="none" stroke="url(#g1)" stroke-width="2.4"></path>
+
+        ${forecast && forecast.length ? `
+          <path d="M ${toX(n1-1, n2)} ${toY(series[n1-1])} ${forecast.map((v,j)=>`L ${toX(n1+j, n2)} ${toY(v)}`).join(" ")}"
+            fill="none" stroke="rgba(100,255,218,.90)" stroke-width="2.2" stroke-dasharray="6 6"></path>
+          ${forecastPoints}
+        ` : ""}
+
+        <line x1="${toX(n1-1, n2)}" y1="${pad}" x2="${toX(n1-1, n2)}" y2="${h-pad}" stroke="rgba(255,255,255,.10)"></line>
+      </svg>
+    `;
   }
 
   async function fetchWithTimeout(url, opts = {}, ms = 12000) {
@@ -467,129 +470,52 @@
     }
   }
 
-  async function run() {
-    const parsed = parseSeries(el.series.value || "");
-    if (!parsed.ok) {
-      setBadge("status: invalid input", "warn");
-      el.out.textContent = JSON.stringify({ error: parsed.error }, null, 2);
-      return;
-    }
-
-    const horizon = Math.max(1, Math.min(60, Number(el.horizon.value || 7)));
-    const window = Math.max(1, Math.min(60, Number(el.window.value || 3)));
-    const holdout = Math.max(1, Math.min(60, Number(el.holdout.value || 4)));
-    const method = el.method.value;
-
-    const series = parsed.series;
-
-    setBadge("status: running…", "warn");
+  async function runForecast() {
+    setStatus("status: running…", "warn");
     el.btnRun.disabled = true;
 
     try {
       const t0 = performance.now();
-      let result;
+      const series = parseSeries(el.series.value);
+      if (series.length < 4) throw new Error("Please provide at least 4 numeric points.");
+
+      const method = el.method.value;
+      const horizon = Math.max(1, Math.min(24, Math.floor(Number(el.horizon.value))));
+      const rawParam = Number(el.param.value);
+
+      let forecast = [];
+      let result = {};
 
       if (mode === "local") {
-        const train = series.slice(0, Math.max(0, series.length - holdout));
-        const test = series.slice(Math.max(0, series.length - holdout));
-
-        if (train.length < 2) {
-          throw new Error("Not enough points for holdout. Reduce holdout or add more points.");
+        if (method === "moving-average") {
+          const window = Math.max(1, Math.min(12, Math.floor(rawParam || 3)));
+          forecast = movingAverageForecast(series, horizon, window);
+          result.params = { method, horizon, param: window };
+        } else {
+          // Treat param as alpha. If user entered an integer, map to alpha.
+          const alpha = (rawParam >= 1) ? Math.min(0.95, Math.max(0.05, rawParam / 10)) : Math.min(0.95, Math.max(0.05, rawParam || 0.35));
+          forecast = expSmoothingForecast(series, horizon, alpha);
+          result.params = { method, horizon, param: Number(alpha.toFixed(2)) };
         }
 
-        let forecast;
-        if (method === "naive") forecast = naiveForecast(series, horizon);
-        else forecast = movingAverageForecast(series, horizon, window);
+        const bt = backtest(series, method, result.params.param);
+        const metric = bt.mae != null ? Number(bt.mae.toFixed(3)) : null;
 
-        // one-step baseline for holdout evaluation
-        const predHoldout = [];
-        const buf = train.slice();
-        for (let i = 0; i < test.length; i++) {
-          let p = (method === "naive")
-            ? buf[buf.length - 1]
-            : movingAverageForecast(buf, 1, window)[0];
-          predHoldout.push(p);
-          buf.push(test[i]);
-        }
-
-        const m = metrics(test, predHoldout);
-        const meta = {
+        result = {
           mode: "local",
-          method,
-          horizon,
-          window,
-          holdout,
+          input: { series, n: series.length },
+          output: { forecast: forecast.map(v => Number(v.toFixed(3))) },
+          backtest: metric != null ? { mae: metric } : { mae: null }
         };
 
-        result = { series, forecast, evaluation: { test, pred: predHoldout, metrics: m }, meta };
+        el.bMetric.textContent = `MAE: ${metric != null ? metric : "n/a"}`;
       } else {
-        const payload = { series, horizon, window, method };
+        const payload = { series, horizon, method, param: rawParam };
         const r = await fetchWithTimeout(`${API_BASE}/forecast/predict`, {
           method: "POST",
           headers: { "Content-Type":"application/json" },
           body: JSON.stringify(payload)
         });
+
         const text = await r.text();
-        const data = (() => { try { return JSON.parse(text); } catch { return { raw: text }; } })();
-        if (!r.ok) throw new Error(`API error (HTTP ${r.status}): ${data?.detail || text}`);
-        result = { mode: "api", request: payload, response: data };
-      }
-
-      const t1 = performance.now();
-      const latency = Math.round(t1 - t0);
-
-      // render
-      if (mode === "local") {
-        drawChart(result.series, result.forecast);
-        const m = result?.evaluation?.metrics;
-        if (m) {
-          const mae = m.mae.toFixed(2);
-          const rmse = m.rmse.toFixed(2);
-          const mape = (m.mape_pct == null) ? "n/a" : m.mape_pct.toFixed(1) + "%";
-          el.bMetrics.textContent = `metrics: MAE=${mae} | RMSE=${rmse} | MAPE=${mape}`;
-        } else {
-          el.bMetrics.textContent = "metrics: —";
-        }
-      } else {
-        const f = Array.isArray(result?.response?.forecast) ? result.response.forecast : [];
-        drawChart(series, f);
-        el.bMetrics.textContent = "metrics: —";
-      }
-
-      result.latency_ms = latency;
-      el.out.textContent = JSON.stringify(result, null, 2);
-      setBadge("status: done", "ok");
-    } catch (e) {
-      el.out.textContent = JSON.stringify({ error: String(e?.message || e) }, null, 2);
-      setBadge("status: error", "bad");
-    } finally {
-      el.btnRun.disabled = false;
-    }
-  }
-
-  function clearAll() {
-    el.series.value = "";
-    el.out.textContent = "{}";
-    el.bMetrics.textContent = "metrics: —";
-    drawChart([], []);
-    setBadge("status: idle", null);
-  }
-
-  document.querySelectorAll(".chip").forEach(ch => {
-    ch.addEventListener("click", () => {
-      el.series.value = ch.getAttribute("data-series") || "";
-      setBadge("status: sample loaded", null);
-    });
-  });
-
-  el.modeLocal.addEventListener("click", () => setMode("local"));
-  el.modeApi.addEventListener("click", () => setMode("api"));
-
-  el.btnRun.addEventListener("click", run);
-  el.btnClear.addEventListener("click", clearAll);
-
-  // initial
-  drawChart([], []);
-</script>
-</body>
-</html>
+        const data = (() =>
