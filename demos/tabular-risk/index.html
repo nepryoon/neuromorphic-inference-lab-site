@@ -4,19 +4,17 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tabular Risk | Neuromorphic Inference Lab</title>
-  <meta name="description" content="Tabular Risk: score a tabular input locally with a transparent explanation, and optionally call an API endpoint." />
+  <meta name="description" content="Tabular Risk: enter features, compute a local score, and optionally call an API endpoint." />
 
   <style>
     :root{
-      --bg:#070A12;--surface:rgba(255,255,255,.06);--surface2:rgba(255,255,255,.08);--border:rgba(255,255,255,.12);
-      --text:rgba(255,255,255,.92);--muted:rgba(255,255,255,.68);
+      --bg:#070A12;--border:rgba(255,255,255,.12);--text:rgba(255,255,255,.92);--muted:rgba(255,255,255,.68);
       --accent:#64FFDA;--accent2:#7C5CFF;--ok:#43FBA4;--warn:#FFCE57;--danger:#FF4D6D;
       --shadow:0 10px 30px rgba(0,0,0,.35);--radius:18px;--max:1100px;
       --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
       --sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
     }
     *{box-sizing:border-box;}
-    html,body{height:100%;}
     body{
       margin:0;font-family:var(--sans);color:var(--text);line-height:1.55;
       background:
@@ -79,13 +77,22 @@
       border-color:rgba(100,255,218,.40);
       background:linear-gradient(135deg, rgba(100,255,218,.18), rgba(124,92,255,.12));
     }
-    .btn.ghost{background:transparent;border-color:rgba(255,255,255,.10);box-shadow:none;}
     .btn:disabled{opacity:.6;cursor:not-allowed;}
 
-    .kbd{
-      font-family:var(--mono);font-size:12px;padding:2px 8px;border:1px solid rgba(255,255,255,.14);
-      background:rgba(0,0,0,.25);border-radius:999px;color:rgba(255,255,255,.78);
+    .toggle{
+      display:inline-flex;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);padding:6px;border-radius:999px;
     }
+    .toggle button{
+      border:0;background:transparent;color:rgba(255,255,255,.75);
+      padding:8px 10px;border-radius:999px;cursor:pointer;font-weight:700;font-size:12px;
+    }
+    .toggle button.active{
+      color:rgba(255,255,255,.92);
+      background:linear-gradient(135deg, rgba(100,255,218,.16), rgba(124,92,255,.12));
+      border:1px solid rgba(100,255,218,.30);
+    }
+
     .badge{
       display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
       border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);
@@ -94,9 +101,13 @@
     .badge.ok{border-color:rgba(67,251,164,.35);background:rgba(67,251,164,.10);color:rgba(255,255,255,.90);}
     .badge.bad{border-color:rgba(255,77,109,.35);background:rgba(255,77,109,.10);color:rgba(255,255,255,.90);}
     .badge.warn{border-color:rgba(255,206,87,.30);background:rgba(255,206,87,.10);color:rgba(255,255,255,.90);}
+    .kbd{
+      font-family:var(--mono);font-size:12px;padding:2px 8px;border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.25);border-radius:999px;color:rgba(255,255,255,.78);
+    }
 
-    .grid{margin-top:16px;display:grid;gap:12px;grid-template-columns:1.2fr .8fr;align-items:start;}
-    @media (max-width:980px){.grid{grid-template-columns:1fr;}}
+    .grid{margin-top:16px;display:grid;gap:12px;grid-template-columns:1.15fr .85fr;align-items:start;}
+    @media (max-width: 980px){ .grid{grid-template-columns:1fr;} }
     .card{border-radius:var(--radius);border:1px solid var(--border);background:rgba(255,255,255,.05);box-shadow:0 10px 24px rgba(0,0,0,.22);padding:16px;}
     .card h2{margin:0 0 8px;font-size:18px;letter-spacing:.2px;}
     .muted{color:var(--muted);}
@@ -104,14 +115,21 @@
     .mono{font-family:var(--mono);}
     .divider{height:1px;background:rgba(255,255,255,.08);margin:14px 0;}
 
-    label{font-size:13px;color:rgba(255,255,255,.82);font-weight:800;letter-spacing:.2px;}
+    .form{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:10px;
+    }
+    @media (max-width: 720px){ .form{grid-template-columns:1fr;} }
+    label{font-size:13px;color:rgba(255,255,255,.82);font-weight:700;}
     input{
       width:100%;
-      border-radius:14px;
+      margin-top:6px;
+      padding:10px 10px;
+      border-radius:12px;
       border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.18);
+      background:rgba(0,0,0,.22);
       color:var(--text);
-      padding:10px 12px;
       outline:none;
       font-family:var(--sans);
     }
@@ -120,62 +138,28 @@
       box-shadow:0 0 0 4px rgba(100,255,218,.08);
     }
 
-    .formGrid{display:grid;gap:10px;grid-template-columns:1fr 1fr;}
-    @media (max-width:700px){.formGrid{grid-template-columns:1fr;}}
+    pre{
+      margin:10px 0 0;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.25);
+      overflow:auto;
+      font-family:var(--mono);
+      font-size:12px;
+      color:rgba(255,255,255,.82);
+    }
 
-    .samples{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
     .chip{
       display:inline-flex;align-items:center;gap:8px;
       padding:8px 10px;border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.16);
+      background:rgba(0,0,0,.18);
       font-size:12px;color:rgba(255,255,255,.82);
       cursor:pointer;user-select:none;
     }
     .chip:hover{background:rgba(255,255,255,.06);}
-
-    .toggle{
-      display:inline-flex;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.18);padding:6px;border-radius:999px;
-    }
-    .toggle button{
-      border:0;background:transparent;color:rgba(255,255,255,.75);
-      padding:8px 10px;border-radius:999px;cursor:pointer;font-weight:800;font-size:12px;
-    }
-    .toggle button.active{
-      color:rgba(255,255,255,.92);
-      background:linear-gradient(135deg, rgba(100,255,218,.16), rgba(124,92,255,.12));
-      border:1px solid rgba(100,255,218,.30);
-    }
-
-    .scoreBox{
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.18);
-      padding:14px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-    .scoreNum{font-size:34px;font-weight:900;letter-spacing:.4px;}
-    .scoreLabel{font-family:var(--mono);color:rgba(255,255,255,.75);}
-
-    .barWrap{display:grid;gap:10px;margin-top:10px;}
-    .barRow{display:grid;grid-template-columns:150px 1fr 80px;gap:10px;align-items:center;}
-    @media (max-width:740px){.barRow{grid-template-columns:1fr;}}
-    .bar{
-      height:10px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.06);overflow:hidden;
-    }
-    .bar > span{display:block;height:100%;width:50%;background:linear-gradient(90deg, rgba(100,255,218,.85), rgba(124,92,255,.70));}
-    .barNeg > span{background:linear-gradient(90deg, rgba(255,206,87,.75), rgba(255,77,109,.70));}
-
-    pre{
-      margin:10px 0 0;padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.25);overflow:auto;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.82);
-    }
 
     footer{margin-top:24px;color:rgba(255,255,255,.55);font-size:13px;}
   </style>
@@ -190,8 +174,7 @@
     </a>
     <nav aria-label="Main navigation">
       <ul>
-        <li><a class="pill" href="/">Home</a></li>
-        <li><a class="pill active" href="/demos/">Demos</a></li>
+        <li><a class="pill" href="/demos/">Demos</a></li>
         <li><a class="pill" href="/evidence/">Evidence</a></li>
       </ul>
     </nav>
@@ -202,11 +185,11 @@
   <section class="hero">
     <h1>Tabular Risk</h1>
     <p class="subtitle">
-      Score a small tabular input with a transparent explanation. Local mode runs in the browser; API mode can call an optional endpoint.
+      Enter a small set of features and compute a local baseline score. API mode can be used if a scoring endpoint is available.
     </p>
 
     <div class="rowWrap">
-      <a class="btn primary" href="/evidence/#tabular-risk">Evidence anchor <span class="kbd">#tabular-risk</span></a>
+      <a class="btn primary" href="/evidence/#tabular-risk">Evidence <span class="kbd">#tabular-risk</span></a>
       <a class="btn" href="https://github.com/nepryoon/nil-tabular-risk" target="_blank" rel="noopener noreferrer">GitHub</a>
 
       <span class="toggle" role="group" aria-label="Mode selector">
@@ -222,96 +205,87 @@
     <div class="card">
       <h2>Try it</h2>
       <p class="muted small">
-        Local mode calculates a score and feature contributions. API mode expects <span class="mono">POST /tabular/score</span> (optional).
+        The local model is a small, transparent baseline (hand-tuned weights). API mode expects <span class="mono">POST /tabular/score</span> (optional).
       </p>
 
-      <div class="samples" aria-label="Sample profiles">
-        <span class="chip" data-profile="low">Low risk</span>
-        <span class="chip" data-profile="mid">Mid risk</span>
-        <span class="chip" data-profile="high">High risk</span>
+      <div class="chips" aria-label="Presets">
+        <span class="chip" data-preset="low">Low risk</span>
+        <span class="chip" data-preset="medium">Medium risk</span>
+        <span class="chip" data-preset="high">High risk</span>
       </div>
 
       <div class="divider"></div>
 
-      <div class="formGrid">
+      <div class="form" aria-label="Input features">
         <div>
-          <label for="age">Age</label>
-          <input id="age" type="number" min="18" max="90" value="37" />
+          <label>Age (years)
+            <input id="age" type="number" min="18" max="100" step="1" value="35" />
+          </label>
         </div>
         <div>
-          <label for="tenure">Tenure (months)</label>
-          <input id="tenure" type="number" min="0" max="240" value="24" />
+          <label>Monthly income (EUR)
+            <input id="income" type="number" min="0" step="50" value="2500" />
+          </label>
         </div>
         <div>
-          <label for="balance">Balance</label>
-          <input id="balance" type="number" min="0" max="50000" value="3500" />
+          <label>Monthly debt payments (EUR)
+            <input id="debt" type="number" min="0" step="50" value="450" />
+          </label>
         </div>
         <div>
-          <label for="salary">Salary</label>
-          <input id="salary" type="number" min="0" max="20000" value="2600" />
-        </div>
-      </div>
-
-      <div class="rowWrap">
-        <button class="btn primary" id="btnRun" type="button">Run</button>
-        <button class="btn" id="btnClear" type="button">Clear</button>
-      </div>
-
-      <div class="divider"></div>
-
-      <h2>Score</h2>
-      <div class="scoreBox">
-        <div>
-          <div class="scoreNum" id="scoreNum">—</div>
-          <div class="scoreLabel" id="scoreLabel">label: —</div>
+          <label>Credit utilisation (0–1)
+            <input id="util" type="number" min="0" max="1" step="0.01" value="0.32" />
+          </label>
         </div>
         <div>
-          <span class="badge" id="bScoreMeta">meta: —</span>
+          <label>Late payments (last 12 months)
+            <input id="late" type="number" min="0" max="20" step="1" value="1" />
+          </label>
+        </div>
+        <div>
+          <label>Open credit lines
+            <input id="lines" type="number" min="0" max="50" step="1" value="6" />
+          </label>
         </div>
       </div>
 
-      <div class="divider"></div>
-
-      <h2>Feature contributions</h2>
-      <p class="muted small" style="margin:0;">
-        Contributions are relative and intended to be easy to read.
-      </p>
-
-      <div class="barWrap" id="bars"></div>
+      <div class="rowWrap" style="margin-top:12px;">
+        <button class="btn primary" id="btnScore" type="button">Score</button>
+        <button class="btn" id="btnClear" type="button">Reset</button>
+        <span class="badge" id="bScore">score: —</span>
+      </div>
 
       <div class="divider"></div>
 
       <h2>Output</h2>
       <pre id="out">{}</pre>
+
+      <div class="divider"></div>
+
+      <h2>API schema (optional)</h2>
+      <pre>{
+  "age": 35,
+  "income_eur": 2500,
+  "debt_eur": 450,
+  "utilisation": 0.32,
+  "late_payments_12m": 1,
+  "open_lines": 6
+}</pre>
     </div>
 
     <aside class="card">
       <h2>Links</h2>
       <div class="small" style="display:grid;gap:10px;">
         <a class="btn" style="justify-content:space-between;" href="/evidence/#tabular-risk"><span>Evidence</span><span class="kbd">#tabular-risk</span></a>
+        <a class="btn" style="justify-content:space-between;" href="/evidence/#ml"><span>Related</span><span class="kbd">#ml</span></a>
         <a class="btn" style="justify-content:space-between;" href="https://github.com/nepryoon/nil-tabular-risk" target="_blank" rel="noopener noreferrer"><span>Repository</span><span class="kbd">GitHub</span></a>
-        <a class="btn" style="justify-content:space-between;" href="/evidence/#python"><span>Related</span><span class="kbd">#python</span></a>
       </div>
 
       <div class="divider"></div>
 
-      <h2>API contract (optional)</h2>
-      <pre>{
-  "age": 37,
-  "tenure": 24,
-  "balance": 3500,
-  "salary": 2600
-}</pre>
-
-      <pre>{
-  "score": 42,
-  "label": "low|medium|high",
-  "contrib": { "age": 0.12, "tenure": -0.08, "balance": 0.16, "salary": -0.05 },
-  "meta": { "latency_ms": 22, "version": "0.0.x", "git_sha": "..." }
-}</pre>
-
-      <p class="muted small" style="margin:10px 0 0;">
-        If API mode fails, local mode remains available.
+      <h2>Notes</h2>
+      <p class="muted small" style="margin:0;">
+        The local baseline is designed to be interpretable. Output includes per-feature contributions and simple range checks.
       </p>
     </aside>
   </section>
@@ -324,21 +298,21 @@
 
   const el = {
     year: document.getElementById("year"),
-    age: document.getElementById("age"),
-    tenure: document.getElementById("tenure"),
-    balance: document.getElementById("balance"),
-    salary: document.getElementById("salary"),
-    btnRun: document.getElementById("btnRun"),
-    btnClear: document.getElementById("btnClear"),
-    out: document.getElementById("out"),
-    bars: document.getElementById("bars"),
-    scoreNum: document.getElementById("scoreNum"),
-    scoreLabel: document.getElementById("scoreLabel"),
-    bScoreMeta: document.getElementById("bScoreMeta"),
-    bStatus: document.getElementById("bStatus"),
-    bMode: document.getElementById("bMode"),
     modeLocal: document.getElementById("modeLocal"),
     modeApi: document.getElementById("modeApi"),
+    bMode: document.getElementById("bMode"),
+    bStatus: document.getElementById("bStatus"),
+    bScore: document.getElementById("bScore"),
+    out: document.getElementById("out"),
+    btnScore: document.getElementById("btnScore"),
+    btnClear: document.getElementById("btnClear"),
+
+    age: document.getElementById("age"),
+    income: document.getElementById("income"),
+    debt: document.getElementById("debt"),
+    util: document.getElementById("util"),
+    late: document.getElementById("late"),
+    lines: document.getElementById("lines"),
   };
 
   el.year.textContent = new Date().getFullYear();
@@ -354,7 +328,7 @@
     el.bMode.classList.add("warn");
   }
 
-  function setBadge(text, state) {
+  function setStatus(text, state) {
     el.bStatus.textContent = text;
     el.bStatus.classList.remove("ok","bad","warn");
     if (state) el.bStatus.classList.add(state);
@@ -364,97 +338,77 @@
     return 1 / (1 + Math.exp(-x));
   }
 
-  function clamp(n, lo, hi) {
-    return Math.max(lo, Math.min(hi, n));
+  function clamp(x, a, b) {
+    return Math.max(a, Math.min(b, x));
+  }
+
+  function parseInputs() {
+    const age = Number(el.age.value);
+    const income = Number(el.income.value);
+    const debt = Number(el.debt.value);
+    const utilisation = Number(el.util.value);
+    const late = Number(el.late.value);
+    const lines = Number(el.lines.value);
+
+    const dti = income > 0 ? debt / income : 1; // debt-to-income
+    return { age, income_eur: income, debt_eur: debt, utilisation, late_payments_12m: late, open_lines: lines, dti };
+  }
+
+  function rangeFlags(x) {
+    const flags = [];
+    if (x.age < 18 || x.age > 100) flags.push("age out of expected range");
+    if (x.income_eur < 0) flags.push("income negative");
+    if (x.debt_eur < 0) flags.push("debt negative");
+    if (x.utilisation < 0 || x.utilisation > 1) flags.push("utilisation out of range");
+    if (x.late_payments_12m < 0) flags.push("late payments negative");
+    if (x.open_lines < 0) flags.push("open lines negative");
+    if (x.dti < 0) flags.push("DTI negative");
+    if (x.dti > 2.5) flags.push("DTI unusually high");
+    return flags;
   }
 
   function localScore(x) {
-    // A compact, transparent scoring function (demo-only).
-    // Values are centred around typical ranges for readability.
-    const z0 = -0.25;
+    // Normalised features (rough, transparent)
+    const ageN = clamp((x.age - 18) / (100 - 18), 0, 1);
+    const utilN = clamp(x.utilisation, 0, 1);
+    const dtiN = clamp(x.dti / 1.5, 0, 2); // allow >1
+    const lateN = clamp(x.late_payments_12m / 10, 0, 2);
+    const linesN = clamp(x.open_lines / 20, 0, 2);
 
-    const w = {
-      age:  0.020,
-      tenure: -0.030,
-      balance: 0.00022,
-      salary: -0.00030
+    // Weights: simple baseline (higher => higher risk)
+    const w0 = -1.2;
+    const wAge = 0.35;
+    const wUtil = 1.35;
+    const wDti = 1.10;
+    const wLate = 1.25;
+    const wLines = 0.25;
+
+    const terms = {
+      age: wAge * ageN,
+      utilisation: wUtil * utilN,
+      dti: wDti * dtiN,
+      late_payments_12m: wLate * lateN,
+      open_lines: wLines * linesN,
+      bias: w0
     };
 
-    const centred = {
-      age: x.age - 40,
-      tenure: x.tenure - 24,
-      balance: x.balance - 2000,
-      salary: x.salary - 2500
-    };
+    const logit = terms.bias + terms.age + terms.utilisation + terms.dti + terms.late_payments_12m + terms.open_lines;
+    const risk = sigmoid(logit); // 0..1
 
-    const contrib = {
-      age: w.age * centred.age,
-      tenure: w.tenure * centred.tenure,
-      balance: w.balance * centred.balance,
-      salary: w.salary * centred.salary
-    };
+    // Simple label
+    const label = risk < 0.33 ? "low" : (risk < 0.66 ? "medium" : "high");
 
-    const z = z0 + contrib.age + contrib.tenure + contrib.balance + contrib.salary;
-    const p = sigmoid(z);
-    const score = Math.round(p * 100);
+    // Contributions (sorted)
+    const contrib = [
+      { feature: "utilisation", value: terms.utilisation },
+      { feature: "late_payments_12m", value: terms.late_payments_12m },
+      { feature: "dti", value: terms.dti },
+      { feature: "age", value: terms.age },
+      { feature: "open_lines", value: terms.open_lines },
+      { feature: "bias", value: terms.bias }
+    ].sort((a,b) => Math.abs(b.value) - Math.abs(a.value));
 
-    let label = "medium";
-    if (score < 35) label = "low";
-    if (score >= 65) label = "high";
-
-    return { score, label, contrib, meta: { z: Number(z.toFixed(4)), p: Number(p.toFixed(4)) } };
-  }
-
-  function normaliseContrib(contrib) {
-    const entries = Object.entries(contrib);
-    const maxAbs = Math.max(1e-9, ...entries.map(([,v]) => Math.abs(v)));
-    const scaled = {};
-    entries.forEach(([k,v]) => { scaled[k] = v / maxAbs; });
-    return { scaled, maxAbs };
-  }
-
-  function renderBars(contrib) {
-    el.bars.innerHTML = "";
-    const { scaled } = normaliseContrib(contrib);
-
-    const rows = [
-      ["age", "Age"],
-      ["tenure", "Tenure"],
-      ["balance", "Balance"],
-      ["salary", "Salary"],
-    ];
-
-    rows.forEach(([k, label]) => {
-      const v = scaled[k] || 0;
-      const pct = Math.round(Math.abs(v) * 100);
-
-      const row = document.createElement("div");
-      row.className = "barRow";
-
-      const left = document.createElement("div");
-      left.className = "small";
-      left.style.color = "rgba(255,255,255,.85)";
-      left.style.fontWeight = "800";
-      left.textContent = label;
-
-      const mid = document.createElement("div");
-      mid.className = "bar" + (v < 0 ? " barNeg" : "");
-      const fill = document.createElement("span");
-      fill.style.width = `${clamp(pct, 0, 100)}%`;
-      mid.appendChild(fill);
-
-      const right = document.createElement("div");
-      right.className = "mono small";
-      right.style.color = "rgba(255,255,255,.75)";
-      right.style.textAlign = "right";
-      right.textContent = `${v < 0 ? "-" : "+"}${pct}%`;
-
-      row.appendChild(left);
-      row.appendChild(mid);
-      row.appendChild(right);
-
-      el.bars.appendChild(row);
-    });
+    return { risk_score: Number(risk.toFixed(4)), label, logit: Number(logit.toFixed(4)), contributions: contrib };
   }
 
   async function fetchWithTimeout(url, opts = {}, ms = 12000) {
@@ -474,110 +428,95 @@
     }
   }
 
-  function getInput() {
-    return {
-      age: Number(el.age.value || 0),
-      tenure: Number(el.tenure.value || 0),
-      balance: Number(el.balance.value || 0),
-      salary: Number(el.salary.value || 0),
-    };
-  }
-
-  function setScoreUI(score, label, metaText) {
-    el.scoreNum.textContent = Number.isFinite(score) ? String(score) : "—";
-    el.scoreLabel.textContent = `label: ${label || "—"}`;
-    el.bScoreMeta.textContent = metaText || "meta: —";
-  }
-
-  async function run() {
-    const x = getInput();
-
-    setBadge("status: running…", "warn");
-    el.btnRun.disabled = true;
+  async function score() {
+    setStatus("status: running…", "warn");
+    el.btnScore.disabled = true;
 
     try {
       const t0 = performance.now();
-      let result;
+      const x = parseInputs();
+      const flags = rangeFlags(x);
 
+      let result;
       if (mode === "local") {
-        const r = localScore(x);
-        result = { mode: "local", input: x, ...r };
+        const y = localScore(x);
+        result = { mode: "local", input: x, output: y, checks: { flags } };
       } else {
+        const payload = {
+          age: x.age,
+          income_eur: x.income_eur,
+          debt_eur: x.debt_eur,
+          utilisation: x.utilisation,
+          late_payments_12m: x.late_payments_12m,
+          open_lines: x.open_lines
+        };
+
         const r = await fetchWithTimeout(`${API_BASE}/tabular/score`, {
           method: "POST",
           headers: { "Content-Type":"application/json" },
-          body: JSON.stringify(x)
+          body: JSON.stringify(payload)
         });
+
         const text = await r.text();
         const data = (() => { try { return JSON.parse(text); } catch { return { raw: text }; } })();
         if (!r.ok) throw new Error(`API error (HTTP ${r.status}): ${data?.detail || text}`);
-        result = { mode: "api", input: x, response: data };
+
+        result = { mode: "api", request: payload, response: data, checks: { flags } };
       }
 
       const t1 = performance.now();
-      const latency = Math.round(t1 - t0);
+      result.latency_ms = Math.round(t1 - t0);
 
-      if (mode === "local") {
-        setScoreUI(result.score, result.label, `meta: latency_ms=${latency} | z=${result.meta.z} | p=${result.meta.p}`);
-        renderBars(result.contrib);
-      } else {
-        const score = result?.response?.score;
-        const label = result?.response?.label;
-        const contrib = result?.response?.contrib;
-        setScoreUI(score, label, `meta: latency_ms=${latency}`);
-        if (contrib && typeof contrib === "object") renderBars(contrib);
-        else el.bars.innerHTML = `<div class="muted small">No contributions returned.</div>`;
-      }
-
-      result.latency_ms = latency;
       el.out.textContent = JSON.stringify(result, null, 2);
-      setBadge("status: done", "ok");
+
+      const scoreValue = (mode === "local")
+        ? result.output.risk_score
+        : (result.response?.risk_score ?? "n/a");
+
+      el.bScore.textContent = `score: ${scoreValue}`;
+      setStatus("status: done", "ok");
     } catch (e) {
       el.out.textContent = JSON.stringify({ error: String(e?.message || e) }, null, 2);
-      setBadge("status: error", "bad");
-      setScoreUI("—", "—", "meta: —");
-      el.bars.innerHTML = "";
+      setStatus("status: error", "bad");
+      el.bScore.textContent = "score: —";
     } finally {
-      el.btnRun.disabled = false;
+      el.btnScore.disabled = false;
     }
   }
 
-  function clearAll() {
-    el.age.value = 37;
-    el.tenure.value = 24;
-    el.balance.value = 3500;
-    el.salary.value = 2600;
+  function reset() {
+    el.age.value = 35;
+    el.income.value = 2500;
+    el.debt.value = 450;
+    el.util.value = 0.32;
+    el.late.value = 1;
+    el.lines.value = 6;
     el.out.textContent = "{}";
-    el.bars.innerHTML = "";
-    setScoreUI("—", "—", "meta: —");
-    setBadge("status: idle", null);
+    el.bScore.textContent = "score: —";
+    setStatus("status: idle", null);
   }
 
-  const profiles = {
-    low:  { age: 32, tenure: 48, balance: 1200, salary: 3200 },
-    mid:  { age: 45, tenure: 18, balance: 5400, salary: 2400 },
-    high: { age: 58, tenure: 6,  balance: 12000, salary: 1800 },
-  };
+  function applyPreset(kind) {
+    if (kind === "low") {
+      el.age.value = 42; el.income.value = 3200; el.debt.value = 250; el.util.value = 0.18; el.late.value = 0; el.lines.value = 4;
+    }
+    if (kind === "medium") {
+      el.age.value = 35; el.income.value = 2500; el.debt.value = 650; el.util.value = 0.45; el.late.value = 2; el.lines.value = 7;
+    }
+    if (kind === "high") {
+      el.age.value = 27; el.income.value = 1800; el.debt.value = 900; el.util.value = 0.78; el.late.value = 6; el.lines.value = 12;
+    }
+    setStatus("status: preset loaded", null);
+  }
 
   document.querySelectorAll(".chip").forEach(ch => {
-    ch.addEventListener("click", () => {
-      const k = ch.getAttribute("data-profile") || "mid";
-      const p = profiles[k] || profiles.mid;
-      el.age.value = p.age;
-      el.tenure.value = p.tenure;
-      el.balance.value = p.balance;
-      el.salary.value = p.salary;
-      setBadge("status: sample loaded", null);
-    });
+    ch.addEventListener("click", () => applyPreset(ch.getAttribute("data-preset")));
   });
 
   el.modeLocal.addEventListener("click", () => setMode("local"));
   el.modeApi.addEventListener("click", () => setMode("api"));
-  el.btnRun.addEventListener("click", run);
-  el.btnClear.addEventListener("click", clearAll);
-
-  // initial
-  clearAll();
+  el.btnScore.addEventListener("click", score);
+  el.btnClear.addEventListener("click", reset);
 </script>
 </body>
 </html>
