@@ -1,114 +1,435 @@
-<!-- /demos/tabular-risk/index.html (UPDATED) -->
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tabular Risk / Churn — Live Docs | Neuromorphic Inference Lab</title>
-  <meta name="description" content="Tabular Risk: scoring + explainability + data quality + drift monitoring (DS production)." />
-  <link rel="stylesheet" href="/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tabular Risk | Neuromorphic Inference Lab</title>
+  <meta name="description" content="Tabular Risk: a simple tabular scoring demo with transparent feature contributions and an optional API mode." />
+
   <style>
     :root{
-      --bg:#0b0f17;--text:#e7ecf5;--muted:#a7b1c6;--line:rgba(231,236,245,.12);
-      --radius:16px;--shadow:0 10px 35px rgba(0,0,0,.35);
-      --accent:#7c5cff;--accent2:#2dd4bf;
+      --bg:#070A12;--surface:rgba(255,255,255,.06);--border:rgba(255,255,255,.12);
+      --text:rgba(255,255,255,.92);--muted:rgba(255,255,255,.68);
+      --accent:#64FFDA;--accent2:#7C5CFF;--ok:#43FBA4;--warn:#FFCE57;--danger:#FF4D6D;
+      --shadow:0 10px 30px rgba(0,0,0,.35);--radius:18px;--max:1100px;
       --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-      --sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      --max:1100px;
+      --sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
     }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--text)}
-    a{color:inherit;text-decoration:none} a:hover{opacity:.92}
-    .wrap{max-width:var(--max);margin:0 auto;padding:22px 18px}
-    header{position:sticky;top:0;z-index:20;background:rgba(11,15,23,.72);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
-    .brand{font-weight:800;display:flex;align-items:center;gap:10px}
-    .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 10px 25px rgba(124,92,255,.22)}
-    nav a{color:var(--muted);font-weight:700;padding:8px 10px;border-radius:12px;border:1px solid transparent}
-    nav a:hover{border-color:var(--line);background:rgba(255,255,255,.03);color:var(--text)}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--muted);font-weight:800;font-size:12px}
-    h1{margin:14px 0 8px;font-size:34px;letter-spacing:-.4px}
-    .sub{margin:0;color:var(--muted);line-height:1.65;max-width:90ch}
-    .grid{margin-top:14px;display:grid;grid-template-columns:1.1fr .9fr;gap:12px}
-    @media(max-width:900px){.grid{grid-template-columns:1fr}}
-    .card{border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));box-shadow:var(--shadow);padding:16px}
-    .card h2{margin:0 0 10px;font-size:18px}
-    .list{margin:0;padding-left:18px;color:var(--muted);line-height:1.7}
-    .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03);font-weight:800}
-    .btn.primary{border-color:rgba(124,92,255,.65);background:linear-gradient(135deg, rgba(124,92,255,.22), rgba(45,212,191,.12))}
-    .note{margin-top:12px;border:1px solid var(--line);border-radius:var(--radius);padding:14px;background:rgba(255,255,255,.02);color:var(--muted);line-height:1.6}
-    .mono{font-family:var(--mono)}
-    footer{margin-top:26px;border-top:1px solid var(--line);padding:18px 0 30px;color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;font-family:var(--sans);color:var(--text);line-height:1.55;
+      background:
+        radial-gradient(900px 600px at 20% 10%, rgba(124,92,255,.18), transparent 55%),
+        radial-gradient(900px 600px at 80% 20%, rgba(100,255,218,.14), transparent 55%),
+        radial-gradient(700px 450px at 40% 80%, rgba(124,92,255,.12), transparent 60%),
+        var(--bg);
+    }
+    a{color:inherit;text-decoration:none;}
+    a:hover{text-decoration:underline;text-underline-offset:3px;}
+    .wrap{max-width:var(--max);margin:0 auto;padding:20px 18px 46px;}
+
+    header{
+      position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);
+      background:linear-gradient(to bottom, rgba(7,10,18,.82), rgba(7,10,18,.50));
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .nav{max-width:var(--max);margin:0 auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px;}
+    .logo{
+      width:34px;height:34px;border-radius:10px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(100,255,218,.95), rgba(100,255,218,.15) 58%, transparent 60%),
+        radial-gradient(circle at 70% 70%, rgba(124,92,255,.9), rgba(124,92,255,.18) 55%, transparent 57%),
+        rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow:0 8px 22px rgba(0,0,0,.25);
+    }
+    nav ul{list-style:none;display:flex;gap:10px;padding:0;margin:0;flex-wrap:wrap;justify-content:flex-end;}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);color:var(--muted);font-size:14px;
+    }
+    .pill.active{color:var(--text);border-color:rgba(100,255,218,.35);background:rgba(100,255,218,.08);}
+
+    .hero{
+      margin-top:22px;padding:22px;border-radius:var(--radius);border:1px solid var(--border);
+      background:linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow:var(--shadow);position:relative;overflow:hidden;
+    }
+    .hero:before{
+      content:"";position:absolute;inset:-2px;
+      background:
+        radial-gradient(420px 260px at 10% 20%, rgba(100,255,218,.20), transparent 55%),
+        radial-gradient(420px 260px at 90% 40%, rgba(124,92,255,.18), transparent 60%);
+      pointer-events:none;filter:blur(1px);
+    }
+    .hero>*{position:relative;}
+    h1{margin:0 0 8px;font-size:clamp(28px,4vw,42px);line-height:1.12;letter-spacing:.2px;}
+    .subtitle{margin:0;color:var(--muted);max-width:92ch;}
+
+    .rowWrap{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+    .btn{
+      display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);
+      color:var(--text);font-weight:600;font-size:14px;box-shadow:0 10px 20px rgba(0,0,0,.18);cursor:pointer;
+    }
+    .btn:hover{background:rgba(255,255,255,.08);text-decoration:none;}
+    .btn.primary{
+      border-color:rgba(100,255,218,.40);
+      background:linear-gradient(135deg, rgba(100,255,218,.18), rgba(124,92,255,.12));
+    }
+    .btn.ghost{background:transparent;border-color:rgba(255,255,255,.10);box-shadow:none;}
+    .btn:disabled{opacity:.6;cursor:not-allowed;}
+
+    .kbd{
+      font-family:var(--mono);font-size:12px;padding:2px 8px;border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.25);border-radius:999px;color:rgba(255,255,255,.78);
+    }
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);
+      font-size:12px;color:rgba(255,255,255,.78);font-family:var(--mono);white-space:nowrap;
+    }
+    .badge.ok{border-color:rgba(67,251,164,.35);background:rgba(67,251,164,.10);color:rgba(255,255,255,.90);}
+    .badge.bad{border-color:rgba(255,77,109,.35);background:rgba(255,77,109,.10);color:rgba(255,255,255,.90);}
+    .badge.warn{border-color:rgba(255,206,87,.30);background:rgba(255,206,87,.10);color:rgba(255,255,255,.90);}
+
+    .grid{margin-top:16px;display:grid;gap:12px;grid-template-columns:1.2fr .8fr;align-items:start;}
+    @media (max-width:980px){.grid{grid-template-columns:1fr;}}
+    .card{border-radius:var(--radius);border:1px solid var(--border);background:rgba(255,255,255,.05);box-shadow:0 10px 24px rgba(0,0,0,.22);padding:16px;}
+    .card h2{margin:0 0 8px;font-size:18px;letter-spacing:.2px;}
+    .muted{color:var(--muted);}
+    .small{font-size:14px;}
+    .mono{font-family:var(--mono);}
+    .divider{height:1px;background:rgba(255,255,255,.08);margin:14px 0;}
+
+    .toggle{
+      display:inline-flex;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);padding:6px;border-radius:999px;
+    }
+    .toggle button{
+      border:0;background:transparent;color:rgba(255,255,255,.75);
+      padding:8px 10px;border-radius:999px;cursor:pointer;font-weight:700;font-size:12px;
+    }
+    .toggle button.active{
+      color:rgba(255,255,255,.92);
+      background:linear-gradient(135deg, rgba(100,255,218,.16), rgba(124,92,255,.12));
+      border:1px solid rgba(100,255,218,.30);
+    }
+
+    .form{
+      display:grid;gap:10px;grid-template-columns:1fr 1fr;
+    }
+    @media (max-width:720px){.form{grid-template-columns:1fr;}}
+    .field label{display:block;font-weight:800;font-size:12px;letter-spacing:.3px;text-transform:uppercase;color:rgba(255,255,255,.78);margin-bottom:6px;}
+    .field input{
+      width:100%;border-radius:12px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.25);color:var(--text);padding:10px 10px;outline:none;
+      font-family:var(--mono);
+    }
+    .field input:focus{border-color:rgba(100,255,218,.35);box-shadow:0 0 0 4px rgba(100,255,218,.08);}
+
+    pre{
+      margin:10px 0 0;padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.25);overflow:auto;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.82);
+    }
+
+    .bar{
+      height:10px;border-radius:999px;border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.22);overflow:hidden;
+    }
+    .bar > div{
+      height:100%;
+      background:linear-gradient(90deg, rgba(100,255,218,.85), rgba(124,92,255,.85));
+      width:0%;
+    }
+    footer{margin-top:24px;color:rgba(255,255,255,.55);font-size:13px;}
   </style>
 </head>
-<body>
-  <header>
-    <div class="wrap nav">
-      <a class="brand" href="/"><span class="dot" aria-hidden="true"></span><span>Neuromorphic Inference Lab</span></a>
-      <nav>
-        <a href="/demos">Demos</a>
-        <a href="/evidence">Evidence</a>
-        <a href="/about">About</a>
-        <a href="/research">Research</a>
-        <a href="https://github.com/nepryoon" target="_blank" rel="noopener">GitHub</a>
-      </nav>
-    </div>
-  </header>
 
-  <main class="wrap">
-    <span class="pill">Demo • Live docs (implementation in progress)</span>
-    <h1>Tabular Risk / Churn</h1>
-    <p class="sub">
-      Production-style tabular scoring: <strong>evaluation</strong>, <strong>explainability</strong>,
-      <strong>data quality</strong>, and <strong>drift awareness</strong>.
+<body>
+<header>
+  <div class="nav">
+    <a class="brand" href="/" aria-label="Neuromorphic Inference Lab Home">
+      <span class="logo" aria-hidden="true"></span>
+      <span>Neuromorphic Inference Lab</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <ul>
+        <li><a class="pill" href="/">Home</a></li>
+        <li><a class="pill active" href="/demos/">Demos</a></li>
+        <li><a class="pill" href="/evidence/">Evidence</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>Tabular Risk</h1>
+    <p class="subtitle">
+      A transparent scoring demo for tabular inputs. Local mode provides a lightweight baseline with feature contributions.
     </p>
 
-    <div class="cta">
-      <a class="btn primary" href="https://github.com/nepryoon/nil-tabular-risk" target="_blank" rel="noopener">View Source (GitHub)</a>
-      <a class="btn" href="/evidence#sklearn">Evidence: scikit-learn</a>
-      <a class="btn" href="/demos">Back to Demos</a>
+    <div class="rowWrap">
+      <a class="btn primary" href="/evidence/#python">Evidence anchor <span class="kbd">#python</span></a>
+      <a class="btn" href="https://github.com/nepryoon/nil-tabular-risk" target="_blank" rel="noopener noreferrer">GitHub</a>
+
+      <span class="toggle" role="group" aria-label="Mode selector">
+        <button id="modeLocal" class="active" type="button">Local</button>
+        <button id="modeApi" type="button">API</button>
+      </span>
+      <span class="badge warn" id="bMode">mode: local</span>
+      <span class="badge" id="bStatus">status: idle</span>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h2>Try it</h2>
+      <p class="muted small">
+        Fill in a few fields and calculate a score. API mode expects <span class="mono">POST /tabular/score</span> (optional).
+      </p>
+
+      <div class="form">
+        <div class="field">
+          <label for="age">Age</label>
+          <input id="age" type="number" min="18" max="100" value="37" />
+        </div>
+        <div class="field">
+          <label for="tenure">Tenure (months)</label>
+          <input id="tenure" type="number" min="0" max="240" value="24" />
+        </div>
+        <div class="field">
+          <label for="balance">Balance</label>
+          <input id="balance" type="number" min="0" step="100" value="3500" />
+        </div>
+        <div class="field">
+          <label for="salary">Salary</label>
+          <input id="salary" type="number" min="0" step="100" value="2600" />
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <button class="btn primary" id="btnScore" type="button">Score</button>
+        <button class="btn" id="btnReset" type="button">Reset</button>
+        <span class="badge" id="bScore">risk: —</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="small muted" style="margin-bottom:8px;">Risk score</div>
+      <div class="bar" aria-label="Risk score bar"><div id="barFill"></div></div>
+
+      <div class="divider"></div>
+
+      <h2>Output</h2>
+      <pre id="out">{}</pre>
     </div>
 
-    <div class="grid">
-      <section class="card">
-        <h2>What it demonstrates</h2>
-        <ul class="list">
-          <li>Train/evaluate a tabular model (AUC/F1 + calibration).</li>
-          <li>Batch scoring: upload CSV → outputs.</li>
-          <li>Explainability: top drivers + per-prediction rationale.</li>
-          <li>Data quality checks before scoring (schema/missingness/ranges).</li>
-          <li>Drift indicators + “alert simulation” panel.</li>
-        </ul>
-        <div class="note">
-          Next milestone: a minimal live flow on this page (CSV upload → score + drivers).
-        </div>
-      </section>
+    <aside class="card">
+      <h2>Overview</h2>
+      <ul class="small" style="margin:10px 0 0;padding-left:18px;color:rgba(255,255,255,.82);">
+        <li>Baseline scoring with explicit weights.</li>
+        <li>Per-feature contributions to support interpretability.</li>
+        <li>Optional API mode for deployed inference.</li>
+      </ul>
 
-      <aside class="card">
-        <h2>Roadmap</h2>
-        <ol class="list">
-          <li>Baseline model + evaluation report</li>
-          <li>Scoring pipeline + explainability</li>
-          <li>Data quality + drift panel + CI + tags</li>
-        </ol>
-        <div class="note">
-          Repo: <a href="https://github.com/nepryoon/nil-tabular-risk" target="_blank" rel="noopener" style="text-decoration:underline;">nil-tabular-risk</a>
-        </div>
-      </aside>
-    </div>
+      <div class="divider"></div>
 
-    <footer>
-      <div class="mono">
-        neuromorphicinference.com · <a href="/evidence" style="text-decoration:underline;">Evidence</a>
+      <h2>Links</h2>
+      <div class="small" style="display:grid;gap:10px;">
+        <a class="btn" style="justify-content:space-between;" href="/evidence/#python"><span>Evidence</span><span class="kbd">#python</span></a>
+        <a class="btn" style="justify-content:space-between;" href="https://github.com/nepryoon/nil-tabular-risk" target="_blank" rel="noopener noreferrer"><span>Repository</span><span class="kbd">GitHub</span></a>
       </div>
-      <div class="mono" id="build-info">
-        Deployed from: <span id="build-sha">unknown</span> (<span id="build-branch">main</span>)
-      </div>
-    </footer>
-  </main>
+    </aside>
+  </section>
 
-  <script src="/build-info.js" defer></script>
+  <footer>© <span id="year"></span> Neuromorphic Inference Lab — Tabular Risk</footer>
+</main>
+
+<script>
+  const API_BASE = "https://api.neuromorphicinference.com";
+
+  const el = {
+    year: document.getElementById("year"),
+    age: document.getElementById("age"),
+    tenure: document.getElementById("tenure"),
+    balance: document.getElementById("balance"),
+    salary: document.getElementById("salary"),
+    btnScore: document.getElementById("btnScore"),
+    btnReset: document.getElementById("btnReset"),
+    out: document.getElementById("out"),
+    bStatus: document.getElementById("bStatus"),
+    bMode: document.getElementById("bMode"),
+    bScore: document.getElementById("bScore"),
+    barFill: document.getElementById("barFill"),
+    modeLocal: document.getElementById("modeLocal"),
+    modeApi: document.getElementById("modeApi"),
+  };
+
+  el.year.textContent = new Date().getFullYear();
+
+  let mode = "local";
+
+  function setMode(next) {
+    mode = next;
+    el.modeLocal.classList.toggle("active", mode === "local");
+    el.modeApi.classList.toggle("active", mode === "api");
+    el.bMode.textContent = `mode: ${mode}`;
+    el.bMode.classList.remove("ok","bad","warn");
+    el.bMode.classList.add("warn");
+  }
+
+  function setStatus(text, state) {
+    el.bStatus.textContent = text;
+    el.bStatus.classList.remove("ok","bad","warn");
+    if (state) el.bStatus.classList.add(state);
+  }
+
+  function sigmoid(x) {
+    return 1 / (1 + Math.exp(-x));
+  }
+
+  function clamp01(x) {
+    return Math.max(0, Math.min(1, x));
+  }
+
+  function localScore(x) {
+    // Lightweight baseline: explicit weights for transparency.
+    // Normalise inputs to roughly comparable ranges.
+    const z = {
+      age: (x.age - 40) / 12,
+      tenure: (x.tenure - 24) / 18,
+      balance: (x.balance - 3000) / 2000,
+      salary: (x.salary - 2500) / 1200
+    };
+
+    // Coefficients: chosen only for demonstrative behaviour.
+    const w = {
+      bias: -0.2,
+      age: 0.15,
+      tenure: -0.35,
+      balance: 0.40,
+      salary: -0.25
+    };
+
+    const contributions = {
+      age: w.age * z.age,
+      tenure: w.tenure * z.tenure,
+      balance: w.balance * z.balance,
+      salary: w.salary * z.salary
+    };
+
+    const logit = w.bias + contributions.age + contributions.tenure + contributions.balance + contributions.salary;
+    const p = sigmoid(logit);
+
+    const ranked = Object.entries(contributions)
+      .map(([k,v]) => ({ feature: k, contribution: Number(v.toFixed(4)) }))
+      .sort((a,b) => Math.abs(b.contribution) - Math.abs(a.contribution));
+
+    return {
+      mode: "local",
+      inputs: x,
+      normalised: Object.fromEntries(Object.entries(z).map(([k,v]) => [k, Number(v.toFixed(4))])),
+      score: Number(p.toFixed(4)),
+      logit: Number(logit.toFixed(4)),
+      contributions: ranked
+    };
+  }
+
+  async function fetchWithTimeout(url, opts = {}, ms = 12000) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), ms);
+    try {
+      const res = await fetch(url, {
+        ...opts,
+        signal: ctrl.signal,
+        headers: { "Accept":"application/json", ...(opts.headers || {}) }
+      });
+      clearTimeout(t);
+      return res;
+    } catch (e) {
+      clearTimeout(t);
+      throw e;
+    }
+  }
+
+  async function score() {
+    setStatus("status: scoring…", "warn");
+    el.btnScore.disabled = true;
+
+    try {
+      const x = {
+        age: Number(el.age.value),
+        tenure: Number(el.tenure.value),
+        balance: Number(el.balance.value),
+        salary: Number(el.salary.value)
+      };
+
+      const t0 = performance.now();
+      let result;
+
+      if (mode === "local") {
+        result = localScore(x);
+      } else {
+        const r = await fetchWithTimeout(`${API_BASE}/tabular/score`, {
+          method: "POST",
+          headers: { "Content-Type":"application/json" },
+          body: JSON.stringify(x)
+        });
+
+        const text = await r.text();
+        const data = (() => { try { return JSON.parse(text); } catch { return { raw: text }; } })();
+        if (!r.ok) throw new Error(`API error (HTTP ${r.status}): ${data?.detail || text}`);
+
+        result = { mode: "api", response: data };
+      }
+
+      const t1 = performance.now();
+      result.latency_ms = Math.round(t1 - t0);
+
+      el.out.textContent = JSON.stringify(result, null, 2);
+
+      const p = mode === "local" ? result.score : (result.response?.score ?? null);
+      if (typeof p === "number") {
+        const pct = Math.round(clamp01(p) * 100);
+        el.bScore.textContent = `risk: ${pct}%`;
+        el.barFill.style.width = `${pct}%`;
+      } else {
+        el.bScore.textContent = "risk: n/a";
+        el.barFill.style.width = "0%";
+      }
+
+      setStatus("status: done", "ok");
+    } catch (e) {
+      el.out.textContent = JSON.stringify({ error: String(e?.message || e) }, null, 2);
+      el.bScore.textContent = "risk: error";
+      el.barFill.style.width = "0%";
+      setStatus("status: error", "bad");
+    } finally {
+      el.btnScore.disabled = false;
+    }
+  }
+
+  function reset() {
+    el.age.value = 37;
+    el.tenure.value = 24;
+    el.balance.value = 3500;
+    el.salary.value = 2600;
+    el.out.textContent = "{}";
+    el.bScore.textContent = "risk: —";
+    el.barFill.style.width = "0%";
+    setStatus("status: idle", null);
+  }
+
+  el.modeLocal.addEventListener("click", () => setMode("local"));
+  el.modeApi.addEventListener("click", () => setMode("api"));
+  el.btnScore.addEventListener("click", score);
+  el.btnReset.addEventListener("click", reset);
+</script>
 </body>
 </html>
-
