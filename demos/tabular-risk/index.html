@@ -4,17 +4,19 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tabular Risk | Neuromorphic Inference Lab</title>
-  <meta name="description" content="Tabular Risk: enter features, compute a local score, and optionally call an API endpoint." />
+  <meta name="description" content="Tabular Risk: enter a small feature set, score locally with a transparent baseline, and optionally call a deployed API endpoint." />
 
   <style>
     :root{
-      --bg:#070A12;--border:rgba(255,255,255,.12);--text:rgba(255,255,255,.92);--muted:rgba(255,255,255,.68);
+      --bg:#070A12;--surface:rgba(255,255,255,.06);--border:rgba(255,255,255,.12);
+      --text:rgba(255,255,255,.92);--muted:rgba(255,255,255,.68);
       --accent:#64FFDA;--accent2:#7C5CFF;--ok:#43FBA4;--warn:#FFCE57;--danger:#FF4D6D;
       --shadow:0 10px 30px rgba(0,0,0,.35);--radius:18px;--max:1100px;
       --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
       --sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
     }
     *{box-sizing:border-box;}
+    html,body{height:100%;}
     body{
       margin:0;font-family:var(--sans);color:var(--text);line-height:1.55;
       background:
@@ -77,7 +79,30 @@
       border-color:rgba(100,255,218,.40);
       background:linear-gradient(135deg, rgba(100,255,218,.18), rgba(124,92,255,.12));
     }
+    .btn.ghost{background:transparent;border-color:rgba(255,255,255,.10);box-shadow:none;}
     .btn:disabled{opacity:.6;cursor:not-allowed;}
+
+    .kbd{
+      font-family:var(--mono);font-size:12px;padding:2px 8px;border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.25);border-radius:999px;color:rgba(255,255,255,.78);
+    }
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);
+      font-size:12px;color:rgba(255,255,255,.78);font-family:var(--mono);white-space:nowrap;
+    }
+    .badge.ok{border-color:rgba(67,251,164,.35);background:rgba(67,251,164,.10);color:rgba(255,255,255,.90);}
+    .badge.bad{border-color:rgba(255,77,109,.35);background:rgba(255,77,109,.10);color:rgba(255,255,255,.90);}
+    .badge.warn{border-color:rgba(255,206,87,.30);background:rgba(255,206,87,.10);color:rgba(255,255,255,.90);}
+
+    .grid{margin-top:16px;display:grid;gap:12px;grid-template-columns:1.25fr .75fr;align-items:start;}
+    @media (max-width:980px){.grid{grid-template-columns:1fr;}}
+    .card{border-radius:var(--radius);border:1px solid var(--border);background:rgba(255,255,255,.05);box-shadow:0 10px 24px rgba(0,0,0,.22);padding:16px;}
+    .card h2{margin:0 0 8px;font-size:18px;letter-spacing:.2px;}
+    .muted{color:var(--muted);}
+    .small{font-size:14px;}
+    .mono{font-family:var(--mono);}
+    .divider{height:1px;background:rgba(255,255,255,.08);margin:14px 0;}
 
     .toggle{
       display:inline-flex;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.12);
@@ -93,73 +118,69 @@
       border:1px solid rgba(100,255,218,.30);
     }
 
-    .badge{
-      display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);
-      font-size:12px;color:rgba(255,255,255,.78);font-family:var(--mono);white-space:nowrap;
-    }
-    .badge.ok{border-color:rgba(67,251,164,.35);background:rgba(67,251,164,.10);color:rgba(255,255,255,.90);}
-    .badge.bad{border-color:rgba(255,77,109,.35);background:rgba(255,77,109,.10);color:rgba(255,255,255,.90);}
-    .badge.warn{border-color:rgba(255,206,87,.30);background:rgba(255,206,87,.10);color:rgba(255,255,255,.90);}
-    .kbd{
-      font-family:var(--mono);font-size:12px;padding:2px 8px;border:1px solid rgba(255,255,255,.14);
-      background:rgba(0,0,0,.25);border-radius:999px;color:rgba(255,255,255,.78);
-    }
-
-    .grid{margin-top:16px;display:grid;gap:12px;grid-template-columns:1.15fr .85fr;align-items:start;}
-    @media (max-width: 980px){ .grid{grid-template-columns:1fr;} }
-    .card{border-radius:var(--radius);border:1px solid var(--border);background:rgba(255,255,255,.05);box-shadow:0 10px 24px rgba(0,0,0,.22);padding:16px;}
-    .card h2{margin:0 0 8px;font-size:18px;letter-spacing:.2px;}
-    .muted{color:var(--muted);}
-    .small{font-size:14px;}
-    .mono{font-family:var(--mono);}
-    .divider{height:1px;background:rgba(255,255,255,.08);margin:14px 0;}
-
-    .form{
-      display:grid;
-      grid-template-columns:repeat(2, minmax(0, 1fr));
-      gap:10px;
-    }
-    @media (max-width: 720px){ .form{grid-template-columns:1fr;} }
-    label{font-size:13px;color:rgba(255,255,255,.82);font-weight:700;}
-    input{
-      width:100%;
-      margin-top:6px;
-      padding:10px 10px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.22);
-      color:var(--text);
-      outline:none;
-      font-family:var(--sans);
-    }
-    input:focus{
-      border-color:rgba(100,255,218,.35);
-      box-shadow:0 0 0 4px rgba(100,255,218,.08);
-    }
-
-    pre{
-      margin:10px 0 0;
-      padding:12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.25);
-      overflow:auto;
-      font-family:var(--mono);
-      font-size:12px;
-      color:rgba(255,255,255,.82);
-    }
-
-    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
     .chip{
       display:inline-flex;align-items:center;gap:8px;
-      padding:8px 10px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.18);
-      font-size:12px;color:rgba(255,255,255,.82);
+      padding:8px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);font-size:12px;color:rgba(255,255,255,.82);
       cursor:pointer;user-select:none;
     }
     .chip:hover{background:rgba(255,255,255,.06);}
+
+    .form{
+      display:grid;
+      gap:12px;
+      grid-template-columns:1fr 1fr;
+      margin-top:10px;
+    }
+    @media (max-width:780px){.form{grid-template-columns:1fr;}}
+    .field{
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      border-radius:14px;
+      padding:12px;
+    }
+    label{
+      display:flex;justify-content:space-between;gap:10px;align-items:baseline;
+      font-weight:800;font-size:13px;color:rgba(255,255,255,.84);
+    }
+    .hint{font-weight:600;color:rgba(255,255,255,.55);font-size:12px;}
+    input[type="number"], input[type="range"]{
+      width:100%;
+      margin-top:8px;
+    }
+    input[type="number"]{
+      border-radius:12px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.22);color:var(--text);padding:10px 10px;
+      font-family:var(--mono);outline:none;
+    }
+    input[type="number"]:focus{
+      border-color:rgba(100,255,218,.35);
+      box-shadow:0 0 0 4px rgba(100,255,218,.08);
+    }
+    input[type="range"]{accent-color:var(--accent);}
+
+    .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px;}
+
+    .bar{
+      height:12px;border-radius:999px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.22);overflow:hidden;margin-top:10px;
+    }
+    .bar > div{height:100%;width:0%;background:linear-gradient(90deg, rgba(67,251,164,.95), rgba(255,206,87,.95), rgba(255,77,109,.95));}
+
+    pre{
+      margin:10px 0 0;padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.25);overflow:auto;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.82);
+    }
+
+    .errorBox{
+      margin-top:12px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,77,109,.35);
+      background:rgba(255,77,109,.08);
+      display:none;
+    }
 
     footer{margin-top:24px;color:rgba(255,255,255,.55);font-size:13px;}
   </style>
@@ -174,7 +195,8 @@
     </a>
     <nav aria-label="Main navigation">
       <ul>
-        <li><a class="pill" href="/demos/">Demos</a></li>
+        <li><a class="pill" href="/">Home</a></li>
+        <li><a class="pill active" href="/demos/">Demos</a></li>
         <li><a class="pill" href="/evidence/">Evidence</a></li>
       </ul>
     </nav>
@@ -185,19 +207,22 @@
   <section class="hero">
     <h1>Tabular Risk</h1>
     <p class="subtitle">
-      Enter a small set of features and compute a local baseline score. API mode can be used if a scoring endpoint is available.
+      Enter a small feature set and compute a transparent baseline score locally.
+      An optional API mode can call a deployed scoring endpoint.
     </p>
 
     <div class="rowWrap">
-      <a class="btn primary" href="/evidence/#tabular-risk">Evidence <span class="kbd">#tabular-risk</span></a>
+      <a class="btn primary" href="/evidence/#tabular-risk">Evidence anchor <span class="kbd">#tabular-risk</span></a>
       <a class="btn" href="https://github.com/nepryoon/nil-tabular-risk" target="_blank" rel="noopener noreferrer">GitHub</a>
 
       <span class="toggle" role="group" aria-label="Mode selector">
         <button id="modeLocal" class="active" type="button">Local</button>
         <button id="modeApi" type="button">API</button>
       </span>
+
       <span class="badge warn" id="bMode">mode: local</span>
       <span class="badge" id="bStatus">status: idle</span>
+      <span class="badge" id="bResult">risk: —</span>
     </div>
   </section>
 
@@ -205,88 +230,86 @@
     <div class="card">
       <h2>Try it</h2>
       <p class="muted small">
-        The local model is a small, transparent baseline (hand-tuned weights). API mode expects <span class="mono">POST /tabular/score</span> (optional).
+        Local mode uses a small logistic baseline (hand-tuned weights) for interpretability.
+        API mode expects <span class="mono">POST /tabular/score</span> (optional).
       </p>
 
       <div class="chips" aria-label="Presets">
-        <span class="chip" data-preset="low">Low risk</span>
-        <span class="chip" data-preset="medium">Medium risk</span>
-        <span class="chip" data-preset="high">High risk</span>
+        <span class="chip" data-preset="low">Preset: low</span>
+        <span class="chip" data-preset="mid">Preset: medium</span>
+        <span class="chip" data-preset="high">Preset: high</span>
       </div>
 
-      <div class="divider"></div>
+      <div class="form" aria-label="Feature inputs">
+        <div class="field">
+          <label for="age">Age <span class="hint">years</span></label>
+          <input id="age" type="number" min="18" max="95" step="1" value="35" />
+          <input id="ageR" type="range" min="18" max="95" step="1" value="35" />
+        </div>
 
-      <div class="form" aria-label="Input features">
-        <div>
-          <label>Age (years)
-            <input id="age" type="number" min="18" max="100" step="1" value="35" />
-          </label>
+        <div class="field">
+          <label for="income">Annual income <span class="hint">GBP</span></label>
+          <input id="income" type="number" min="0" max="250000" step="1000" value="42000" />
+          <input id="incomeR" type="range" min="0" max="250000" step="1000" value="42000" />
         </div>
-        <div>
-          <label>Monthly income (EUR)
-            <input id="income" type="number" min="0" step="50" value="2500" />
-          </label>
+
+        <div class="field">
+          <label for="debt">Debt ratio <span class="hint">0.00 – 1.00</span></label>
+          <input id="debt" type="number" min="0" max="1" step="0.01" value="0.28" />
+          <input id="debtR" type="range" min="0" max="1" step="0.01" value="0.28" />
         </div>
-        <div>
-          <label>Monthly debt payments (EUR)
-            <input id="debt" type="number" min="0" step="50" value="450" />
-          </label>
-        </div>
-        <div>
-          <label>Credit utilisation (0–1)
-            <input id="util" type="number" min="0" max="1" step="0.01" value="0.32" />
-          </label>
-        </div>
-        <div>
-          <label>Late payments (last 12 months)
-            <input id="late" type="number" min="0" max="20" step="1" value="1" />
-          </label>
-        </div>
-        <div>
-          <label>Open credit lines
-            <input id="lines" type="number" min="0" max="50" step="1" value="6" />
-          </label>
+
+        <div class="field">
+          <label for="late">Late payments <span class="hint">count</span></label>
+          <input id="late" type="number" min="0" max="24" step="1" value="1" />
+          <input id="lateR" type="range" min="0" max="24" step="1" value="1" />
         </div>
       </div>
 
-      <div class="rowWrap" style="margin-top:12px;">
-        <button class="btn primary" id="btnScore" type="button">Score</button>
-        <button class="btn" id="btnClear" type="button">Reset</button>
-        <span class="badge" id="bScore">score: —</span>
+      <div class="controls">
+        <button class="btn primary" id="btnRun" type="button">Score</button>
+        <button class="btn" id="btnReset" type="button">Reset</button>
+        <button class="btn ghost" id="btnCopy" type="button">Copy JSON</button>
+      </div>
+
+      <div class="bar" aria-label="Risk score bar"><div id="barFill"></div></div>
+
+      <div class="errorBox" id="errBox" role="alert">
+        <div class="small" id="errMsg" style="white-space:pre-wrap;"></div>
       </div>
 
       <div class="divider"></div>
 
       <h2>Output</h2>
       <pre id="out">{}</pre>
-
-      <div class="divider"></div>
-
-      <h2>API schema (optional)</h2>
-      <pre>{
-  "age": 35,
-  "income_eur": 2500,
-  "debt_eur": 450,
-  "utilisation": 0.32,
-  "late_payments_12m": 1,
-  "open_lines": 6
-}</pre>
     </div>
 
     <aside class="card">
       <h2>Links</h2>
       <div class="small" style="display:grid;gap:10px;">
         <a class="btn" style="justify-content:space-between;" href="/evidence/#tabular-risk"><span>Evidence</span><span class="kbd">#tabular-risk</span></a>
-        <a class="btn" style="justify-content:space-between;" href="/evidence/#ml"><span>Related</span><span class="kbd">#ml</span></a>
+        <a class="btn" style="justify-content:space-between;" href="/evidence/#sql"><span>Related</span><span class="kbd">#sql</span></a>
         <a class="btn" style="justify-content:space-between;" href="https://github.com/nepryoon/nil-tabular-risk" target="_blank" rel="noopener noreferrer"><span>Repository</span><span class="kbd">GitHub</span></a>
       </div>
 
       <div class="divider"></div>
 
+      <h2>API shape (optional)</h2>
+      <pre>{
+  "age": 35,
+  "income_gbp": 42000,
+  "debt_ratio": 0.28,
+  "late_payments": 1
+}</pre>
+
+      <div class="divider"></div>
+
       <h2>Notes</h2>
-      <p class="muted small" style="margin:0;">
-        The local baseline is designed to be interpretable. Output includes per-feature contributions and simple range checks.
-      </p>
+      <ul class="muted small" style="margin:0;padding-left:18px;line-height:1.7;">
+        <li>Local scoring is deterministic and intentionally simple.</li>
+        <li>API mode uses the same payload and returns JSON.</li>
+        <li>Values are illustrative and used only to demonstrate the workflow.</li>
+      </ul>
     </aside>
   </section>
 
@@ -298,21 +321,30 @@
 
   const el = {
     year: document.getElementById("year"),
+    age: document.getElementById("age"),
+    ageR: document.getElementById("ageR"),
+    income: document.getElementById("income"),
+    incomeR: document.getElementById("incomeR"),
+    debt: document.getElementById("debt"),
+    debtR: document.getElementById("debtR"),
+    late: document.getElementById("late"),
+    lateR: document.getElementById("lateR"),
+
+    btnRun: document.getElementById("btnRun"),
+    btnReset: document.getElementById("btnReset"),
+    btnCopy: document.getElementById("btnCopy"),
+
     modeLocal: document.getElementById("modeLocal"),
     modeApi: document.getElementById("modeApi"),
     bMode: document.getElementById("bMode"),
     bStatus: document.getElementById("bStatus"),
-    bScore: document.getElementById("bScore"),
-    out: document.getElementById("out"),
-    btnScore: document.getElementById("btnScore"),
-    btnClear: document.getElementById("btnClear"),
+    bResult: document.getElementById("bResult"),
 
-    age: document.getElementById("age"),
-    income: document.getElementById("income"),
-    debt: document.getElementById("debt"),
-    util: document.getElementById("util"),
-    late: document.getElementById("late"),
-    lines: document.getElementById("lines"),
+    out: document.getElementById("out"),
+    barFill: document.getElementById("barFill"),
+
+    errBox: document.getElementById("errBox"),
+    errMsg: document.getElementById("errMsg"),
   };
 
   el.year.textContent = new Date().getFullYear();
@@ -334,81 +366,83 @@
     if (state) el.bStatus.classList.add(state);
   }
 
-  function sigmoid(x) {
-    return 1 / (1 + Math.exp(-x));
+  function showError(msg) {
+    el.errMsg.textContent = msg;
+    el.errBox.style.display = "block";
   }
 
-  function clamp(x, a, b) {
-    return Math.max(a, Math.min(b, x));
+  function hideError() {
+    el.errMsg.textContent = "";
+    el.errBox.style.display = "none";
   }
 
-  function parseInputs() {
+  function setResult(score, label, state) {
+    if (score == null) {
+      el.bResult.textContent = "risk: —";
+      el.bResult.classList.remove("ok","bad","warn");
+      el.barFill.style.width = "0%";
+      return;
+    }
+    const pct = Math.max(0, Math.min(100, Math.round(score * 100)));
+    el.barFill.style.width = `${pct}%`;
+
+    el.bResult.textContent = `risk: ${label} (${pct}%)`;
+    el.bResult.classList.remove("ok","bad","warn");
+    if (state) el.bResult.classList.add(state);
+  }
+
+  function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+  function sigmoid(z){ return 1 / (1 + Math.exp(-z)); }
+
+  function readInputs() {
     const age = Number(el.age.value);
     const income = Number(el.income.value);
     const debt = Number(el.debt.value);
-    const utilisation = Number(el.util.value);
     const late = Number(el.late.value);
-    const lines = Number(el.lines.value);
 
-    const dti = income > 0 ? debt / income : 1; // debt-to-income
-    return { age, income_eur: income, debt_eur: debt, utilisation, late_payments_12m: late, open_lines: lines, dti };
+    if (!Number.isFinite(age) || !Number.isFinite(income) || !Number.isFinite(debt) || !Number.isFinite(late)) {
+      throw new Error("Invalid numeric input.");
+    }
+    if (age < 18 || age > 95) throw new Error("Age must be between 18 and 95.");
+    if (income < 0) throw new Error("Income must be non-negative.");
+    if (debt < 0 || debt > 1) throw new Error("Debt ratio must be between 0 and 1.");
+    if (late < 0) throw new Error("Late payments must be non-negative.");
+
+    return { age, income_gbp: income, debt_ratio: debt, late_payments: late };
   }
 
-  function rangeFlags(x) {
-    const flags = [];
-    if (x.age < 18 || x.age > 100) flags.push("age out of expected range");
-    if (x.income_eur < 0) flags.push("income negative");
-    if (x.debt_eur < 0) flags.push("debt negative");
-    if (x.utilisation < 0 || x.utilisation > 1) flags.push("utilisation out of range");
-    if (x.late_payments_12m < 0) flags.push("late payments negative");
-    if (x.open_lines < 0) flags.push("open lines negative");
-    if (x.dti < 0) flags.push("DTI negative");
-    if (x.dti > 2.5) flags.push("DTI unusually high");
-    return flags;
-  }
+  function localScore(payload) {
+    // Normalise to rough ranges for a stable baseline.
+    const xAge = clamp(payload.age / 100, 0, 1);
+    const xIncome = clamp(payload.income_gbp / 150000, 0, 1);
+    const xDebt = clamp(payload.debt_ratio, 0, 1);
+    const xLate = clamp(payload.late_payments / 12, 0, 2);
 
-  function localScore(x) {
-    // Normalised features (rough, transparent)
-    const ageN = clamp((x.age - 18) / (100 - 18), 0, 1);
-    const utilN = clamp(x.utilisation, 0, 1);
-    const dtiN = clamp(x.dti / 1.5, 0, 2); // allow >1
-    const lateN = clamp(x.late_payments_12m / 10, 0, 2);
-    const linesN = clamp(x.open_lines / 20, 0, 2);
-
-    // Weights: simple baseline (higher => higher risk)
-    const w0 = -1.2;
+    // Hand-tuned weights: higher debt & late payments increase risk; higher income reduces risk.
     const wAge = 0.35;
-    const wUtil = 1.35;
-    const wDti = 1.10;
+    const wIncome = -1.10;
+    const wDebt = 1.55;
     const wLate = 1.25;
-    const wLines = 0.25;
+    const b = -0.35;
 
-    const terms = {
-      age: wAge * ageN,
-      utilisation: wUtil * utilN,
-      dti: wDti * dtiN,
-      late_payments_12m: wLate * lateN,
-      open_lines: wLines * linesN,
-      bias: w0
+    const z = (wAge * xAge) + (wIncome * xIncome) + (wDebt * xDebt) + (wLate * xLate) + b;
+    const score = sigmoid(z);
+
+    let label = "low";
+    let state = "ok";
+    if (score >= 0.66) { label = "high"; state = "bad"; }
+    else if (score >= 0.33) { label = "medium"; state = "warn"; }
+
+    const contribs = {
+      age: Number((wAge * xAge).toFixed(4)),
+      income: Number((wIncome * xIncome).toFixed(4)),
+      debt_ratio: Number((wDebt * xDebt).toFixed(4)),
+      late_payments: Number((wLate * xLate).toFixed(4)),
+      bias: Number(b.toFixed(4)),
+      logit_z: Number(z.toFixed(4))
     };
 
-    const logit = terms.bias + terms.age + terms.utilisation + terms.dti + terms.late_payments_12m + terms.open_lines;
-    const risk = sigmoid(logit); // 0..1
-
-    // Simple label
-    const label = risk < 0.33 ? "low" : (risk < 0.66 ? "medium" : "high");
-
-    // Contributions (sorted)
-    const contrib = [
-      { feature: "utilisation", value: terms.utilisation },
-      { feature: "late_payments_12m", value: terms.late_payments_12m },
-      { feature: "dti", value: terms.dti },
-      { feature: "age", value: terms.age },
-      { feature: "open_lines", value: terms.open_lines },
-      { feature: "bias", value: terms.bias }
-    ].sort((a,b) => Math.abs(b.value) - Math.abs(a.value));
-
-    return { risk_score: Number(risk.toFixed(4)), label, logit: Number(logit.toFixed(4)), contributions: contrib };
+    return { score, label, state, contribs };
   }
 
   async function fetchWithTimeout(url, opts = {}, ms = 12000) {
@@ -428,29 +462,33 @@
     }
   }
 
-  async function score() {
+  async function run() {
+    hideError();
     setStatus("status: running…", "warn");
-    el.btnScore.disabled = true;
+    el.btnRun.disabled = true;
 
     try {
+      const payload = readInputs();
       const t0 = performance.now();
-      const x = parseInputs();
-      const flags = rangeFlags(x);
 
       let result;
+
       if (mode === "local") {
-        const y = localScore(x);
-        result = { mode: "local", input: x, output: y, checks: { flags } };
-      } else {
-        const payload = {
-          age: x.age,
-          income_eur: x.income_eur,
-          debt_eur: x.debt_eur,
-          utilisation: x.utilisation,
-          late_payments_12m: x.late_payments_12m,
-          open_lines: x.open_lines
+        const s = localScore(payload);
+        const t1 = performance.now();
+
+        result = {
+          mode: "local",
+          input: payload,
+          output: { risk_score: Number(s.score.toFixed(4)), label: s.label },
+          model: { type: "logistic-baseline", notes: "Hand-tuned weights for transparency." },
+          explain: { contributions: s.contribs },
+          latency_ms: Math.round(t1 - t0)
         };
 
+        setResult(s.score, s.label, s.state);
+        setStatus("status: done", "ok");
+      } else {
         const r = await fetchWithTimeout(`${API_BASE}/tabular/score`, {
           method: "POST",
           headers: { "Content-Type":"application/json" },
@@ -459,64 +497,106 @@
 
         const text = await r.text();
         const data = (() => { try { return JSON.parse(text); } catch { return { raw: text }; } })();
-        if (!r.ok) throw new Error(`API error (HTTP ${r.status}): ${data?.detail || text}`);
 
-        result = { mode: "api", request: payload, response: data, checks: { flags } };
+        if (!r.ok) {
+          const detail = data?.detail
+            ? (typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail))
+            : null;
+
+          throw new Error([`API error (HTTP ${r.status})`, detail ? `detail: ${detail}` : null].filter(Boolean).join("\n"));
+        }
+
+        const t1 = performance.now();
+        result = { mode: "api", input: payload, response: data, latency_ms: Math.round(t1 - t0) };
+
+        const s = Number(data?.risk_score ?? data?.score);
+        const label = (data?.label && String(data.label).toLowerCase()) || null;
+
+        if (Number.isFinite(s)) {
+          const score = clamp(s, 0, 1);
+          const derivedLabel = label || (score >= 0.66 ? "high" : (score >= 0.33 ? "medium" : "low"));
+          const state = score >= 0.66 ? "bad" : (score >= 0.33 ? "warn" : "ok");
+          setResult(score, derivedLabel, state);
+        } else {
+          setResult(null, null, null);
+        }
+
+        setStatus("status: done", "ok");
       }
 
-      const t1 = performance.now();
-      result.latency_ms = Math.round(t1 - t0);
-
       el.out.textContent = JSON.stringify(result, null, 2);
-
-      const scoreValue = (mode === "local")
-        ? result.output.risk_score
-        : (result.response?.risk_score ?? "n/a");
-
-      el.bScore.textContent = `score: ${scoreValue}`;
-      setStatus("status: done", "ok");
     } catch (e) {
-      el.out.textContent = JSON.stringify({ error: String(e?.message || e) }, null, 2);
+      const msg = String(e?.message || e);
+      showError(msg);
+      el.out.textContent = JSON.stringify({ error: msg }, null, 2);
       setStatus("status: error", "bad");
-      el.bScore.textContent = "score: —";
+      setResult(null, null, null);
     } finally {
-      el.btnScore.disabled = false;
+      el.btnRun.disabled = false;
     }
   }
 
-  function reset() {
-    el.age.value = 35;
-    el.income.value = 2500;
-    el.debt.value = 450;
-    el.util.value = 0.32;
-    el.late.value = 1;
-    el.lines.value = 6;
+  function resetDefaults() {
+    el.age.value = "35"; el.ageR.value = "35";
+    el.income.value = "42000"; el.incomeR.value = "42000";
+    el.debt.value = "0.28"; el.debtR.value = "0.28";
+    el.late.value = "1"; el.lateR.value = "1";
     el.out.textContent = "{}";
-    el.bScore.textContent = "score: —";
+    hideError();
     setStatus("status: idle", null);
+    setResult(null, null, null);
   }
 
-  function applyPreset(kind) {
-    if (kind === "low") {
-      el.age.value = 42; el.income.value = 3200; el.debt.value = 250; el.util.value = 0.18; el.late.value = 0; el.lines.value = 4;
-    }
-    if (kind === "medium") {
-      el.age.value = 35; el.income.value = 2500; el.debt.value = 650; el.util.value = 0.45; el.late.value = 2; el.lines.value = 7;
-    }
-    if (kind === "high") {
-      el.age.value = 27; el.income.value = 1800; el.debt.value = 900; el.util.value = 0.78; el.late.value = 6; el.lines.value = 12;
-    }
-    setStatus("status: preset loaded", null);
+  function syncPair(a, b) {
+    a.addEventListener("input", () => { b.value = a.value; });
+    b.addEventListener("input", () => { a.value = b.value; });
   }
+
+  syncPair(el.age, el.ageR);
+  syncPair(el.income, el.incomeR);
+  syncPair(el.debt, el.debtR);
+  syncPair(el.late, el.lateR);
 
   document.querySelectorAll(".chip").forEach(ch => {
-    ch.addEventListener("click", () => applyPreset(ch.getAttribute("data-preset")));
+    ch.addEventListener("click", () => {
+      const p = ch.getAttribute("data-preset");
+      if (p === "low") {
+        el.age.value = "42"; el.ageR.value = "42";
+        el.income.value = "78000"; el.incomeR.value = "78000";
+        el.debt.value = "0.18"; el.debtR.value = "0.18";
+        el.late.value = "0"; el.lateR.value = "0";
+      } else if (p === "mid") {
+        el.age.value = "33"; el.ageR.value = "33";
+        el.income.value = "42000"; el.incomeR.value = "42000";
+        el.debt.value = "0.38"; el.debtR.value = "0.38";
+        el.late.value = "2"; el.lateR.value = "2";
+      } else if (p === "high") {
+        el.age.value = "26"; el.ageR.value = "26";
+        el.income.value = "26000"; el.incomeR.value = "26000";
+        el.debt.value = "0.72"; el.debtR.value = "0.72";
+        el.late.value = "8"; el.lateR.value = "8";
+      }
+      setStatus("status: preset loaded", null);
+    });
   });
 
   el.modeLocal.addEventListener("click", () => setMode("local"));
   el.modeApi.addEventListener("click", () => setMode("api"));
-  el.btnScore.addEventListener("click", score);
-  el.btnClear.addEventListener("click", reset);
+
+  el.btnRun.addEventListener("click", run);
+  el.btnReset.addEventListener("click", resetDefaults);
+
+  el.btnCopy.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(el.out.textContent || "{}");
+      setStatus("status: copied", "ok");
+      setTimeout(() => setStatus("status: idle", null), 900);
+    } catch {
+      setStatus("status: copy failed", "warn");
+    }
+  });
+
+  window.addEventListener("load", () => resetDefaults());
 </script>
 </body>
 </html>
