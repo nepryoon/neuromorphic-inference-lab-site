@@ -1,16 +1,15 @@
 <!doctype html>
-<html lang="it">
+<html lang="en-GB">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Evidence | Neuromorphic Inference Lab</title>
-  <meta name="description" content="Evidence-based competence: demo live, endpoint verificabili e repository GitHub collegate al progetto Neuromorphic Inference Lab." />
+  <meta name="description" content="Evidence hub: live endpoints, repositories, and anchored references for projects and skills." />
 
   <style>
     :root{
       --bg: #070A12;
       --surface: rgba(255,255,255,.06);
-      --surface2: rgba(255,255,255,.08);
       --border: rgba(255,255,255,.12);
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.68);
@@ -18,9 +17,9 @@
       --accent2: #7C5CFF;
       --danger: #FF4D6D;
       --ok: #43FBA4;
+      --warn: #FFCE57;
       --shadow: 0 10px 30px rgba(0,0,0,.35);
       --radius: 18px;
-      --radius2: 14px;
       --max: 1100px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
@@ -49,7 +48,6 @@
       padding: 20px 18px 46px;
     }
 
-    /* Header */
     header{
       position: sticky;
       top: 0;
@@ -111,7 +109,6 @@
       background: rgba(100,255,218,.08);
     }
 
-    /* Hero */
     .hero{
       margin-top: 22px;
       padding: 22px;
@@ -133,6 +130,7 @@
       filter: blur(1px);
     }
     .hero > *{ position: relative; }
+
     h1{
       margin: 0 0 8px;
       font-size: clamp(28px, 4vw, 42px);
@@ -142,15 +140,17 @@
     .subtitle{
       margin: 0;
       color: var(--muted);
-      max-width: 80ch;
+      max-width: 92ch;
     }
-    .heroRow{
-      margin-top: 18px;
+
+    .row{
+      margin-top: 14px;
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
       align-items: center;
     }
+
     .btn{
       display: inline-flex;
       align-items: center;
@@ -170,6 +170,7 @@
       border-color: rgba(100,255,218,.40);
       background: linear-gradient(135deg, rgba(100,255,218,.18), rgba(124,92,255,.12));
     }
+
     .kbd{
       font-family: var(--mono);
       font-size: 12px;
@@ -180,62 +181,6 @@
       color: rgba(255,255,255,.78);
     }
 
-    /* Cards */
-    .grid{
-      margin-top: 16px;
-      display: grid;
-      gap: 12px;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    }
-    .card{
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      box-shadow: 0 10px 24px rgba(0,0,0,.22);
-      padding: 16px;
-    }
-    .card h2{
-      margin: 0 0 8px;
-      font-size: 18px;
-      letter-spacing: .2px;
-    }
-    .muted{ color: var(--muted); }
-    .small{ font-size: 14px; }
-    .list{
-      margin: 10px 0 0;
-      padding: 0;
-      list-style: none;
-      display: grid;
-      gap: 10px;
-    }
-    .row{
-      display:flex;
-      align-items:center;
-      justify-content: space-between;
-      gap: 10px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
-      border-radius: var(--radius2);
-      padding: 10px 12px;
-    }
-    .left{
-      display:flex;
-      flex-direction: column;
-      gap: 2px;
-      min-width: 0;
-    }
-    .code{
-      font-family: var(--mono);
-      font-size: 12px;
-      color: rgba(255,255,255,.82);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .hint{
-      font-size: 12px;
-      color: rgba(255,255,255,.62);
-    }
     .badge{
       display:inline-flex;
       align-items:center;
@@ -266,19 +211,61 @@
       margin: 16px 0;
     }
 
+    .grid{
+      margin-top: 16px;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+    }
+
+    .card{
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      box-shadow: 0 10px 24px rgba(0,0,0,.22);
+      padding: 16px;
+    }
+
+    .twoCol{
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr 1fr;
+    }
+    @media (max-width: 900px){
+      .twoCol{ grid-template-columns: 1fr; }
+    }
+
+    .muted{ color: var(--muted); }
+    .small{ font-size: 14px; }
+    .mono{ font-family: var(--mono); }
+
+    .anchor{
+      scroll-margin-top: 90px;
+    }
+
+    .list{
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: rgba(255,255,255,.86);
+    }
+    .list li{ margin: 6px 0; }
+
+    pre{
+      margin: 10px 0 0;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.25);
+      overflow: auto;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,.82);
+    }
+
     footer{
       margin-top: 24px;
       color: rgba(255,255,255,.55);
       font-size: 13px;
-    }
-
-    .mono{ font-family: var(--mono); }
-
-    /* Mobile tweaks */
-    @media (max-width: 520px){
-      .nav{ padding: 12px 14px; }
-      .wrap{ padding: 18px 14px 42px; }
-      .row{ flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
@@ -303,155 +290,203 @@
 
 <main class="wrap">
   <section class="hero">
-    <h1>Evidence-based competence</h1>
+    <h1>Evidence</h1>
     <p class="subtitle">
-      Non “claim”, ma <strong>prove cliccabili</strong>: endpoint live, versioning e repository collegate.
-      Questa pagina è pensata per recruiter e hiring manager: verifiche in 30 secondi.
+      A single place for live links, repositories, and anchors used across the site and documentation.
+      This page avoids duplication by grouping information by project and by capability.
     </p>
 
-    <div class="heroRow">
-      <button class="btn primary" id="btnCheck">
-        Check live endpoints <span class="kbd">/health</span> <span class="kbd">/version</span>
-      </button>
+    <div class="row">
+      <a class="btn primary" href="/demos/">Demos</a>
+
+      <a class="btn" href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">
+        Live API <span class="kbd">/health</span>
+      </a>
+      <a class="btn" href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">
+        Build info <span class="kbd">/version</span>
+      </a>
 
       <a class="btn" href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">
-        Open GitHub repo (app)
+        GitHub (app)
+      </a>
+      <a class="btn" href="https://github.com/nepryoon/neuromorphic-inference-lab-site" target="_blank" rel="noopener noreferrer">
+        GitHub (site)
       </a>
 
-      <a class="btn" href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener noreferrer">
-        Open GitHub repo (infra)
-      </a>
+      <button class="btn" id="btnCheck">Check endpoints</button>
+      <span class="badge" id="bHealth">health: unknown</span>
+      <span class="badge" id="bVersion">version: unknown</span>
     </div>
+
+    <div class="divider"></div>
+    <p class="muted small mono" id="versionPreview">Version preview: —</p>
   </section>
 
-  <section class="grid" aria-label="Evidence cards">
-    <!-- Live API -->
+  <section class="grid">
+
     <div class="card">
-      <h2>Live API</h2>
-      <p class="muted small">Endpoint verificabili in produzione (ALB + ECS Fargate).</p>
+      <h2>Contents</h2>
+      <p class="muted small">Quick links to sections and anchors.</p>
 
-      <ul class="list">
-        <li class="row">
-          <div class="left">
-            <div class="code">GET https://api.neuromorphicinference.com/health</div>
-            <div class="hint">Health check (must be 200)</div>
-          </div>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <span class="badge" id="badgeHealth">unknown</span>
-            <a class="btn" style="padding:8px 12px;" href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">Open</a>
-          </div>
-        </li>
-
-        <li class="row">
-          <div class="left">
-            <div class="code">GET https://api.neuromorphicinference.com/version</div>
-            <div class="hint">Build fingerprint (APP_VERSION / GIT_SHA)</div>
-          </div>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <span class="badge" id="badgeVersion">unknown</span>
-            <a class="btn" style="padding:8px 12px;" href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">Open</a>
-          </div>
-        </li>
-      </ul>
-
-      <div class="divider"></div>
-      <p class="muted small mono" id="versionPreview">Version preview: —</p>
+      <div class="twoCol">
+        <div>
+          <h3 style="margin:0 0 8px 0; font-size:16px;">Projects</h3>
+          <ul class="list">
+            <li><a href="#rag-copilot">RAG Copilot</a></li>
+            <li><a href="#forecast-dashboard">Tabular Forecast Dashboard</a></li>
+            <li><a href="#doc-classifier">Document Classifier</a></li>
+            <li><a href="#vision-classifier">Vision Classifier</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="margin:0 0 8px 0; font-size:16px;">Capabilities</h3>
+          <ul class="list">
+            <li><a href="#python">Python</a></li>
+            <li><a href="#fastapi">FastAPI</a></li>
+            <li><a href="#containers">Containers</a></li>
+            <li><a href="#aws-ecs">AWS (ECS/ALB/ECR)</a></li>
+            <li><a href="#sql">SQL</a></li>
+            <li><a href="#frontend">Front-end (HTML/CSS/JS)</a></li>
+          </ul>
+        </div>
+      </div>
     </div>
 
-    <!-- Source code -->
-    <div class="card">
-      <h2>Source code</h2>
-      <p class="muted small">Repo collegate: implementazione + infrastruttura.</p>
-
-      <ul class="list">
-        <li class="row">
-          <div class="left">
-            <div class="code">github.com/nepryoon/nil-rag-copilot</div>
-            <div class="hint">API + app logic (FastAPI, container ready)</div>
-          </div>
-          <a class="btn" style="padding:8px 12px;" href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">View</a>
-        </li>
-
-        <li class="row">
-          <div class="left">
-            <div class="code">github.com/nepryoon/nil-infra-template</div>
-            <div class="hint">Infra blueprint (ALB, ECS, CI/CD ready)</div>
-          </div>
-          <a class="btn" style="padding:8px 12px;" href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener noreferrer">View</a>
-        </li>
-      </ul>
-
-      <div class="divider"></div>
+    <div class="card anchor" id="rag-copilot">
+      <h2>RAG Copilot</h2>
       <p class="muted small">
-        Focus: <strong>production mindset</strong> (deployable artifacts, versioning, observability).
+        Question answering across a curated knowledge base with citations. A small client is available as a web page.
       </p>
-    </div>
-
-    <!-- Stack proof -->
-    <div class="card">
-      <h2>Deployment proof</h2>
-      <p class="muted small">Segnali concreti di messa in produzione.</p>
 
       <ul class="list">
-        <li class="row">
-          <div class="left">
-            <div class="code">HTTPS + ACM certificate</div>
-            <div class="hint">TLS termination su ALB</div>
-          </div>
-          <span class="badge ok">enabled</span>
-        </li>
+        <li>Demo page: <a href="/demos/rag-copilot/">/demos/rag-copilot/</a></li>
+        <li>API base: <a href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">api.neuromorphicinference.com</a></li>
+        <li>Repository (app): <a href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">nil-rag-copilot</a></li>
+        <li>Repository (infra): <a href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener noreferrer">nil-infra-template</a></li>
+      </ul>
 
-        <li class="row">
-          <div class="left">
-            <div class="code">ECR image + immutable tag</div>
-            <div class="hint">Build “frozen” (no-only-latest)</div>
-          </div>
-          <span class="badge" id="badgeFrozen">verify via /version</span>
-        </li>
+      <pre>curl -s https://api.neuromorphicinference.com/health
+curl -s https://api.neuromorphicinference.com/version</pre>
 
-        <li class="row">
-          <div class="left">
-            <div class="code">Health checks</div>
-            <div class="hint">ALB → Target Group → /health</div>
-          </div>
-          <span class="badge" id="badgeHC2">unknown</span>
-        </li>
+      <pre>curl -s -X POST https://api.neuromorphicinference.com/rag/ask \
+  -H "Content-Type: application/json" \
+  -d '{"question":"How is this deployed?","top_k":4}'</pre>
+    </div>
+
+    <div class="card anchor" id="forecast-dashboard">
+      <h2>Tabular Forecast Dashboard</h2>
+      <p class="muted small">
+        Forecasting over tabular data with feature engineering and evaluation. (Page and repository can be linked here as they are added.)
+      </p>
+      <ul class="list">
+        <li>Planned demo page: <a href="/demos/forecast-dashboard/">/demos/forecast-dashboard/</a></li>
+        <li>Planned repository: <span class="mono">nil-forecast-dashboard</span></li>
       </ul>
     </div>
 
-    <!-- Notes -->
-    <div class="card">
-      <h2>How to evaluate fast</h2>
-      <p class="muted small">Checklist per hiring manager.</p>
-      <ol class="small" style="margin:10px 0 0; padding-left:18px; color: rgba(255,255,255,.78);">
-        <li>Apri <span class="mono">/health</span>: deve rispondere <span class="mono">200</span>.</li>
-        <li>Apri <span class="mono">/version</span>: deve mostrare <span class="mono">APP_VERSION</span> e <span class="mono">GIT_SHA</span>.</li>
-        <li>Apri le repo GitHub: README, architettura, deploy steps.</li>
-      </ol>
-      <div class="divider"></div>
+    <div class="card anchor" id="doc-classifier">
+      <h2>Document Classifier</h2>
       <p class="muted small">
-        Nota: questa è la “spina dorsale” su cui aggiungo le demo (RAG, CV, tabular forecasting) mantenendo prove cliccabili.
+        Text classification and extraction, with evaluation and error analysis. (Links can be added once the repository is published.)
       </p>
+      <ul class="list">
+        <li>Planned demo page: <a href="/demos/doc-classifier/">/demos/doc-classifier/</a></li>
+        <li>Planned repository: <span class="mono">nil-doc-classifier</span></li>
+      </ul>
     </div>
+
+    <div class="card anchor" id="vision-classifier">
+      <h2>Vision Classifier</h2>
+      <p class="muted small">
+        Image classification with packaging and inference notes. (Links can be added once the repository is published.)
+      </p>
+      <ul class="list">
+        <li>Planned demo page: <a href="/demos/vision-classifier/">/demos/vision-classifier/</a></li>
+        <li>Planned repository: <span class="mono">nil-vision-classifier</span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Capabilities</h2>
+      <p class="muted small">
+        Anchors below are intended as stable references from pages and documents.
+      </p>
+
+      <div class="divider"></div>
+
+      <div class="anchor" id="python">
+        <h3 style="margin:0 0 8px 0; font-size:16px;">Python</h3>
+        <ul class="list">
+          <li>RAG API implementation: <a href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">nil-rag-copilot</a></li>
+        </ul>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="anchor" id="fastapi">
+        <h3 style="margin:0 0 8px 0; font-size:16px;">FastAPI</h3>
+        <ul class="list">
+          <li>Service endpoints: <a href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">/health</a>, <a href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">/version</a></li>
+          <li>Application repository: <a href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">nil-rag-copilot</a></li>
+        </ul>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="anchor" id="containers">
+        <h3 style="margin:0 0 8px 0; font-size:16px;">Containers</h3>
+        <ul class="list">
+          <li>Container build and run instructions in: <a href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">nil-rag-copilot</a></li>
+        </ul>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="anchor" id="aws-ecs">
+        <h3 style="margin:0 0 8px 0; font-size:16px;">AWS (ECS/ALB/ECR)</h3>
+        <ul class="list">
+          <li>Service endpoints: <a href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">/health</a>, <a href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">/version</a></li>
+          <li>Infrastructure templates: <a href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener noreferrer">nil-infra-template</a></li>
+        </ul>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="anchor" id="sql">
+        <h3 style="margin:0 0 8px 0; font-size:16px;">SQL</h3>
+        <p class="muted small" style="margin:0;">
+          This anchor is reserved for the forecast dashboard and analytics demos where SQL queries and data modelling are shown.
+        </p>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="anchor" id="frontend">
+        <h3 style="margin:0 0 8px 0; font-size:16px;">Front-end (HTML/CSS/JS)</h3>
+        <ul class="list">
+          <li>Site repository: <a href="https://github.com/nepryoon/neuromorphic-inference-lab-site" target="_blank" rel="noopener noreferrer">neuromorphic-inference-lab-site</a></li>
+          <li>Demo pages: <a href="/demos/">/demos/</a></li>
+        </ul>
+      </div>
+    </div>
+
   </section>
 
   <footer>
-    <div>© <span id="year"></span> Neuromorphic Inference Lab — Evidence page</div>
+    <div>© <span id="year"></span> Neuromorphic Inference Lab — Evidence</div>
   </footer>
 </main>
 
 <script>
   const API_BASE = "https://api.neuromorphicinference.com";
-  const els = {
-    badgeHealth: document.getElementById("badgeHealth"),
-    badgeVersion: document.getElementById("badgeVersion"),
-    badgeHC2: document.getElementById("badgeHC2"),
-    badgeFrozen: document.getElementById("badgeFrozen"),
-    versionPreview: document.getElementById("versionPreview"),
-    btnCheck: document.getElementById("btnCheck"),
-  };
-
   document.getElementById("year").textContent = new Date().getFullYear();
+
+  const els = {
+    btnCheck: document.getElementById("btnCheck"),
+    bHealth: document.getElementById("bHealth"),
+    bVersion: document.getElementById("bVersion"),
+    versionPreview: document.getElementById("versionPreview"),
+  };
 
   function setBadge(el, text, state) {
     el.textContent = text;
@@ -474,60 +509,37 @@
   }
 
   async function check() {
-    setBadge(els.badgeHealth, "checking…", null);
-    setBadge(els.badgeVersion, "checking…", null);
-    setBadge(els.badgeHC2, "checking…", null);
+    setBadge(els.bHealth, "health: checking…", null);
+    setBadge(els.bVersion, "version: checking…", null);
     els.versionPreview.textContent = "Version preview: checking…";
 
-    // /health
     try {
       const r = await fetchWithTimeout(`${API_BASE}/health`, 3500);
-      if (r.ok) {
-        setBadge(els.badgeHealth, "200 OK", "ok");
-        setBadge(els.badgeHC2, "pass", "ok");
-      } else {
-        setBadge(els.badgeHealth, `${r.status}`, "bad");
-        setBadge(els.badgeHC2, "fail", "bad");
-      }
+      setBadge(els.bHealth, r.ok ? "health: 200 OK" : `health: ${r.status}`, r.ok ? "ok" : "bad");
     } catch {
-      setBadge(els.badgeHealth, "down/timeout", "bad");
-      setBadge(els.badgeHC2, "fail", "bad");
+      setBadge(els.bHealth, "health: down/timeout", "bad");
     }
 
-    // /version
     try {
       const r = await fetchWithTimeout(`${API_BASE}/version`, 3500);
       if (!r.ok) {
-        setBadge(els.badgeVersion, `${r.status}`, "bad");
+        setBadge(els.bVersion, `version: ${r.status}`, "bad");
         els.versionPreview.textContent = "Version preview: unavailable";
         return;
       }
-
       const data = await r.json();
-      setBadge(els.badgeVersion, "200 OK", "ok");
-
+      setBadge(els.bVersion, "version: 200 OK", "ok");
       const v = data?.version ?? "unknown";
       const sha = data?.git_sha ?? "unknown";
       els.versionPreview.textContent = `Version preview: version=${v} | git_sha=${sha}`;
-
-      // "Frozen" heuristic: if git_sha looks real (not 'unknown') consider it frozen
-      if (sha && sha !== "unknown") setBadge(els.badgeFrozen, `frozen ✅ (${sha})`, "ok");
-      else setBadge(els.badgeFrozen, "not frozen (git_sha unknown)", "bad");
-
     } catch {
-      setBadge(els.badgeVersion, "down/timeout", "bad");
+      setBadge(els.bVersion, "version: down/timeout", "bad");
       els.versionPreview.textContent = "Version preview: unavailable";
-      setBadge(els.badgeFrozen, "verify via /version", null);
     }
   }
 
   els.btnCheck.addEventListener("click", check);
-
-  // Auto-check once on load (non-blocking)
-  window.addEventListener("load", () => {
-    // slight delay to ensure paint
-    setTimeout(check, 250);
-  });
+  window.addEventListener("load", () => setTimeout(check, 250));
 </script>
 </body>
 </html>
