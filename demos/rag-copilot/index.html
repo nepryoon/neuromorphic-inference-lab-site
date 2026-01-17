@@ -1,114 +1,895 @@
-<!-- /demos/rag-copilot/index.html (UPDATED) -->
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>RAG Copilot — Live Docs | Neuromorphic Inference Lab</title>
-  <meta name="description" content="RAG Copilot: chatbot with citations, eval set, guardrails, and production-first UX." />
-  <link rel="stylesheet" href="/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RAG Copilot | Neuromorphic Inference Lab</title>
+  <meta name="description" content="RAG Copilot demo: ask questions across a curated knowledge base and receive an answer with citations. Live endpoints and source code linked." />
+
   <style>
     :root{
-      --bg:#0b0f17;--text:#e7ecf5;--muted:#a7b1c6;--line:rgba(231,236,245,.12);
-      --radius:16px;--shadow:0 10px 35px rgba(0,0,0,.35);
-      --accent:#7c5cff;--accent2:#2dd4bf;
-      --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-      --sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      --max:1100px;
+      --bg: #070A12;
+      --surface: rgba(255,255,255,.06);
+      --surface2: rgba(255,255,255,.08);
+      --border: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --accent: #64FFDA;
+      --accent2: #7C5CFF;
+      --danger: #FF4D6D;
+      --ok: #43FBA4;
+      --warn: #FFCE57;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+      --radius2: 14px;
+      --max: 1100px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--text)}
-    a{color:inherit;text-decoration:none} a:hover{opacity:.92}
-    .wrap{max-width:var(--max);margin:0 auto;padding:22px 18px}
-    header{position:sticky;top:0;z-index:20;background:rgba(11,15,23,.72);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
-    .brand{font-weight:800;display:flex;align-items:center;gap:10px}
-    .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 10px 25px rgba(124,92,255,.22)}
-    nav a{color:var(--muted);font-weight:700;padding:8px 10px;border-radius:12px;border:1px solid transparent}
-    nav a:hover{border-color:var(--line);background:rgba(255,255,255,.03);color:var(--text)}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--muted);font-weight:800;font-size:12px}
-    h1{margin:14px 0 8px;font-size:34px;letter-spacing:-.4px}
-    .sub{margin:0;color:var(--muted);line-height:1.65;max-width:90ch}
-    .grid{margin-top:14px;display:grid;grid-template-columns:1.1fr .9fr;gap:12px}
-    @media(max-width:900px){.grid{grid-template-columns:1fr}}
-    .card{border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));box-shadow:var(--shadow);padding:16px}
-    .card h2{margin:0 0 10px;font-size:18px}
-    .list{margin:0;padding-left:18px;color:var(--muted);line-height:1.7}
-    .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03);font-weight:800}
-    .btn.primary{border-color:rgba(124,92,255,.65);background:linear-gradient(135deg, rgba(124,92,255,.22), rgba(45,212,191,.12))}
-    .note{margin-top:12px;border:1px solid var(--line);border-radius:var(--radius);padding:14px;background:rgba(255,255,255,.02);color:var(--muted);line-height:1.6}
-    .mono{font-family:var(--mono)}
-    footer{margin-top:26px;border-top:1px solid var(--line);padding:18px 0 30px;color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
+
+    *{ box-sizing: border-box; }
+    html, body{ height: 100%; }
+    body{
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 600px at 20% 10%, rgba(124,92,255,.18), transparent 55%),
+        radial-gradient(900px 600px at 80% 20%, rgba(100,255,218,.14), transparent 55%),
+        radial-gradient(700px 450px at 40% 80%, rgba(124,92,255,.12), transparent 60%),
+        var(--bg);
+      line-height: 1.55;
+    }
+
+    a{ color: inherit; text-decoration: none; }
+    a:hover{ text-decoration: underline; text-underline-offset: 3px; }
+
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 20px 18px 46px;
+    }
+
+    /* Header */
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(to bottom, rgba(7,10,18,.82), rgba(7,10,18,.50));
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .nav{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: centre;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .brand{
+      display: flex;
+      align-items: centre;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+    .logo{
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(100,255,218,.95), rgba(100,255,218,.15) 58%, transparent 60%),
+        radial-gradient(circle at 70% 70%, rgba(124,92,255,.9), rgba(124,92,255,.18) 55%, transparent 57%),
+        rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 8px 22px rgba(0,0,0,.25);
+    }
+    nav ul{
+      list-style: none;
+      display: flex;
+      gap: 10px;
+      padding: 0;
+      margin: 0;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .pill{
+      display: inline-flex;
+      align-items: centre;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .pill.active{
+      color: var(--text);
+      border-color: rgba(100,255,218,.35);
+      background: rgba(100,255,218,.08);
+    }
+
+    /* Hero */
+    .hero{
+      margin-top: 22px;
+      padding: 22px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(420px 260px at 10% 20%, rgba(100,255,218,.20), transparent 55%),
+        radial-gradient(420px 260px at 90% 40%, rgba(124,92,255,.18), transparent 60%);
+      pointer-events:none;
+      filter: blur(1px);
+    }
+    .hero > *{ position: relative; }
+    h1{
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.12;
+      letter-spacing: .2px;
+    }
+    .subtitle{
+      margin: 0;
+      color: var(--muted);
+      max-width: 92ch;
+    }
+
+    .rowWrap{
+      margin-top: 14px;
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: centre;
+    }
+
+    .btn{
+      display: inline-flex;
+      align-items: centre;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 10px 20px rgba(0,0,0,.18);
+      cursor: pointer;
+    }
+    .btn:hover{ background: rgba(255,255,255,.08); text-decoration: none; }
+    .btn.primary{
+      border-color: rgba(100,255,218,.40);
+      background: linear-gradient(135deg, rgba(100,255,218,.18), rgba(124,92,255,.12));
+    }
+    .btn.ghost{
+      background: transparent;
+      border-color: rgba(255,255,255,.10);
+      box-shadow: none;
+    }
+    .btn:disabled{
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .kbd{
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 2px 8px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.25);
+      border-radius: 999px;
+      color: rgba(255,255,255,.78);
+    }
+
+    /* Layout */
+    .grid{
+      margin-top: 16px;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1.35fr 0.65fr;
+      align-items: start;
+    }
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      box-shadow: 0 10px 24px rgba(0,0,0,.22);
+      padding: 16px;
+    }
+    .card h2{
+      margin: 0 0 8px;
+      font-size: 18px;
+      letter-spacing: .2px;
+    }
+    .muted{ color: var(--muted); }
+    .small{ font-size: 14px; }
+    .mono{ font-family: var(--mono); }
+
+    .divider{
+      height: 1px;
+      background: rgba(255,255,255,.08);
+      margin: 14px 0;
+    }
+
+    /* Try it UI */
+    .field{
+      display:flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    textarea{
+      width: 100%;
+      min-height: 120px;
+      resize: vertical;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+      padding: 12px 12px;
+      font-family: var(--sans);
+      outline: none;
+    }
+    textarea:focus{
+      border-color: rgba(100,255,218,.35);
+      box-shadow: 0 0 0 4px rgba(100,255,218,.08);
+    }
+
+    .controls{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: centre;
+      margin-top: 10px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items: centre;
+      gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      font-size: 12px;
+      color: rgba(255,255,255,.78);
+      font-family: var(--mono);
+      white-space: nowrap;
+    }
+    .badge.ok{
+      border-color: rgba(67,251,164,.35);
+      background: rgba(67,251,164,.10);
+      color: rgba(255,255,255,.90);
+    }
+    .badge.bad{
+      border-color: rgba(255,77,109,.35);
+      background: rgba(255,77,109,.10);
+      color: rgba(255,255,255,.90);
+    }
+    .badge.warn{
+      border-color: rgba(255,206,87,.30);
+      background: rgba(255,206,87,.10);
+      color: rgba(255,255,255,.90);
+    }
+
+    .samples{
+      display:flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items: centre;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      font-size: 12px;
+      color: rgba(255,255,255,.82);
+      cursor: pointer;
+      user-select: none;
+    }
+    .chip:hover{ background: rgba(255,255,255,.06); }
+
+    .output{
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+    }
+    .output h3{
+      margin: 0 0 10px 0;
+      font-size: 16px;
+      letter-spacing: .2px;
+    }
+    .answer{
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      colour: rgba(255,255,255,.90);
+    }
+
+    .sources{
+      margin-top: 12px;
+      display:grid;
+      gap: 10px;
+    }
+    .src{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      padding: 12px;
+    }
+    .srcTop{
+      display:flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 12px;
+    }
+    .srcTitle{
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 1.3;
+    }
+    .srcMeta{
+      display:flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .snippet{
+      margin-top: 8px;
+      font-size: 13px;
+      color: rgba(255,255,255,.78);
+      white-space: pre-wrap;
+    }
+
+    pre{
+      margin: 10px 0 0;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.25);
+      overflow: auto;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,.82);
+    }
+
+    /* Architecture mini diagram */
+    .diagram{
+      display:grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .node{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      padding: 12px;
+    }
+    .nodeTitle{
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: .3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.80);
+      margin-bottom: 6px;
+    }
+    .nodeBody{
+      font-size: 13px;
+      color: rgba(255,255,255,.78);
+    }
+    .arrow{
+      font-family: var(--mono);
+      color: rgba(255,255,255,.55);
+      text-align: centre;
+    }
+
+    footer{
+      margin-top: 24px;
+      color: rgba(255,255,255,.55);
+      font-size: 13px;
+    }
   </style>
 </head>
-<body>
-  <header>
-    <div class="wrap nav">
-      <a class="brand" href="/"><span class="dot" aria-hidden="true"></span><span>Neuromorphic Inference Lab</span></a>
-      <nav>
-        <a href="/demos">Demos</a>
-        <a href="/evidence">Evidence</a>
-        <a href="/about">About</a>
-        <a href="/research">Research</a>
-        <a href="https://github.com/nepryoon" target="_blank" rel="noopener">GitHub</a>
-      </nav>
-    </div>
-  </header>
 
-  <main class="wrap">
-    <span class="pill">Demo • Live docs (implementation in progress)</span>
+<body>
+<header>
+  <div class="nav">
+    <a class="brand" href="/" aria-label="Neuromorphic Inference Lab Home">
+      <span class="logo" aria-hidden="true"></span>
+      <span>Neuromorphic Inference Lab</span>
+    </a>
+
+    <nav aria-label="Main navigation">
+      <ul>
+        <li><a class="pill" href="/">Home</a></li>
+        <li><a class="pill active" href="/demos/">Demos</a></li>
+        <li><a class="pill" href="/evidence/">Evidence</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
     <h1>RAG Copilot</h1>
-    <p class="sub">
-      Production-first RAG chatbot with <strong>citations</strong>, <strong>evaluation</strong>, and <strong>guardrails</strong>.
-      This page acts as the live documentation; the repository is the exact implementation.
+    <p class="subtitle">
+      Ask questions across a curated knowledge base and receive an answer with <strong>citations</strong>.
+      Links below provide access to the live service and the implementation.
     </p>
 
-    <div class="cta">
-      <a class="btn primary" href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener">View Source (GitHub)</a>
-      <a class="btn" href="/evidence#react">Evidence: React/JS</a>
-      <a class="btn" href="/demos">Back to Demos</a>
+    <div class="rowWrap">
+      <a class="btn primary" href="/evidence/">Evidence</a>
+
+      <a class="btn" href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">
+        Live API <span class="kbd">/health</span>
+      </a>
+      <a class="btn" href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">
+        Build info <span class="kbd">/version</span>
+      </a>
+
+      <a class="btn" href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">
+        GitHub (app)
+      </a>
+      <a class="btn" href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener noreferrer">
+        GitHub (infra)
+      </a>
+
+      <button class="btn ghost" id="btnCheck">Check endpoints</button>
+      <span class="badge" id="bHealth">health: unknown</span>
+      <span class="badge" id="bVersion">version: unknown</span>
     </div>
 
-    <div class="grid">
-      <section class="card">
-        <h2>What it demonstrates</h2>
-        <ul class="list">
-          <li>Retrieval + reranking + <strong>citations</strong> (auditable answers).</li>
-          <li>Eval harness (quality regression tests over time).</li>
-          <li>Prompt-injection defenses + refusal behavior.</li>
-          <li>Full-stack: UI + API + deploy + monitoring hooks.</li>
-        </ul>
+    <div class="divider"></div>
+    <p class="muted small mono" id="versionPreview">Version preview: —</p>
+  </section>
 
-        <div class="note">
-          Next milestone: a minimal live chat UI on this page, showing citations and latency per request.
-        </div>
-      </section>
+  <section class="grid">
+    <!-- Left: Try it -->
+    <div class="card">
+      <h2>Try it</h2>
+      <p class="muted small">
+        This page calls <span class="mono">POST /rag/ask</span> and renders an answer plus citations.
+        If the endpoint is not available yet, you will see a clear error message.
+      </p>
 
-      <aside class="card">
-        <h2>Roadmap</h2>
-        <ol class="list">
-          <li>Minimal API + retrieval + citations</li>
-          <li>Eval set + regression tests</li>
-          <li>UI + deploy + latency/cost panel</li>
-        </ol>
-        <div class="note">
-          Repo: <a href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener" style="text-decoration:underline;">nil-rag-copilot</a>
+      <div class="samples" aria-label="Sample questions">
+        <span class="chip" data-q="How is this project deployed on AWS (high level)?">AWS deployment</span>
+        <span class="chip" data-q="How can I confirm which build is running?">Confirm build</span>
+        <span class="chip" data-q="What is on the Evidence page?">Evidence page</span>
+        <span class="chip" data-q="What are the main steps in the RAG pipeline here?">RAG pipeline</span>
+      </div>
+
+      <div class="field">
+        <label for="q" class="small" style="color: rgba(255,255,255,.82); font-weight: 700;">
+          Question
+        </label>
+        <textarea id="q" placeholder='Ask something… e.g. "How is the API deployed and how do I check it?"'></textarea>
+      </div>
+
+      <div class="controls">
+        <button class="btn primary" id="btnAsk">Ask</button>
+        <button class="btn" id="btnClear">Clear</button>
+        <span class="badge" id="bAsk">rag: idle</span>
+        <span class="badge warn" id="bMode">mode: demo</span>
+      </div>
+
+      <div class="output" id="out" style="display:none;">
+        <h3>Result</h3>
+        <div class="answer" id="answer"></div>
+
+        <div class="divider"></div>
+        <div class="small muted" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <span class="mono" id="metaLine">meta: —</span>
         </div>
-      </aside>
+
+        <div class="divider"></div>
+        <h3 style="margin:0 0 10px 0; font-size: 16px;">Citations</h3>
+        <div class="sources" id="sources"></div>
+      </div>
+
+      <div class="output" id="errBox" style="display:none; border-color: rgba(255,77,109,.35); background: rgba(255,77,109,.08);">
+        <h3 style="margin:0 0 8px 0;">Error</h3>
+        <div class="small" id="errMsg" style="white-space: pre-wrap;"></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <h2>API schema</h2>
+      <p class="muted small">
+        Request and response shapes used by the demo UI.
+      </p>
+
+      <pre>{
+  "question": "…",
+  "top_k": 4
+}</pre>
+
+      <pre>{
+  "answer": "…",
+  "sources": [
+    { "title": "…", "url": "…", "snippet": "…", "score": 0.87 }
+  ],
+  "meta": {
+    "trace_id": "…",
+    "latency_ms": 123,
+    "mode": "retrieval-only|llm",
+    "version": "0.0.x",
+    "git_sha": "…"
+  }
+}</pre>
+
+      <pre>curl -s -X POST https://api.neuromorphicinference.com/rag/ask \
+  -H "Content-Type: application/json" \
+  -d '{"question":"How is this deployed?","top_k":4}'</pre>
     </div>
 
-    <footer>
-      <div class="mono">
-        neuromorphicinference.com · <a href="/evidence" style="text-decoration:underline;">Evidence</a>
-      </div>
-      <div class="mono" id="build-info">
-        Deployed from: <span id="build-sha">unknown</span> (<span id="build-branch">main</span>)
-      </div>
-    </footer>
-  </main>
+    <!-- Right: What it does + architecture -->
+    <aside class="card">
+      <h2>Overview</h2>
+      <ul class="small" style="margin:10px 0 0; padding-left:18px; color: rgba(255,255,255,.82);">
+        <li><strong>RAG behaviour:</strong> answers are returned with citations (URLs + snippets).</li>
+        <li><strong>Simple API contract:</strong> predictable JSON with structured metadata.</li>
+        <li><strong>Live service:</strong> health and build endpoints are available above.</li>
+      </ul>
 
-  <script src="/build-info.js" defer></script>
+      <div class="divider"></div>
+
+      <h2>Architecture</h2>
+      <p class="muted small">
+        A high-level view of the demo flow.
+      </p>
+
+      <div class="diagram" role="img" aria-label="Architecture diagram">
+        <div class="node">
+          <div class="nodeTitle">Client</div>
+          <div class="nodeBody">This page (<span class="mono">/demos/rag-copilot/</span>) calls the API.</div>
+        </div>
+        <div class="arrow">↓ HTTPS</div>
+        <div class="node">
+          <div class="nodeTitle">ALB + TLS</div>
+          <div class="nodeBody">Routes traffic to ECS. Health checks on <span class="mono">/health</span>.</div>
+        </div>
+        <div class="arrow">↓</div>
+        <div class="node">
+          <div class="nodeTitle">ECS Fargate</div>
+          <div class="nodeBody">FastAPI container. Endpoints: <span class="mono">/health</span>, <span class="mono">/version</span>, <span class="mono">/rag/ask</span>.</div>
+        </div>
+        <div class="arrow">↓</div>
+        <div class="node">
+          <div class="nodeTitle">RAG core</div>
+          <div class="nodeBody">
+            Chunk → index → retrieve top-k → answer (+ citations). LLM optional.
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <h2>Links</h2>
+      <div class="small" style="display:grid; gap:10px;">
+        <a class="btn" style="justify-content: space-between;" href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">
+          <span>Open /health</span><span class="kbd">200</span>
+        </a>
+        <a class="btn" style="justify-content: space-between;" href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">
+          <span>Open /version</span><span class="kbd">build</span>
+        </a>
+        <a class="btn" style="justify-content: space-between;" href="/evidence/">
+          <span>Evidence</span><span class="kbd">notes</span>
+        </a>
+      </div>
+
+      <div class="divider"></div>
+
+      <p class="muted small">
+        Tip: if <span class="mono">/rag/ask</span> is not yet deployed, you can still verify the service via
+        <span class="mono">/health</span> and <span class="mono">/version</span>.
+      </p>
+    </aside>
+  </section>
+
+  <footer>
+    <div>© <span id="year"></span> Neuromorphic Inference Lab — RAG Copilot</div>
+  </footer>
+</main>
+
+<script>
+  const API_BASE = "https://api.neuromorphicinference.com";
+
+  const els = {
+    year: document.getElementById("year"),
+    btnCheck: document.getElementById("btnCheck"),
+    bHealth: document.getElementById("bHealth"),
+    bVersion: document.getElementById("bVersion"),
+    versionPreview: document.getElementById("versionPreview"),
+
+    q: document.getElementById("q"),
+    btnAsk: document.getElementById("btnAsk"),
+    btnClear: document.getElementById("btnClear"),
+    bAsk: document.getElementById("bAsk"),
+    bMode: document.getElementById("bMode"),
+
+    out: document.getElementById("out"),
+    answer: document.getElementById("answer"),
+    sources: document.getElementById("sources"),
+    metaLine: document.getElementById("metaLine"),
+
+    errBox: document.getElementById("errBox"),
+    errMsg: document.getElementById("errMsg"),
+  };
+
+  els.year.textContent = new Date().getFullYear();
+
+  function setBadge(el, text, state) {
+    el.textContent = text;
+    el.classList.remove("ok", "bad", "warn");
+    if (state) el.classList.add(state);
+  }
+
+  async function fetchWithTimeout(url, opts = {}, ms = 4500) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), ms);
+    try {
+      const res = await fetch(url, {
+        ...opts,
+        signal: ctrl.signal,
+        headers: {
+          "Accept": "application/json",
+          ...(opts.headers || {})
+        }
+      });
+      clearTimeout(t);
+      return res;
+    } catch (e) {
+      clearTimeout(t);
+      throw e;
+    }
+  }
+
+  function showError(msg) {
+    els.errMsg.textContent = msg;
+    els.errBox.style.display = "block";
+  }
+
+  function hideError() {
+    els.errMsg.textContent = "";
+    els.errBox.style.display = "none";
+  }
+
+  function showOutput() {
+    els.out.style.display = "block";
+  }
+
+  function hideOutput() {
+    els.out.style.display = "none";
+    els.answer.textContent = "";
+    els.sources.innerHTML = "";
+    els.metaLine.textContent = "meta: —";
+  }
+
+  function renderSources(sources = []) {
+    els.sources.innerHTML = "";
+    if (!sources.length) {
+      const empty = document.createElement("div");
+      empty.className = "muted small";
+      empty.textContent = "No citations returned.";
+      els.sources.appendChild(empty);
+      return;
+    }
+
+    sources.forEach((s, idx) => {
+      const card = document.createElement("div");
+      card.className = "src";
+
+      const top = document.createElement("div");
+      top.className = "srcTop";
+
+      const left = document.createElement("div");
+      left.style.minWidth = "0";
+
+      const title = document.createElement("div");
+      title.className = "srcTitle";
+      title.textContent = s.title || `Source ${idx + 1}`;
+
+      const url = document.createElement("div");
+      url.className = "muted small mono";
+      url.style.marginTop = "2px";
+      url.style.overflow = "hidden";
+      url.style.textOverflow = "ellipsis";
+      url.style.whiteSpace = "nowrap";
+
+      if (s.url) {
+        const a = document.createElement("a");
+        a.href = s.url;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.textContent = s.url;
+        url.appendChild(a);
+      } else {
+        url.textContent = "—";
+      }
+
+      left.appendChild(title);
+      left.appendChild(url);
+
+      const meta = document.createElement("div");
+      meta.className = "srcMeta";
+
+      const b1 = document.createElement("span");
+      b1.className = "badge";
+      const score = (typeof s.score === "number") ? s.score.toFixed(2) : "n/a";
+      b1.textContent = `score=${score}`;
+
+      const b2 = document.createElement("span");
+      b2.className = "badge";
+      const kind = s.kind || "chunk";
+      b2.textContent = kind;
+
+      meta.appendChild(b1);
+      meta.appendChild(b2);
+
+      top.appendChild(left);
+      top.appendChild(meta);
+
+      const snippet = document.createElement("div");
+      snippet.className = "snippet";
+      snippet.textContent = s.snippet || "";
+
+      card.appendChild(top);
+      card.appendChild(snippet);
+
+      els.sources.appendChild(card);
+    });
+  }
+
+  async function checkEndpoints() {
+    setBadge(els.bHealth, "health: checking…", null);
+    setBadge(els.bVersion, "version: checking…", null);
+    els.versionPreview.textContent = "Version preview: checking…";
+
+    try {
+      const r = await fetchWithTimeout(`${API_BASE}/health`, {}, 3500);
+      if (r.ok) setBadge(els.bHealth, "health: 200 OK", "ok");
+      else setBadge(els.bHealth, `health: ${r.status}`, "bad");
+    } catch {
+      setBadge(els.bHealth, "health: down/timeout", "bad");
+    }
+
+    try {
+      const r = await fetchWithTimeout(`${API_BASE}/version`, {}, 3500);
+      if (!r.ok) {
+        setBadge(els.bVersion, `version: ${r.status}`, "bad");
+        els.versionPreview.textContent = "Version preview: unavailable";
+        return;
+      }
+      const data = await r.json();
+      setBadge(els.bVersion, "version: 200 OK", "ok");
+
+      const v = data?.version ?? "unknown";
+      const sha = data?.git_sha ?? "unknown";
+      els.versionPreview.textContent = `Version preview: version=${v} | git_sha=${sha}`;
+    } catch {
+      setBadge(els.bVersion, "version: down/timeout", "bad");
+      els.versionPreview.textContent = "Version preview: unavailable";
+    }
+  }
+
+  async function askRag() {
+    const question = (els.q.value || "").trim();
+    if (!question) {
+      hideOutput();
+      showError("Please type a question first.");
+      setBadge(els.bAsk, "rag: missing question", "warn");
+      return;
+    }
+
+    hideError();
+    hideOutput();
+
+    els.btnAsk.disabled = true;
+    setBadge(els.bAsk, "rag: calling…", "warn");
+
+    const t0 = performance.now();
+
+    try {
+      const r = await fetchWithTimeout(`${API_BASE}/rag/ask`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question, top_k: 4 })
+      }, 12000);
+
+      const t1 = performance.now();
+
+      let data = null;
+      const text = await r.text();
+      try { data = JSON.parse(text); } catch { data = { raw: text }; }
+
+      if (!r.ok) {
+        const detail = data?.detail
+          ? (typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail))
+          : null;
+
+        const msg = [
+          `HTTP ${r.status}`,
+          detail ? `detail: ${detail}` : null,
+          "If this is your first time trying it, ensure /rag/ask is deployed and CORS allows this origin."
+        ].filter(Boolean).join("\n");
+
+        showError(msg);
+        setBadge(els.bAsk, `rag: ${r.status}`, "bad");
+        return;
+      }
+
+      const answer = data?.answer ?? "(No 'answer' field returned.)";
+      const sources = Array.isArray(data?.sources) ? data.sources : [];
+      const meta = data?.meta ?? {};
+
+      els.answer.textContent = answer;
+      renderSources(sources);
+
+      const latency = meta.latency_ms ?? Math.round(t1 - t0);
+      const trace = meta.trace_id ?? "—";
+      const mode = meta.mode ?? "—";
+      const ver = meta.version ?? "—";
+      const sha = meta.git_sha ?? "—";
+
+      els.metaLine.textContent = `meta: latency_ms=${latency} | mode=${mode} | trace_id=${trace} | version=${ver} | git_sha=${sha}`;
+
+      setBadge(els.bAsk, `rag: 200 OK (${latency}ms)`, "ok");
+      setBadge(els.bMode, `mode: ${mode}`, mode === "llm" ? "ok" : "warn");
+
+      showOutput();
+
+    } catch (e) {
+      const msg = (e && e.name === "AbortError")
+        ? "Request timed out. The service may be starting up, or /rag/ask is not reachable."
+        : `Network error: ${e?.message || e}`;
+      showError(msg);
+      setBadge(els.bAsk, "rag: network error", "bad");
+    } finally {
+      els.btnAsk.disabled = false;
+    }
+  }
+
+  document.querySelectorAll(".chip").forEach(ch => {
+    ch.addEventListener("click", () => {
+      const q = ch.getAttribute("data-q") || "";
+      els.q.value = q;
+      els.q.focus();
+    });
+  });
+
+  els.btnCheck.addEventListener("click", checkEndpoints);
+  els.btnAsk.addEventListener("click", askRag);
+  els.btnClear.addEventListener("click", () => {
+    els.q.value = "";
+    hideError();
+    hideOutput();
+    setBadge(els.bAsk, "rag: idle", null);
+  });
+
+  window.addEventListener("load", () => setTimeout(checkEndpoints, 250));
+</script>
 </body>
 </html>
-
