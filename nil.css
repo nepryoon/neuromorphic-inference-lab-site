@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Systems — Neuromorphic Inference Lab</title>
+  <meta name="description" content="Neuromorphic systems: end-to-end ML pipelines, CI/CD for model deployment, inference serving, and LLMOps patterns." />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<style>
+  body { background: #070b12 !important; color: #eaf0fb !important; }
+  a { color: #7cc4ff !important; }
+  .nav { background: rgba(7,11,18,.85) !important; }
+</style>
+
+<body>
+  <header class="nav">
+    <div class="brand">
+      <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+      <span>Neuromorphic Inference Lab</span>
+    </div>
+    <nav class="navlinks" aria-label="Primary navigation">
+      <a data-nav href="/">Signal</a>
+      <a data-nav href="/demos/">Systems</a>
+      <a data-nav href="/evidence/">Proof Ledger</a>
+      <a data-nav href="/about/">Identity</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <p class="kicker">Systems</p>
+      <h1 class="h1">Engineering intelligent systems under real constraints.</h1>
+      <p class="sub">
+        Each system is documented end-to-end: data → features → training → artefacts → serving → monitoring-ready outputs.
+        This is designed for technical screening and ATS parsing.
+      </p>
+      <div class="badges">
+        <span class="badge">CI/CD for ML</span>
+        <span class="badge">Inference Serving</span>
+        <span class="badge">MLflow</span>
+        <span class="badge">Docker</span>
+        <span class="badge">RAG / LLMOps</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="grid">
+        <article class="card project col-6">
+          <h3>NeuroGrid Fault Risk Scoring Platform</h3>
+          <p>Fault risk inference for medium-voltage networks, with CI training, artefact versioning, and live serving.</p>
+          <div class="tags">
+            <span class="tag">End-to-End ML</span>
+            <span class="tag">Model Serving</span>
+            <span class="tag">CI Training</span>
+          </div>
+          <div class="actions">
+            <a class="btn primary" href="/demos/mv-grid-fault-risk/">Open system</a>
+            <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">API docs</a>
+            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Source</a>
+          </div>
+        </article>
+
+        <article class="card project col-6">
+          <h3>RAG Knowledge Copilot (LLMOps)</h3>
+          <p>Retrieval-augmented generation with evaluation harnesses and reliability patterns for document reality.</p>
+          <div class="tags">
+            <span class="tag">RAG</span>
+            <span class="tag">LLMOps</span>
+            <span class="tag">Evaluation</span>
+          </div>
+          <div class="actions">
+            <a class="btn" href="/demos/">Coming next</a>
+            <a class="btn" href="/evidence/">Proof mapping</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
+      <div class="prov">
+        <span id="build-branch">branch: …</span>
+        <span id="build-commit">commit: …</span>
+        <span id="build-time">built: …</span>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById("year").textContent = String(new Date().getFullYear());
+  </script>
+  <script src="/build-info.js"></script>
+</body>
+</html>
