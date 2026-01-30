@@ -194,7 +194,8 @@
 
       const features = {};
       for (const [k, v] of data.entries()) {
-        features[k] = toNumber(v);
+      const vv = (typeof v === "string") ? v.trim() : v;
+      features[k] = vv === "" ? null : toNumber(vv);
       }
 
       const resultEl = document.getElementById("result");
