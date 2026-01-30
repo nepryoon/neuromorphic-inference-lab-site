@@ -1,3 +1,6 @@
+/* NIL THEME MARKER */
+body { background: var(--bg) !important; color: var(--text) !important; }
+
 <!doctype html>
 <html lang="en-GB">
 <head>
