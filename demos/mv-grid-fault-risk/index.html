@@ -198,7 +198,7 @@
       }
 
       const resultEl = document.getElementById("result");
-      resultEl.textContent = "Scoring…";
+      resultEl.textContent = "Scoring… If this is the first request, the API may take ~30–60 seconds to warm up.";
       
       try { await fetch(API_HEALTH, { cache: "no-store" }); } catch (_) {}
 
