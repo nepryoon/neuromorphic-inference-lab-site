@@ -178,7 +178,9 @@
   <script>
     document.getElementById("year").textContent = String(new Date().getFullYear());
 
-    const API_BASE = "https://mv-grid-fault-risk-api.onrender.com";
+    const API_PREDICT = "/api/mvgrid/predict";
+    const API_HEALTH = "/api/mvgrid/health";
+
 
     function toNumber(v) {
       const n = Number(v);
@@ -197,13 +199,16 @@
 
       const resultEl = document.getElementById("result");
       resultEl.textContent = "Scoring…";
+      
+      try { await fetch(API_HEALTH, { cache: "no-store" }); } catch (_) {}
 
       try {
-        const res = await fetch(API_BASE + "/predict", {
+          const res = await fetch(API_PREDICT, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ features })
-        });
+      });
+
 
         if (!res.ok) {
           const txt = await res.text();
