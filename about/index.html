@@ -1,174 +1,155 @@
-<!-- /about/index.html -->
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>About — Neuromorphic Inference Lab</title>
-  <meta name="description" content="About: production-first AI systems, evidence-based competence, and the Neuromorphic Inference Lab philosophy." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Evidence Dossier — NeuroGrid Fault Risk Scoring Platform</title>
+  <meta name="description" content="Evidence dossier: full-stack ML delivery proof (data pipeline, MLflow training, CI workflow, artefact versioning, live inference serving)." />
+  <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
-
-  <style>
-    :root{
-      --bg:#0b0f17; --text:#e7ecf5; --muted:#a7b1c6; --line:rgba(231,236,245,.12);
-      --radius:16px; --shadow:0 10px 35px rgba(0,0,0,.35);
-      --accent:#7c5cff; --accent2:#2dd4bf;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      --max:1100px;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--text)}
-    a{color:inherit;text-decoration:none}
-    a:hover{opacity:.92}
-    .wrap{max-width:var(--max);margin:0 auto;padding:22px 18px}
-
-    header{
-      position:sticky;top:0;z-index:20;
-      background:rgba(11,15,23,.72);
-      backdrop-filter: blur(10px);
-      border-bottom:1px solid var(--line);
-    }
-    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
-    .brand{font-weight:800;display:flex;align-items:center;gap:10px}
-    .dot{
-      width:10px;height:10px;border-radius:50%;
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      box-shadow:0 10px 25px rgba(124,92,255,.22);
-    }
-    nav a{
-      color:var(--muted);font-weight:700;padding:8px 10px;border-radius:12px;border:1px solid transparent
-    }
-    nav a:hover{border-color:var(--line);background:rgba(255,255,255,.03);color:var(--text)}
-
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:7px 10px;border-radius:999px;border:1px solid var(--line);
-      background:rgba(255,255,255,.03);color:var(--muted);
-      font-weight:800;font-size:12px;
-    }
-    h1{margin:18px 0 6px;font-size:32px;letter-spacing:-.4px}
-    .sub{margin:0 0 16px;color:var(--muted);line-height:1.65;max-width:85ch}
-
-    .grid{
-      margin-top:14px;
-      display:grid;grid-template-columns:1.1fr .9fr;gap:12px;
-    }
-    @media (max-width: 900px){.grid{grid-template-columns:1fr}}
-    .card{
-      border:1px solid var(--line);
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:16px;
-    }
-    .card h2{margin:0 0 10px;font-size:18px;letter-spacing:.2px}
-    .card p{margin:0 0 12px;color:var(--muted);line-height:1.65}
-    .list{margin:0;padding-left:18px;color:var(--muted);line-height:1.7}
-    .mini-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-    .mini{
-      font-size:13px;padding:9px 11px;border-radius:12px;
-      border:1px solid var(--line);background:rgba(255,255,255,.02);
-      font-weight:800;color:var(--text);
-    }
-    .mini.secondary{color:var(--muted)}
-    .mono{font-family:var(--mono)}
-    footer{
-      margin-top:26px;border-top:1px solid var(--line);
-      padding:18px 0 30px;color:var(--muted);font-size:13px;
-      display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center
-    }
-  </style>
 </head>
-
 <body>
-  <header>
-    <div class="wrap nav">
-      <a class="brand" href="/" aria-label="Home">
-        <span class="dot" aria-hidden="true"></span>
-        <span>Neuromorphic Inference Lab</span>
-      </a>
-      <nav aria-label="Primary">
-        <a href="/demos">Demos</a>
-        <a href="/evidence">Evidence</a>
-        <a href="/about">About</a>
-        <a href="/research">Research</a>
-        <a href="https://github.com/nepryoon" target="_blank" rel="noopener">GitHub</a>
-      </nav>
+  <header class="nav">
+    <div class="brand">
+      <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+      <span>Neuromorphic Inference Lab</span>
     </div>
+    <nav class="navlinks" aria-label="Primary navigation">
+      <a data-nav href="/">Signal</a>
+      <a data-nav href="/demos/">Systems</a>
+      <a data-nav href="/evidence/">Proof Ledger</a>
+      <a data-nav href="/about/">Identity</a>
+    </nav>
   </header>
 
-  <main class="wrap">
-    <span class="pill">Identity • Positioning • What to expect</span>
-    <h1>About</h1>
-    <p class="sub">
-      Neuromorphic Inference Lab is a personal portfolio focused on <strong>production-first AI systems</strong>.
-      “Neuromorphic” is the signature: obsession for <strong>efficient inference</strong> (latency/cost/robustness) and
-      <strong>operability</strong> (reproducibility, monitoring, clear trade-offs).
-    </p>
+  <main class="container">
+    <section class="hero">
+      <p class="kicker">Evidence Dossier</p>
+      <h1 class="h1">NeuroGrid Fault Risk Scoring Platform</h1>
+      <p class="sub">
+        A verification-oriented dossier designed for hiring managers: each claim is tied to a concrete artefact.
+        The system demonstrates full-stack delivery — from data/feature pipelines through MLflow-tracked training,
+        CI execution, versioned model artefacts, and live inference serving.
+      </p>
 
-    <div class="grid">
-      <section class="card">
-        <h2>What I build</h2>
-        <p>
-          End-to-end systems where machine learning is just one component of a reliable product:
-          data ingestion, pipelines, model serving, observability, and user-facing interfaces.
-        </p>
-        <ul class="list">
-          <li><strong>NLP</strong> (RAG, assistants with citations & eval)</li>
-          <li><strong>Computer Vision</strong> (classification + explainability)</li>
-          <li><strong>Tabular / Forecasting</strong> (scoring + reporting + drift awareness)</li>
-          <li><strong>MLOps</strong> (containerization, CI/CD, deployability)</li>
-        </ul>
+      <div class="actions">
+        <a class="btn primary" href="/demos/mv-grid-fault-risk/">Open live system</a>
+        <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Repository</a>
+        <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/actions" target="_blank" rel="noopener">CI runs</a>
+        <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/releases/tag/model-v0.1.0" target="_blank" rel="noopener">Model artefact</a>
+        <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">API docs</a>
+        <a class="btn" href="/api/mvgrid/health" target="_blank" rel="noopener">Proxy health</a>
+      </div>
 
-        <div class="mini-links">
-          <a class="mini" href="/demos">View Demos</a>
-          <a class="mini secondary" href="/evidence">Evidence Index</a>
-        </div>
-      </section>
-
-      <aside class="card">
-        <h2>How to evaluate this portfolio</h2>
-        <p>
-          This site is built to be audited quickly. Every claim is backed by proofs:
-          a live page here and the exact source code on GitHub.
-        </p>
-        <ul class="list">
-          <li>Start from <a href="/demos" style="text-decoration:underline;">Demos</a> to see solutions.</li>
-          <li>Use <a href="/evidence" style="text-decoration:underline;">Evidence</a> to map skills → proofs (CV-ready).</li>
-          <li>Check the <a href="/research" style="text-decoration:underline;">Research</a> archive for background work.</li>
-        </ul>
-
-        <div class="mini-links">
-          <a class="mini" href="https://github.com/nepryoon" target="_blank" rel="noopener">GitHub</a>
-          <a class="mini secondary" href="/research">Research Archive</a>
-        </div>
-      </aside>
-    </div>
-
-    <section class="card" style="margin-top:12px">
-      <h2>Principles</h2>
-      <ul class="list">
-        <li><strong>Evidence-based competence:</strong> no “skills list” without clickable proof.</li>
-        <li><strong>Production constraints first:</strong> latency, cost, failure modes, data quality.</li>
-        <li><strong>Operability:</strong> reproducible runs, clear interfaces, monitoring hooks.</li>
-        <li><strong>Radical clarity:</strong> architecture and trade-offs explained in plain language.</li>
-      </ul>
+      <div class="badges">
+        <span class="badge">Scalable ML Pipelines</span>
+        <span class="badge">CI/CD for ML</span>
+        <span class="badge">MLflow Tracking</span>
+        <span class="badge">Artefact Versioning</span>
+        <span class="badge">Model Serving</span>
+        <span class="badge">Monitoring-ready outputs</span>
+      </div>
     </section>
 
-    <footer aria-label="Footer">
-      <div>
-        <span class="mono">neuromorphicinference.com</span> ·
-        <a href="/demos" style="text-decoration:underline;">Demos</a> ·
-        <a href="/evidence" style="text-decoration:underline;">Evidence</a> ·
-        <a href="https://github.com/nepryoon" target="_blank" rel="noopener" style="text-decoration:underline;">@nepryoon</a>
-      </div>
-      <div class="mono" id="build-info">
-        Deployed from: <span id="build-sha">unknown</span> (<span id="build-branch">main</span>)
-      </div>
-    </footer>
-  </main>
-  <script src="/build-info.js" defer></script>
-</body>
-</html>
+    <section class="section">
+      <h2>Skill → proof mapping</h2>
+      <p>
+        The matrix below maps full-stack competencies to verifiable proof. Each item is intentionally linkable.
+      </p>
 
+      <div class="grid">
+        <article class="card project col-6">
+          <h3>Data pipeline & feature engineering</h3>
+          <p>
+            Ingestion → validation → training table. Rolling-window features (30/90/180 days), recency features, and asset-age signals.
+            Designed to be reproducible and retraining-ready.
+          </p>
+          <div class="actions">
+            <a class="btn primary" href="https://github.com/nepryoon/mv-grid-fault-risk/tree/main/src/mvgrid" target="_blank" rel="noopener">Pipeline module</a>
+            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Repo root</a>
+          </div>
+          <div class="tags" style="margin-top:12px;">
+            <span class="tag">Feature Engineering</span>
+            <span class="tag">Data Validation</span>
+            <span class="tag">Retraining-ready</span>
+          </div>
+        </article>
+
+        <article class="card project col-6">
+          <h3>Modelling + statistical evaluation</h3>
+          <p>
+            Time-aware split (operational realism) and metrics suitable for risk models (ROC-AUC / PR-AUC / F1).
+            Baseline classifier with an extensible architecture.
+          </p>
+          <div class="actions">
+            <a class="btn primary" href="https://github.com/nepryoon/mv-grid-fault-risk/tree/main/src/mvgrid/train.py" target="_blank" rel="noopener">Training script</a>
+            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/actions" target="_blank" rel="noopener">Training runs</a>
+          </div>
+          <div class="tags" style="margin-top:12px;">
+            <span class="tag">Time-based Split</span>
+            <span class="tag">ROC-AUC / PR-AUC</span>
+            <span class="tag">Reproducibility</span>
+          </div>
+        </article>
+
+        <article class="card project col-6">
+          <h3>CI training workflow (MLOps)</h3>
+          <p>
+            Automated dataset build + training in GitHub Actions. Produces artefacts for deployment and supports
+            repeatable model promotion.
+          </p>
+          <div class="actions">
+            <a class="btn primary" href="https://github.com/nepryoon/mv-grid-fault-risk/tree/main/.github/workflows" target="_blank" rel="noopener">Workflow YAML</a>
+            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/actions" target="_blank" rel="noopener">Actions</a>
+          </div>
+          <div class="tags" style="margin-top:12px;">
+            <span class="tag">CI/CD for ML</span>
+            <span class="tag">Automated Training</span>
+            <span class="tag">Artefact Promotion</span>
+          </div>
+        </article>
+
+        <article class="card project col-6">
+          <h3>Artefact versioning + deployment readiness</h3>
+          <p>
+            Model artefact published as a GitHub Release asset. The API fetches the artefact via environment configuration,
+            enabling clean version promotion.
+          </p>
+          <div class="actions">
+            <a class="btn primary" href="https://github.com/nepryoon/mv-grid-fault-risk/releases" target="_blank" rel="noopener">Releases</a>
+            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/releases/download/model-v0.1.0/model_latest.zip" target="_blank" rel="noopener">Model asset</a>
+          </div>
+          <div class="tags" style="margin-top:12px;">
+            <span class="tag">Versioned Artefacts</span>
+            <span class="tag">Deployment-ready</span>
+            <span class="tag">Reproducible Builds</span>
+          </div>
+        </article>
+
+        <article class="card project col-12">
+          <h3>Model serving + live inference</h3>
+          <p>
+            Dockerised FastAPI service deployed on Render. The website demo calls a same-origin Cloudflare proxy,
+            removing CORS and producing stable browser-based testing.
+          </p>
+          <div class="actions">
+            <a class="btn primary" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">Swagger UI</a>
+            <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/health" target="_blank" rel="noopener">Upstream health</a>
+            <a class="btn" href="/api/mvgrid/health" target="_blank" rel="noopener">Proxy health</a>
+            <a class="btn" href="/demos/mv-grid-fault-risk/">Try demo</a>
+          </div>
+          <div class="tags" style="margin-top:12px;">
+            <span class="tag">FastAPI</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Serving Reliability</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>ATS keyword pack</h2>
+      <p>
+        Full-Stack Machine Learning Engineer, Data Scientist, scalable ML pipelines, feature engineering, statistical modelling,
+        MLflow experiment tracking, CI/CD for ML, Dockerization, FastAPI model serving, inference scaling (patterns),
+        artefact versioning, automat
