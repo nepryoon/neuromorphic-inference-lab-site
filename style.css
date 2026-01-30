@@ -8,6 +8,12 @@
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="style.css" />
 </head>
+<style>
+  body { background: #070b12 !important; color: #eaf0fb !important; }
+  a { color: #7cc4ff !important; }
+  .nav { background: rgba(7,11,18,.85) !important; }
+</style>
+
 <body>
   <header class="nav">
     <div class="brand">
