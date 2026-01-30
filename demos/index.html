@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Projects — Neuromorphic Inference Lab</title>
-  <meta name="description" content="Hero projects: end-to-end ML systems, CI/CD for model deployment, inference serving, MLOps/LLMOps." />
+  <title>Systems — Neuromorphic Inference Lab</title>
+  <meta name="description" content="Neuromorphic systems: end-to-end ML pipelines, CI/CD for model deployment, inference serving, and LLMOps patterns." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
 </head>
@@ -15,90 +15,76 @@
       <span>Neuromorphic Inference Lab</span>
     </div>
     <nav class="navlinks" aria-label="Primary navigation">
-      <a data-nav href="/">Home</a>
-      <a data-nav href="/demos/">Projects</a>
-      <a data-nav href="/evidence/">Evidence</a>
-      <a data-nav href="/about/">About</a>
+      <a data-nav href="/">Signal</a>
+      <a data-nav href="/demos/">Systems</a>
+      <a data-nav href="/evidence/">Proof Ledger</a>
+      <a data-nav href="/about/">Identity</a>
     </nav>
   </header>
 
   <main class="container">
     <section class="hero">
-      <p class="kicker">Projects</p>
-      <h1 class="h1">Hero systems built for production constraints.</h1>
+      <p class="kicker">Systems</p>
+      <h1 class="h1">Engineering intelligent systems under real constraints.</h1>
       <p class="sub">
-        Each project is documented as an end-to-end delivery: data pipeline, modelling, CI/CD for ML, model serving,
-        and monitoring-ready outputs. Where possible, you can test a live endpoint.
+        Each system is documented end-to-end: data → features → training → artefacts → serving → monitoring-ready outputs.
+        This is designed for technical screening and ATS parsing.
       </p>
       <div class="badges">
-        <span class="badge">Scalable ML Pipelines</span>
-        <span class="badge">CI/CD for Model Deployment</span>
-        <span class="badge">Inference Scaling</span>
+        <span class="badge">CI/CD for ML</span>
+        <span class="badge">Inference Serving</span>
         <span class="badge">MLflow</span>
-        <span class="badge">FastAPI</span>
         <span class="badge">Docker</span>
+        <span class="badge">RAG / LLMOps</span>
       </div>
     </section>
 
     <section class="section">
       <div class="grid">
         <article class="card project col-6">
-          <h3>MV Grid Fault Risk Scoring Platform</h3>
-          <p>
-            Predicts medium-voltage fault risk to prioritise preventive interventions. Includes reproducible training (MLflow),
-            Dockerised model serving (FastAPI), and a live endpoint.
-          </p>
+          <h3>NeuroGrid Fault Risk Scoring Platform</h3>
+          <p>Fault risk inference for medium-voltage networks, with CI training, artefact versioning, and live serving.</p>
           <div class="tags">
             <span class="tag">End-to-End ML</span>
-            <span class="tag">Feature Engineering</span>
-            <span class="tag">Statistical Modelling</span>
-            <span class="tag">CI/CD for ML</span>
             <span class="tag">Model Serving</span>
+            <span class="tag">CI Training</span>
           </div>
           <div class="actions">
-            <a class="btn primary" href="/demos/mv-grid-fault-risk/">Project page</a>
-            <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">Live API Docs</a>
-            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Code</a>
+            <a class="btn primary" href="/demos/mv-grid-fault-risk/">Open system</a>
+            <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">API docs</a>
+            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Source</a>
           </div>
         </article>
 
         <article class="card project col-6">
           <h3>RAG Knowledge Copilot (LLMOps)</h3>
-          <p>
-            Retrieval-augmented generation with evaluation harnesses, prompt/version control, and reliability patterns for
-            document reality (metadata, citations, regressions).
-          </p>
+          <p>Retrieval-augmented generation with evaluation harnesses and reliability patterns for document reality.</p>
           <div class="tags">
             <span class="tag">RAG</span>
             <span class="tag">LLMOps</span>
             <span class="tag">Evaluation</span>
-            <span class="tag">Observability</span>
           </div>
           <div class="actions">
-            <a class="btn" href="/demos/rag-copilot/">Project page (next)</a>
-            <a class="btn" href="/evidence/">Evidence</a>
-          </div>
-        </article>
-
-        <article class="card project col-12">
-          <h3>Forecasting & Monitoring Studio</h3>
-          <p>
-            Time-series forecasting pipeline with experiment tracking, drift-aware monitoring design, and retraining triggers.
-            Focused on operational controls and measurable acceptance criteria.
-          </p>
-          <div class="tags">
-            <span class="tag">Time Series</span>
-            <span class="tag">Experiment Tracking</span>
-            <span class="tag">Model Monitoring</span>
-            <span class="tag">Automated Retraining</span>
-          </div>
-          <div class="actions">
-            <a class="btn" href="/demos/forecasting-studio/">Project page (next)</a>
-            <a class="btn" href="/evidence/">Evidence</a>
+            <a class="btn" href="/demos/">Coming next</a>
+            <a class="btn" href="/evidence/">Proof mapping</a>
           </div>
         </article>
       </div>
     </section>
 
     <footer class="footer">
-      <di
+      <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
+      <div class="prov">
+        <span id="build-branch">branch: …</span>
+        <span id="build-commit">commit: …</span>
+        <span id="build-time">built: …</span>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById("year").textContent = String(new Date().getFullYear());
+  </script>
+  <script src="/build-info.js"></script>
+</body>
+</html>
