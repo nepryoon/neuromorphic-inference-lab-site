@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Evidence — MV Grid Fault Risk Scoring Platform</title>
+  <meta name="description" content="Evidence pack: full-stack ML delivery proof (data pipeline, MLflow training, CI workflow, model artefacts, serving endpoint)." />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="brand">
+      <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+      <span>Neuromorphic Inference Lab</span>
+    </div>
+    <nav class="navlinks" aria-label="Primary navigation">
+      <a data-nav href="/">Home</a>
+      <a data-nav href="/demos/">Projects</a>
+      <a data-nav href="/evidence/">Evidence</a>
+      <a data-nav href="/about/">About</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <p class="kicker">Evidence Pack</p>
+      <h1 class="h1">MV Grid Fault Risk Scoring Platform</h1>
+      <p class="sub">
+        Proof of full-stack ML capability: modelling + engineering merged in one delivery.
+        This includes data pipeline, feature engineering, MLflow tracking, CI training workflow,
+        versioned model artefacts, Dockerised FastAPI serving, and a live inference endpoint.
+      </p>
+
+      <div class="actions">
+        <a class="btn primary" href="/demos/mv-grid-fault-risk/">Project page</a>
+        <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Repository</a>
+        <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">Live API Docs</a>
+        <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/health" target="_blank" rel="noopener">Health</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Skill → proof matrix</h2>
+
+      <div class="grid">
+        <article class="card project col-6">
+          <h3>Data pipeline & feature engineering</h3>
+          <p>
+            Ingestion → validated training table → rolling-window features (30/90/180 days), recency features, asset age.
+            Designed to be reproducible and retraining-ready.
+          </p>
+          <div class="actions">
+            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Repo</a>
+            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/tree/main/src/mvgrid" target="_blank" rel="noopener">src/mvgrid</a>
+          </div>
+        </article>
+
+        <article class="card project col-6">
+          <h3>Modelling + statistical evaluation</h3>
+          <p>
+            Time-aware split (operational realism) and tracked metrics suitable for risk models
+            (ROC-AUC / PR-AUC / F1). Baseline classifier with extensible architecture.
+          </p>
+          <div class="actions">
+            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/tree/main/src/mvgrid/train.py" target="_blank" rel="noopener">Training code</a>
+            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/actions" target="_blank" rel="noopener">CI runs</a>
+          </div>
+        </article>
+
+        <article class="card project col-6">
+          <h3>CI training workflow (MLOps)</h3>
+          <p>
+            Automated dataset build + model training in GitHub Actions. Produces versioned artefacts for deployment.
+            This is a core differentiator vs purely academic Data Science.
+          </p>
+          <div class="actions">
+            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/tree/main/.github/workflows" target="_blank" rel="noopener">Workflow YAML</a>
+            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/actions" target="_blank" rel="noopener">Action runs</a>
+          </div>
+        </article>
+
+        <article class="card project col-6">
+          <h3>Artefact versioning + deployment readiness</h3>
+          <p>
+            Model artefact published as a GitHub Release asset. The API fetches it on boot via MODEL_URL,
+            enabling clean promotion of model versions.
+          </p>
+          <div class="actions">
+            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/releases" target="_blank" rel="noopener">Releases</a>
+            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/releases/download/model-v0.1.0/model_latest.zip" target="_blank" rel="noopener">Model asset</a>
+          </div>
+        </article>
+
+        <article class="card project col-12">
+          <h3>Model serving (FastAPI) + live endpoint</h3>
+          <p>
+            Dockerised FastAPI service deployed on Render. Provides `/predict` for online inference and `/docs` for interactive testing.
+            The website demo calls the live endpoint to score risk in real time.
+          </p>
+          <div class="actions">
+            <a class="btn primary" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">Swagger UI</a>
+            <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/health" target="_blank" rel="noopener">Health</a>
+            <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/predict" target="_blank" rel="noopener">Predict (POST)</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Reviewer notes</h2>
+      <p>
+        This evidence pack is intentionally structured for hiring managers:
+        it shows not only model building, but also deployment mechanics, reproducible workflows, and artefact promotion patterns.
+      </p>
+    </section>
+
+    <footer class="footer">
+      <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
+      <div class="prov">
+        <span id="build-branch">branch: …</span>
+        <span id="build-commit">commit: …</span>
+        <span id="build-time">built: …</span>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById("year").textContent = String(new Date().getFullYear());
+  </script>
+  <script src="/build-info.js"></script>
+</body>
+</html>
