@@ -3,543 +3,116 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Neuromorphic Inference Lab</title>
-  <meta name="description" content="Neuromorphic Inference Lab: applied AI demos for retrieval, forecasting, tabular scoring, and vision workflows, with production-minded implementation." />
-
-  <style>
-    :root{
-      --bg: #070A12;
-      --surface: rgba(255,255,255,.06);
-      --surface2: rgba(255,255,255,.08);
-      --border: rgba(255,255,255,.12);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.68);
-      --accent: #64FFDA;
-      --accent2: #7C5CFF;
-      --danger: #FF4D6D;
-      --ok: #43FBA4;
-      --warn: #FFCE57;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius: 18px;
-      --radius2: 14px;
-      --max: 1100px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-    }
-
-    *{ box-sizing: border-box; }
-    html, body{ height: 100%; }
-    body{
-      margin: 0;
-      font-family: var(--sans);
-      color: var(--text);
-      background:
-        radial-gradient(900px 600px at 20% 10%, rgba(124,92,255,.18), transparent 55%),
-        radial-gradient(900px 600px at 80% 20%, rgba(100,255,218,.14), transparent 55%),
-        radial-gradient(700px 450px at 40% 80%, rgba(124,92,255,.12), transparent 60%),
-        var(--bg);
-      line-height: 1.55;
-    }
-
-    a{ color: inherit; text-decoration: none; }
-    a:hover{ text-decoration: underline; text-underline-offset: 3px; }
-
-    .wrap{
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 20px 18px 46px;
-    }
-
-    /* Header */
-    header{
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      backdrop-filter: blur(10px);
-      background: linear-gradient(to bottom, rgba(7,10,18,.82), rgba(7,10,18,.50));
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
-    .nav{
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-    }
-    .brand{
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 800;
-      letter-spacing: .2px;
-    }
-    .logo{
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(100,255,218,.95), rgba(100,255,218,.15) 58%, transparent 60%),
-        radial-gradient(circle at 70% 70%, rgba(124,92,255,.9), rgba(124,92,255,.18) 55%, transparent 57%),
-        rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 8px 22px rgba(0,0,0,.25);
-    }
-    nav ul{
-      list-style: none;
-      display: flex;
-      gap: 10px;
-      padding: 0;
-      margin: 0;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-    .pill{
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 700;
-    }
-    .pill.active{
-      color: var(--text);
-      border-color: rgba(100,255,218,.35);
-      background: rgba(100,255,218,.08);
-    }
-
-    /* Hero */
-    .hero{
-      margin-top: 22px;
-      padding: 22px;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-    }
-    .hero:before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(420px 260px at 10% 20%, rgba(100,255,218,.20), transparent 55%),
-        radial-gradient(420px 260px at 90% 40%, rgba(124,92,255,.18), transparent 60%);
-      pointer-events:none;
-      filter: blur(1px);
-    }
-    .hero > *{ position: relative; }
-
-    h1{
-      margin: 0 0 8px;
-      font-size: clamp(30px, 4.4vw, 46px);
-      line-height: 1.08;
-      letter-spacing: .2px;
-    }
-    .subtitle{
-      margin: 0;
-      color: var(--muted);
-      max-width: 95ch;
-    }
-
-    .rowWrap{
-      margin-top: 14px;
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .btn{
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      font-weight: 700;
-      font-size: 14px;
-      box-shadow: 0 10px 20px rgba(0,0,0,.18);
-      cursor: pointer;
-    }
-    .btn:hover{ background: rgba(255,255,255,.08); text-decoration: none; }
-    .btn.primary{
-      border-color: rgba(100,255,218,.40);
-      background: linear-gradient(135deg, rgba(100,255,218,.18), rgba(124,92,255,.12));
-    }
-    .btn.ghost{
-      background: transparent;
-      border-color: rgba(255,255,255,.10);
-      box-shadow: none;
-    }
-
-    .kbd{
-      font-family: var(--mono);
-      font-size: 12px;
-      padding: 2px 8px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.25);
-      border-radius: 999px;
-      color: rgba(255,255,255,.78);
-    }
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      font-size: 12px;
-      color: rgba(255,255,255,.78);
-      font-family: var(--mono);
-      white-space: nowrap;
-    }
-    .badge.ok{
-      border-color: rgba(67,251,164,.35);
-      background: rgba(67,251,164,.10);
-      color: rgba(255,255,255,.90);
-    }
-    .badge.warn{
-      border-color: rgba(255,206,87,.30);
-      background: rgba(255,206,87,.10);
-      color: rgba(255,255,255,.90);
-    }
-
-    .divider{
-      height: 1px;
-      background: rgba(255,255,255,.08);
-      margin: 16px 0;
-    }
-
-    /* Sections */
-    .sectionTitle{
-      margin: 18px 0 10px;
-      font-size: 18px;
-      letter-spacing: .2px;
-    }
-
-    .grid{
-      margin-top: 12px;
-      display: grid;
-      gap: 12px;
-      grid-template-columns: 1fr 1fr;
-      align-items: stretch;
-    }
-    @media (max-width: 980px){
-      .grid{ grid-template-columns: 1fr; }
-    }
-
-    .card{
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      box-shadow: 0 10px 24px rgba(0,0,0,.22);
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .card h2{
-      margin: 0;
-      font-size: 18px;
-      letter-spacing: .2px;
-    }
-    .muted{ color: var(--muted); }
-    .small{ font-size: 14px; }
-    .mono{ font-family: var(--mono); }
-
-    .tagRow{
-      display:flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 2px;
-    }
-
-    .cardActions{
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-    }
-
-    .miniGrid{
-      margin-top: 12px;
-      display:grid;
-      gap: 12px;
-      grid-template-columns: 1fr 1fr 1fr;
-    }
-    @media (max-width: 980px){
-      .miniGrid{ grid-template-columns: 1fr; }
-    }
-    .mini{
-      border-radius: var(--radius2);
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.16);
-      padding: 14px;
-    }
-    .mini h3{
-      margin: 0 0 6px 0;
-      font-size: 14px;
-      letter-spacing: .2px;
-    }
-
-    footer{
-      margin-top: 24px;
-      color: rgba(255,255,255,.55);
-      font-size: 13px;
-      display:flex;
-      flex-wrap:wrap;
-      gap: 10px;
-      justify-content: space-between;
-      align-items: center;
-    }
-  </style>
+  <title>Neuromorphic Inference Lab — Full-Stack ML Engineering Portfolio</title>
+  <meta name="description" content="Production-first portfolio: end-to-end ML systems, MLOps/LLMOps, CI/CD for model deployment, inference serving, and evidence-based competence." />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/style.css" />
 </head>
-
 <body>
-<header>
-  <div class="nav">
-    <a class="brand" href="/" aria-label="Neuromorphic Inference Lab Home">
-      <span class="logo" aria-hidden="true"></span>
+  <header class="nav">
+    <div class="brand">
+      <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
       <span>Neuromorphic Inference Lab</span>
-    </a>
-
-    <nav aria-label="Main navigation">
-      <ul>
-        <li><a class="pill active" href="/">Home</a></li>
-        <li><a class="pill" href="/demos/">Demos</a></li>
-        <li><a class="pill" href="/evidence/">Evidence</a></li>
-      </ul>
+    </div>
+    <nav class="navlinks" aria-label="Primary navigation">
+      <a data-nav href="/">Home</a>
+      <a data-nav href="/demos/">Projects</a>
+      <a data-nav href="/evidence/">Evidence</a>
+      <a data-nav href="/about/">About</a>
     </nav>
-  </div>
-</header>
+  </header>
 
-<main class="wrap">
-  <section class="hero">
-    <h1>Applied inference, end to end</h1>
-    <p class="subtitle">
-      Neuromorphic Inference Lab started in neuromorphic computing, and now focuses on practical, production-minded AI systems:
-      retrieval, forecasting, tabular scoring, and computer vision workflows. Each demo is interactive and links to its implementation.
-    </p>
-
-    <div class="rowWrap">
-      <a class="btn primary" href="/demos/">Open demos</a>
-      <a class="btn" href="/evidence/">Evidence</a>
-
-      <a class="btn" href="https://github.com/nepryoon/neuromorphic-inference-lab-site" target="_blank" rel="noopener noreferrer">
-        Site code
-      </a>
-
-      <a class="btn" href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">
-        Live API <span class="kbd">/health</span>
-      </a>
-
-      <span class="badge ok">status: live</span>
-      <span class="badge" id="bBuild">build: unknown</span>
-    </div>
-
-    <div class="divider"></div>
-    <p class="muted small mono" id="buildLine">Version preview: —</p>
-  </section>
-
-  <h2 class="sectionTitle">Showcases</h2>
-  <section class="grid" aria-label="Showcase demos">
-    <article class="card">
-      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;">
-        <div>
-          <h2>RAG Copilot</h2>
-          <p class="muted small" style="margin:6px 0 0;">
-            Ask questions across a curated knowledge base and receive an answer with citations.
-          </p>
-        </div>
-        <span class="badge ok">live</span>
-      </div>
-
-      <div class="tagRow">
-        <span class="badge">NLP</span>
-        <span class="badge">RAG</span>
-        <span class="badge">FastAPI</span>
-        <span class="badge">AWS</span>
-      </div>
-
-      <div class="cardActions">
-        <a class="btn primary" href="/demos/rag-copilot/">Open demo</a>
-        <a class="btn" href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">Repository</a>
-        <a class="btn ghost" href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">
-          <span>Build info</span><span class="kbd">/version</span>
-        </a>
-      </div>
-    </article>
-
-    <article class="card">
-      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;">
-        <div>
-          <h2>Tabular Risk</h2>
-          <p class="muted small" style="margin:6px 0 0;">
-            Structured inputs, transparent local baseline scoring, with an optional API mode.
-          </p>
-        </div>
-        <span class="badge ok">live</span>
-      </div>
-
-      <div class="tagRow">
-        <span class="badge">Tabular</span>
-        <span class="badge">JSON</span>
-        <span class="badge">Metrics</span>
-      </div>
-
-      <div class="cardActions">
-        <a class="btn primary" href="/demos/tabular-risk/">Open demo</a>
-        <a class="btn" href="https://github.com/nepryoon/nil-tabular-risk" target="_blank" rel="noopener noreferrer">Repository</a>
-        <a class="btn ghost" href="/evidence/#tabular-risk"><span>Evidence</span><span class="kbd">#tabular-risk</span></a>
-      </div>
-    </article>
-
-    <article class="card">
-      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;">
-        <div>
-          <h2>Forecast Studio</h2>
-          <p class="muted small" style="margin:6px 0 0;">
-            Time-series forecasting with baselines, evaluation, and lightweight visualisation.
-          </p>
-        </div>
-        <span class="badge ok">live</span>
-      </div>
-
-      <div class="tagRow">
-        <span class="badge">Time series</span>
-        <span class="badge">Evaluation</span>
-        <span class="badge">Visualisation</span>
-      </div>
-
-      <div class="cardActions">
-        <a class="btn primary" href="/demos/forecast-studio/">Open demo</a>
-        <a class="btn" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener noreferrer">Repository</a>
-        <a class="btn ghost" href="/evidence/#forecast-studio"><span>Evidence</span><span class="kbd">#forecast-studio</span></a>
-      </div>
-    </article>
-
-    <article class="card">
-      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;">
-        <div>
-          <h2>Visual Inspector</h2>
-          <p class="muted small" style="margin:6px 0 0;">
-            Image upload workflow with local inspection and an optional API mode.
-          </p>
-        </div>
-        <span class="badge ok">live</span>
-      </div>
-
-      <div class="tagRow">
-        <span class="badge">Computer vision</span>
-        <span class="badge">Client</span>
-        <span class="badge">FormData</span>
-      </div>
-
-      <div class="cardActions">
-        <a class="btn primary" href="/demos/visual-inspector/">Open demo</a>
-        <a class="btn" href="https://github.com/nepryoon/nil-visual-inspector" target="_blank" rel="noopener noreferrer">Repository</a>
-        <a class="btn ghost" href="/evidence/#visual-inspector"><span>Evidence</span><span class="kbd">#visual-inspector</span></a>
-      </div>
-    </article>
-  </section>
-
-  <h2 class="sectionTitle">Focus</h2>
-  <section class="miniGrid" aria-label="Focus areas">
-    <div class="mini">
-      <h3>API contracts</h3>
-      <p class="muted small" style="margin:0;">
-        Predictable JSON payloads, clear failure modes, and small endpoints designed for integration.
+  <main class="container">
+    <section class="hero">
+      <p class="kicker">Full-Stack Machine Learning Engineer • Data Scientist • MLOps / LLMOps</p>
+      <h1 class="h1">I build end-to-end ML systems: from messy data to production inference.</h1>
+      <p class="sub">
+        This site is intentionally <strong>production-first</strong>: each claim is backed by <strong>live documentation</strong>, <strong>source code</strong>,
+        and a reproducible deployment path (CI/CD for ML, model serving, monitoring-ready outputs).
       </p>
-    </div>
-    <div class="mini">
-      <h3>Versioning</h3>
-      <p class="muted small" style="margin:0;">
-        Build metadata and lightweight checks to confirm what is running and where.
+
+      <div class="badges" aria-label="Core keywords">
+        <span class="badge">Scalable ML Pipelines</span>
+        <span class="badge">CI/CD for Model Deployment</span>
+        <span class="badge">Feature Engineering & Statistical Modelling</span>
+        <span class="badge">Inference Scaling</span>
+        <span class="badge">MLflow Tracking</span>
+        <span class="badge">RAG / LLMOps</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Hero projects</h2>
+      <p>Systems with a clear business problem, measurable impact, and a production-ready architecture.</p>
+
+      <div class="grid">
+        <article class="card project col-6">
+          <h3>MV Grid Fault Risk Scoring Platform</h3>
+          <p>
+            Predicts medium-voltage fault risk to prioritise preventive interventions.
+            Includes training + MLflow artefacts + FastAPI serving + Dockerised deployment.
+          </p>
+          <div class="tags">
+            <span class="tag">End-to-End ML</span>
+            <span class="tag">CI/CD for ML</span>
+            <span class="tag">Model Serving</span>
+            <span class="tag">MLflow</span>
+            <span class="tag">FastAPI</span>
+            <span class="tag">Docker</span>
+          </div>
+          <div class="actions">
+            <a class="btn primary" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">Live API Docs</a>
+            <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/health" target="_blank" rel="noopener">Health</a>
+            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Code</a>
+          </div>
+        </article>
+
+        <article class="card project col-6">
+          <h3>RAG Knowledge Copilot (LLMOps)</h3>
+          <p>
+            Retrieval-augmented generation workflow with evaluation hooks, prompt/version control,
+            and deployment patterns for enterprise document reality (chunking, metadata, reliability).
+          </p>
+          <div class="tags">
+            <span class="tag">RAG</span>
+            <span class="tag">LLMOps</span>
+            <span class="tag">Vector Search</span>
+            <span class="tag">Evaluation</span>
+            <span class="tag">Observability</span>
+          </div>
+          <div class="actions">
+            <a class="btn" href="/demos/">Docs (coming next)</a>
+            <a class="btn" href="https://github.com/nepryoon" target="_blank" rel="noopener">Code (repo link next)</a>
+          </div>
+        </article>
+
+        <article class="card project col-12">
+          <h3>Forecasting & Monitoring Studio</h3>
+          <p>
+            Time-series forecasting pipeline with reproducible experiments, monitoring-ready outputs,
+            and clear operational controls (data drift checks, retraining triggers, model registry patterns).
+          </p>
+          <div class="tags">
+            <span class="tag">Time Series</span>
+            <span class="tag">Experiment Tracking</span>
+            <span class="tag">Model Monitoring</span>
+            <span class="tag">Automated Retraining</span>
+          </div>
+          <div class="actions">
+            <a class="btn" href="/demos/">Docs (coming next)</a>
+            <a class="btn" href="/evidence/">Evidence index</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>How to assess this portfolio</h2>
+      <p>
+        Start from <a href="/demos/">Projects</a> (live docs), then verify claims via
+        <a href="/evidence/">Evidence</a> (skill → proof mapping). This is designed for ATS screening and technical reviews.
       </p>
-    </div>
-    <div class="mini">
-      <h3>Reproducibility</h3>
-      <p class="muted small" style="margin:0;">
-        Containerised services, documented runs, and repository structure that supports iteration.
-      </p>
-    </div>
-  </section>
+    </section>
 
-  <h2 class="sectionTitle">Stack (selected)</h2>
-  <section class="card" aria-label="Stack">
-    <p class="muted small" style="margin:0 0 10px;">
-      A pragmatic toolkit across modelling, serving, and front-end delivery.
-    </p>
-    <div class="tagRow">
-      <span class="badge">Python</span>
-      <span class="badge">FastAPI</span>
-      <span class="badge">PyTorch</span>
-      <span class="badge">scikit-learn</span>
-      <span class="badge">SQL</span>
-      <span class="badge">Docker/Podman</span>
-      <span class="badge">AWS (ECS/ALB/ECR)</span>
-      <span class="badge">HTML/CSS/JS</span>
-    </div>
-  </section>
-
-  <footer>
-    <div class="mono">
-      <span>neuromorphicinference.com</span> · <a href="/demos/" style="text-decoration:underline;">Demos</a> ·
-      <a href="/evidence/" style="text-decoration:underline;">Evidence</a>
-    </div>
-    <div class="mono" id="yearLine">© <span id="year"></span> Neuromorphic Inference Lab</div>
-  </footer>
-</main>
-
-<script>
-  const API_BASE = "https://api.neuromorphicinference.com";
-
-  const year = document.getElementById("year");
-  const bBuild = document.getElementById("bBuild");
-  const buildLine = document.getElementById("buildLine");
-
-  year.textContent = new Date().getFullYear();
-
-  async function fetchWithTimeout(url, ms = 3500) {
-    const ctrl = new AbortController();
-    const t = setTimeout(() => ctrl.abort(), ms);
-    try {
-      const res = await fetch(url, { signal: ctrl.signal, headers: { "Accept":"application/json" } });
-      clearTimeout(t);
-      return res;
-    } catch (e) {
-      clearTimeout(t);
-      throw e;
-    }
-  }
-
-  async function loadBuildInfo() {
-    try {
-      const r = await fetchWithTimeout(`${API_BASE}/version`, 3500);
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      const data = await r.json();
-      const v = data?.version ?? "unknown";
-      const sha = data?.git_sha ?? "unknown";
-      bBuild.textContent = `build: v${v}`;
-      buildLine.textContent = `Version preview: version=${v} | git_sha=${sha}`;
-    } catch {
-      bBuild.textContent = "build: unavailable";
-      buildLine.textContent = "Version preview: unavailable";
-    }
-  }
-
-  window.addEventListener("load", () => setTimeout(loadBuildInfo, 250));
-</script>
-</body>
-</html>
+    <footer class="footer">
+      <div>© <span id="year"></span> Ne
