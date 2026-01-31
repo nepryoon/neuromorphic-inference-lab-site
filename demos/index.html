@@ -28,67 +28,79 @@
   <main class="container">
     <section class="hero">
       <p class="kicker">Systems</p>
-      <h1 class="h1">Engineering intelligent systems under real constraints.</h1>
+      <h1 class="h1">Full-stack ML systems, documented end-to-end.</h1>
       <p class="sub">
-        Each system is documented end-to-end: data → features → training → artefacts → serving → monitoring-ready outputs.
-        This is designed for technical screening and ATS parsing.
+        Each system is paired with two verification paths:
+        <strong>live docs</strong> (what it does) and an <strong>evidence memo</strong> (what it proves, how to verify, risks & mitigations).
+        This structure is optimised for technical screening and ATS parsing.
       </p>
       <div class="badges">
         <span class="badge">CI/CD for ML</span>
         <span class="badge">Inference Scaling</span>
-        <span class="badge">Feature Stores</span>
-        <span class="badge">Automated Retraining</span>
+        <span class="badge">Feature Engineering</span>
+        <span class="badge">Backtesting</span>
         <span class="badge">RAG / LLMOps</span>
       </div>
     </section>
 
     <section class="section">
       <div class="grid">
+
+        <!-- NeuroGrid -->
         <article class="card col-6">
           <h3>NeuroGrid Fault Risk Scoring Platform</h3>
-          <p>Fault risk inference for medium-voltage networks, with CI training, artefact versioning, and live serving.</p>
+          <p>Medium-voltage fault risk inference with CI-minded training flow, artefact versioning, and live API serving.</p>
           <div class="tags">
             <span class="tag">End-to-End ML</span>
             <span class="tag">Model Serving</span>
             <span class="tag">CI Training</span>
+            <span class="tag">Versioned Artefacts</span>
           </div>
           <div class="actions">
             <a class="btn primary" href="/demos/mv-grid-fault-risk/">Open system</a>
+            <a class="btn" href="/evidence/mv-grid-fault-risk/">Evidence memo</a>
+            <a class="btn" href="/evidence/#mv-grid-fault-risk">Proof anchor</a>
             <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">API docs</a>
-            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Source</a>
           </div>
         </article>
 
+        <!-- Forecast Studio -->
         <article class="card col-6">
           <h3>Forecast Studio (Time-Series Production Pipeline)</h3>
-          <p>Forecasting as a system: feature pipelines, backtesting harness, model registry, and deployment-ready outputs.</p>
+          <p>Forecasting as a system: feature pipelines, backtesting harness, and deployment-ready outputs for planning workflows.</p>
           <div class="tags">
             <span class="tag">Time-Series</span>
             <span class="tag">Backtesting</span>
             <span class="tag">MLOps</span>
+            <span class="tag">Monitoring-ready Outputs</span>
           </div>
           <div class="actions">
             <a class="btn primary" href="/demos/forecast-studio/">Open system</a>
-            <a class="btn" href="/evidence/#forecast-studio">Proof ledger</a>
+            <a class="btn" href="/evidence/forecast-studio/">Evidence memo</a>
+            <a class="btn" href="/evidence/#forecast-studio">Proof anchor</a>
             <a class="btn" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener">Source</a>
           </div>
         </article>
 
+        <!-- RAG Copilot -->
         <article class="card col-12">
-          <h3>RAG Copilot (LLMOps Reliability)</h3>
-          <p>Retrieval-augmented generation with evaluation hooks and production safety patterns for “document reality”.</p>
+          <h3>RAG Knowledge Copilot (LLMOps Reliability)</h3>
+          <p>Retrieval tracing, grounded drafting, and guardrails — designed to evidence production-minded LLMOps.</p>
           <div class="tags">
             <span class="tag">RAG</span>
             <span class="tag">LLMOps</span>
-            <span class="tag">Evaluation</span>
-            <span class="tag">Prompt Hygiene</span>
+            <span class="tag">Evaluation Harness</span>
+            <span class="tag">Guardrails</span>
+            <span class="tag">Citation Discipline</span>
           </div>
           <div class="actions">
             <a class="btn primary" href="/demos/rag-copilot/">Open system</a>
-            <a class="btn" href="/evidence/#rag-copilot">Proof ledger</a>
-            <a class="btn" href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener">Source</a>
+            <a class="btn" href="/evidence/rag-copilot/">Evidence memo</a>
+            <a class="btn" href="/evidence/#rag-copilot">Proof anchor</a>
+            <a class="btn" href="https://github.com/nepryoon/neuromorphic-inference-lab-site/tree/main/demos/rag-copilot" target="_blank" rel="noopener">Source (site repo)</a>
           </div>
         </article>
+
       </div>
     </section>
 
