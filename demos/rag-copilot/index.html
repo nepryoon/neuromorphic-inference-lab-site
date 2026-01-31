@@ -4,12 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>RAG Knowledge Copilot — Neuromorphic Inference Lab</title>
-  <meta name="description" content="RAG Knowledge Copilot: retrieval tracing, grounded drafting, guardrails, and evaluation mindset — a Cloudflare-safe, client-only LLMOps demo." />
+  <meta name="description" content="RAG Knowledge Copilot: retrieval tracing, grounded drafting, guardrails, and evaluation harness — a Cloudflare-safe, client-only LLMOps demo." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
 
   <style>
-    /* Minimal page-specific styles, consistent with site language */
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
     .muted { color: rgba(234,240,255,.74); }
     .tiny { font-size: 12px; line-height: 1.55; color: rgba(234,240,255,.72); }
@@ -105,9 +104,54 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity .2s ease;
-      max-width: min(560px, 92vw);
+      max-width: min(720px, 92vw);
     }
     .toast.show { opacity: 1; }
+
+    /* Eval harness */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      font-size: 12px;
+      color: rgba(234,240,255,.86);
+    }
+    .pill b { font-weight: 700; }
+    .evalGrid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    .evalTableWrap {
+      overflow-x: auto;
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 16px;
+      background: rgba(0,0,0,.12);
+    }
+    table.eval {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      font-size: 12px;
+    }
+    table.eval th, table.eval td {
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      padding: 10px 10px;
+      text-align: left;
+      vertical-align: top;
+      color: rgba(234,240,255,.84);
+    }
+    table.eval th {
+      position: sticky;
+      top: 0;
+      background: rgba(10,12,18,.85);
+      backdrop-filter: blur(8px);
+      z-index: 1;
+      color: rgba(234,240,255,.92);
+    }
+    .ok { color: rgba(138,255,186,.95); font-weight: 700; }
+    .bad { color: rgba(255,130,130,.95); font-weight: 700; }
+    .warn { color: rgba(255,211,120,.95); font-weight: 700; }
   </style>
 </head>
 
@@ -133,8 +177,8 @@
       <h1 class="h1">RAG Knowledge Copilot</h1>
       <p class="sub">
         A client-only RAG demo that surfaces production signals: <strong>retrieval tracing</strong>, <strong>grounded drafting</strong>,
-        <strong>guardrails</strong>, and an <strong>evaluation mindset</strong>. Designed to be reliable on Cloudflare Pages
-        (no backend calls, no CORS failure modes).
+        <strong>guardrails</strong>, and a lightweight <strong>evaluation harness</strong>.
+        Designed to be reliable on Cloudflare Pages (no backend calls, no CORS failure modes).
       </p>
 
       <div class="badges">
@@ -147,7 +191,6 @@
 
       <div style="height:12px"></div>
 
-      <!-- Breadcrumb -->
       <div class="tags" aria-label="Breadcrumb">
         <a class="tag" href="/">Signal</a>
         <span class="tag">→</span>
@@ -174,7 +217,7 @@
         <article class="card">
           <h2>Ask a question</h2>
           <p class="lead">
-            This demo does not “hallucinate”: it drafts only from retrieved sources. If evidence is weak, it refuses (Strict policy).
+            This demo drafts only from retrieved sources. If evidence is weak, it refuses (Strict policy).
           </p>
 
           <div class="field">
@@ -207,8 +250,53 @@
             <div id="trace" class="traceList"></div>
           </details>
 
+          <div class="hr"></div>
+
+          <h2>Evaluation harness</h2>
+          <p class="tiny">
+            A lightweight, deterministic evaluation set for screening. Tests include positive queries (should retrieve relevant sources)
+            and negative queries (should refuse in Strict mode).
+          </p>
+
+          <div class="row" style="margin:10px 0;">
+            <button id="runEvalStrict" class="btn primary" type="button">Run evaluation (Strict)</button>
+            <button id="runEvalLenient" class="btn" type="button">Run evaluation (Lenient)</button>
+            <button id="copyEval" class="btn" type="button">Export eval report JSON</button>
+          </div>
+
+          <div class="row" style="margin:10px 0;">
+            <span class="pill"><b id="evalScore">—</b> overall score</span>
+            <span class="pill"><b id="evalRefusal">—</b> refusal correctness</span>
+            <span class="pill"><b id="evalRetrieval">—</b> retrieval@k</span>
+            <span class="pill"><b id="evalCitations">—</b> citation presence</span>
+            <span class="pill"><b id="evalTrace">—</b> trace completeness</span>
+          </div>
+
+          <div class="evalTableWrap">
+            <table class="eval" aria-label="Evaluation results">
+              <thead>
+                <tr>
+                  <th style="width: 190px;">Test</th>
+                  <th>Query</th>
+                  <th style="width: 120px;">Expected</th>
+                  <th style="width: 110px;">Refusal</th>
+                  <th style="width: 120px;">Retrieval@k</th>
+                  <th style="width: 120px;">Citations</th>
+                  <th style="width: 140px;">Top similarity</th>
+                  <th style="width: 160px;">Notes</th>
+                </tr>
+              </thead>
+              <tbody id="evalBody">
+                <tr>
+                  <td colspan="8" class="muted">Run an evaluation to populate results.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
           <p class="tiny" style="margin-top:10px;">
-            Screening signal: a reviewer can verify faithfulness by comparing the answer to the retrieved snippets.
+            Interpretation: this is not a benchmark against other LLMs; it demonstrates <strong>production evaluation habits</strong>
+            (refusal correctness, retrieval quality proxies, traceability).
           </p>
         </article>
 
@@ -361,6 +449,46 @@ Always connect metrics to operational consequences: latency budgets, cost constr
       }
     ];
 
+    // Evaluation set (deterministic)
+    const EVAL_SET = [
+      {
+        id: "eval-01-monitoring",
+        name: "Monitoring basics",
+        query: "What should be monitored for deployed ML models? Provide citations.",
+        expected: { should_refuse: false, must_retrieve: ["doc-ml-monitoring"], min_top_sim: 0.13 }
+      },
+      {
+        id: "eval-02-cicd",
+        name: "CI/CD for ML",
+        query: "Explain CI/CD for ML deployment and why model artefact versioning matters. Cite sources.",
+        expected: { should_refuse: false, must_retrieve: ["doc-cicd-ml"], min_top_sim: 0.13 }
+      },
+      {
+        id: "eval-03-drift",
+        name: "Drift detection",
+        query: "What is data drift vs prediction drift, and how do you detect them? Provide citations.",
+        expected: { should_refuse: false, must_retrieve: ["doc-drift"], min_top_sim: 0.13 }
+      },
+      {
+        id: "eval-04-feature-store",
+        name: "Feature store",
+        query: "What is a feature store and when would you use one? Provide citations.",
+        expected: { should_refuse: false, must_retrieve: ["doc-feature-store"], min_top_sim: 0.13 }
+      },
+      {
+        id: "eval-05-prompt-injection",
+        name: "RAG guardrails",
+        query: "Describe a safe RAG workflow with guardrails against prompt injection. Cite sources.",
+        expected: { should_refuse: false, must_retrieve: ["doc-rag-guardrails"], min_top_sim: 0.13 }
+      },
+      {
+        id: "eval-06-negative",
+        name: "Negative control",
+        query: "Give me a detailed recipe for lasagne, step by step.",
+        expected: { should_refuse: true, must_retrieve: [], min_top_sim: 0.13 }
+      }
+    ];
+
     // Simple tokeniser
     function tokens(s){
       return (s || "")
@@ -370,7 +498,7 @@ Always connect metrics to operational consequences: latency budgets, cost constr
         .filter(t => t && t.length > 2);
     }
 
-    // Build TF-IDF-ish weights (lightweight, deterministic)
+    // Build TF-IDF-ish weights
     const DOCS = CORPUS.map(d => {
       const t = tokens(d.text + " " + d.title);
       const tf = new Map();
@@ -391,7 +519,6 @@ Always connect metrics to operational consequences: latency budgets, cost constr
       return Math.log((N + 1) / (df + 1)) + 1.0;
     }
 
-    // Vector normalisation helpers
     function dot(a, b){
       let s = 0;
       for (const [k, v] of a){
@@ -439,7 +566,6 @@ Always connect metrics to operational consequences: latency budgets, cost constr
     }
 
     function pickSnippets(text, query){
-      // pick up to 2 “sentences” that share tokens with the query
       const qset = new Set(tokens(query));
       const sentences = text
         .replace(/\s+/g, " ")
@@ -457,12 +583,10 @@ Always connect metrics to operational consequences: latency budgets, cost constr
       const chosen = ranked.filter(r => r.hit > 0).slice(0, 2).map(r => r.s);
       if (chosen.length) return chosen;
 
-      // fallback: first ~180 chars
       return [text.slice(0, 180) + (text.length > 180 ? "…" : "")];
     }
 
     function buildAnswer(query, hits, policy){
-      // This is a *drafting* demo, not an LLM. We produce a structured answer with citations.
       const top = hits.map((h, i) => {
         const snippets = pickSnippets(h.doc.text, query);
         return { i: i+1, title: h.doc.title, url: h.doc.url, snippets };
@@ -475,7 +599,6 @@ Always connect metrics to operational consequences: latency budgets, cost constr
       const cautious = policy === "lenient";
 
       const bullets = [];
-      // Pull key lines from top sources
       for (const t of top){
         const s1 = t.snippets[0] || "";
         bullets.push(`<li>${escapeHtml(s1)} <span class="mono">[${t.i}]</span></li>`);
@@ -516,7 +639,6 @@ Always connect metrics to operational consequences: latency budgets, cost constr
     }
 
     function strictThreshold(){
-      // tuned for small corpus; in real systems this could be dynamic
       return 0.13;
     }
 
@@ -562,6 +684,7 @@ Always connect metrics to operational consequences: latency budgets, cost constr
 
     let lastTrace = null;
     let lastCitations = "";
+    let lastEvalReport = null;
 
     function run(){
       const q = document.getElementById("q").value.trim();
@@ -575,7 +698,6 @@ Always connect metrics to operational consequences: latency budgets, cost constr
       const { top, maxSim } = retrieve(q, 3);
       const threshold = strictThreshold();
 
-      // Strict refusal on weak retrieval
       if (policy === "strict" && maxSim < threshold){
         document.getElementById("answer").innerHTML = `
           <p style="margin:0 0 8px;"><strong>Refusal (Strict policy):</strong> evidence is too weak to answer safely.</p>
@@ -592,7 +714,6 @@ Always connect metrics to operational consequences: latency budgets, cost constr
         return;
       }
 
-      // Build grounded draft
       const answer = buildAnswer(q, top, policy);
       document.getElementById("answer").innerHTML = answer.html;
       renderTrace(top);
@@ -659,6 +780,20 @@ Always connect metrics to operational consequences: latency budgets, cost constr
       }
     }
 
+    async function copyEval(){
+      if (!lastEvalReport){
+        toast("Run an evaluation first.");
+        return;
+      }
+      const json = JSON.stringify(lastEvalReport, null, 2);
+      try {
+        await navigator.clipboard.writeText(json);
+        toast("Eval report JSON copied.");
+      } catch {
+        toast("Clipboard blocked by browser.");
+      }
+    }
+
     function clearAll(){
       document.getElementById("q").value = "";
       document.getElementById("answer").innerHTML = `<p class="muted" style="margin:0;">Cleared. Run a query to generate a grounded draft.</p>`;
@@ -669,11 +804,195 @@ Always connect metrics to operational consequences: latency budgets, cost constr
       toast("Cleared.");
     }
 
+    // -----------------------------
+    // Evaluation Harness
+    // -----------------------------
+
+    function setEvalPills({overall, refusal, retrieval, citations, trace}){
+      document.getElementById("evalScore").textContent = overall;
+      document.getElementById("evalRefusal").textContent = refusal;
+      document.getElementById("evalRetrieval").textContent = retrieval;
+      document.getElementById("evalCitations").textContent = citations;
+      document.getElementById("evalTrace").textContent = trace;
+    }
+
+    function fmtPct(x){
+      const v = Math.round(x * 100);
+      return `${v}%`;
+    }
+
+    function runEvaluation(policy){
+      const threshold = strictThreshold();
+      const rows = [];
+      let okRefusal = 0, totRefusal = 0;
+      let okRetrieval = 0, totRetrieval = 0;
+      let okCites = 0, totCites = 0;
+      let okTrace = 0, totTrace = 0;
+
+      for (const t of EVAL_SET){
+        const { top, maxSim } = retrieve(t.query, 3);
+        const shouldRefuse = t.expected.should_refuse === true;
+
+        const refused = (policy === "strict" && maxSim < threshold);
+        totRefusal += 1;
+        const refusalCorrect = (shouldRefuse && refused) || (!shouldRefuse && !refused);
+        if (refusalCorrect) okRefusal += 1;
+
+        // Retrieval@k proxy: must_retrieve docs appear in top-k doc_id list (for positive tests)
+        const topIds = top.map(h => h.doc.id);
+        let retrievalOk = true;
+        if (t.expected.must_retrieve && t.expected.must_retrieve.length){
+          totRetrieval += 1;
+          retrievalOk = t.expected.must_retrieve.every(id => topIds.includes(id));
+          if (retrievalOk) okRetrieval += 1;
+        }
+
+        // Citation presence: if not refused, answer should include at least one [1] style citation
+        totCites += 1;
+        let citesOk = true;
+        let citesText = "";
+        if (!refused){
+          const answer = buildAnswer(t.query, top, policy);
+          citesText = answer.cites || "";
+          citesOk = /\[\d+\]/.test(answer.html);
+        } else {
+          // in refusal we still allow citations to be empty; keep it "ok" if refused correctly
+          citesOk = refusalCorrect;
+        }
+        if (citesOk) okCites += 1;
+
+        // Trace completeness: must have top_k entries and include similarity + snippets
+        totTrace += 1;
+        const traceJson = buildTraceJson(t.query, policy, top, maxSim, threshold, refused);
+        const traceOk =
+          Array.isArray(traceJson.retrieval?.top_k) &&
+          traceJson.retrieval.top_k.length > 0 &&
+          typeof traceJson.retrieval.top_k[0].similarity === "number" &&
+          Array.isArray(traceJson.retrieval.top_k[0].snippets);
+        if (traceOk) okTrace += 1;
+
+        const expectedLabel = shouldRefuse ? "Refuse" : "Answer";
+        const refusalLabel = refused ? `<span class="ok">REFUSED</span>` : `<span class="warn">ANSWERED</span>`;
+
+        const simLabel = maxSim.toFixed(3);
+        const notes = [];
+        if (policy === "strict" && !shouldRefuse && refused) notes.push("Over-refusal risk");
+        if (policy === "strict" && shouldRefuse && !refused) notes.push("Under-refusal risk");
+        if (t.expected.must_retrieve?.length && !retrievalOk) notes.push("Missed expected source");
+        if (!citesOk) notes.push("No citations in answer");
+        if (!traceOk) notes.push("Trace incomplete");
+
+        rows.push({
+          name: t.name,
+          query: t.query,
+          expected: expectedLabel,
+          refused,
+          refusalCorrect,
+          retrievalOk: t.expected.must_retrieve?.length ? retrievalOk : null,
+          citesOk,
+          maxSim,
+          notes: notes.join("; ")
+        });
+      }
+
+      const refusalRate = okRefusal / Math.max(1, totRefusal);
+      const retrievalRate = okRetrieval / Math.max(1, totRetrieval || 1); // avoid div0
+      const citeRate = okCites / Math.max(1, totCites);
+      const traceRate = okTrace / Math.max(1, totTrace);
+
+      // Overall score weighting: refusal 40%, retrieval 25%, citations 20%, trace 15%
+      const overall =
+        0.40 * refusalRate +
+        0.25 * retrievalRate +
+        0.20 * citeRate +
+        0.15 * traceRate;
+
+      renderEvalTable(rows, policy);
+
+      setEvalPills({
+        overall: fmtPct(overall),
+        refusal: fmtPct(refusalRate),
+        retrieval: fmtPct(retrievalRate),
+        citations: fmtPct(citeRate),
+        trace: fmtPct(traceRate)
+      });
+
+      lastEvalReport = {
+        schema_version: "nil.rag.eval.v1",
+        generated_at: new Date().toISOString(),
+        policy,
+        strict_similarity_threshold: threshold,
+        corpus_size: DOCS.length,
+        top_k: 3,
+        scores: {
+          overall: Number(overall.toFixed(6)),
+          refusal_correctness: Number(refusalRate.toFixed(6)),
+          retrieval_at_k: Number(retrievalRate.toFixed(6)),
+          citation_presence: Number(citeRate.toFixed(6)),
+          trace_completeness: Number(traceRate.toFixed(6))
+        },
+        results: rows.map(r => ({
+          test: r.name,
+          query: r.query,
+          expected: r.expected,
+          refused: r.refused,
+          refusal_correct: r.refusalCorrect,
+          retrieval_ok: r.retrievalOk,
+          citations_ok: r.citesOk,
+          top_similarity: Number(r.maxSim.toFixed(6)),
+          notes: r.notes
+        }))
+      };
+
+      toast(`Evaluation complete (${policy}).`);
+    }
+
+    function renderEvalTable(rows, policy){
+      const body = document.getElementById("evalBody");
+      body.innerHTML = "";
+
+      for (const r of rows){
+        const tr = document.createElement("tr");
+
+        const refusalOkClass = r.refusalCorrect ? "ok" : "bad";
+        const refusalTxt = r.refused ? "REFUSED" : "ANSWERED";
+
+        let retrievalCell = "—";
+        if (r.retrievalOk === null){
+          retrievalCell = "n/a";
+        } else {
+          retrievalCell = r.retrievalOk ? `<span class="ok">OK</span>` : `<span class="bad">MISS</span>`;
+        }
+
+        const citesCell = r.citesOk ? `<span class="ok">OK</span>` : `<span class="bad">NO</span>`;
+        const simCell = `<span class="mono">${r.maxSim.toFixed(3)}</span>`;
+
+        tr.innerHTML = `
+          <td><strong>${escapeHtml(r.name)}</strong></td>
+          <td>${escapeHtml(r.query)}</td>
+          <td><span class="mono">${escapeHtml(r.expected)}</span></td>
+          <td><span class="${refusalOkClass}">${refusalTxt}</span></td>
+          <td>${retrievalCell}</td>
+          <td>${citesCell}</td>
+          <td>${simCell}</td>
+          <td class="tiny">${escapeHtml(r.notes || "")}</td>
+        `;
+        body.appendChild(tr);
+      }
+    }
+
+    // -----------------------------
     // Wire up UI
+    // -----------------------------
+
     document.getElementById("run").addEventListener("click", run);
     document.getElementById("clear").addEventListener("click", clearAll);
     document.getElementById("copyTrace").addEventListener("click", copyTrace);
     document.getElementById("copyCites").addEventListener("click", copyCitations);
+    document.getElementById("copyEval").addEventListener("click", copyEval);
+
+    document.getElementById("runEvalStrict").addEventListener("click", () => runEvaluation("strict"));
+    document.getElementById("runEvalLenient").addEventListener("click", () => runEvaluation("lenient"));
 
     document.getElementById("q").addEventListener("keydown", (e) => {
       if (e.key === "Enter"){
@@ -682,13 +1001,15 @@ Always connect metrics to operational consequences: latency budgets, cost constr
       }
     });
 
-    // Example query buttons
     for (const btn of document.querySelectorAll("[data-example]")){
       btn.addEventListener("click", () => {
         document.getElementById("q").value = btn.getAttribute("data-example") || "";
         toast("Example query loaded.");
       });
     }
+
+    // Initialise eval pills
+    setEvalPills({ overall: "—", refusal: "—", retrieval: "—", citations: "—", trace: "—" });
   </script>
 </body>
 </html>
