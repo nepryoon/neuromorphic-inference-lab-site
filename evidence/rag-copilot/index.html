@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RAG Copilot — Proof Ledger</title>
+  <meta name="description" content="Evidence memo for the RAG Knowledge Copilot: retrieval, evaluation, and reliability patterns." />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+  <header class="nav">
+    <div class="inner">
+      <a class="brand" href="/" aria-label="Neuromorphic Inference Lab home">
+        <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+        <span>Neuromorphic Inference Lab</span>
+      </a>
+
+      <nav class="navlinks" aria-label="Primary navigation">
+        <a data-nav href="/">Signal</a>
+        <a data-nav href="/demos/">Systems</a>
+        <a data-nav href="/evidence/" data-active="true">Proof Ledger</a>
+        <a data-nav href="/about/">Identity</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <p class="kicker">Proof Ledger · RAG / LLMOps</p>
+      <h1 class="h1">RAG Knowledge Copilot — Evidence Memo</h1>
+      <p class="sub">
+        This memo captures the engineering decisions behind the demo: retrieval traceability, evaluation signals, and reliability patterns that
+        distinguish production-ready RAG from a toy chatbot.
+      </p>
+
+      <div class="actions">
+        <a class="btn primary" href="/demos/rag-copilot/">Open system</a>
+        <a class="btn" href="/demos/">Back to Systems</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="grid">
+        <article class="card col-6">
+          <h3>What this system demonstrates</h3>
+          <p>
+            Retrieval-first design, transparent traces, and evaluation-minded iterations. The demo is static for a public portfolio, but mirrors
+            a production flow: ingestion → chunking → embeddings → vector index → retrieval → answer generation → monitoring.
+          </p>
+          <div class="badges">
+            <span class="badge">Chunking</span>
+            <span class="badge">Embeddings</span>
+            <span class="badge">Vector Store</span>
+            <span class="badge">Re-ranking</span>
+          </div>
+        </article>
+
+        <article class="card col-6">
+          <h3>Evaluation signals (LLMOps)</h3>
+          <p>
+            A credible RAG build ships with measurable signals: retrieval hit rate, precision@k, citation correctness, faithfulness, latency, and
+            cost per query. The portfolio narrative should include failure cases and the iteration that fixed them.
+          </p>
+          <div class="badges">
+            <span class="badge">precision@k</span>
+            <span class="badge">faithfulness</span>
+            <span class="badge">latency budget</span>
+            <span class="badge">cost controls</span>
+          </div>
+        </article>
+
+        <article class="card col-12">
+          <h3>Reliability patterns</h3>
+          <p style="margin:0;color:rgba(234,240,255,.78);">
+            Guardrails that matter in real deployments: prompt injection defence, source-based claims only, refusal on empty retrieval,
+            PII redaction, structured output validation, and monitoring for drift/regressions. CI/CD should cover retriever changes, prompt changes,
+            and evaluation set updates.
+          </p>
+          <div class="badges" style="margin-top:12px;">
+            <span class="badge">Prompt Injection Defence</span>
+            <span class="badge">PII Redaction</span>
+            <span class="badge">Structured Outputs</span>
+            <span class="badge">CI/CD for ML</span>
+            <span class="badge">Monitoring</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
+      <div class="prov">
+        <span id="build-branch">branch: …</span>
+        <span id="build-commit">commit: …</span>
+        <span id="build-time">built: …</span>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById("year").textContent = String(new Date().getFullYear());
+  </script>
+  <script src="/build-info.js"></script>
+</body>
+</html>
