@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RAG Copilot — Evidence Memo</title>
-  <meta name="description" content="Proof memo for the RAG Knowledge Copilot: retrieval, evaluation harness, guardrails, CI/CD for prompts, and monitoring signals." />
+  <title>Systems — Neuromorphic Inference Lab</title>
+  <meta name="description" content="Systems: end-to-end ML pipelines, CI/CD for model deployment, inference serving, and LLMOps patterns." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
 </head>
@@ -12,15 +12,14 @@
 <body>
   <header class="nav">
     <div class="inner">
-      <a class="brand" href="/" aria-label="Neuromorphic Inference Lab home">
+      <div class="brand">
         <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
         <span>Neuromorphic Inference Lab</span>
-      </a>
-
+      </div>
       <nav class="navlinks" aria-label="Primary navigation">
         <a data-nav href="/">Signal</a>
-        <a data-nav href="/demos/">Systems</a>
-        <a data-nav href="/evidence/" data-active="true">Proof Ledger</a>
+        <a data-nav class="active" href="/demos/">Systems</a>
+        <a data-nav href="/evidence/">Proof Ledger</a>
         <a data-nav href="/about/">Identity</a>
       </nav>
     </div>
@@ -28,109 +27,74 @@
 
   <main class="container">
     <section class="hero">
-      <p class="kicker">Proof Ledger · RAG / LLMOps</p>
-      <h1 class="h1">RAG Knowledge Copilot — Evidence Memo</h1>
+      <p class="kicker">Systems</p>
+      <h1 class="h1">Engineering intelligent systems under real constraints.</h1>
       <p class="sub">
-        This memo maps system claims to verifiable artefacts. The live demo is static-by-design (safe for a public site),
-        but mirrors a production architecture: ingestion → chunking + metadata → embeddings → vector index → retrieval + reranking →
-        prompt assembly → inference → citations/guardrails → monitoring and feedback loops.
+        Each system is documented end-to-end: data → features → training → artefacts → serving → monitoring-ready outputs.
+        This is designed for technical screening and ATS parsing.
       </p>
-
-      <div class="actions" style="margin-top:16px;">
-        <a class="btn primary" href="/demos/rag-copilot/">Open system</a>
-        <a class="btn" href="/evidence/">Back to Proof Ledger</a>
-        <a class="btn" href="/demos/">Back to Systems</a>
-      </div>
-
-      <div class="badges" style="margin-top:14px;" aria-label="Keywords">
-        <span class="badge">RAG</span>
-        <span class="badge">LLMOps</span>
-        <span class="badge">Evaluation Harness</span>
-        <span class="badge">Retrieval Tracing</span>
-        <span class="badge">Guardrails</span>
-        <span class="badge">CI/CD for Prompts</span>
-        <span class="badge">Monitoring</span>
+      <div class="badges">
+        <span class="badge">CI/CD for ML</span>
+        <span class="badge">Inference Scaling</span>
+        <span class="badge">Feature Stores</span>
+        <span class="badge">Automated Retraining</span>
+        <span class="badge">RAG / LLMOps</span>
       </div>
     </section>
 
     <section class="section">
       <div class="grid">
         <article class="card col-6">
-          <h3>What is proven</h3>
-          <p>
-            The demo provides three concrete hiring signals: (1) transparent retrieval traces with similarity scores,
-            (2) grounded drafting constrained by retrieved context, and (3) a minimal regression-style evaluation loop.
-          </p>
-
+          <h3>NeuroGrid Fault Risk Scoring Platform</h3>
+          <p>Fault risk inference for medium-voltage networks, with CI training, artefact versioning, and live serving.</p>
           <div class="tags">
-            <span class="tag">Auditability</span>
-            <span class="tag">Grounded Drafting</span>
-            <span class="tag">Mini Eval</span>
+            <span class="tag">End-to-End ML</span>
+            <span class="tag">Model Serving</span>
+            <span class="tag">CI Training</span>
+          </div>
+          <div class="actions">
+            <a class="btn primary" href="/demos/mv-grid-fault-risk/">Open system</a>
+            <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">API docs</a>
+            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Source</a>
           </div>
         </article>
 
         <article class="card col-6">
-          <h3>Production design choices</h3>
-          <p>
-            A production implementation adds embeddings + vector store, hybrid retrieval, reranking,
-            strict citations policy, refusal on weak retrieval, and schema-validated outputs.
-            CI/CD covers prompts, retrieval configs, and evaluation sets.
-          </p>
-
+          <h3>Forecast Studio (Time-Series Production Pipeline)</h3>
+          <p>Forecasting as a system: feature pipelines, backtesting harness, model registry, and deployment-ready outputs.</p>
           <div class="tags">
-            <span class="tag">Vector Store</span>
-            <span class="tag">Hybrid Retrieval</span>
-            <span class="tag">Schema Validation</span>
+            <span class="tag">Time-Series</span>
+            <span class="tag">Backtesting</span>
+            <span class="tag">MLOps</span>
+          </div>
+          <div class="actions">
+            <a class="btn primary" href="/demos/forecast-studio/">Open system</a>
+            <a class="btn" href="/evidence/#forecast-studio">Proof ledger</a>
+            <a class="btn" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener">Source</a>
           </div>
         </article>
 
         <article class="card col-12">
-          <h3>Evaluation harness: what recruiters look for</h3>
-          <p class="muted" style="margin:0;">
-            A credible RAG build ships with measurable signals and a repeatable loop:
-            retrieval hit-rate, precision@k, citation correctness, faithfulness, latency, and cost per query.
-            You maintain a suite of regression prompts and labelled failure cases, replayed on every release.
-          </p>
-
-          <div class="badges" style="margin-top:12px;">
-            <span class="badge">precision@k</span>
-            <span class="badge">faithfulness</span>
-            <span class="badge">citation correctness</span>
-            <span class="badge">latency budget</span>
-            <span class="badge">cost controls</span>
-            <span class="badge">regression prompts</span>
+          <h3>RAG Copilot (LLMOps Reliability)</h3>
+          <p>Retrieval-augmented generation with evaluation hooks and production safety patterns for “document reality”.</p>
+          <div class="tags">
+            <span class="tag">RAG</span>
+            <span class="tag">LLMOps</span>
+            <span class="tag">Evaluation</span>
+            <span class="tag">Prompt Hygiene</span>
           </div>
-        </article>
-
-        <article class="card col-12">
-          <h3>Reliability and guardrails</h3>
-          <p class="muted" style="margin:0;">
-            Real-world failure modes are addressed explicitly: prompt injection, missing context, wrong context, and over-confident answers.
-            Reliability patterns include refusal on empty retrieval, source-based claims, structured output validation, and monitoring for drift/regressions.
-          </p>
-
-          <div class="badges" style="margin-top:12px;">
-            <span class="badge">Prompt Injection Defence</span>
-            <span class="badge">Refusal Policy</span>
-            <span class="badge">PII Redaction</span>
-            <span class="badge">Monitoring</span>
+          <div class="actions">
+            <a class="btn primary" href="/demos/rag-copilot/">Open system</a>
+            <a class="btn" href="/evidence/#rag-copilot">Proof ledger</a>
+            <a class="btn" href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener">Source</a>
           </div>
-        </article>
-
-        <article class="card col-12">
-          <h3>ATS keyword pack (explicit)</h3>
-          <p class="muted" style="margin:0;">
-            RAG, LLMOps, embeddings, vector database, hybrid retrieval, reranking, chunking, retrieval tracing, citations,
-            evaluation harness, regression prompts, precision@k, faithfulness, prompt injection defence, CI/CD for ML,
-            CI/CD for prompts, monitoring, observability, monitoring-ready outputs.
-          </p>
         </article>
       </div>
     </section>
 
     <footer class="footer">
       <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
-      <div class="prov" aria-label="Build provenance">
+      <div class="prov">
         <span id="build-branch">branch: …</span>
         <span id="build-commit">commit: …</span>
         <span id="build-time">built: …</span>
