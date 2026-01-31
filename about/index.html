@@ -4,100 +4,149 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Identity — Neuromorphic Inference Lab</title>
-  <meta name="description" content="Identity and direction: bio-inspired, hardware-aware AI systems; full-stack ML engineering with reproducible training, serving reliability, and monitoring-ready outputs." />
+  <meta name="description" content="Identity: full-stack machine learning engineering from statistical modelling to production deployment, monitoring, and LLMOps." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
 </head>
 
 <body>
   <header class="nav">
-    <div class="brand">
-      <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
-      <span>Neuromorphic Inference Lab</span>
+    <div class="inner">
+      <a class="brand" href="/" aria-label="Neuromorphic Inference Lab home">
+        <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+        <span>Neuromorphic Inference Lab</span>
+      </a>
+
+      <nav class="navlinks" aria-label="Primary navigation">
+        <a data-nav href="/">Signal</a>
+        <a data-nav href="/demos/">Systems</a>
+        <a data-nav href="/evidence/">Proof Ledger</a>
+        <a data-nav href="/about/" data-active="true">Identity</a>
+      </nav>
     </div>
-    <nav class="navlinks" aria-label="Primary navigation">
-      <a data-nav href="/">Signal</a>
-      <a data-nav href="/demos/">Systems</a>
-      <a data-nav href="/evidence/">Proof Ledger</a>
-      <a data-nav class="active" href="/about/">Identity</a>
-    </nav>
   </header>
 
   <main class="container">
     <section class="hero">
       <p class="kicker">Identity</p>
-      <h1 class="h1">Engineering intelligence with neuromorphic discipline.</h1>
+      <h1 class="h1">Full Stack Machine Learning Engineer & Data Scientist.</h1>
       <p class="sub">
-        Neuromorphic Inference Lab is a proof-first portfolio focused on <strong>bio-inspired efficiency</strong> and
-        <strong>hardware-aware AI</strong>. The aim is pragmatic: build ML systems that survive production realities —
-        noisy data, deployment constraints, latency budgets, and verification requirements.
+        I design and ship <strong>end-to-end ML systems</strong> under real constraints — from data pipelines and statistical modelling to
+        <strong>CI/CD for ML</strong>, <strong>inference serving</strong>, and <strong>monitoring-ready deployment</strong>.
+        Where the use case demands it, I build <strong>RAG/LLMOps workflows</strong> with retrieval tracing and evaluation harnesses.
       </p>
 
-      <div class="actions">
+      <div class="badges" aria-label="Core keywords">
+        <span class="badge">Scalable ML Pipelines</span>
+        <span class="badge">Statistical Modelling</span>
+        <span class="badge">CI/CD for ML</span>
+        <span class="badge">Model Serving</span>
+        <span class="badge">Inference Scaling</span>
+        <span class="badge">Monitoring</span>
+        <span class="badge">RAG / LLMOps</span>
+      </div>
+
+      <div class="actions" style="margin-top:16px;">
         <a class="btn primary" href="/demos/">Explore systems</a>
-        <a class="btn" href="/evidence/">Open proof ledger</a>
+        <a class="btn" href="/evidence/">View proof ledger</a>
         <a class="btn" href="https://github.com/nepryoon" target="_blank" rel="noopener">GitHub</a>
       </div>
-
-      <div class="badges">
-        <span class="badge">Full-Stack Machine Learning Engineer</span>
-        <span class="badge">Data Scientist</span>
-        <span class="badge">MLOps / LLMOps patterns</span>
-        <span class="badge">Inference reliability</span>
-      </div>
     </section>
 
     <section class="section">
-      <h2>How I work</h2>
-      <p>
-        I design systems where modelling and engineering are inseparable: the model is only “done” when it is measurable,
-        reproducible, deployable, and monitorable. The default mindset is: build like a nervous system —
-        efficient signal processing, feedback loops, and robust interfaces.
-      </p>
-
       <div class="grid">
-        <article class="card project col-6">
-          <h3>Delivery principles</h3>
+        <article class="card col-6">
+          <h3>How I work</h3>
           <p>
-            • Time-aware evaluation for operational realism<br />
-            • Experiment tracking and artefact versioning<br />
-            • Serving reliability (schema alignment, safe defaults)<br />
-            • Monitoring-ready outputs and retraining triggers (design patterns)
+            I treat ML as a product system, not a notebook. I ship with reproducibility, measurement, and operational clarity:
+            data validation, versioned artefacts, and deployment discipline. I’m deliberate about trade-offs — latency, cost, robustness,
+            and auditability — and I prefer evidence over claims.
           </p>
-          <div class="tags">
-            <span class="tag">Reproducibility</span>
-            <span class="tag">Reliability</span>
-            <span class="tag">Operational realism</span>
+
+          <div class="badges" aria-label="Working principles">
+            <span class="badge">Reproducibility</span>
+            <span class="badge">Evaluation</span>
+            <span class="badge">Observability</span>
+            <span class="badge">Production Readiness</span>
           </div>
         </article>
 
-        <article class="card project col-6">
-          <h3>Research direction</h3>
+        <article class="card col-6">
+          <h3>What I build end-to-end</h3>
           <p>
-            The long-term direction is neuromorphic inference: energy-efficient representations, event-driven processing,
-            and deployment-aware architectures. The portfolio bridges research intuition with production constraints.
+            Ingestion → data modelling → feature engineering → training + evaluation → artefact registry →
+            containerisation → serving APIs → monitoring and retraining triggers. For GenAI use cases: retrieval, chunking,
+            reranking, guardrails, and evaluation harnesses.
           </p>
-          <div class="tags">
-            <span class="tag">Neuromorphic inference</span>
-            <span class="tag">Efficiency</span>
-            <span class="tag">Hardware-aware AI</span>
+
+          <div class="badges" aria-label="Lifecycle capabilities">
+            <span class="badge">Feature Engineering</span>
+            <span class="badge">Model Registry</span>
+            <span class="badge">Dockerisation</span>
+            <span class="badge">FastAPI</span>
           </div>
+        </article>
+
+        <article class="card col-12">
+          <h3>Technical focus areas</h3>
+          <p class="muted" style="margin:0;">
+            This site highlights systems that connect modelling quality with engineering quality. The goal is to demonstrate a single identity:
+            a full-stack ML engineer who can both build models and deploy them reliably.
+          </p>
+
+          <hr class="hr" />
+
+          <div class="grid">
+            <div class="card col-6" style="box-shadow:none;">
+              <h3 style="margin-top:0;">AI & Modelling</h3>
+              <p class="muted" style="margin:0;">
+                Supervised learning, feature engineering, uncertainty-aware thinking, model evaluation, calibration, and robust baselines.
+                When using LLMs: retrieval-augmented generation, prompt + tool orchestration, and evaluation-driven iteration.
+              </p>
+              <div class="badges" style="margin-top:12px;">
+                <span class="badge">Feature Engineering</span>
+                <span class="badge">Evaluation</span>
+                <span class="badge">RAG</span>
+                <span class="badge">Guardrails</span>
+              </div>
+            </div>
+
+            <div class="card col-6" style="box-shadow:none;">
+              <h3 style="margin-top:0;">MLOps & Engineering</h3>
+              <p class="muted" style="margin:0;">
+                CI/CD for ML, container-first delivery, reproducible training, deployment automation, and monitoring-ready outputs.
+                I design for reliability: versioning, provenance, and fast rollback paths.
+              </p>
+              <div class="badges" style="margin-top:12px;">
+                <span class="badge">CI/CD for ML</span>
+                <span class="badge">Docker</span>
+                <span class="badge">Model Serving</span>
+                <span class="badge">Monitoring</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions" style="margin-top:16px;">
+            <a class="btn primary" href="/demos/mv-grid-fault-risk/">Open NeuroGrid system</a>
+            <a class="btn" href="/demos/rag-copilot/">Open RAG Copilot</a>
+            <a class="btn" href="/evidence/rag-copilot/">Read RAG evidence memo</a>
+          </div>
+        </article>
+
+        <article class="card col-12">
+          <h3>Recruiter-friendly summary (ATS-ready)</h3>
+          <p class="muted" style="margin:0;">
+            Full Stack Machine Learning Engineer / Data Scientist building scalable ML pipelines and deployment systems.
+            Keywords: CI/CD for ML, Dockerisation, model serving, inference scaling, monitoring, automated retraining, RAG/LLMOps,
+            evaluation harness, data governance, and production trade-offs.
+          </p>
         </article>
       </div>
-    </section>
-
-    <section class="section">
-      <h2>ATS keyword pack (explicit)</h2>
-      <p>
-        Full-Stack Machine Learning Engineer, Data Scientist, scalable ML pipelines, feature engineering, statistical modelling,
-        MLflow, CI/CD for ML, Dockerization, FastAPI, model serving, inference scaling (patterns), artefact versioning,
-        monitoring-ready outputs, retraining triggers (design pattern), RAG, LLMOps, cloud deployment.
-      </p>
     </section>
 
     <footer class="footer">
       <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
-      <div class="prov">
+      <div class="prov" aria-label="Build provenance">
         <span id="build-branch">branch: …</span>
         <span id="build-commit">commit: …</span>
         <span id="build-time">built: …</span>
