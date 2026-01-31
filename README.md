@@ -1,20 +1,28 @@
 # Neuromorphic Inference Lab — Site
 
-**Live site:** https://www.neuromorphicinference.com/  
-**Systems (demos hub):** https://www.neuromorphicinference.com/demos/  
-**Proof Ledger (evidence index):** https://www.neuromorphicinference.com/evidence/  
-**Build provenance (commit/branch):** https://www.neuromorphicinference.com/api/build  
+**Live:** https://www.neuromorphicinference.com/  
+**Systems hub:** https://www.neuromorphicinference.com/demos/  
+**Proof Ledger:** https://www.neuromorphicinference.com/evidence/  
+**Build provenance (commit/branch):** https://www.neuromorphicinference.com/api/build
 
-This repository contains the source for the Neuromorphic Inference Lab website: **static HTML pages + lightweight Cloudflare Pages Functions**.
-The site is designed as an **applied Full-Stack Machine Learning Engineering portfolio**, where every claim is backed by **clickable proof**.
+This repository contains the source for the Neuromorphic Inference Lab website:
+**static HTML + lightweight Cloudflare Pages Functions**.
+
+The site is intentionally designed as an **applied Full-Stack Machine Learning Engineering portfolio**:
+every claim is backed by **clickable proof** (live docs + source code).
 
 ---
 
 ## What recruiters can verify in 60 seconds
 
-1. **Systems**: each project is presented as an end-to-end system (data → features → training → artefacts → serving → monitoring-ready outputs).  
-2. **Proof Ledger**: skill-to-proof mapping with stable anchors intended to be linked from a CV.  
-3. **Build provenance**: the footer shows commit/branch to demonstrate traceability.
+1. **End-to-end systems thinking**  
+   Each project is framed as a system (data → features → training → artefacts → serving → evaluation → ops).
+
+2. **Evidence-based competence (ATS-friendly)**  
+   The Proof Ledger maps “skills” to stable anchors intended to be linked from a CV.
+
+3. **Traceability / provenance**  
+   Footer build provenance shows commit + branch from `/api/build`.
 
 ---
 
@@ -22,40 +30,41 @@ The site is designed as an **applied Full-Stack Machine Learning Engineering por
 
 ### 1) MV Grid Fault Risk Scoring Platform
 **Live docs:** https://www.neuromorphicinference.com/demos/mv-grid-fault-risk/  
-**API (live):** https://mv-grid-fault-risk-api.onrender.com/docs  
-**Source:** https://github.com/nepryoon/mv-grid-fault-risk  
+**API docs:** https://mv-grid-fault-risk-api.onrender.com/docs  
+**Source:** https://github.com/nepryoon/mv-grid-fault-risk
 
-A production-first pipeline for medium-voltage fault risk inference:
-- feature engineering + model training (tracked)
-- artefact versioning
-- model serving (API)
+Production-first fault risk inference for medium-voltage networks:
+- feature engineering + tracked training
+- artefact versioning and releases
+- model serving via API
 - demo UI for interactive scoring
+- monitoring-ready outputs (structured, consistent)
 
-Key keywords: CI/CD for ML, inference serving, model artefacts, pipeline automation, monitoring-ready outputs.
+Keywords: CI/CD for ML, model serving, inference scaling, artefact lineage, automated retraining (pattern-ready).
 
 ### 2) RAG Copilot (LLMOps)
 **Live docs:** https://www.neuromorphicinference.com/demos/rag-copilot/  
-**Source:** https://github.com/nepryoon/nil-rag-copilot  
+**Source:** https://github.com/nepryoon/nil-rag-copilot
 
-A RAG chatbot built to be auditable and regression-tested:
-- citations and retrieval transparency
+RAG copilot built for auditability and regression safety:
+- retrieval traceability + citations
 - evaluation harness for quality regression
-- guardrails for prompt injection / unsafe requests
-- production-ready structure (API + containerisation)
+- guardrails for prompt injection and unsafe requests
+- production-friendly layout (API + containerisation patterns)
 
-Key keywords: RAG, LLMOps, evaluation harness, guardrails, citations.
+Keywords: RAG, LLMOps, evaluation harness, guardrails, citations, observability.
 
 ### 3) Forecast Studio
 **Live docs:** https://www.neuromorphicinference.com/demos/forecast-studio/  
-**Source:** https://github.com/nepryoon/nil-forecast-studio  
+**Source:** https://github.com/nepryoon/nil-forecast-studio
 
-A forecasting system designed to escape the “notebook trap”:
-- data ingestion + validation
+Forecasting system designed to escape the “notebook trap”:
+- ingestion + validation
 - backtesting and model comparison
-- artefacts (reports) and scheduled runs
-- dashboard-style presentation for decision-makers
+- reproducible artefacts and reports
+- stakeholder-facing memo output
 
-Key keywords: time series, backtesting, reproducibility, artefacts, scheduling.
+Keywords: time series, backtesting, reproducibility, artefacts, scheduling.
 
 ---
 
@@ -63,16 +72,17 @@ Key keywords: time series, backtesting, reproducibility, artefacts, scheduling.
 
 - **Evidence-based competence**: no “skill listing” without clickable proof (live + code).
 - **Production-first framing**: projects are described as systems, not papers.
-- **Stable URLs**: `/demos/*` and `/evidence#*` are intended to be referenced from the CV.
+- **Stable URLs**: `/demos/*` and `/evidence#*` are intended for direct CV links.
+- **Fast scanning**: each page prioritises clarity for technical screening.
 
 ---
 
-## How the portfolio is structured
+## Site structure
 
-- `/` → positioning (Signal)
-- `/demos/` → systems catalogue
-- `/demos/<project>/` → live documentation (case study, architecture, verification path)
-- `/evidence/` → Proof Ledger (skill-to-proof index)
+- `/` → positioning (“Signal”)
+- `/demos/` → systems catalogue (cards + links)
+- `/demos/<project>/` → live documentation (case study / verification path)
+- `/evidence/` → Proof Ledger (skill → proof mapping)
 - `/about/` → identity / narrative
 - `/research/` → archive (intentionally secondary)
 
@@ -82,8 +92,8 @@ Key keywords: time series, backtesting, reproducibility, artefacts, scheduling.
 
 - `index.html` → home
 - `style.css` → shared styling
-- `build-info.js` → fetches `/api/build` and populates footer provenance
-- `demos/` → demo pages (live docs)
+- `build-info.js` → populates footer provenance by calling `/api/build`
+- `demos/` → systems pages
 - `evidence/`, `about/`, `research/` → section pages
 - `functions/api/build.js` → Cloudflare Pages Function returning build metadata as JSON
 
@@ -91,8 +101,8 @@ Key keywords: time series, backtesting, reproducibility, artefacts, scheduling.
 
 ## Build provenance (commit + branch)
 
-Cloudflare Pages provides build context (for example, branch and commit) at deploy time.
-Because this information is not directly available to client-side scripts, the site uses:
+Cloudflare Pages exposes build information as environment variables (e.g., commit SHA, branch).
+Because these variables are not directly available in the browser, the site uses:
 
 - Function endpoint: `/api/build` (served by `functions/api/build.js`)
 - Client script: `build-info.js` fetches `/api/build` and updates the footer
@@ -103,24 +113,20 @@ This provides a lightweight traceability signal engineers can audit.
 
 ## Local development
 
-### Option A — Static-only preview (fastest)
-Run with any static server:
+### Option A — Static preview (fastest)
+This site is static HTML. Use any static server:
 
-- Python:
-  - `python -m http.server 8080`
-- Node:
-  - `npx serve .`
+- Python: `python -m http.server 8080`
+- Node: `npx serve .`
 
-Open: `http://localhost:8080`
+Open: http://localhost:8080
 
-Note: this does not run Pages Functions.
+> Note: Cloudflare Pages Functions won’t run in a plain static server.
 
-### Option B — Local dev with Pages Functions (recommended)
-Use Cloudflare Wrangler to run static assets **and** Functions locally:
+### Option B — With Pages Functions (recommended)
+Run static + Functions locally using Wrangler:
 
 - `npx wrangler pages dev .`
-
-This serves the site locally and runs Functions under `/functions`.
 
 ---
 
@@ -130,24 +136,49 @@ This repo is connected to Cloudflare Pages (git-driven deploy).
 
 Typical setup:
 - Build command: none / empty (static)
-- Output directory: root (this repository)
+- Output directory: `/` (repo root)
+- Functions directory: `functions/` (auto-detected)
 
-On each push to the production branch, Cloudflare Pages builds and deploys the site.
+After pushing to `main`, Cloudflare Pages deploys automatically.
 
 ---
 
-## Content conventions
+## Adding a new system (standard workflow)
 
-- Each system page aims to be self-contained:
-  - What it solves (problem + business impact)
-  - Architecture (components + flow)
-  - Verification path (how to reproduce / validate)
-  - Links: live demo/docs + source repository
-- The Proof Ledger maps skills → evidence anchors and should stay stable over time.
+1. Create a live docs page:
+   - `/demos/<slug>/index.html`
+
+2. Link the code repository (or create a new repo)
+
+3. Update:
+   - `/demos/index.html` (add a project card with Live/Docs + Source)
+   - `/evidence/index.html` (add proofs for skills demonstrated)
+
+4. Enforce bidirectional links:
+   - Demo page → GitHub repo
+   - GitHub README → live docs page + Proof Ledger
+
+---
+
+## Related repositories (code)
+
+- https://github.com/nepryoon/mv-grid-fault-risk
+- https://github.com/nepryoon/nil-rag-copilot
+- https://github.com/nepryoon/nil-forecast-studio
+- https://github.com/nepryoon/edgepulse
+
+(See `/demos/` for the authoritative list.)
 
 ---
 
 ## Licence
 
-Unless stated otherwise, content in this repository is licensed under the repository’s licence.
-Project repositories may have different licences — see each project repo for details.
+Add a `LICENSE` file if you want explicit reuse terms for the site content.
+(MIT is common for code; content may require a separate policy.)
+
+---
+
+## Contact
+
+GitHub: https://github.com/nepryoon  
+Website: https://www.neuromorphicinference.com
