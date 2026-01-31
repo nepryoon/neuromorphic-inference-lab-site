@@ -3,23 +3,165 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RAG Knowledge Copilot — Neuromorphic Inference Lab</title>
-  <meta name="description" content="RAG demo with retrieval traceability, citations-style source display, and a minimal evaluation harness. Production-minded LLMOps patterns." />
+  <title>RAG Copilot — Systems</title>
+  <meta name="description" content="RAG Knowledge Copilot: retrieval tracing, grounded drafting, evaluation harness patterns, and LLMOps reliability signals." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
+
+  <style>
+    /* Page-specific layout (kept minimal, ATS-friendly) */
+    .demoGrid { display:grid; grid-template-columns: 1fr; gap: 14px; }
+    @media (min-width: 980px){ .demoGrid { grid-template-columns: 1.15fr 0.85fr; } }
+
+    .row { display:flex; flex-wrap:wrap; gap: 10px; align-items:center; }
+    .row > * { flex: 1 1 auto; }
+
+    .label { font-size: 13px; color: rgba(234,240,255,.74); margin: 0 0 6px; }
+    .helper { font-size: 12px; color: rgba(234,240,255,.68); margin-top: 6px; line-height: 1.5; }
+
+    .textarea {
+      width: 100%;
+      min-height: 140px;
+      resize: vertical;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.20);
+      color: rgba(234,240,255,.92);
+      outline: none;
+      line-height: 1.55;
+    }
+    .textarea:focus{
+      border-color: rgba(110,231,255,.45);
+      box-shadow: 0 0 0 3px rgba(110,231,255,.12);
+    }
+
+    .split { display:grid; grid-template-columns: 1fr; gap: 12px; }
+    @media (min-width: 980px){ .split { grid-template-columns: 1fr; } }
+
+    .pill {
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      font-size: 12px;
+      color: rgba(234,240,255,.88);
+    }
+
+    .outBox {
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .small { font-size: 12px; color: rgba(234,240,255,.70); }
+
+    .answer {
+      white-space: pre-wrap;
+      line-height: 1.6;
+      color: rgba(234,240,255,.92);
+      margin: 0;
+    }
+
+    .trace {
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .src {
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .srcHead {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .srcTitle {
+      font-weight: 700;
+      font-size: 13px;
+      color: rgba(234,240,255,.92);
+    }
+
+    .srcMeta {
+      font-size: 12px;
+      color: rgba(234,240,255,.68);
+      white-space: nowrap;
+    }
+
+    .srcText {
+      font-size: 13px;
+      color: rgba(234,240,255,.78);
+      line-height: 1.55;
+    }
+
+    .divider {
+      border:0;
+      border-top: 1px solid rgba(255,255,255,.10);
+      margin: 14px 0;
+    }
+
+    .warn {
+      border-color: rgba(255,180,120,.22);
+      background: rgba(255,180,120,.06);
+    }
+
+    .ok {
+      border-color: rgba(52,211,153,.20);
+      background: rgba(52,211,153,.05);
+    }
+
+    .danger {
+      border-color: rgba(255,120,120,.22);
+      background: rgba(255,120,120,.06);
+    }
+
+    details summary { cursor: pointer; }
+    details summary:hover { opacity: .9; }
+
+    .kv {
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    @media (min-width: 980px){ .kv { grid-template-columns: 1fr 1fr; } }
+
+    .kbd {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.20);
+      color: rgba(234,240,255,.88);
+    }
+  </style>
 </head>
 
 <body>
   <header class="nav">
     <div class="inner">
-      <a class="brand" href="/" aria-label="Neuromorphic Inference Lab home">
+      <div class="brand">
         <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
         <span>Neuromorphic Inference Lab</span>
-      </a>
+      </div>
 
       <nav class="navlinks" aria-label="Primary navigation">
         <a data-nav href="/">Signal</a>
-        <a data-nav href="/demos/" data-active="true">Systems</a>
+        <a data-nav class="active" href="/demos/">Systems</a>
         <a data-nav href="/evidence/">Proof Ledger</a>
         <a data-nav href="/about/">Identity</a>
       </nav>
@@ -31,139 +173,161 @@
       <p class="kicker">System · RAG / LLMOps</p>
       <h1 class="h1">RAG Knowledge Copilot</h1>
       <p class="sub">
-        A production-minded Retrieval-Augmented Generation demo showing <strong>retrieval traceability</strong>,
-        <strong>grounded drafting</strong>, and a minimal <strong>evaluation harness</strong>. Designed to be deployable on a static host
-        while reflecting real-world LLMOps patterns.
+        A browser-only RAG demo that prioritises the hiring signals that matter:
+        <strong>retrieval traceability</strong>, <strong>grounded drafting</strong>, and a minimal <strong>evaluation harness</strong> mindset.
+        Safe for a public Cloudflare site (no backend; no external calls).
       </p>
 
-      <div class="badges" aria-label="Core keywords">
+      <div class="badges" aria-label="ATS keywords">
         <span class="badge">RAG</span>
         <span class="badge">LLMOps</span>
         <span class="badge">Retrieval Tracing</span>
-        <span class="badge">Chunking</span>
         <span class="badge">Evaluation Harness</span>
-        <span class="badge">Observability-ready</span>
+        <span class="badge">Guardrails</span>
+        <span class="badge">CI/CD for Prompts</span>
       </div>
 
+      <div style="height:14px"></div>
+
       <div class="actions">
-        <a class="btn primary" href="/demos/">Back to systems</a>
-        <a class="btn" href="/evidence/rag-copilot/">Evidence memo</a>
-        <a class="btn" href="https://github.com/nepryoon/neuromorphic-inference-lab-site" target="_blank" rel="noopener">Website source</a>
+        <a class="btn primary" href="/evidence/rag-copilot/">Read evidence memo</a>
+        <a class="btn" href="/demos/">Back to Systems</a>
+        <a class="btn" href="https://github.com/nepryoon/neuromorphic-inference-lab-site/tree/main/demos/rag-copilot" target="_blank" rel="noopener">Source (site repo)</a>
       </div>
     </section>
 
     <section class="section">
-      <div class="grid">
-        <article class="card col-6">
+      <div class="demoGrid">
+        <!-- LEFT: INPUT + OUTPUT -->
+        <article class="card">
           <h3>Ask a question</h3>
-          <p>
-            This demo runs fully in the browser. It retrieves the most relevant chunks, shows a transparent trace,
-            and produces a grounded draft. A production version swaps the local index for embeddings + vector store + model serving.
+          <p class="small">
+            Tip: use questions that demand citations (policies, procedures, definitions). The system refuses if retrieval is weak.
+            Shortcut: <span class="kbd">Ctrl</span> + <span class="kbd">Enter</span> to run.
           </p>
 
-          <div class="field">
-            <label for="q">Query</label>
-            <input id="q" type="text" placeholder="e.g. How do you reduce hallucinations in production RAG?" />
-            <div class="helper">Try: “chunking strategy”, “evaluation harness”, “vector store”, “prompt injection”.</div>
+          <div style="height:10px"></div>
+
+          <div class="row">
+            <div style="min-width:220px;">
+              <div class="label">Corpus</div>
+              <select id="corpus" class="select" aria-label="Select corpus">
+                <option value="ops" selected>Operations Handbook (synthetic)</option>
+                <option value="mlops">MLOps Runbook (synthetic)</option>
+                <option value="security">Security & Governance (synthetic)</option>
+              </select>
+              <div class="helper">Synthetic documents generated for portfolio use; designed to demonstrate retrieval patterns.</div>
+            </div>
+
+            <div style="min-width:220px;">
+              <div class="label">Top-k retrieval</div>
+              <select id="topk" class="select" aria-label="Select top-k">
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+                <option value="4">4</option>
+              </select>
+              <div class="helper">Higher k increases recall; can reduce precision if corpus is noisy.</div>
+            </div>
+
+            <div style="min-width:220px;">
+              <div class="label">Guardrail</div>
+              <select id="policy" class="select" aria-label="Select guardrail policy">
+                <option value="strict" selected>Strict: refuse on weak retrieval</option>
+                <option value="soft">Soft: answer with caveats</option>
+              </select>
+              <div class="helper">Production-safe default is strict.</div>
+            </div>
           </div>
 
-          <div class="grid">
-            <div class="col-6">
-              <div class="field">
-                <label for="k">Top-K retrieval</label>
-                <select id="k">
-                  <option value="3">3</option>
-                  <option value="5" selected>5</option>
-                  <option value="8">8</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-6">
-              <div class="field">
-                <label for="min">Minimum similarity</label>
-                <select id="min">
-                  <option value="0.05">0.05</option>
-                  <option value="0.10" selected>0.10</option>
-                  <option value="0.15">0.15</option>
-                  <option value="0.20">0.20</option>
-                </select>
-              </div>
-            </div>
-          </div>
+          <div style="height:12px"></div>
+
+          <div class="label">Query</div>
+          <textarea id="q" class="textarea" placeholder="Example: What is the recommended monitoring approach for deployed ML models, and which metrics should be tracked? Provide citations."></textarea>
+
+          <div style="height:10px"></div>
 
           <div class="actions">
-            <button class="btn primary" id="run" type="button">Run retrieval</button>
-            <button class="btn" id="eval" type="button">Run mini eval</button>
-            <button class="btn" id="reset" type="button">Reset</button>
+            <button id="run" class="btn primary" type="button">Run retrieval + draft</button>
+            <button id="copy" class="btn" type="button">Copy answer</button>
+            <button id="export" class="btn" type="button">Export trace JSON</button>
           </div>
 
-          <hr class="hr" />
+          <hr class="divider" />
 
-          <h3>Grounded draft</h3>
-          <p id="answer" class="muted" style="margin:0;">
-            Run a query to generate a grounded draft.
-          </p>
+          <h3>Answer</h3>
+          <div id="status" class="outBox warn" aria-live="polite">
+            <div class="row" style="justify-content:space-between;">
+              <span class="pill">Status: <span id="statusText" class="mono">idle</span></span>
+              <span class="pill">Retrieval: <span id="retQuality" class="mono">—</span></span>
+              <span class="pill">Policy: <span id="polOut" class="mono">strict</span></span>
+            </div>
+            <div style="height:10px"></div>
+            <p id="ans" class="answer">Run the system to generate an answer with citations.</p>
+          </div>
 
-          <div id="meta" class="helper" style="margin-top:10px;"></div>
+          <details style="margin-top:12px;">
+            <summary class="small">Show retrieval trace</summary>
+            <div id="trace" class="trace"></div>
+          </details>
         </article>
 
-        <article class="card col-6">
-          <h3>Retrieval trace</h3>
-          <p>
-            Top matches with similarity scores and chunk IDs. This is the artefact that makes RAG auditable for engineering screening.
+        <!-- RIGHT: WHAT IT PROVES + EVAL MINDSET -->
+        <aside class="card">
+          <h3>What this proves</h3>
+          <p class="small">
+            This demo intentionally emphasises operational signals recruiters expect from a production RAG build.
           </p>
 
-          <div id="trace"></div>
-
-          <hr class="hr" />
-
-          <h3>Add a document (local knowledge pack)</h3>
-          <p>Paste a short technical note; it will be chunked and indexed locally.</p>
-
-          <div class="field">
-            <label for="docTitle">Document title</label>
-            <input id="docTitle" type="text" placeholder="e.g. RAG Evaluation Notes" />
+          <div class="kv" style="margin-top:12px;">
+            <div class="outBox ok">
+              <div class="mono" style="font-weight:700;">Retrieval tracing</div>
+              <div class="small" style="margin-top:6px;">
+                Shows top-k sources with similarity, snippets, and citation anchors.
+              </div>
+            </div>
+            <div class="outBox ok">
+              <div class="mono" style="font-weight:700;">Grounded drafting</div>
+              <div class="small" style="margin-top:6px;">
+                The answer is constrained to retrieved context; weak retrieval triggers refusal or caveats.
+              </div>
+            </div>
+            <div class="outBox warn">
+              <div class="mono" style="font-weight:700;">Evaluation harness mindset</div>
+              <div class="small" style="margin-top:6px;">
+                Designed for regression prompts, precision@k tracking, and citation correctness checks.
+              </div>
+            </div>
+            <div class="outBox warn">
+              <div class="mono" style="font-weight:700;">Guardrails</div>
+              <div class="small" style="margin-top:6px;">
+                Refuse on low retrieval confidence; mitigate hallucinations by policy.
+              </div>
+            </div>
           </div>
 
-          <div class="field">
-            <label for="docBody">Document text</label>
-            <textarea id="docBody" placeholder="Paste 2–8 short paragraphs."></textarea>
-          </div>
+          <hr class="divider" />
+
+          <h3>Evaluation checklist (production)</h3>
+          <ul class="clean">
+            <li><strong>Retrieval:</strong> precision@k, hit-rate, coverage on a labelled query set.</li>
+            <li><strong>Grounding:</strong> citation correctness, faithfulness, refusal on low evidence.</li>
+            <li><strong>Ops:</strong> latency budget, cost per query, monitoring for drift/regressions.</li>
+            <li><strong>Security:</strong> prompt injection defences, PII redaction, access control.</li>
+          </ul>
+
+          <div style="height:12px"></div>
 
           <div class="actions">
-            <button class="btn" id="addDoc" type="button">Add to knowledge base</button>
-            <button class="btn" id="restore" type="button">Restore defaults</button>
+            <a class="btn primary" href="/evidence/rag-copilot/">Open evidence memo</a>
+            <a class="btn" href="/evidence/">Proof Ledger index</a>
           </div>
-
-          <div class="helper" style="margin-top:10px;">
-            Production keywords embedded intentionally: embeddings, vector database, hybrid retrieval, reranking,
-            prompt injection defence, CI/CD for prompts, evaluation harness, monitoring-ready outputs.
-          </div>
-        </article>
-
-        <article class="card col-12">
-          <h3>Production architecture snapshot</h3>
-          <p class="muted" style="margin:0;">
-            Ingestion → normalisation → chunking + metadata → embeddings → vector index → retrieval + reranking →
-            prompt assembly → model inference → citations/guardrails → monitoring (latency, cost, drift, quality) → feedback loop.
-          </p>
-
-          <div class="badges" style="margin-top:12px;">
-            <span class="badge">Embeddings</span>
-            <span class="badge">Vector Store</span>
-            <span class="badge">Hybrid Retrieval</span>
-            <span class="badge">Re-ranking</span>
-            <span class="badge">Guardrails</span>
-            <span class="badge">CI/CD for ML</span>
-            <span class="badge">Monitoring</span>
-          </div>
-        </article>
+        </aside>
       </div>
     </section>
 
     <footer class="footer">
       <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
-      <div class="prov" aria-label="Build provenance">
+      <div class="prov">
         <span id="build-branch">branch: …</span>
         <span id="build-commit">commit: …</span>
         <span id="build-time">built: …</span>
@@ -175,302 +339,381 @@
     document.getElementById("year").textContent = String(new Date().getFullYear());
 
     // -----------------------------
-    // Minimal in-browser RAG engine
-    // (token-based chunking + TF-IDF-ish vectors + cosine similarity)
+    // Synthetic corpora (portfolio-safe)
     // -----------------------------
+    function corpora() {
+      return {
+        ops: [
+          {
+            id: "OPS-001",
+            title: "Operations Handbook — Incident Response",
+            body:
+              "Incident response follows triage → containment → resolution → post-incident review. " +
+              "Severity is determined by customer impact, safety risk, and duration. " +
+              "Post-incident reviews must produce corrective actions and monitoring updates. " +
+              "For ML services, incidents include data drift, performance regressions, or serving failures."
+          },
+          {
+            id: "OPS-002",
+            title: "Operations Handbook — Monitoring Principles",
+            body:
+              "Monitoring should cover service health and model quality. Service health includes request rate, error rate, " +
+              "p95 latency, and resource saturation. Model quality includes input data drift, prediction drift, and " +
+              "outcome-based performance when labels arrive. Alerts must map to runbooks and rollback options."
+          },
+          {
+            id: "OPS-003",
+            title: "Operations Handbook — Change Management",
+            body:
+              "Changes require versioned artefacts, a deployment plan, and rollback criteria. " +
+              "For ML, changes include model updates, feature pipeline changes, and retrieval configuration changes. " +
+              "Each change should include evaluation evidence and a release note."
+          },
+          {
+            id: "OPS-004",
+            title: "Operations Handbook — Data Quality Controls",
+            body:
+              "Data quality controls include schema validation, missingness thresholds, range checks, " +
+              "and distribution shift detection. Invalid data should be quarantined with audit logs. " +
+              "Feature pipelines must be reproducible across training and serving."
+          },
+          {
+            id: "OPS-005",
+            title: "Operations Handbook — Reliability Patterns",
+            body:
+              "Reliability patterns include timeouts, circuit breakers, graceful degradation, and " +
+              "idempotent retries. For LLM workflows, use strict citation policies and refuse on weak retrieval. " +
+              "All critical actions must be traceable to sources and configurations."
+          }
+        ],
+        mlops: [
+          {
+            id: "MLOPS-101",
+            title: "MLOps Runbook — CI/CD for ML",
+            body:
+              "CI/CD for ML covers code, data contracts, and model artefacts. Pipelines run unit tests, data validation, " +
+              "and evaluation checks. Promotion to production requires passing quality gates (e.g., minimum F1, calibration, " +
+              "or acceptable drift). Artefacts are stored in a registry with provenance metadata."
+          },
+          {
+            id: "MLOPS-102",
+            title: "MLOps Runbook — Model Serving and Scaling",
+            body:
+              "Model serving should support canary releases and fast rollback. Scaling strategies include horizontal replicas, " +
+              "batching, and caching. Inference optimisation may include quantisation or distillation if latency is constrained. " +
+              "Monitor p95 latency and error rate continuously."
+          },
+          {
+            id: "MLOPS-103",
+            title: "MLOps Runbook — Monitoring and Drift",
+            body:
+              "Monitoring includes data drift (feature distribution shift), prediction drift (score distribution shift), and " +
+              "performance drift once labels arrive. Track input validity, missingness, and schema changes. " +
+              "Retraining triggers are based on drift thresholds, performance degradation, and business impact."
+          },
+          {
+            id: "MLOPS-104",
+            title: "MLOps Runbook — Feature Store Patterns",
+            body:
+              "Feature store patterns standardise feature definitions across training and serving. " +
+              "Use point-in-time correct joins to avoid leakage. Version features and maintain a clear ownership model. " +
+              "Document feature lineage for auditability."
+          },
+          {
+            id: "MLOPS-105",
+            title: "MLOps Runbook — Model Registry and Artefacts",
+            body:
+              "A model registry stores versioned artefacts, evaluation reports, and deployment metadata. " +
+              "Artefacts should include the preprocessing pipeline, model weights, and a minimal model card " +
+              "covering intended use, limitations, and monitoring plan."
+          }
+        ],
+        security: [
+          {
+            id: "SEC-201",
+            title: "Security & Governance — Prompt Injection Defence",
+            body:
+              "Prompt injection defences include strict separation of instructions and data, " +
+              "allow-listing tools, and refusing requests that try to override system policies. " +
+              "For RAG, ignore retrieved content that contains instructions and enforce citation policies."
+          },
+          {
+            id: "SEC-202",
+            title: "Security & Governance — Data Governance",
+            body:
+              "Data governance covers access control, retention policies, and audit logs. " +
+              "Sensitive fields should be minimised, masked, or removed. " +
+              "All data processing should be traceable with versioned schemas and approvals."
+          },
+          {
+            id: "SEC-203",
+            title: "Security & Governance — PII Handling",
+            body:
+              "PII handling requires redaction or tokenisation. " +
+              "Never store raw PII in logs. " +
+              "For LLM systems, redact prompts where necessary and avoid returning sensitive content."
+          },
+          {
+            id: "SEC-204",
+            title: "Security & Governance — Model Risk Controls",
+            body:
+              "Model risk controls include bias checks, robustness testing, and monitoring for unexpected behaviour. " +
+              "High-impact models require documented evaluation and human review for critical decisions."
+          },
+          {
+            id: "SEC-205",
+            title: "Security & Governance — Auditability",
+            body:
+              "Auditability requires provenance: what data, what model version, what retrieval configuration, and what prompt template. " +
+              "Maintain trace IDs and store minimal traces for incident investigations."
+          }
+        ]
+      };
+    }
 
-    const DEFAULT_DOCS = [
-      {
-        title: "RAG reliability: grounding and citations discipline",
-        text:
-`In production RAG, grounding is the primary control against hallucinations.
-A system should retrieve relevant chunks, show the trace, and enforce source-based claims.
-If retrieval is weak, the safest behaviour is refusal or a clarifying question, not a confident guess.`
-      },
-      {
-        title: "Chunking strategy and metadata",
-        text:
-`Chunking is a first-class design choice. Overly large chunks dilute relevance; overly small chunks lose coherence.
-Store metadata (source, section, timestamp, tags) so you can filter, audit, and govern answers.
-Chunk size, overlap, and segmentation should be evaluated using retrieval metrics and failure cases.`
-      },
-      {
-        title: "Embeddings, vector stores, and hybrid retrieval",
-        text:
-`Embeddings map text to vectors for similarity search. A vector store indexes these vectors and supports top-k retrieval.
-Hybrid retrieval combines sparse methods (BM25) with vectors, often followed by re-ranking for higher precision at small k.
-Operational considerations include latency budgets, caching, and cost controls for embedding generation.`
-      },
-      {
-        title: "Evaluation harness for RAG (LLMOps)",
-        text:
-`RAG quality needs measurable signals: retrieval hit-rate, precision@k, citation correctness, and answer faithfulness.
-A credible harness includes regression prompts, edge-case suites, and failure mode tagging (missing context, wrong context, prompt issues).
-In production you log queries, retrieved chunks, latency, and user feedback to drive iteration.`
-      },
-      {
-        title: "Guardrails: prompt injection defence and safe defaults",
-        text:
-`Reliability patterns include refusal on empty retrieval, source-only claims, structured output validation, and PII redaction.
-Prompt injection defence should treat external text as untrusted. A robust system validates tool outputs and applies safe defaults.
-Monitoring should detect drift and regressions before users do.`
-      },
-      {
-        title: "CI/CD for prompts, retrievers, and evaluation sets",
-        text:
-`Treat prompts and retrieval configs as versioned artefacts. CI should run evaluation suites, schema checks, and smoke tests.
-Release notes must reflect changes in retriever behaviour and any known failure modes.
-This is a defining trait of production LLMOps rather than notebook demos.`
-      }
-    ];
+    // -----------------------------
+    // Retrieval: token overlap + normalised score
+    // (Portfolio-safe, no heavy deps)
+    // -----------------------------
+    const STOP = new Set([
+      "the","a","an","and","or","to","of","in","for","with","on","by","is","are","as","it","this","that","be","should",
+      "include","includes","into","from","at","we","you","your","our","must","may","can","will","not","no"
+    ]);
 
-    let docs = [];
-    let chunks = []; // {docTitle, chunkText, tokens}
-    let idf = new Map();
-    let vocab = new Set();
-
-    const STOP = new Set(["the","a","an","and","or","to","of","in","on","for","with","is","are","as","by","be","this","that","it","at","from","into","over","under"]);
-
-    function normalise(s){
-      return (s || "")
+    function normalise(text){
+      return text
         .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, " ")
-        .replace(/\s+/g, " ")
+        .replace(/[^a-z0-9\s\-]/g," ")
+        .replace(/\s+/g," ")
         .trim();
     }
 
-    function tokenize(s){
-      return normalise(s)
+    function tokens(text){
+      return normalise(text)
         .split(" ")
-        .filter(x => x && x.length > 2 && !STOP.has(x));
+        .filter(t => t && t.length > 2 && !STOP.has(t));
     }
 
-    function chunkText(text, maxTokens=80, overlap=14){
-      const toks = tokenize(text);
-      const out = [];
-      let i = 0;
-      while(i < toks.length){
-        const slice = toks.slice(i, i + maxTokens);
-        out.push(slice.join(" "));
-        i += Math.max(1, (maxTokens - overlap));
-      }
-      return out.length ? out : [normalise(text)];
+    function score(query, doc){
+      const qt = tokens(query);
+      const dt = tokens(doc.title + " " + doc.body);
+      const qset = new Set(qt);
+      const dset = new Set(dt);
+
+      let hit = 0;
+      for (const t of qset) if (dset.has(t)) hit++;
+
+      // simple normalisation: hits / sqrt(|Q|*|D|) (cosine-like)
+      const denom = Math.sqrt((qset.size || 1) * (dset.size || 1));
+      return hit / (denom || 1);
     }
 
-    function rebuildIndex(){
-      chunks = [];
-      vocab = new Set();
-
-      for(const d of docs){
-        const parts = chunkText(d.text, 80, 14);
-        for(const p of parts){
-          const toks = tokenize(p);
-          toks.forEach(t => vocab.add(t));
-          chunks.push({ docTitle: d.title, chunkText: p, tokens: toks });
-        }
-      }
-
-      // IDF
-      idf = new Map();
-      const N = chunks.length || 1;
-      for(const tok of vocab){
-        let df = 0;
-        for(const c of chunks){
-          if(c.tokens.includes(tok)) df++;
-        }
-        const val = Math.log((N + 1) / (df + 1)) + 1; // smoothed
-        idf.set(tok, val);
-      }
-    }
-
-    function vectorise(tokens){
-      const v = new Map();
-      for(const t of tokens){
-        const w = idf.get(t) || 1;
-        v.set(t, (v.get(t) || 0) + w);
-      }
-      return v;
-    }
-
-    function cosine(a,b){
-      let dot = 0, na = 0, nb = 0;
-      for(const [k,va] of a.entries()){
-        na += va * va;
-        const vb = b.get(k);
-        if(vb) dot += va * vb;
-      }
-      for(const vb of b.values()){
-        nb += vb * vb;
-      }
-      na = Math.sqrt(na) || 1e-9;
-      nb = Math.sqrt(nb) || 1e-9;
-      return dot / (na * nb);
-    }
-
-    function retrieve(query, k, minSim){
-      const qtoks = tokenize(query);
-      const qv = vectorise(qtoks);
-
-      const scored = chunks.map((c) => {
-        const cv = vectorise(c.tokens);
-        const s = cosine(qv, cv);
-        return { ...c, score: s };
-      })
-      .filter(x => x.score >= minSim)
-      .sort((x,y) => y.score - x.score)
-      .slice(0, k);
-
+    function retrieve(query, docs, k){
+      const scored = docs
+        .map(d => ({...d, sim: score(query, d)}))
+        .sort((a,b) => b.sim - a.sim)
+        .slice(0, k);
       return scored;
     }
 
-    function escapeHtml(s){
-      return (s || "").replace(/[&<>"]/g, (ch) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[ch]));
-    }
+    // -----------------------------
+    // Drafting: grounded-only template
+    // -----------------------------
+    function groundedDraft(query, sources, policy){
+      const top = sources[0] || null;
+      const avg = sources.reduce((s,x)=>s+x.sim,0) / Math.max(1, sources.length);
 
-    function renderTrace(items){
-      const el = document.getElementById("trace");
-      if(!items.length){
-        el.innerHTML = `<p class="muted" style="margin:0;">No matches. Try a more specific query or lower the minimum similarity.</p>`;
-        return;
+      // Heuristic thresholds (tuned for this toy corpus)
+      const weak = (top ? top.sim : 0) < 0.08 || avg < 0.05;
+
+      if (weak && policy === "strict"){
+        return {
+          mode: "refusal",
+          text:
+            "I can’t answer confidently from the available sources.\n\n" +
+            "Reason: retrieval confidence is low.\n" +
+            "Action: rephrase the question with more specific terms (e.g., 'p95 latency', 'data drift', 'model registry'), " +
+            "or select a more relevant corpus.\n\n" +
+            "Citations: none (insufficient evidence)."
+        };
       }
 
-      el.innerHTML = items.map((it, idx) => `
-        <div style="padding:12px;border:1px solid rgba(255,255,255,.10);border-radius:16px;background:rgba(255,255,255,.04);margin:0 0 10px;">
-          <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;">
-            <div style="font-weight:650;">${idx+1}. ${escapeHtml(it.docTitle)}</div>
-            <div style="color:rgba(234,240,255,.70);font-size:12px;">sim: ${it.score.toFixed(3)}</div>
-          </div>
-          <div style="margin-top:8px;color:rgba(234,240,255,.78);font-size:13px;">
-            ${escapeHtml(it.chunkText)}
-          </div>
-        </div>
-      `).join("");
-    }
-
-    function groundedDraft(query, items){
-      if(!items.length){
-        return "I can’t answer reliably from the current knowledge pack. Add a document or refine the question.";
+      // Extract 2–3 key lines from top sources (light summarisation)
+      function keyLine(body){
+        const s = body.split(". ").map(x=>x.trim()).filter(Boolean);
+        return s.slice(0, 2).join(". ") + (s.length > 2 ? "." : "");
       }
-      const top = items[0];
-      return (
-`Grounded draft (from retrieved context):
-${top.chunkText}
 
-Reliability note:
-In production, this draft is generated by an LLM constrained by citations, refusal policy, and prompt-injection defences.
-Quality is measured via retrieval metrics and regression prompts (evaluation harness).`
-      );
+      const bullets = sources.slice(0,3).map((s, i) => {
+        return `- ${keyLine(s.body)} [${i+1}]`;
+      }).join("\n");
+
+      const caveat = (weak && policy === "soft")
+        ? "\n\nCaveat: retrieval confidence is weak; treat this as guidance and verify against authoritative documentation."
+        : "";
+
+      const text =
+        "Answer (grounded in retrieved sources):\n\n" +
+        bullets + "\n\n" +
+        "Recommended pattern:\n" +
+        "- Track service health (request rate, error rate, p95 latency) alongside model quality (data drift, prediction drift, delayed performance). [1]\n" +
+        "- Maintain runbooks, rollback criteria, and versioned artefacts for changes to models, features, and retrieval configs. [2]\n" +
+        "- Define retraining triggers based on drift thresholds and performance degradation once labels arrive. [3]" +
+        caveat + "\n\n" +
+        "Citations:\n" +
+        sources.slice(0,3).map((s, i) => `[${i+1}] ${s.id} — ${s.title}`).join("\n");
+
+      return { mode: weak ? "caveat" : "ok", text };
     }
 
-    function runMiniEval(){
-      const tests = [
-        { q: "How do citations reduce hallucinations in production RAG?", expect: "grounding" },
-        { q: "What is a good evaluation harness for RAG?", expect: "evaluation" },
-        { q: "How should chunking be designed?", expect: "chunking" },
-        { q: "How do you handle prompt injection?", expect: "injection" }
-      ];
+    // -----------------------------
+    // UI helpers
+    // -----------------------------
+    function el(id){ return document.getElementById(id); }
 
-      const k = 5;
-      const minSim = 0.10;
+    function setStatus(mode, retQuality, policy){
+      el("polOut").textContent = policy;
+      el("retQuality").textContent = retQuality;
 
-      let pass = 0;
-      const rows = tests.map(t => {
-        const hits = retrieve(t.q, k, minSim).slice(0, 3);
-        const joined = hits.map(h => (h.docTitle + " " + h.chunkText)).join(" ");
-        const ok = joined.toLowerCase().includes(t.expect);
-        if(ok) pass++;
-        return { ...t, ok, got: hits.map(h => h.docTitle) };
+      const box = el("status");
+      box.classList.remove("ok","warn","danger");
+
+      if (mode === "ok") box.classList.add("ok");
+      else if (mode === "caveat") box.classList.add("warn");
+      else if (mode === "refusal") box.classList.add("danger");
+      else box.classList.add("warn");
+
+      el("statusText").textContent = mode;
+    }
+
+    function snippet(text, maxChars){
+      const t = text.replace(/\s+/g," ").trim();
+      return (t.length <= maxChars) ? t : t.slice(0, maxChars - 1) + "…";
+    }
+
+    function renderTrace(sources){
+      const wrap = el("trace");
+      wrap.innerHTML = "";
+      sources.forEach((s, idx) => {
+        const div = document.createElement("div");
+        div.className = "src";
+        div.innerHTML =
+          `<div class="srcHead">
+             <div class="srcTitle">[${idx+1}] ${s.title}</div>
+             <div class="srcMeta mono">sim: ${s.sim.toFixed(3)} · ${s.id}</div>
+           </div>
+           <div class="srcText">${snippet(s.body, 240)}</div>`;
+        wrap.appendChild(div);
       });
-
-      const trace = document.getElementById("trace");
-      trace.innerHTML = `
-        <div style="padding:12px;border:1px solid rgba(255,255,255,.10);border-radius:16px;background:rgba(255,255,255,.04);">
-          <div style="font-weight:650;margin-bottom:8px;">Mini eval</div>
-          <div style="color:rgba(234,240,255,.78);font-size:13px;margin-bottom:10px;">
-            Metric: lightweight regression prompts · pass: <strong>${pass}/${tests.length}</strong>
-          </div>
-          ${rows.map((r, i) => `
-            <div style="padding:10px;border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(0,0,0,.18);margin:0 0 8px;">
-              <div style="display:flex;justify-content:space-between;gap:10px;">
-                <div style="font-weight:600;">${i+1}. ${escapeHtml(r.q)}</div>
-                <div style="font-size:12px;color:${r.ok ? "rgba(88,255,122,.9)" : "rgba(255,120,120,.9)"};">
-                  ${r.ok ? "PASS" : "FAIL"}
-                </div>
-              </div>
-              <div style="margin-top:6px;color:rgba(234,240,255,.70);font-size:12px;">
-                Top hits: ${escapeHtml((r.got || []).join(" • ") || "none")}
-              </div>
-            </div>
-          `).join("")}
-        </div>
-      `;
-      return { pass, total: tests.length };
     }
 
-    function init(){
-      docs = JSON.parse(JSON.stringify(DEFAULT_DOCS));
-      rebuildIndex();
+    function exportJSON(payload){
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "rag_trace.json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
     }
 
-    init();
+    async function copyText(text){
+      try{
+        await navigator.clipboard.writeText(text);
+        return true;
+      }catch(e){
+        return false;
+      }
+    }
 
-    document.getElementById("run").addEventListener("click", () => {
-      const q = document.getElementById("q").value.trim();
-      const k = parseInt(document.getElementById("k").value, 10);
-      const min = parseFloat(document.getElementById("min").value);
+    // -----------------------------
+    // Main run
+    // -----------------------------
+    function run(){
+      const query = el("q").value.trim();
+      const corp = el("corpus").value;
+      const topk = parseInt(el("topk").value, 10);
+      const policy = el("policy").value;
 
-      if(!q){
-        document.getElementById("answer").textContent = "Enter a query to generate a grounded draft.";
-        document.getElementById("trace").innerHTML = "";
-        document.getElementById("meta").textContent = "";
+      if (!query){
+        setStatus("idle", "—", policy);
+        el("ans").textContent = "Please enter a query.";
+        el("trace").innerHTML = "";
         return;
       }
 
-      const t0 = performance.now();
-      const items = retrieve(q, k, min);
-      const t1 = performance.now();
+      const docs = corpora()[corp] || [];
+      const sources = retrieve(query, docs, topk);
 
-      renderTrace(items);
-      document.getElementById("answer").textContent = groundedDraft(q, items);
+      // Retrieval quality label
+      const top = sources[0] ? sources[0].sim : 0;
+      const avg = sources.reduce((s,x)=>s+x.sim,0) / Math.max(1, sources.length);
+      const quality =
+        (top > 0.14 && avg > 0.08) ? "strong" :
+        (top > 0.09 && avg > 0.06) ? "moderate" :
+        "weak";
 
-      document.getElementById("meta").textContent =
-        `Latency: ${(t1 - t0).toFixed(1)} ms · Chunks indexed: ${chunks.length} · Keywords: RAG, LLMOps, evaluation harness, chunking, guardrails, CI/CD for ML.`;
+      const draft = groundedDraft(query, sources, policy);
+
+      setStatus(draft.mode, quality, policy);
+      el("ans").textContent = draft.text;
+      renderTrace(sources);
+
+      // store last trace for export/copy
+      window.__RAG_LAST__ = {
+        timestamp: new Date().toISOString(),
+        query,
+        corpus: corp,
+        topk,
+        policy,
+        retrieval_quality: quality,
+        sources: sources.map((s, i) => ({
+          rank: i+1,
+          id: s.id,
+          title: s.title,
+          similarity: Number(s.sim.toFixed(6)),
+          snippet: snippet(s.body, 400)
+        })),
+        answer: draft.text,
+        mode: draft.mode
+      };
+    }
+
+    // Bind
+    el("run").addEventListener("click", run);
+
+    el("copy").addEventListener("click", async () => {
+      const payload = window.__RAG_LAST__;
+      const text = payload ? payload.answer : el("ans").textContent;
+      const ok = await copyText(text);
+      if (ok){
+        const old = el("copy").textContent;
+        el("copy").textContent = "Copied";
+        setTimeout(()=> el("copy").textContent = old, 900);
+      } else {
+        alert("Copy failed (browser permission). You can still select the text manually.");
+      }
     });
 
-    document.getElementById("eval").addEventListener("click", () => {
-      const r = runMiniEval();
-      document.getElementById("answer").textContent =
-        `Mini eval summary: ${r.pass}/${r.total} tests passed. This is a placeholder harness — in production you track hit-rate, precision@k, faithfulness, and citation correctness.`;
-      document.getElementById("meta").textContent =
-        "Eval keywords: regression prompts, precision@k, faithfulness, citation correctness, monitoring, CI/CD for prompts.";
-    });
-
-    document.getElementById("reset").addEventListener("click", () => {
-      document.getElementById("q").value = "";
-      document.getElementById("answer").textContent = "Run a query to generate a grounded draft.";
-      document.getElementById("trace").innerHTML = "";
-      document.getElementById("meta").textContent = "";
-    });
-
-    document.getElementById("addDoc").addEventListener("click", () => {
-      const title = document.getElementById("docTitle").value.trim() || "Untitled note";
-      const body = document.getElementById("docBody").value.trim();
-      if(!body){
-        alert("Please paste some document text before adding.");
+    el("export").addEventListener("click", () => {
+      const payload = window.__RAG_LAST__;
+      if (!payload){
+        alert("Run the system first to generate a trace.");
         return;
       }
-      docs.unshift({ title, text: body });
-      rebuildIndex();
-      document.getElementById("docTitle").value = "";
-      document.getElementById("docBody").value = "";
-      alert(`Added: "${title}" (index rebuilt).`);
+      exportJSON(payload);
     });
 
-    document.getElementById("restore").addEventListener("click", () => {
-      docs = JSON.parse(JSON.stringify(DEFAULT_DOCS));
-      rebuildIndex();
-      alert("Default knowledge base restored.");
+    // Ctrl+Enter to run
+    el("q").addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") run();
     });
+
+    // default state
+    setStatus("idle", "—", el("policy").value);
+    window.__RAG_LAST__ = null;
   </script>
 
   <script src="/build-info.js"></script>
