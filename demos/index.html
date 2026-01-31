@@ -8,6 +8,7 @@
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
 </head>
+
 <body>
   <header class="nav">
     <div class="brand">
@@ -16,7 +17,7 @@
     </div>
     <nav class="navlinks" aria-label="Primary navigation">
       <a data-nav href="/">Signal</a>
-      <a data-nav href="/demos/">Systems</a>
+      <a data-nav class="active" href="/demos/">Systems</a>
       <a data-nav href="/evidence/">Proof Ledger</a>
       <a data-nav href="/about/">Identity</a>
     </nav>
@@ -30,6 +31,7 @@
         Each system is documented end-to-end: data → features → training → artefacts → serving → monitoring-ready outputs.
         Designed for technical screening and ATS parsing.
       </p>
+
       <div class="badges">
         <span class="badge">CI/CD for ML</span>
         <span class="badge">Inference Serving</span>
@@ -44,7 +46,7 @@
         <article class="card project col-6">
           <h3>NeuroGrid Fault Risk Scoring Platform</h3>
           <p>
-            Fault risk inference for medium-voltage networks, with CI training, versioned artefacts,
+            Fault risk inference for medium-voltage networks, with reproducible training, versioned artefacts,
             and live serving via FastAPI.
           </p>
           <div class="tags">
@@ -55,6 +57,7 @@
           </div>
           <div class="actions">
             <a class="btn primary" href="/demos/mv-grid-fault-risk/">Open system</a>
+            <a class="btn" href="/evidence/mv-grid-fault-risk/">Evidence dossier</a>
             <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">API docs</a>
             <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Source</a>
           </div>
