@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RAG Knowledge Copilot — Systems</title>
-  <meta name="description" content="Retrieval-augmented generation demo: retrieval tracing, evaluation signals, and LLMOps-ready patterns." />
+  <title>RAG Knowledge Copilot — Neuromorphic Inference Lab</title>
+  <meta name="description" content="RAG demo with retrieval traceability, citations-style source display, and a minimal evaluation harness. Production-minded LLMOps patterns." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
 </head>
@@ -31,16 +31,24 @@
       <p class="kicker">System · RAG / LLMOps</p>
       <h1 class="h1">RAG Knowledge Copilot</h1>
       <p class="sub">
-        A lightweight, ATS-readable demonstration of Retrieval-Augmented Generation concepts:
-        chunking, retrieval, traceability, and evaluation signals — designed for production-minded ML engineers.
+        A production-minded Retrieval-Augmented Generation demo showing <strong>retrieval traceability</strong>,
+        <strong>grounded drafting</strong>, and a minimal <strong>evaluation harness</strong>. Designed to be deployable on a static host
+        while reflecting real-world LLMOps patterns.
       </p>
 
-      <div class="badges" aria-label="Core capabilities">
+      <div class="badges" aria-label="Core keywords">
         <span class="badge">RAG</span>
         <span class="badge">LLMOps</span>
         <span class="badge">Retrieval Tracing</span>
+        <span class="badge">Chunking</span>
         <span class="badge">Evaluation Harness</span>
         <span class="badge">Observability-ready</span>
+      </div>
+
+      <div class="actions">
+        <a class="btn primary" href="/demos/">Back to systems</a>
+        <a class="btn" href="/evidence/rag-copilot/">Evidence memo</a>
+        <a class="btn" href="https://github.com/nepryoon/neuromorphic-inference-lab-site" target="_blank" rel="noopener">Website source</a>
       </div>
     </section>
 
@@ -48,49 +56,69 @@
       <div class="grid">
         <article class="card col-6">
           <h3>Ask a question</h3>
-          <p>Query the mini knowledge base. The system will retrieve the most relevant chunks and draft an answer grounded in the retrieved text.</p>
+          <p>
+            This demo runs fully in the browser. It retrieves the most relevant chunks, shows a transparent trace,
+            and produces a grounded draft. A production version swaps the local index for embeddings + vector store + model serving.
+          </p>
 
           <div class="field">
             <label for="q">Query</label>
-            <input id="q" type="text" placeholder="e.g. How does this RAG pipeline reduce hallucinations?" />
-            <div class="helper">Tip: try “chunking strategy”, “evaluation”, “vector store”, or “guardrails”.</div>
+            <input id="q" type="text" placeholder="e.g. How do you reduce hallucinations in production RAG?" />
+            <div class="helper">Try: “chunking strategy”, “evaluation harness”, “vector store”, “prompt injection”.</div>
           </div>
 
-          <div class="field">
-            <label for="k">Top-K retrieval</label>
-            <select id="k">
-              <option value="3">3</option>
-              <option value="5" selected>5</option>
-              <option value="8">8</option>
-            </select>
+          <div class="grid">
+            <div class="col-6">
+              <div class="field">
+                <label for="k">Top-K retrieval</label>
+                <select id="k">
+                  <option value="3">3</option>
+                  <option value="5" selected>5</option>
+                  <option value="8">8</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="field">
+                <label for="min">Minimum similarity</label>
+                <select id="min">
+                  <option value="0.05">0.05</option>
+                  <option value="0.10" selected>0.10</option>
+                  <option value="0.15">0.15</option>
+                  <option value="0.20">0.20</option>
+                </select>
+              </div>
+            </div>
           </div>
 
           <div class="actions">
-            <button class="btn primary" id="run">Run retrieval</button>
-            <button class="btn" id="reset">Reset</button>
-            <a class="btn" href="/evidence/rag-copilot/">Proof ledger</a>
+            <button class="btn primary" id="run" type="button">Run retrieval</button>
+            <button class="btn" id="eval" type="button">Run mini eval</button>
+            <button class="btn" id="reset" type="button">Reset</button>
           </div>
 
           <hr class="hr" />
 
-          <h3>Answer draft</h3>
-          <p id="answer" style="margin:0;color:rgba(234,240,255,.84);">
+          <h3>Grounded draft</h3>
+          <p id="answer" class="muted" style="margin:0;">
             Run a query to generate a grounded draft.
           </p>
 
-          <div class="helper" id="meta" style="margin-top:10px;"></div>
+          <div id="meta" class="helper" style="margin-top:10px;"></div>
         </article>
 
         <article class="card col-6">
           <h3>Retrieval trace</h3>
-          <p>Top matches with similarity scores. This is the core artefact recruiters look for in RAG work: transparent retrieval + grounding.</p>
+          <p>
+            Top matches with similarity scores and chunk IDs. This is the artefact that makes RAG auditable for engineering screening.
+          </p>
 
           <div id="trace"></div>
 
           <hr class="hr" />
 
-          <h3>Knowledge base (editable)</h3>
-          <p>Add a new document below; it will be chunked and indexed locally in your browser.</p>
+          <h3>Add a document (local knowledge pack)</h3>
+          <p>Paste a short technical note; it will be chunked and indexed locally.</p>
 
           <div class="field">
             <label for="docTitle">Document title</label>
@@ -99,32 +127,35 @@
 
           <div class="field">
             <label for="docBody">Document text</label>
-            <textarea id="docBody" placeholder="Paste a short technical note (2–8 paragraphs)."></textarea>
+            <textarea id="docBody" placeholder="Paste 2–8 short paragraphs."></textarea>
           </div>
 
           <div class="actions">
-            <button class="btn" id="addDoc">Add to knowledge base</button>
-            <button class="btn" id="restore">Restore defaults</button>
+            <button class="btn" id="addDoc" type="button">Add to knowledge base</button>
+            <button class="btn" id="restore" type="button">Restore defaults</button>
           </div>
 
           <div class="helper" style="margin-top:10px;">
-            This demo is static by design (safe for a public portfolio). A production variant would call a secured API and store embeddings in a managed vector database.
+            Production keywords embedded intentionally: embeddings, vector database, hybrid retrieval, reranking,
+            prompt injection defence, CI/CD for prompts, evaluation harness, monitoring-ready outputs.
           </div>
         </article>
 
         <article class="card col-12">
           <h3>Production architecture snapshot</h3>
-          <p style="margin:0;color:rgba(234,240,255,.78);">
-            <strong>Ingestion</strong> → chunking + metadata → embeddings → vector index → retrieval + re-ranking → prompt assembly →
-            <strong>LLM</strong> → citations + safety filters → monitoring (latency, cost, drift, answer quality).
+          <p class="muted" style="margin:0;">
+            Ingestion → normalisation → chunking + metadata → embeddings → vector index → retrieval + reranking →
+            prompt assembly → model inference → citations/guardrails → monitoring (latency, cost, drift, quality) → feedback loop.
           </p>
+
           <div class="badges" style="margin-top:12px;">
-            <span class="badge">Chunking</span>
             <span class="badge">Embeddings</span>
             <span class="badge">Vector Store</span>
+            <span class="badge">Hybrid Retrieval</span>
             <span class="badge">Re-ranking</span>
             <span class="badge">Guardrails</span>
-            <span class="badge">Evaluation</span>
+            <span class="badge">CI/CD for ML</span>
+            <span class="badge">Monitoring</span>
           </div>
         </article>
       </div>
@@ -132,7 +163,7 @@
 
     <footer class="footer">
       <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
-      <div class="prov">
+      <div class="prov" aria-label="Build provenance">
         <span id="build-branch">branch: …</span>
         <span id="build-commit">commit: …</span>
         <span id="build-time">built: …</span>
@@ -144,64 +175,64 @@
     document.getElementById("year").textContent = String(new Date().getFullYear());
 
     // -----------------------------
-    // Minimal in-browser RAG demo
-    // (TF-IDF-ish vectors + cosine similarity)
+    // Minimal in-browser RAG engine
+    // (token-based chunking + TF-IDF-ish vectors + cosine similarity)
     // -----------------------------
 
     const DEFAULT_DOCS = [
       {
-        title: "RAG basics: grounding and hallucination control",
+        title: "RAG reliability: grounding and citations discipline",
         text:
-`Retrieval-Augmented Generation (RAG) reduces hallucinations by grounding the model response in retrieved documents.
-Instead of relying purely on parametric memory, the system retrieves relevant context (chunks) from a knowledge base.
-A production implementation should expose retrieval traces and citations to make the system auditable.`
+`In production RAG, grounding is the primary control against hallucinations.
+A system should retrieve relevant chunks, show the trace, and enforce source-based claims.
+If retrieval is weak, the safest behaviour is refusal or a clarifying question, not a confident guess.`
       },
       {
         title: "Chunking strategy and metadata",
         text:
 `Chunking is a first-class design choice. Overly large chunks dilute relevance; overly small chunks lose coherence.
-Effective pipelines store metadata (source, section, timestamp, tags) to support filtering and governance.
-For technical screening, you should be able to explain chunk sizing, overlap, and how you evaluate retrieval quality.`
+Store metadata (source, section, timestamp, tags) so you can filter, audit, and govern answers.
+Chunk size, overlap, and segmentation should be evaluated using retrieval metrics and failure cases.`
       },
       {
-        title: "Embeddings, vector stores, and retrieval",
+        title: "Embeddings, vector stores, and hybrid retrieval",
         text:
-`Embeddings convert text into vectors for similarity search. A vector store indexes embeddings and supports top-k retrieval.
-Common patterns include hybrid retrieval (BM25 + vectors) and re-ranking to improve precision at small k.
+`Embeddings map text to vectors for similarity search. A vector store indexes these vectors and supports top-k retrieval.
+Hybrid retrieval combines sparse methods (BM25) with vectors, often followed by re-ranking for higher precision at small k.
 Operational considerations include latency budgets, caching, and cost controls for embedding generation.`
       },
       {
         title: "Evaluation harness for RAG (LLMOps)",
         text:
-`RAG quality needs measurable evaluation: retrieval precision/recall, answer faithfulness, citation correctness, and robustness on edge cases.
-A good harness includes test sets, golden answers, and failure mode tagging (missing context, wrong context, prompt issues).
-In production, you log queries, retrieved chunks, latency, and user feedback to drive iterative improvements.`
+`RAG quality needs measurable signals: retrieval hit-rate, precision@k, citation correctness, and answer faithfulness.
+A credible harness includes regression prompts, edge-case suites, and failure mode tagging (missing context, wrong context, prompt issues).
+In production you log queries, retrieved chunks, latency, and user feedback to drive iteration.`
       },
       {
-        title: "Reliability patterns and guardrails",
+        title: "Guardrails: prompt injection defence and safe defaults",
         text:
-`Reliability patterns include: refusing when retrieval is empty, showing citations, enforcing structured outputs, and applying safety filters.
-Guardrails can block prompt injection, redact PII, and require source-based claims.
-For enterprise readiness, align with data governance policies and implement monitoring for drift and regressions.`
+`Reliability patterns include refusal on empty retrieval, source-only claims, structured output validation, and PII redaction.
+Prompt injection defence should treat external text as untrusted. A robust system validates tool outputs and applies safe defaults.
+Monitoring should detect drift and regressions before users do.`
       },
       {
-        title: "Deployment notes: CI/CD and monitoring",
+        title: "CI/CD for prompts, retrievers, and evaluation sets",
         text:
-`A full-stack ML engineer treats RAG as a system: CI/CD for changes to prompts, retrievers, and evaluation sets.
-Monitoring should cover latency, error rate, cost per query, retrieval hit rate, and quality metrics over time.
-This is the difference between a demo and a production service.`
+`Treat prompts and retrieval configs as versioned artefacts. CI should run evaluation suites, schema checks, and smoke tests.
+Release notes must reflect changes in retriever behaviour and any known failure modes.
+This is a defining trait of production LLMOps rather than notebook demos.`
       }
     ];
 
     let docs = [];
-    let chunks = []; // {docTitle, chunkText, tokens, tf}
-    let idf = new Map(); // token -> idf
+    let chunks = []; // {docTitle, chunkText, tokens}
+    let idf = new Map();
     let vocab = new Set();
 
-    const stop = new Set(["the","a","an","and","or","to","of","in","on","for","with","is","are","as","by","be","this","that","it","at","from"]);
+    const STOP = new Set(["the","a","an","and","or","to","of","in","on","for","with","is","are","as","by","be","this","that","it","at","from","into","over","under"]);
 
     function normalise(s){
-      return s
+      return (s || "")
         .toLowerCase()
         .replace(/[^a-z0-9\s-]/g, " ")
         .replace(/\s+/g, " ")
@@ -209,18 +240,19 @@ This is the difference between a demo and a production service.`
     }
 
     function tokenize(s){
-      const t = normalise(s).split(" ").filter(x => x && x.length > 2 && !stop.has(x));
-      return t;
+      return normalise(s)
+        .split(" ")
+        .filter(x => x && x.length > 2 && !STOP.has(x));
     }
 
-    function chunkText(text, maxTokens=70, overlap=12){
+    function chunkText(text, maxTokens=80, overlap=14){
       const toks = tokenize(text);
       const out = [];
       let i = 0;
       while(i < toks.length){
         const slice = toks.slice(i, i + maxTokens);
         out.push(slice.join(" "));
-        i += (maxTokens - overlap);
+        i += Math.max(1, (maxTokens - overlap));
       }
       return out.length ? out : [normalise(text)];
     }
@@ -229,17 +261,12 @@ This is the difference between a demo and a production service.`
       chunks = [];
       vocab = new Set();
 
-      // build chunks + TF
       for(const d of docs){
         const parts = chunkText(d.text, 80, 14);
         for(const p of parts){
           const toks = tokenize(p);
-          const tf = new Map();
-          for(const tok of toks){
-            vocab.add(tok);
-            tf.set(tok, (tf.get(tok) || 0) + 1);
-          }
-          chunks.push({ docTitle: d.title, chunkText: p, tokens: toks, tf });
+          toks.forEach(t => vocab.add(t));
+          chunks.push({ docTitle: d.title, chunkText: p, tokens: toks });
         }
       }
 
@@ -249,7 +276,7 @@ This is the difference between a demo and a production service.`
       for(const tok of vocab){
         let df = 0;
         for(const c of chunks){
-          if(c.tf.has(tok)) df += 1;
+          if(c.tokens.includes(tok)) df++;
         }
         const val = Math.log((N + 1) / (df + 1)) + 1; // smoothed
         idf.set(tok, val);
@@ -266,10 +293,7 @@ This is the difference between a demo and a production service.`
     }
 
     function cosine(a,b){
-      let dot = 0;
-      let na = 0;
-      let nb = 0;
-
+      let dot = 0, na = 0, nb = 0;
       for(const [k,va] of a.entries()){
         na += va * va;
         const vb = b.get(k);
@@ -283,7 +307,7 @@ This is the difference between a demo and a production service.`
       return dot / (na * nb);
     }
 
-    function topK(query, k){
+    function retrieve(query, k, minSim){
       const qtoks = tokenize(query);
       const qv = vectorise(qtoks);
 
@@ -291,20 +315,22 @@ This is the difference between a demo and a production service.`
         const cv = vectorise(c.tokens);
         const s = cosine(qv, cv);
         return { ...c, score: s };
-      });
+      })
+      .filter(x => x.score >= minSim)
+      .sort((x,y) => y.score - x.score)
+      .slice(0, k);
 
-      scored.sort((x,y) => y.score - x.score);
-      return scored.slice(0, k);
+      return scored;
     }
 
     function escapeHtml(s){
-      return s.replace(/[&<>"]/g, (ch) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[ch]));
+      return (s || "").replace(/[&<>"]/g, (ch) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[ch]));
     }
 
     function renderTrace(items){
       const el = document.getElementById("trace");
       if(!items.length){
-        el.innerHTML = `<p style="margin:0;color:rgba(234,240,255,.75);">No matches. Try a more specific query.</p>`;
+        el.innerHTML = `<p class="muted" style="margin:0;">No matches. Try a more specific query or lower the minimum similarity.</p>`;
         return;
       }
 
@@ -312,7 +338,7 @@ This is the difference between a demo and a production service.`
         <div style="padding:12px;border:1px solid rgba(255,255,255,.10);border-radius:16px;background:rgba(255,255,255,.04);margin:0 0 10px;">
           <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;">
             <div style="font-weight:650;">${idx+1}. ${escapeHtml(it.docTitle)}</div>
-            <div style="color:rgba(234,240,255,.70);font-size:12px;">score: ${it.score.toFixed(3)}</div>
+            <div style="color:rgba(234,240,255,.70);font-size:12px;">sim: ${it.score.toFixed(3)}</div>
           </div>
           <div style="margin-top:8px;color:rgba(234,240,255,.78);font-size:13px;">
             ${escapeHtml(it.chunkText)}
@@ -321,73 +347,132 @@ This is the difference between a demo and a production service.`
       `).join("");
     }
 
-    function draftAnswer(query, items){
+    function groundedDraft(query, items){
       if(!items.length){
-        return "I can’t find relevant context in the current knowledge base. Add a document or refine the query.";
+        return "I can’t answer reliably from the current knowledge pack. Add a document or refine the question.";
       }
-
-      const best = items[0];
+      const top = items[0];
       return (
-`Grounded draft (from retrieved context): ${best.chunkText}
+`Grounded draft (from retrieved context):
+${top.chunkText}
 
-Operational note: in a production RAG system, this draft would be generated by an LLM with strict citation rules, prompt-injection defences, and monitoring for drift and regressions.`
+Reliability note:
+In production, this draft is generated by an LLM constrained by citations, refusal policy, and prompt-injection defences.
+Quality is measured via retrieval metrics and regression prompts (evaluation harness).`
       );
     }
 
-    // UI wiring
+    function runMiniEval(){
+      const tests = [
+        { q: "How do citations reduce hallucinations in production RAG?", expect: "grounding" },
+        { q: "What is a good evaluation harness for RAG?", expect: "evaluation" },
+        { q: "How should chunking be designed?", expect: "chunking" },
+        { q: "How do you handle prompt injection?", expect: "injection" }
+      ];
+
+      const k = 5;
+      const minSim = 0.10;
+
+      let pass = 0;
+      const rows = tests.map(t => {
+        const hits = retrieve(t.q, k, minSim).slice(0, 3);
+        const joined = hits.map(h => (h.docTitle + " " + h.chunkText)).join(" ");
+        const ok = joined.toLowerCase().includes(t.expect);
+        if(ok) pass++;
+        return { ...t, ok, got: hits.map(h => h.docTitle) };
+      });
+
+      const trace = document.getElementById("trace");
+      trace.innerHTML = `
+        <div style="padding:12px;border:1px solid rgba(255,255,255,.10);border-radius:16px;background:rgba(255,255,255,.04);">
+          <div style="font-weight:650;margin-bottom:8px;">Mini eval</div>
+          <div style="color:rgba(234,240,255,.78);font-size:13px;margin-bottom:10px;">
+            Metric: lightweight regression prompts · pass: <strong>${pass}/${tests.length}</strong>
+          </div>
+          ${rows.map((r, i) => `
+            <div style="padding:10px;border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(0,0,0,.18);margin:0 0 8px;">
+              <div style="display:flex;justify-content:space-between;gap:10px;">
+                <div style="font-weight:600;">${i+1}. ${escapeHtml(r.q)}</div>
+                <div style="font-size:12px;color:${r.ok ? "rgba(88,255,122,.9)" : "rgba(255,120,120,.9)"};">
+                  ${r.ok ? "PASS" : "FAIL"}
+                </div>
+              </div>
+              <div style="margin-top:6px;color:rgba(234,240,255,.70);font-size:12px;">
+                Top hits: ${escapeHtml((r.got || []).join(" • ") || "none")}
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+      return { pass, total: tests.length };
+    }
+
     function init(){
       docs = JSON.parse(JSON.stringify(DEFAULT_DOCS));
       rebuildIndex();
-
-      document.getElementById("run").addEventListener("click", () => {
-        const q = document.getElementById("q").value.trim();
-        const k = parseInt(document.getElementById("k").value, 10);
-
-        const t0 = performance.now();
-        const items = q ? topK(q, k) : [];
-        const t1 = performance.now();
-
-        renderTrace(items);
-
-        const answer = q ? draftAnswer(q, items) : "Enter a query to generate a grounded draft.";
-        document.getElementById("answer").textContent = answer;
-
-        const meta = q
-          ? `Latency: ${(t1 - t0).toFixed(1)} ms · Chunks indexed: ${chunks.length} · Keywords: CI/CD for ML, Feature Stores, Automated Retraining, Inference Scaling, RAG, LLMOps`
-          : "";
-        document.getElementById("meta").textContent = meta;
-      });
-
-      document.getElementById("reset").addEventListener("click", () => {
-        document.getElementById("q").value = "";
-        document.getElementById("answer").textContent = "Run a query to generate a grounded draft.";
-        document.getElementById("trace").innerHTML = "";
-        document.getElementById("meta").textContent = "";
-      });
-
-      document.getElementById("addDoc").addEventListener("click", () => {
-        const title = document.getElementById("docTitle").value.trim() || "Untitled note";
-        const body = document.getElementById("docBody").value.trim();
-        if(!body){
-          alert("Please paste some document text before adding.");
-          return;
-        }
-        docs.unshift({ title, text: body });
-        rebuildIndex();
-        document.getElementById("docTitle").value = "";
-        document.getElementById("docBody").value = "";
-        alert(`Added: "${title}" (index rebuilt).`);
-      });
-
-      document.getElementById("restore").addEventListener("click", () => {
-        docs = JSON.parse(JSON.stringify(DEFAULT_DOCS));
-        rebuildIndex();
-        alert("Default knowledge base restored.");
-      });
     }
 
     init();
+
+    document.getElementById("run").addEventListener("click", () => {
+      const q = document.getElementById("q").value.trim();
+      const k = parseInt(document.getElementById("k").value, 10);
+      const min = parseFloat(document.getElementById("min").value);
+
+      if(!q){
+        document.getElementById("answer").textContent = "Enter a query to generate a grounded draft.";
+        document.getElementById("trace").innerHTML = "";
+        document.getElementById("meta").textContent = "";
+        return;
+      }
+
+      const t0 = performance.now();
+      const items = retrieve(q, k, min);
+      const t1 = performance.now();
+
+      renderTrace(items);
+      document.getElementById("answer").textContent = groundedDraft(q, items);
+
+      document.getElementById("meta").textContent =
+        `Latency: ${(t1 - t0).toFixed(1)} ms · Chunks indexed: ${chunks.length} · Keywords: RAG, LLMOps, evaluation harness, chunking, guardrails, CI/CD for ML.`;
+    });
+
+    document.getElementById("eval").addEventListener("click", () => {
+      const r = runMiniEval();
+      document.getElementById("answer").textContent =
+        `Mini eval summary: ${r.pass}/${r.total} tests passed. This is a placeholder harness — in production you track hit-rate, precision@k, faithfulness, and citation correctness.`;
+      document.getElementById("meta").textContent =
+        "Eval keywords: regression prompts, precision@k, faithfulness, citation correctness, monitoring, CI/CD for prompts.";
+    });
+
+    document.getElementById("reset").addEventListener("click", () => {
+      document.getElementById("q").value = "";
+      document.getElementById("answer").textContent = "Run a query to generate a grounded draft.";
+      document.getElementById("trace").innerHTML = "";
+      document.getElementById("meta").textContent = "";
+    });
+
+    document.getElementById("addDoc").addEventListener("click", () => {
+      const title = document.getElementById("docTitle").value.trim() || "Untitled note";
+      const body = document.getElementById("docBody").value.trim();
+      if(!body){
+        alert("Please paste some document text before adding.");
+        return;
+      }
+      docs.unshift({ title, text: body });
+      rebuildIndex();
+      document.getElementById("docTitle").value = "";
+      document.getElementById("docBody").value = "";
+      alert(`Added: "${title}" (index rebuilt).`);
+    });
+
+    document.getElementById("restore").addEventListener("click", () => {
+      docs = JSON.parse(JSON.stringify(DEFAULT_DOCS));
+      rebuildIndex();
+      alert("Default knowledge base restored.");
+    });
   </script>
+
   <script src="/build-info.js"></script>
 </body>
 </html>
