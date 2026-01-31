@@ -3,10 +3,36 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Systems — Neuromorphic Inference Lab</title>
-  <meta name="description" content="End-to-end systems: forecasting, tabular risk scoring, and RAG/LLMOps with production-minded ML pipelines." />
+  <title>Forecast Studio — Neuromorphic Inference Lab</title>
+  <meta name="description" content="Forecast Studio: time-series forecasting workbench with backtesting discipline, MLOps-ready artefacts, and deployment-oriented outputs." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
+  <style>
+    .demoGrid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+    @media (min-width: 900px) { .demoGrid { grid-template-columns: 1.2fr 0.8fr; } }
+    .field { display: grid; gap: 6px; margin: 10px 0; }
+    .field label { font-size: 0.92rem; opacity: 0.9; }
+    .field select, .field input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06);
+      color: inherit;
+      outline: none;
+    }
+    .field small { opacity: 0.8; }
+    .chartBox { border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); }
+    .chartHeader { display:flex; justify-content:space-between; align-items:center; padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.10); }
+    .chartHeader span { font-size: 0.92rem; opacity: 0.9; }
+    .chartPad { padding: 10px 14px 14px 14px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .kpi { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
+    .kpi .card { padding: 14px; }
+    .kpi .num { font-size: 1.2rem; font-weight: 700; }
+    .hint { opacity: 0.85; }
+    .btnRow { display:flex; flex-wrap:wrap; gap:10px; }
+  </style>
 </head>
 
 <body>
@@ -25,80 +51,119 @@
 
   <main class="container">
     <section class="hero">
-      <p class="kicker">Systems</p>
-      <h1 class="h1">Full-stack ML systems engineered under real constraints.</h1>
+      <p class="kicker">Forecast Studio</p>
+      <h1 class="h1">Time-series forecasting with deployment-grade discipline.</h1>
       <p class="sub">
-        Each system is documented end-to-end: ingestion → features → training → artefacts → serving → monitoring-ready outputs.
-        Built to be legible to technical reviewers and parsable by ATS.
+        A practical workbench for forecasting workflows: data validation, feature engineering, backtesting, artefact versioning,
+        and production-minded outputs (latency budgets, drift signals, retraining triggers).
       </p>
+
       <div class="badges">
-        <span class="badge">Scalable ML Pipelines</span>
+        <span class="badge">Time Series</span>
+        <span class="badge">Backtesting</span>
+        <span class="badge">Uncertainty-aware Outputs</span>
         <span class="badge">CI/CD for ML</span>
-        <span class="badge">Model Serving</span>
-        <span class="badge">Inference Optimisation</span>
-        <span class="badge">RAG / LLMOps</span>
+        <span class="badge">Model Registry</span>
+        <span class="badge">Serving-ready Artefacts</span>
+      </div>
+
+      <div class="btnRow" style="margin-top:14px;">
+        <a class="btn primary" href="/evidence/forecast-studio/">Read evidence memo</a>
+        <a class="btn" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener">Source repository</a>
       </div>
     </section>
 
     <section class="section">
-      <div class="grid">
+      <div class="demoGrid">
 
-        <!-- 1) NeuroGrid -->
-        <article class="card project col-6">
-          <h3>NeuroGrid Fault Risk Scoring Platform</h3>
-          <p>
-            Fault risk inference for medium-voltage networks, with CI training, artefact versioning, and live model serving.
+        <article class="card">
+          <h3>Interactive demo (client-side)</h3>
+          <p class="hint">
+            This demo runs entirely in the browser (no backend). It illustrates the forecasting workflow:
+            series → backtest window → forecast horizon → error metrics → forecast plot.
           </p>
-          <div class="tags">
-            <span class="tag">Tabular ML</span>
-            <span class="tag">Model Registry</span>
-            <span class="tag">CI Training</span>
-            <span class="tag">FastAPI Serving</span>
-          </div>
-          <div class="actions">
-            <a class="btn primary" href="/demos/mv-grid-fault-risk/">Open system</a>
-            <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">API docs</a>
-            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Source</a>
+
+          <div class="chartBox" style="margin-top:12px;">
+            <div class="chartHeader">
+              <span>Forecast plot</span>
+              <span class="mono" id="seriesMeta">series: —</span>
+            </div>
+            <div class="chartPad">
+              <svg id="chart" viewBox="0 0 900 260" width="100%" height="260" role="img" aria-label="Forecast chart">
+                <rect x="0" y="0" width="900" height="260" fill="rgba(255,255,255,0.02)"></rect>
+                <g id="grid"></g>
+                <path id="histPath" d="" fill="none" stroke="rgba(120,220,255,0.85)" stroke-width="2.5"></path>
+                <path id="fcPath" d="" fill="none" stroke="rgba(180,255,180,0.85)" stroke-width="2.5" stroke-dasharray="6 5"></path>
+                <path id="bandPath" d="" fill="rgba(180,255,180,0.18)" stroke="none"></path>
+              </svg>
+              <div class="kpi" style="margin-top:12px;">
+                <div class="card">
+                  <div class="hint">Backtest MAE</div>
+                  <div class="num mono" id="mae">—</div>
+                </div>
+                <div class="card">
+                  <div class="hint">Backtest MAPE</div>
+                  <div class="num mono" id="mape">—</div>
+                </div>
+              </div>
+            </div>
           </div>
         </article>
 
-        <!-- 2) Forecast Studio (NEW / replaces the previous concept) -->
-        <article class="card project col-6">
-          <h3>Forecast Studio — Time-series Forecasting Workbench</h3>
-          <p>
-            A forecasting workbench with backtesting discipline, uncertainty-aware outputs, and deployment-ready artefacts.
-          </p>
-          <div class="tags">
-            <span class="tag">Time Series</span>
-            <span class="tag">Backtesting</span>
-            <span class="tag">Drift-ready</span>
-            <span class="tag">MLOps Patterns</span>
-          </div>
-          <div class="actions">
-            <a class="btn primary" href="/demos/forecast-studio/">Open system</a>
-            <a class="btn" href="/evidence/forecast-studio/">Evidence memo</a>
-            <a class="btn" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener">Source</a>
-          </div>
-        </article>
+        <aside class="card">
+          <h3>Controls</h3>
 
-        <!-- 3) RAG Copilot -->
-        <article class="card project col-6">
-          <h3>RAG Knowledge Copilot (LLMOps)</h3>
-          <p>
-            Retrieval-augmented generation with evaluation harnesses, traceability, and reliability patterns for document reality.
+          <div class="field">
+            <label for="series">Sample series</label>
+            <select id="series">
+              <option value="grid_load">Grid load (daily)</option>
+              <option value="asset_health">Asset health index (weekly)</option>
+              <option value="demand_spikes">Demand spikes (daily)</option>
+            </select>
+            <small class="hint">Synthetic data generated for portfolio use (replicable).</small>
+          </div>
+
+          <div class="field">
+            <label for="horizon">Forecast horizon (steps)</label>
+            <select id="horizon">
+              <option value="7">7</option>
+              <option value="14" selected>14</option>
+              <option value="30">30</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="noise">Noise level</label>
+            <input id="noise" type="range" min="0" max="40" value="18" />
+            <small class="hint">Higher noise simulates harder operational conditions.</small>
+          </div>
+
+          <div class="field">
+            <label for="seed">Seed</label>
+            <input id="seed" type="number" value="42" min="1" step="1" />
+          </div>
+
+          <div class="actions" style="margin-top: 14px;">
+            <button class="btn primary" id="run" type="button">Run forecast</button>
+            <a class="btn" href="/demos/">Back to Systems</a>
+          </div>
+
+          <hr style="border:0;border-top:1px solid rgba(255,255,255,0.10); margin:16px 0;" />
+
+          <h3>What this validates</h3>
+          <p class="hint">
+            <strong>Data → Model → Deployment</strong> thinking:
+            backtesting discipline, error reporting, forecast artefacts, and monitoring hooks (drift / retraining triggers).
           </p>
-          <div class="tags">
-            <span class="tag">RAG</span>
-            <span class="tag">LLMOps</span>
-            <span class="tag">Evaluation</span>
-            <span class="tag">Guardrails</span>
+
+          <div class="tags" style="margin-top:10px;">
+            <span class="tag">Feature Engineering</span>
+            <span class="tag">Backtesting Harness</span>
+            <span class="tag">CI/CD for ML</span>
+            <span class="tag">Model Artefacts</span>
+            <span class="tag">Monitoring-ready Outputs</span>
           </div>
-          <div class="actions">
-            <a class="btn primary" href="/demos/rag-copilot/">Open system</a>
-            <a class="btn" href="/evidence/rag-copilot/">Evidence memo</a>
-            <a class="btn" href="https://github.com/nepryoon/neuromorphic-inference-lab-site" target="_blank" rel="noopener">Site source</a>
-          </div>
-        </article>
+        </aside>
 
       </div>
     </section>
@@ -115,7 +180,244 @@
 
   <script>
     document.getElementById("year").textContent = String(new Date().getFullYear());
+
+    function mulberry32(a) {
+      return function() {
+        let t = a += 0x6D2B79F5;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      }
+    }
+
+    function linReg(xs, ys) {
+      const n = xs.length;
+      let sx=0, sy=0, sxx=0, sxy=0;
+      for (let i=0;i<n;i++){
+        sx += xs[i]; sy += ys[i];
+        sxx += xs[i]*xs[i]; sxy += xs[i]*ys[i];
+      }
+      const denom = (n*sxx - sx*sx) || 1e-9;
+      const b = (n*sxy - sx*sy) / denom;
+      const a = (sy - b*sx) / n;
+      return {a,b};
+    }
+
+    function genSeries(kind, n, noise, seed) {
+      const rnd = mulberry32(seed);
+      const y = [];
+      for (let t=0;t<n;t++){
+        let base, trend, season;
+        if (kind === "grid_load") {
+          base = 120;
+          trend = 0.12 * t;
+          season = 12 * Math.sin((2*Math.PI*t)/7) + 6 * Math.sin((2*Math.PI*t)/30);
+        } else if (kind === "asset_health") {
+          base = 72;
+          trend = -0.08 * t;
+          season = 2.5 * Math.sin((2*Math.PI*t)/12);
+        } else { // demand_spikes
+          base = 95;
+          trend = 0.05 * t;
+          season = 10 * Math.sin((2*Math.PI*t)/7);
+        }
+        let eps = (rnd() - 0.5) * 2 * (noise/10);
+        // occasional spikes for demand_spikes
+        if (kind === "demand_spikes" && rnd() < 0.07) eps += (rnd()*1.8 + 0.4) * (noise/3);
+        y.push(base + trend + season + eps);
+      }
+      return y;
+    }
+
+    function backtestForecast(series, horizon) {
+      // Simple approach:
+      // - trend from last 28 points (or fewer)
+      // - weekly seasonal index from last 28 points
+      // - prediction interval from residuals (MAD-based)
+      const n = series.length;
+      const trainEnd = n - horizon;
+      const train = series.slice(0, trainEnd);
+      const test = series.slice(trainEnd);
+
+      const w = Math.min(28, train.length);
+      const start = train.length - w;
+      const xs = [];
+      const ys = [];
+      for (let i=0;i<w;i++){
+        xs.push(i);
+        ys.push(train[start+i]);
+      }
+      const {a,b} = linReg(xs, ys);
+
+      // weekly seasonal indices (7)
+      const season = new Array(7).fill(0);
+      const counts = new Array(7).fill(0);
+      for (let i=0;i<w;i++){
+        const dow = i % 7;
+        const trendVal = a + b*i;
+        season[dow] += (ys[i] - trendVal);
+        counts[dow] += 1;
+      }
+      for (let d=0; d<7; d++){
+        season[d] = season[d] / (counts[d] || 1);
+      }
+
+      // residuals on training window
+      const resid = [];
+      for (let i=0;i<w;i++){
+        const pred = (a + b*i) + season[i % 7];
+        resid.push(ys[i] - pred);
+      }
+      resid.sort((p,q)=>p-q);
+      const med = resid[Math.floor(resid.length/2)];
+      const absDev = resid.map(r => Math.abs(r - med)).sort((p,q)=>p-q);
+      const mad = absDev[Math.floor(absDev.length/2)] || 1;
+      const sigma = 1.4826 * mad; // robust std approx
+
+      // forecast next horizon (continuing index)
+      const fc = [];
+      const lower = [];
+      const upper = [];
+      for (let k=0;k<horizon;k++){
+        const i = w + k; // extend from end of window
+        const pred = (a + b*i) + season[i % 7];
+        fc.push(pred);
+        lower.push(pred - 1.64*sigma);
+        upper.push(pred + 1.64*sigma);
+      }
+
+      // evaluate vs test
+      let ae = 0, ape = 0, m = test.length;
+      for (let i=0;i<m;i++){
+        const err = Math.abs(test[i] - fc[i]);
+        ae += err;
+        ape += (Math.abs(err / (Math.abs(test[i]) || 1e-9)));
+      }
+      const mae = ae / m;
+      const mape = (ape / m) * 100;
+
+      return {train, test, fc, lower, upper, mae, mape};
+    }
+
+    function pathFromPoints(points, x0, y0, w, h, ymin, ymax) {
+      const n = points.length;
+      const dx = w / Math.max(1, n-1);
+      const scaleY = (val) => {
+        const t = (val - ymin) / (ymax - ymin || 1e-9);
+        return y0 + (1 - t) * h;
+      };
+      let d = "";
+      for (let i=0;i<n;i++){
+        const x = x0 + i*dx;
+        const y = scaleY(points[i]);
+        d += (i===0 ? `M ${x.toFixed(2)} ${y.toFixed(2)}` : ` L ${x.toFixed(2)} ${y.toFixed(2)}`);
+      }
+      return d;
+    }
+
+    function bandPath(lower, upper, x0, y0, w, h, ymin, ymax) {
+      const n = lower.length;
+      const dx = w / Math.max(1, n-1);
+      const scaleY = (val) => {
+        const t = (val - ymin) / (ymax - ymin || 1e-9);
+        return y0 + (1 - t) * h;
+      };
+      let d = "";
+      for (let i=0;i<n;i++){
+        const x = x0 + i*dx;
+        const y = scaleY(upper[i]);
+        d += (i===0 ? `M ${x.toFixed(2)} ${y.toFixed(2)}` : ` L ${x.toFixed(2)} ${y.toFixed(2)}`);
+      }
+      for (let i=n-1;i>=0;i--){
+        const x = x0 + i*dx;
+        const y = scaleY(lower[i]);
+        d += ` L ${x.toFixed(2)} ${y.toFixed(2)}`;
+      }
+      d += " Z";
+      return d;
+    }
+
+    function drawGrid() {
+      const g = document.getElementById("grid");
+      g.innerHTML = "";
+      for (let i=1;i<=4;i++){
+        const y = 20 + i * 50;
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1","30"); line.setAttribute("x2","870");
+        line.setAttribute("y1", String(y)); line.setAttribute("y2", String(y));
+        line.setAttribute("stroke","rgba(255,255,255,0.10)");
+        line.setAttribute("stroke-width","1");
+        g.appendChild(line);
+      }
+      for (let i=1;i<=6;i++){
+        const x = 30 + i * 140;
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("y1","20"); line.setAttribute("y2","240");
+        line.setAttribute("x1", String(x)); line.setAttribute("x2", String(x));
+        line.setAttribute("stroke","rgba(255,255,255,0.08)");
+        line.setAttribute("stroke-width","1");
+        g.appendChild(line);
+      }
+    }
+
+    function run() {
+      drawGrid();
+
+      const kind = document.getElementById("series").value;
+      const horizon = parseInt(document.getElementById("horizon").value, 10);
+      const noise = parseInt(document.getElementById("noise").value, 10);
+      const seed = parseInt(document.getElementById("seed").value, 10);
+
+      const series = genSeries(kind, 120, noise, seed);
+      const res = backtestForecast(series, horizon);
+
+      // Combine for plotting: last 70 train points + test + fc
+      const tail = 70;
+      const hist = res.train.slice(Math.max(0, res.train.length - tail)).concat(res.test);
+      const fc = res.fc;
+
+      const allY = hist.concat(res.lower, res.upper);
+      const ymin = Math.min(...allY) - 3;
+      const ymax = Math.max(...allY) + 3;
+
+      // Plot area
+      const x0 = 30, y0 = 20, W = 840, H = 220;
+
+      document.getElementById("histPath").setAttribute(
+        "d",
+        pathFromPoints(hist, x0, y0, W*(hist.length/(hist.length+fc.length)), H, ymin, ymax)
+      );
+
+      // Forecast starts after hist end; shift forecast in x by hist length
+      // We create a path in its own coordinate and then translate by dx*histLen.
+      const fcW = W*(fc.length/(hist.length+fc.length));
+      const fcPath = pathFromPoints(fc, x0, y0, fcW, H, ymin, ymax);
+      const band = bandPath(res.lower, res.upper, x0, y0, fcW, H, ymin, ymax);
+
+      // Translate forecast to the right edge of hist plot
+      const dx = (W / Math.max(1, (hist.length+fc.length)-1));
+      const shift = dx*(hist.length-1);
+      document.getElementById("fcPath").setAttribute("d", fcPath);
+      document.getElementById("bandPath").setAttribute("d", band);
+      document.getElementById("fcPath").setAttribute("transform", `translate(${shift},0)`);
+      document.getElementById("bandPath").setAttribute("transform", `translate(${shift},0)`);
+
+      document.getElementById("mae").textContent = res.mae.toFixed(2);
+      document.getElementById("mape").textContent = res.mape.toFixed(1) + "%";
+
+      const meta = {
+        grid_load: "grid_load · daily",
+        asset_health: "asset_health · weekly-ish",
+        demand_spikes: "demand_spikes · daily"
+      };
+      document.getElementById("seriesMeta").textContent = "series: " + (meta[kind] || kind);
+    }
+
+    document.getElementById("run").addEventListener("click", run);
+    // run once on load
+    run();
   </script>
+
   <script src="/build-info.js"></script>
 </body>
 </html>
