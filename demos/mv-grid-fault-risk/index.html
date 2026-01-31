@@ -67,7 +67,7 @@
             <a class="btn" href="/api/mvgrid/health" target="_blank" rel="noopener">Proxy health</a>
           </div>
 
-          <div class="tags" style="margin-top:12px;">
+          <div class="tags mt-12">
             <span class="tag">Time-aware split</span>
             <span class="tag">Reproducible builds</span>
             <span class="tag">Deployment-ready artefacts</span>
@@ -80,7 +80,7 @@
             Score risk via a same-origin Cloudflare proxy (no CORS). If the upstream service was idle, the first request may take a moment to warm up.
           </p>
 
-          <div class="card project" style="padding:16px;">
+          <div class="card project p-16">
             <form id="score-form">
               <div class="grid">
                 <div class="col-6">
@@ -144,14 +144,14 @@
                   </label>
                 </div>
 
-                <div class="col-12" style="margin-top:6px;">
+                <div class="col-12 mt-6">
                   <button class="btn primary" type="submit">Score risk</button>
                   <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">Open Swagger</a>
                 </div>
               </div>
             </form>
 
-            <div id="result" style="margin-top:14px; color: var(--muted);"></div>
+            <div id="result" class="mt-14 muted"></div>
           </div>
         </article>
       </div>
@@ -227,8 +227,7 @@
             `fault probability (30d): <strong>${Number.isFinite(prob) ? prob.toFixed(3) : out.fault_probability_30d}</strong>`,
             `risk band: <strong>${band}</strong>`,
             `model: ${model}`
-          ]) +
-          `<div style="margin-top:10px;"><small>Live inference via Cloudflare proxy → Render FastAPI → versioned model artefact.</small></div>`;
+          ]) + `<div class="mt-10"><small>Live inference via Cloudflare proxy → Render FastAPI → versioned model artefact.</small></div>`;
 
       } catch (err) {
         resultEl.textContent = "Request failed: " + err.message;
