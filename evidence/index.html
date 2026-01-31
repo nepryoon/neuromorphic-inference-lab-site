@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Proof Ledger — Neuromorphic Inference Lab</title>
-  <meta name="description" content="Evidence-led portfolio mapping full-stack ML systems to proof artefacts: evaluation, CI/CD, serving, and monitoring." />
+  <meta name="description" content="Evidence-led portfolio: architectures, evaluation, CI/CD for ML, serving, monitoring, and reliability patterns." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
 </head>
@@ -32,15 +32,16 @@
       <h1 class="h1">Evidence over claims.</h1>
       <p class="sub">
         Short technical memos that make systems auditable: architecture decisions, evaluation signals,
-        deployment trade-offs, and monitoring. Built to support technical interviews and ATS screening.
+        deployment trade-offs, and monitoring plans. Written for technical screening.
       </p>
 
-      <div class="badges">
+      <div class="badges" aria-label="Core keywords">
+        <span class="badge">Evaluation Harness</span>
         <span class="badge">CI/CD for ML</span>
-        <span class="badge">Evaluation</span>
         <span class="badge">Model Serving</span>
-        <span class="badge">LLMOps</span>
         <span class="badge">Monitoring</span>
+        <span class="badge">LLMOps</span>
+        <span class="badge">Guardrails</span>
       </div>
     </section>
 
@@ -48,19 +49,55 @@
       <div class="grid">
         <article class="card col-6">
           <h3>RAG Knowledge Copilot — Evidence Memo</h3>
-          <p>Retrieval traceability, evaluation harness approach, and reliability patterns for document reality.</p>
-          <div class="actions">
+          <p>
+            Retrieval traceability, evaluation harness approach, and reliability patterns for document reality.
+            Includes explicit “what recruiters look for” signals and ATS keyword anchors.
+          </p>
+
+          <div class="tags" aria-label="Tags">
+            <span class="tag">Retrieval Tracing</span>
+            <span class="tag">Regression Prompts</span>
+            <span class="tag">Prompt Injection Defence</span>
+          </div>
+
+          <div class="actions" aria-label="Actions">
             <a class="btn primary" href="/evidence/rag-copilot/">Open memo</a>
             <a class="btn" href="/demos/rag-copilot/">Open system</a>
           </div>
         </article>
 
         <article class="card col-6">
-          <h3>NeuroGrid Fault Risk — Evidence</h3>
-          <p>Inference serving, model versioning, deployment integration, and operational constraints for grid analytics.</p>
-          <div class="actions">
+          <h3>NeuroGrid Fault Risk — Evidence Notes</h3>
+          <p>
+            Operational constraints, deployment integration, and inference serving considerations for grid analytics.
+            Links back to the live system demo and production API.
+          </p>
+
+          <div class="tags" aria-label="Tags">
+            <span class="tag">Inference Serving</span>
+            <span class="tag">Latency Budget</span>
+            <span class="tag">Artefact Versioning</span>
+          </div>
+
+          <div class="actions" aria-label="Actions">
             <a class="btn primary" href="/demos/mv-grid-fault-risk/">Open system</a>
-            <a class="btn" href="/demos/">Systems</a>
+            <a class="btn" href="/demos/">Back to systems</a>
+          </div>
+        </article>
+
+        <article class="card col-12">
+          <h3>What this ledger proves</h3>
+          <p class="muted" style="margin:0;">
+            This section exists to remove ambiguity: it links modelling claims to engineering artefacts.
+            It highlights evaluation signals, deployment decisions, monitoring plans, and failure modes — the difference between
+            a demo and a production-ready ML system.
+          </p>
+
+          <div class="badges" style="margin-top:12px;">
+            <span class="badge">Auditability</span>
+            <span class="badge">Failure Modes</span>
+            <span class="badge">Rollback Discipline</span>
+            <span class="badge">Observability</span>
           </div>
         </article>
       </div>
@@ -68,7 +105,7 @@
 
     <footer class="footer">
       <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
-      <div class="prov">
+      <div class="prov" aria-label="Build provenance">
         <span id="build-branch">branch: …</span>
         <span id="build-commit">commit: …</span>
         <span id="build-time">built: …</span>
