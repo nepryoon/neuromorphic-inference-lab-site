@@ -3,893 +3,391 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RAG Copilot | Neuromorphic Inference Lab</title>
-  <meta name="description" content="RAG Copilot demo: ask questions across a curated knowledge base and receive an answer with citations. Live endpoints and source code linked." />
-
-  <style>
-    :root{
-      --bg: #070A12;
-      --surface: rgba(255,255,255,.06);
-      --surface2: rgba(255,255,255,.08);
-      --border: rgba(255,255,255,.12);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.68);
-      --accent: #64FFDA;
-      --accent2: #7C5CFF;
-      --danger: #FF4D6D;
-      --ok: #43FBA4;
-      --warn: #FFCE57;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius: 18px;
-      --radius2: 14px;
-      --max: 1100px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-    }
-
-    *{ box-sizing: border-box; }
-    html, body{ height: 100%; }
-    body{
-      margin: 0;
-      font-family: var(--sans);
-      color: var(--text);
-      background:
-        radial-gradient(900px 600px at 20% 10%, rgba(124,92,255,.18), transparent 55%),
-        radial-gradient(900px 600px at 80% 20%, rgba(100,255,218,.14), transparent 55%),
-        radial-gradient(700px 450px at 40% 80%, rgba(124,92,255,.12), transparent 60%),
-        var(--bg);
-      line-height: 1.55;
-    }
-
-    a{ color: inherit; text-decoration: none; }
-    a:hover{ text-decoration: underline; text-underline-offset: 3px; }
-
-    .wrap{
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 20px 18px 46px;
-    }
-
-    /* Header */
-    header{
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      backdrop-filter: blur(10px);
-      background: linear-gradient(to bottom, rgba(7,10,18,.82), rgba(7,10,18,.50));
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
-    .nav{
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-    }
-    .brand{
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      letter-spacing: .2px;
-    }
-    .logo{
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(100,255,218,.95), rgba(100,255,218,.15) 58%, transparent 60%),
-        radial-gradient(circle at 70% 70%, rgba(124,92,255,.9), rgba(124,92,255,.18) 55%, transparent 57%),
-        rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 8px 22px rgba(0,0,0,.25);
-    }
-    nav ul{
-      list-style: none;
-      display: flex;
-      gap: 10px;
-      padding: 0;
-      margin: 0;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-    .pill{
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      color: var(--muted);
-      font-size: 14px;
-    }
-    .pill.active{
-      color: var(--text);
-      border-color: rgba(100,255,218,.35);
-      background: rgba(100,255,218,.08);
-    }
-
-    /* Hero */
-    .hero{
-      margin-top: 22px;
-      padding: 22px;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-    }
-    .hero:before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(420px 260px at 10% 20%, rgba(100,255,218,.20), transparent 55%),
-        radial-gradient(420px 260px at 90% 40%, rgba(124,92,255,.18), transparent 60%);
-      pointer-events:none;
-      filter: blur(1px);
-    }
-    .hero > *{ position: relative; }
-    h1{
-      margin: 0 0 8px;
-      font-size: clamp(28px, 4vw, 42px);
-      line-height: 1.12;
-      letter-spacing: .2px;
-    }
-    .subtitle{
-      margin: 0;
-      color: var(--muted);
-      max-width: 92ch;
-    }
-
-    .rowWrap{
-      margin-top: 14px;
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .btn{
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      font-weight: 600;
-      font-size: 14px;
-      box-shadow: 0 10px 20px rgba(0,0,0,.18);
-      cursor: pointer;
-    }
-    .btn:hover{ background: rgba(255,255,255,.08); text-decoration: none; }
-    .btn.primary{
-      border-color: rgba(100,255,218,.40);
-      background: linear-gradient(135deg, rgba(100,255,218,.18), rgba(124,92,255,.12));
-    }
-    .btn.ghost{
-      background: transparent;
-      border-color: rgba(255,255,255,.10);
-      box-shadow: none;
-    }
-    .btn:disabled{
-      opacity: .6;
-      cursor: not-allowed;
-    }
-
-    .kbd{
-      font-family: var(--mono);
-      font-size: 12px;
-      padding: 2px 8px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.25);
-      border-radius: 999px;
-      color: rgba(255,255,255,.78);
-    }
-
-    /* Layout */
-    .grid{
-      margin-top: 16px;
-      display: grid;
-      gap: 12px;
-      grid-template-columns: 1.35fr 0.65fr;
-      align-items: start;
-    }
-    @media (max-width: 980px){
-      .grid{ grid-template-columns: 1fr; }
-    }
-
-    .card{
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      box-shadow: 0 10px 24px rgba(0,0,0,.22);
-      padding: 16px;
-    }
-    .card h2{
-      margin: 0 0 8px;
-      font-size: 18px;
-      letter-spacing: .2px;
-    }
-    .muted{ color: var(--muted); }
-    .small{ font-size: 14px; }
-    .mono{ font-family: var(--mono); }
-
-    .divider{
-      height: 1px;
-      background: rgba(255,255,255,.08);
-      margin: 14px 0;
-    }
-
-    /* Try it UI */
-    .field{
-      display:flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 10px;
-    }
-    textarea{
-      width: 100%;
-      min-height: 120px;
-      resize: vertical;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.25);
-      color: var(--text);
-      padding: 12px 12px;
-      font-family: var(--sans);
-      outline: none;
-    }
-    textarea:focus{
-      border-color: rgba(100,255,218,.35);
-      box-shadow: 0 0 0 4px rgba(100,255,218,.08);
-    }
-
-    .controls{
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-top: 10px;
-    }
-
-    .badge{
-      display:inline-flex;
-      align-items: center;
-      gap:8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      font-size: 12px;
-      color: rgba(255,255,255,.78);
-      font-family: var(--mono);
-      white-space: nowrap;
-    }
-    .badge.ok{
-      border-color: rgba(67,251,164,.35);
-      background: rgba(67,251,164,.10);
-      color: rgba(255,255,255,.90);
-    }
-    .badge.bad{
-      border-color: rgba(255,77,109,.35);
-      background: rgba(255,77,109,.10);
-      color: rgba(255,255,255,.90);
-    }
-    .badge.warn{
-      border-color: rgba(255,206,87,.30);
-      background: rgba(255,206,87,.10);
-      color: rgba(255,255,255,.90);
-    }
-
-    .samples{
-      display:flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-
-    .chip{
-      display:inline-flex;
-      align-items: center;
-      gap:8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.18);
-      font-size: 12px;
-      color: rgba(255,255,255,.82);
-      cursor: pointer;
-      user-select: none;
-    }
-    .chip:hover{ background: rgba(255,255,255,.06); }
-
-    .output{
-      margin-top: 12px;
-      padding: 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
-    }
-    .output h3{
-      margin: 0 0 10px 0;
-      font-size: 16px;
-      letter-spacing: .2px;
-    }
-    .answer{
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      color: rgba(255,255,255,.90);
-    }
-
-    .sources{
-      margin-top: 12px;
-      display:grid;
-      gap: 10px;
-    }
-    .src{
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      padding: 12px;
-    }
-    .srcTop{
-      display:flex;
-      justify-content: space-between;
-      align-items: start;
-      gap: 12px;
-    }
-    .srcTitle{
-      font-weight: 700;
-      font-size: 14px;
-      line-height: 1.3;
-    }
-    .srcMeta{
-      display:flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-    .snippet{
-      margin-top: 8px;
-      font-size: 13px;
-      color: rgba(255,255,255,.78);
-      white-space: pre-wrap;
-    }
-
-    pre{
-      margin: 10px 0 0;
-      padding: 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.25);
-      overflow: auto;
-      font-family: var(--mono);
-      font-size: 12px;
-      color: rgba(255,255,255,.82);
-    }
-
-    /* Architecture mini diagram */
-    .diagram{
-      display:grid;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .node{
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
-      padding: 12px;
-    }
-    .nodeTitle{
-      font-weight: 800;
-      font-size: 13px;
-      letter-spacing: .3px;
-      text-transform: uppercase;
-      color: rgba(255,255,255,.80);
-      margin-bottom: 6px;
-    }
-    .nodeBody{
-      font-size: 13px;
-      color: rgba(255,255,255,.78);
-    }
-    .arrow{
-      font-family: var(--mono);
-      color: rgba(255,255,255,.55);
-      text-align: center;
-    }
-
-    footer{
-      margin-top: 24px;
-      color: rgba(255,255,255,.55);
-      font-size: 13px;
-    }
-  </style>
+  <title>RAG Knowledge Copilot — Systems</title>
+  <meta name="description" content="Retrieval-augmented generation demo: retrieval tracing, evaluation signals, and LLMOps-ready patterns." />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/style.css" />
 </head>
 
 <body>
-<header>
-  <div class="nav">
-    <a class="brand" href="/" aria-label="Neuromorphic Inference Lab Home">
-      <span class="logo" aria-hidden="true"></span>
-      <span>Neuromorphic Inference Lab</span>
-    </a>
-
-    <nav aria-label="Main navigation">
-      <ul>
-        <li><a class="pill" href="/">Home</a></li>
-        <li><a class="pill active" href="/demos/">Demos</a></li>
-        <li><a class="pill" href="/evidence/">Evidence</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
-
-<main class="wrap">
-  <section class="hero">
-    <h1>RAG Copilot</h1>
-    <p class="subtitle">
-      Ask questions across a curated knowledge base and receive an answer with <strong>citations</strong>.
-      Links below provide access to the live service and the implementation.
-    </p>
-
-    <div class="rowWrap">
-      <a class="btn primary" href="/evidence/">Evidence</a>
-
-      <a class="btn" href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">
-        Live API <span class="kbd">/health</span>
-      </a>
-      <a class="btn" href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">
-        Build info <span class="kbd">/version</span>
+  <header class="nav">
+    <div class="inner">
+      <a class="brand" href="/" aria-label="Neuromorphic Inference Lab home">
+        <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+        <span>Neuromorphic Inference Lab</span>
       </a>
 
-      <a class="btn" href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener noreferrer">
-        GitHub (app)
-      </a>
-      <a class="btn" href="https://github.com/nepryoon/nil-infra-template" target="_blank" rel="noopener noreferrer">
-        GitHub (infra)
-      </a>
-
-      <button class="btn ghost" id="btnCheck">Check endpoints</button>
-      <span class="badge" id="bHealth">health: unknown</span>
-      <span class="badge" id="bVersion">version: unknown</span>
+      <nav class="navlinks" aria-label="Primary navigation">
+        <a data-nav href="/">Signal</a>
+        <a data-nav href="/demos/" data-active="true">Systems</a>
+        <a data-nav href="/evidence/">Proof Ledger</a>
+        <a data-nav href="/about/">Identity</a>
+      </nav>
     </div>
+  </header>
 
-    <div class="divider"></div>
-    <p class="muted small mono" id="versionPreview">Version preview: —</p>
-  </section>
-
-  <section class="grid">
-    <!-- Left: Try it -->
-    <div class="card">
-      <h2>Try it</h2>
-      <p class="muted small">
-        This page calls <span class="mono">POST /rag/ask</span> and renders an answer plus citations.
-        If the endpoint is not available yet, you will see a clear error message.
+  <main class="container">
+    <section class="hero">
+      <p class="kicker">System · RAG / LLMOps</p>
+      <h1 class="h1">RAG Knowledge Copilot</h1>
+      <p class="sub">
+        A lightweight, ATS-readable demonstration of Retrieval-Augmented Generation concepts:
+        chunking, retrieval, traceability, and evaluation signals — designed for production-minded ML engineers.
       </p>
 
-      <div class="samples" aria-label="Sample questions">
-        <span class="chip" data-q="How is this project deployed on AWS (high level)?">AWS deployment</span>
-        <span class="chip" data-q="How can I confirm which build is running?">Confirm build</span>
-        <span class="chip" data-q="What is on the Evidence page?">Evidence page</span>
-        <span class="chip" data-q="What are the main steps in the RAG pipeline here?">RAG pipeline</span>
+      <div class="badges" aria-label="Core capabilities">
+        <span class="badge">RAG</span>
+        <span class="badge">LLMOps</span>
+        <span class="badge">Retrieval Tracing</span>
+        <span class="badge">Evaluation Harness</span>
+        <span class="badge">Observability-ready</span>
       </div>
+    </section>
 
-      <div class="field">
-        <label for="q" class="small" style="color: rgba(255,255,255,.82); font-weight: 700;">
-          Question
-        </label>
-        <textarea id="q" placeholder='Ask something… e.g. "How is the API deployed and how do I check it?"'></textarea>
+    <section class="section">
+      <div class="grid">
+        <article class="card col-6">
+          <h3>Ask a question</h3>
+          <p>Query the mini knowledge base. The system will retrieve the most relevant chunks and draft an answer grounded in the retrieved text.</p>
+
+          <div class="field">
+            <label for="q">Query</label>
+            <input id="q" type="text" placeholder="e.g. How does this RAG pipeline reduce hallucinations?" />
+            <div class="helper">Tip: try “chunking strategy”, “evaluation”, “vector store”, or “guardrails”.</div>
+          </div>
+
+          <div class="field">
+            <label for="k">Top-K retrieval</label>
+            <select id="k">
+              <option value="3">3</option>
+              <option value="5" selected>5</option>
+              <option value="8">8</option>
+            </select>
+          </div>
+
+          <div class="actions">
+            <button class="btn primary" id="run">Run retrieval</button>
+            <button class="btn" id="reset">Reset</button>
+            <a class="btn" href="/evidence/rag-copilot/">Proof ledger</a>
+          </div>
+
+          <hr class="hr" />
+
+          <h3>Answer draft</h3>
+          <p id="answer" style="margin:0;color:rgba(234,240,255,.84);">
+            Run a query to generate a grounded draft.
+          </p>
+
+          <div class="helper" id="meta" style="margin-top:10px;"></div>
+        </article>
+
+        <article class="card col-6">
+          <h3>Retrieval trace</h3>
+          <p>Top matches with similarity scores. This is the core artefact recruiters look for in RAG work: transparent retrieval + grounding.</p>
+
+          <div id="trace"></div>
+
+          <hr class="hr" />
+
+          <h3>Knowledge base (editable)</h3>
+          <p>Add a new document below; it will be chunked and indexed locally in your browser.</p>
+
+          <div class="field">
+            <label for="docTitle">Document title</label>
+            <input id="docTitle" type="text" placeholder="e.g. RAG Evaluation Notes" />
+          </div>
+
+          <div class="field">
+            <label for="docBody">Document text</label>
+            <textarea id="docBody" placeholder="Paste a short technical note (2–8 paragraphs)."></textarea>
+          </div>
+
+          <div class="actions">
+            <button class="btn" id="addDoc">Add to knowledge base</button>
+            <button class="btn" id="restore">Restore defaults</button>
+          </div>
+
+          <div class="helper" style="margin-top:10px;">
+            This demo is static by design (safe for a public portfolio). A production variant would call a secured API and store embeddings in a managed vector database.
+          </div>
+        </article>
+
+        <article class="card col-12">
+          <h3>Production architecture snapshot</h3>
+          <p style="margin:0;color:rgba(234,240,255,.78);">
+            <strong>Ingestion</strong> → chunking + metadata → embeddings → vector index → retrieval + re-ranking → prompt assembly →
+            <strong>LLM</strong> → citations + safety filters → monitoring (latency, cost, drift, answer quality).
+          </p>
+          <div class="badges" style="margin-top:12px;">
+            <span class="badge">Chunking</span>
+            <span class="badge">Embeddings</span>
+            <span class="badge">Vector Store</span>
+            <span class="badge">Re-ranking</span>
+            <span class="badge">Guardrails</span>
+            <span class="badge">Evaluation</span>
+          </div>
+        </article>
       </div>
+    </section>
 
-      <div class="controls">
-        <button class="btn primary" id="btnAsk">Ask</button>
-        <button class="btn" id="btnClear">Clear</button>
-        <span class="badge" id="bAsk">rag: idle</span>
-        <span class="badge warn" id="bMode">mode: demo</span>
+    <footer class="footer">
+      <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
+      <div class="prov">
+        <span id="build-branch">branch: …</span>
+        <span id="build-commit">commit: …</span>
+        <span id="build-time">built: …</span>
       </div>
+    </footer>
+  </main>
 
-      <div class="output" id="out" style="display:none;">
-        <h3>Result</h3>
-        <div class="answer" id="answer"></div>
+  <script>
+    document.getElementById("year").textContent = String(new Date().getFullYear());
 
-        <div class="divider"></div>
-        <div class="small muted" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-          <span class="mono" id="metaLine">meta: —</span>
-        </div>
+    // -----------------------------
+    // Minimal in-browser RAG demo
+    // (TF-IDF-ish vectors + cosine similarity)
+    // -----------------------------
 
-        <div class="divider"></div>
-        <h3 style="margin:0 0 10px 0; font-size: 16px;">Citations</h3>
-        <div class="sources" id="sources"></div>
-      </div>
+    const DEFAULT_DOCS = [
+      {
+        title: "RAG basics: grounding and hallucination control",
+        text:
+`Retrieval-Augmented Generation (RAG) reduces hallucinations by grounding the model response in retrieved documents.
+Instead of relying purely on parametric memory, the system retrieves relevant context (chunks) from a knowledge base.
+A production implementation should expose retrieval traces and citations to make the system auditable.`
+      },
+      {
+        title: "Chunking strategy and metadata",
+        text:
+`Chunking is a first-class design choice. Overly large chunks dilute relevance; overly small chunks lose coherence.
+Effective pipelines store metadata (source, section, timestamp, tags) to support filtering and governance.
+For technical screening, you should be able to explain chunk sizing, overlap, and how you evaluate retrieval quality.`
+      },
+      {
+        title: "Embeddings, vector stores, and retrieval",
+        text:
+`Embeddings convert text into vectors for similarity search. A vector store indexes embeddings and supports top-k retrieval.
+Common patterns include hybrid retrieval (BM25 + vectors) and re-ranking to improve precision at small k.
+Operational considerations include latency budgets, caching, and cost controls for embedding generation.`
+      },
+      {
+        title: "Evaluation harness for RAG (LLMOps)",
+        text:
+`RAG quality needs measurable evaluation: retrieval precision/recall, answer faithfulness, citation correctness, and robustness on edge cases.
+A good harness includes test sets, golden answers, and failure mode tagging (missing context, wrong context, prompt issues).
+In production, you log queries, retrieved chunks, latency, and user feedback to drive iterative improvements.`
+      },
+      {
+        title: "Reliability patterns and guardrails",
+        text:
+`Reliability patterns include: refusing when retrieval is empty, showing citations, enforcing structured outputs, and applying safety filters.
+Guardrails can block prompt injection, redact PII, and require source-based claims.
+For enterprise readiness, align with data governance policies and implement monitoring for drift and regressions.`
+      },
+      {
+        title: "Deployment notes: CI/CD and monitoring",
+        text:
+`A full-stack ML engineer treats RAG as a system: CI/CD for changes to prompts, retrievers, and evaluation sets.
+Monitoring should cover latency, error rate, cost per query, retrieval hit rate, and quality metrics over time.
+This is the difference between a demo and a production service.`
+      }
+    ];
 
-      <div class="output" id="errBox" style="display:none; border-color: rgba(255,77,109,.35); background: rgba(255,77,109,.08);">
-        <h3 style="margin:0 0 8px 0;">Error</h3>
-        <div class="small" id="errMsg" style="white-space: pre-wrap;"></div>
-      </div>
+    let docs = [];
+    let chunks = []; // {docTitle, chunkText, tokens, tf}
+    let idf = new Map(); // token -> idf
+    let vocab = new Set();
 
-      <div class="divider"></div>
+    const stop = new Set(["the","a","an","and","or","to","of","in","on","for","with","is","are","as","by","be","this","that","it","at","from"]);
 
-      <h2>API schema</h2>
-      <p class="muted small">
-        Request and response shapes used by the demo UI.
-      </p>
+    function normalise(s){
+      return s
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
 
-      <pre>{
-  "question": "…",
-  "top_k": 4
-}</pre>
+    function tokenize(s){
+      const t = normalise(s).split(" ").filter(x => x && x.length > 2 && !stop.has(x));
+      return t;
+    }
 
-      <pre>{
-  "answer": "…",
-  "sources": [
-    { "title": "…", "url": "…", "snippet": "…", "score": 0.87 }
-  ],
-  "meta": {
-    "trace_id": "…",
-    "latency_ms": 123,
-    "mode": "retrieval-only|llm",
-    "version": "0.0.x",
-    "git_sha": "…"
-  }
-}</pre>
+    function chunkText(text, maxTokens=70, overlap=12){
+      const toks = tokenize(text);
+      const out = [];
+      let i = 0;
+      while(i < toks.length){
+        const slice = toks.slice(i, i + maxTokens);
+        out.push(slice.join(" "));
+        i += (maxTokens - overlap);
+      }
+      return out.length ? out : [normalise(text)];
+    }
 
-      <pre>curl -s -X POST https://api.neuromorphicinference.com/rag/ask \
-  -H "Content-Type: application/json" \
-  -d '{"question":"How is this deployed?","top_k":4}'</pre>
-    </div>
+    function rebuildIndex(){
+      chunks = [];
+      vocab = new Set();
 
-    <!-- Right: What it does + architecture -->
-    <aside class="card">
-      <h2>Overview</h2>
-      <ul class="small" style="margin:10px 0 0; padding-left:18px; color: rgba(255,255,255,.82);">
-        <li><strong>RAG behaviour:</strong> answers are returned with citations (URLs + snippets).</li>
-        <li><strong>Simple API contract:</strong> predictable JSON with structured metadata.</li>
-        <li><strong>Live service:</strong> health and build endpoints are available above.</li>
-      </ul>
+      // build chunks + TF
+      for(const d of docs){
+        const parts = chunkText(d.text, 80, 14);
+        for(const p of parts){
+          const toks = tokenize(p);
+          const tf = new Map();
+          for(const tok of toks){
+            vocab.add(tok);
+            tf.set(tok, (tf.get(tok) || 0) + 1);
+          }
+          chunks.push({ docTitle: d.title, chunkText: p, tokens: toks, tf });
+        }
+      }
 
-      <div class="divider"></div>
+      // IDF
+      idf = new Map();
+      const N = chunks.length || 1;
+      for(const tok of vocab){
+        let df = 0;
+        for(const c of chunks){
+          if(c.tf.has(tok)) df += 1;
+        }
+        const val = Math.log((N + 1) / (df + 1)) + 1; // smoothed
+        idf.set(tok, val);
+      }
+    }
 
-      <h2>Architecture</h2>
-      <p class="muted small">
-        A high-level view of the demo flow.
-      </p>
+    function vectorise(tokens){
+      const v = new Map();
+      for(const t of tokens){
+        const w = idf.get(t) || 1;
+        v.set(t, (v.get(t) || 0) + w);
+      }
+      return v;
+    }
 
-      <div class="diagram" role="img" aria-label="Architecture diagram">
-        <div class="node">
-          <div class="nodeTitle">Client</div>
-          <div class="nodeBody">This page (<span class="mono">/demos/rag-copilot/</span>) calls the API.</div>
-        </div>
-        <div class="arrow">↓ HTTPS</div>
-        <div class="node">
-          <div class="nodeTitle">ALB + TLS</div>
-          <div class="nodeBody">Routes traffic to ECS. Health checks on <span class="mono">/health</span>.</div>
-        </div>
-        <div class="arrow">↓</div>
-        <div class="node">
-          <div class="nodeTitle">ECS Fargate</div>
-          <div class="nodeBody">FastAPI container. Endpoints: <span class="mono">/health</span>, <span class="mono">/version</span>, <span class="mono">/rag/ask</span>.</div>
-        </div>
-        <div class="arrow">↓</div>
-        <div class="node">
-          <div class="nodeTitle">RAG core</div>
-          <div class="nodeBody">
-            Chunk → index → retrieve top-k → answer (+ citations). LLM optional.
+    function cosine(a,b){
+      let dot = 0;
+      let na = 0;
+      let nb = 0;
+
+      for(const [k,va] of a.entries()){
+        na += va * va;
+        const vb = b.get(k);
+        if(vb) dot += va * vb;
+      }
+      for(const vb of b.values()){
+        nb += vb * vb;
+      }
+      na = Math.sqrt(na) || 1e-9;
+      nb = Math.sqrt(nb) || 1e-9;
+      return dot / (na * nb);
+    }
+
+    function topK(query, k){
+      const qtoks = tokenize(query);
+      const qv = vectorise(qtoks);
+
+      const scored = chunks.map((c) => {
+        const cv = vectorise(c.tokens);
+        const s = cosine(qv, cv);
+        return { ...c, score: s };
+      });
+
+      scored.sort((x,y) => y.score - x.score);
+      return scored.slice(0, k);
+    }
+
+    function escapeHtml(s){
+      return s.replace(/[&<>"]/g, (ch) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[ch]));
+    }
+
+    function renderTrace(items){
+      const el = document.getElementById("trace");
+      if(!items.length){
+        el.innerHTML = `<p style="margin:0;color:rgba(234,240,255,.75);">No matches. Try a more specific query.</p>`;
+        return;
+      }
+
+      el.innerHTML = items.map((it, idx) => `
+        <div style="padding:12px;border:1px solid rgba(255,255,255,.10);border-radius:16px;background:rgba(255,255,255,.04);margin:0 0 10px;">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;">
+            <div style="font-weight:650;">${idx+1}. ${escapeHtml(it.docTitle)}</div>
+            <div style="color:rgba(234,240,255,.70);font-size:12px;">score: ${it.score.toFixed(3)}</div>
+          </div>
+          <div style="margin-top:8px;color:rgba(234,240,255,.78);font-size:13px;">
+            ${escapeHtml(it.chunkText)}
           </div>
         </div>
-      </div>
+      `).join("");
+    }
 
-      <div class="divider"></div>
+    function draftAnswer(query, items){
+      if(!items.length){
+        return "I can’t find relevant context in the current knowledge base. Add a document or refine the query.";
+      }
 
-      <h2>Links</h2>
-      <div class="small" style="display:grid; gap:10px;">
-        <a class="btn" style="justify-content: space-between;" href="https://api.neuromorphicinference.com/health" target="_blank" rel="noopener noreferrer">
-          <span>Open /health</span><span class="kbd">200</span>
-        </a>
-        <a class="btn" style="justify-content: space-between;" href="https://api.neuromorphicinference.com/version" target="_blank" rel="noopener noreferrer">
-          <span>Open /version</span><span class="kbd">build</span>
-        </a>
-        <a class="btn" style="justify-content: space-between;" href="/evidence/">
-          <span>Evidence</span><span class="kbd">notes</span>
-        </a>
-      </div>
+      const best = items[0];
+      return (
+`Grounded draft (from retrieved context): ${best.chunkText}
 
-      <div class="divider"></div>
+Operational note: in a production RAG system, this draft would be generated by an LLM with strict citation rules, prompt-injection defences, and monitoring for drift and regressions.`
+      );
+    }
 
-      <p class="muted small">
-        Tip: if <span class="mono">/rag/ask</span> is not yet deployed, you can still verify the service via
-        <span class="mono">/health</span> and <span class="mono">/version</span>.
-      </p>
-    </aside>
-  </section>
+    // UI wiring
+    function init(){
+      docs = JSON.parse(JSON.stringify(DEFAULT_DOCS));
+      rebuildIndex();
 
-  <footer>
-    <div>© <span id="year"></span> Neuromorphic Inference Lab — RAG Copilot</div>
-  </footer>
-</main>
+      document.getElementById("run").addEventListener("click", () => {
+        const q = document.getElementById("q").value.trim();
+        const k = parseInt(document.getElementById("k").value, 10);
 
-<script>
-  const API_BASE = "https://api.neuromorphicinference.com";
+        const t0 = performance.now();
+        const items = q ? topK(q, k) : [];
+        const t1 = performance.now();
 
-  const els = {
-    year: document.getElementById("year"),
-    btnCheck: document.getElementById("btnCheck"),
-    bHealth: document.getElementById("bHealth"),
-    bVersion: document.getElementById("bVersion"),
-    versionPreview: document.getElementById("versionPreview"),
+        renderTrace(items);
 
-    q: document.getElementById("q"),
-    btnAsk: document.getElementById("btnAsk"),
-    btnClear: document.getElementById("btnClear"),
-    bAsk: document.getElementById("bAsk"),
-    bMode: document.getElementById("bMode"),
+        const answer = q ? draftAnswer(q, items) : "Enter a query to generate a grounded draft.";
+        document.getElementById("answer").textContent = answer;
 
-    out: document.getElementById("out"),
-    answer: document.getElementById("answer"),
-    sources: document.getElementById("sources"),
-    metaLine: document.getElementById("metaLine"),
-
-    errBox: document.getElementById("errBox"),
-    errMsg: document.getElementById("errMsg"),
-  };
-
-  els.year.textContent = new Date().getFullYear();
-
-  function setBadge(el, text, state) {
-    el.textContent = text;
-    el.classList.remove("ok", "bad", "warn");
-    if (state) el.classList.add(state);
-  }
-
-  async function fetchWithTimeout(url, opts = {}, ms = 4500) {
-    const ctrl = new AbortController();
-    const t = setTimeout(() => ctrl.abort(), ms);
-    try {
-      const res = await fetch(url, {
-        ...opts,
-        signal: ctrl.signal,
-        headers: {
-          "Accept": "application/json",
-          ...(opts.headers || {})
-        }
+        const meta = q
+          ? `Latency: ${(t1 - t0).toFixed(1)} ms · Chunks indexed: ${chunks.length} · Keywords: CI/CD for ML, Feature Stores, Automated Retraining, Inference Scaling, RAG, LLMOps`
+          : "";
+        document.getElementById("meta").textContent = meta;
       });
-      clearTimeout(t);
-      return res;
-    } catch (e) {
-      clearTimeout(t);
-      throw e;
-    }
-  }
 
-  function showError(msg) {
-    els.errMsg.textContent = msg;
-    els.errBox.style.display = "block";
-  }
+      document.getElementById("reset").addEventListener("click", () => {
+        document.getElementById("q").value = "";
+        document.getElementById("answer").textContent = "Run a query to generate a grounded draft.";
+        document.getElementById("trace").innerHTML = "";
+        document.getElementById("meta").textContent = "";
+      });
 
-  function hideError() {
-    els.errMsg.textContent = "";
-    els.errBox.style.display = "none";
-  }
+      document.getElementById("addDoc").addEventListener("click", () => {
+        const title = document.getElementById("docTitle").value.trim() || "Untitled note";
+        const body = document.getElementById("docBody").value.trim();
+        if(!body){
+          alert("Please paste some document text before adding.");
+          return;
+        }
+        docs.unshift({ title, text: body });
+        rebuildIndex();
+        document.getElementById("docTitle").value = "";
+        document.getElementById("docBody").value = "";
+        alert(`Added: "${title}" (index rebuilt).`);
+      });
 
-  function showOutput() {
-    els.out.style.display = "block";
-  }
-
-  function hideOutput() {
-    els.out.style.display = "none";
-    els.answer.textContent = "";
-    els.sources.innerHTML = "";
-    els.metaLine.textContent = "meta: —";
-  }
-
-  function renderSources(sources = []) {
-    els.sources.innerHTML = "";
-    if (!sources.length) {
-      const empty = document.createElement("div");
-      empty.className = "muted small";
-      empty.textContent = "No citations returned.";
-      els.sources.appendChild(empty);
-      return;
+      document.getElementById("restore").addEventListener("click", () => {
+        docs = JSON.parse(JSON.stringify(DEFAULT_DOCS));
+        rebuildIndex();
+        alert("Default knowledge base restored.");
+      });
     }
 
-    sources.forEach((s, idx) => {
-      const card = document.createElement("div");
-      card.className = "src";
-
-      const top = document.createElement("div");
-      top.className = "srcTop";
-
-      const left = document.createElement("div");
-      left.style.minWidth = "0";
-
-      const title = document.createElement("div");
-      title.className = "srcTitle";
-      title.textContent = s.title || `Source ${idx + 1}`;
-
-      const url = document.createElement("div");
-      url.className = "muted small mono";
-      url.style.marginTop = "2px";
-      url.style.overflow = "hidden";
-      url.style.textOverflow = "ellipsis";
-      url.style.whiteSpace = "nowrap";
-
-      if (s.url) {
-        const a = document.createElement("a");
-        a.href = s.url;
-        a.target = "_blank";
-        a.rel = "noopener noreferrer";
-        a.textContent = s.url;
-        url.appendChild(a);
-      } else {
-        url.textContent = "—";
-      }
-
-      left.appendChild(title);
-      left.appendChild(url);
-
-      const meta = document.createElement("div");
-      meta.className = "srcMeta";
-
-      const b1 = document.createElement("span");
-      b1.className = "badge";
-      const score = (typeof s.score === "number") ? s.score.toFixed(2) : "n/a";
-      b1.textContent = `score=${score}`;
-
-      const b2 = document.createElement("span");
-      b2.className = "badge";
-      const kind = s.kind || "chunk";
-      b2.textContent = kind;
-
-      meta.appendChild(b1);
-      meta.appendChild(b2);
-
-      top.appendChild(left);
-      top.appendChild(meta);
-
-      const snippet = document.createElement("div");
-      snippet.className = "snippet";
-      snippet.textContent = s.snippet || "";
-
-      card.appendChild(top);
-      card.appendChild(snippet);
-
-      els.sources.appendChild(card);
-    });
-  }
-
-  async function checkEndpoints() {
-    setBadge(els.bHealth, "health: checking…", null);
-    setBadge(els.bVersion, "version: checking…", null);
-    els.versionPreview.textContent = "Version preview: checking…";
-
-    try {
-      const r = await fetchWithTimeout(`${API_BASE}/health`, {}, 3500);
-      if (r.ok) setBadge(els.bHealth, "health: 200 OK", "ok");
-      else setBadge(els.bHealth, `health: ${r.status}`, "bad");
-    } catch {
-      setBadge(els.bHealth, "health: down/timeout", "bad");
-    }
-
-    try {
-      const r = await fetchWithTimeout(`${API_BASE}/version`, {}, 3500);
-      if (!r.ok) {
-        setBadge(els.bVersion, `version: ${r.status}`, "bad");
-        els.versionPreview.textContent = "Version preview: unavailable";
-        return;
-      }
-      const data = await r.json();
-      setBadge(els.bVersion, "version: 200 OK", "ok");
-
-      const v = data?.version ?? "unknown";
-      const sha = data?.git_sha ?? "unknown";
-      els.versionPreview.textContent = `Version preview: version=${v} | git_sha=${sha}`;
-    } catch {
-      setBadge(els.bVersion, "version: down/timeout", "bad");
-      els.versionPreview.textContent = "Version preview: unavailable";
-    }
-  }
-
-  async function askRag() {
-    const question = (els.q.value || "").trim();
-    if (!question) {
-      hideOutput();
-      showError("Please type a question first.");
-      setBadge(els.bAsk, "rag: missing question", "warn");
-      return;
-    }
-
-    hideError();
-    hideOutput();
-
-    els.btnAsk.disabled = true;
-    setBadge(els.bAsk, "rag: calling…", "warn");
-
-    const t0 = performance.now();
-
-    try {
-      const r = await fetchWithTimeout(`${API_BASE}/rag/ask`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, top_k: 4 })
-      }, 12000);
-
-      const t1 = performance.now();
-
-      let data = null;
-      const text = await r.text();
-      try { data = JSON.parse(text); } catch { data = { raw: text }; }
-
-      if (!r.ok) {
-        const detail = data?.detail
-          ? (typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail))
-          : null;
-
-        const msg = [
-          `HTTP ${r.status}`,
-          detail ? `detail: ${detail}` : null,
-          "If this is your first time trying it, ensure /rag/ask is deployed and CORS allows this origin."
-        ].filter(Boolean).join("\n");
-
-        showError(msg);
-        setBadge(els.bAsk, `rag: ${r.status}`, "bad");
-        return;
-      }
-
-      const answer = data?.answer ?? "(No 'answer' field returned.)";
-      const sources = Array.isArray(data?.sources) ? data.sources : [];
-      const meta = data?.meta ?? {};
-
-      els.answer.textContent = answer;
-      renderSources(sources);
-
-      const latency = meta.latency_ms ?? Math.round(t1 - t0);
-      const trace = meta.trace_id ?? "—";
-      const mode = meta.mode ?? "—";
-      const ver = meta.version ?? "—";
-      const sha = meta.git_sha ?? "—";
-
-      els.metaLine.textContent = `meta: latency_ms=${latency} | mode=${mode} | trace_id=${trace} | version=${ver} | git_sha=${sha}`;
-
-      setBadge(els.bAsk, `rag: 200 OK (${latency}ms)`, "ok");
-      setBadge(els.bMode, `mode: ${mode}`, mode === "llm" ? "ok" : "warn");
-
-      showOutput();
-
-    } catch (e) {
-      const msg = (e && e.name === "AbortError")
-        ? "Request timed out. The service may be starting up, or /rag/ask is not reachable."
-        : `Network error: ${e?.message || e}`;
-      showError(msg);
-      setBadge(els.bAsk, "rag: network error", "bad");
-    } finally {
-      els.btnAsk.disabled = false;
-    }
-  }
-
-  document.querySelectorAll(".chip").forEach(ch => {
-    ch.addEventListener("click", () => {
-      const q = ch.getAttribute("data-q") || "";
-      els.q.value = q;
-      els.q.focus();
-    });
-  });
-
-  els.btnCheck.addEventListener("click", checkEndpoints);
-  els.btnAsk.addEventListener("click", askRag);
-  els.btnClear.addEventListener("click", () => {
-    els.q.value = "";
-    hideError();
-    hideOutput();
-    setBadge(els.bAsk, "rag: idle", null);
-  });
-
-  window.addEventListener("load", () => setTimeout(checkEndpoints, 250));
-</script>
+    init();
+  </script>
+  <script src="/build-info.js"></script>
 </body>
 </html>
