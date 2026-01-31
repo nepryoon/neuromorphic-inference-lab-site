@@ -3,143 +3,86 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RAG Copilot — Systems</title>
-  <meta name="description" content="RAG Knowledge Copilot: retrieval tracing, grounded drafting, evaluation harness patterns, and LLMOps reliability signals." />
+  <title>RAG Knowledge Copilot — Neuromorphic Inference Lab</title>
+  <meta name="description" content="RAG Knowledge Copilot: retrieval tracing, grounded drafting, guardrails, and evaluation mindset — a Cloudflare-safe, client-only LLMOps demo." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
 
   <style>
-    /* Page-specific layout (kept minimal, ATS-friendly) */
-    .demoGrid { display:grid; grid-template-columns: 1fr; gap: 14px; }
-    @media (min-width: 980px){ .demoGrid { grid-template-columns: 1.15fr 0.85fr; } }
-
-    .row { display:flex; flex-wrap:wrap; gap: 10px; align-items:center; }
-    .row > * { flex: 1 1 auto; }
-
-    .label { font-size: 13px; color: rgba(234,240,255,.74); margin: 0 0 6px; }
-    .helper { font-size: 12px; color: rgba(234,240,255,.68); margin-top: 6px; line-height: 1.5; }
-
-    .textarea {
-      width: 100%;
-      min-height: 140px;
-      resize: vertical;
-      padding: 12px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.20);
-      color: rgba(234,240,255,.92);
-      outline: none;
-      line-height: 1.55;
-    }
-    .textarea:focus{
-      border-color: rgba(110,231,255,.45);
-      box-shadow: 0 0 0 3px rgba(110,231,255,.12);
-    }
-
-    .split { display:grid; grid-template-columns: 1fr; gap: 12px; }
-    @media (min-width: 980px){ .split { grid-template-columns: 1fr; } }
-
-    .pill {
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      font-size: 12px;
-      color: rgba(234,240,255,.88);
-    }
-
-    .outBox {
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-      border-radius: 16px;
-      padding: 14px;
-    }
-
+    /* Minimal page-specific styles, consistent with site language */
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-    .small { font-size: 12px; color: rgba(234,240,255,.70); }
-
-    .answer {
-      white-space: pre-wrap;
-      line-height: 1.6;
-      color: rgba(234,240,255,.92);
-      margin: 0;
-    }
-
-    .trace {
-      display:flex;
-      flex-direction:column;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .src {
+    .muted { color: rgba(234,240,255,.74); }
+    .tiny { font-size: 12px; line-height: 1.55; color: rgba(234,240,255,.72); }
+    .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .stack { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    @media (min-width: 980px){ .stack { grid-template-columns: 1.25fr .75fr; } }
+    .field { display: grid; gap: 8px; }
+    .input, .textarea, .select {
+      width: 100%;
+      border-radius: 14px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
-      border-radius: 14px;
-      padding: 12px;
-    }
-
-    .srcHead {
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap: 10px;
-      margin-bottom: 6px;
-    }
-
-    .srcTitle {
-      font-weight: 700;
-      font-size: 13px;
       color: rgba(234,240,255,.92);
+      padding: 12px 12px;
+      outline: none;
     }
-
-    .srcMeta {
-      font-size: 12px;
-      color: rgba(234,240,255,.68);
-      white-space: nowrap;
+    .textarea { min-height: 120px; resize: vertical; }
+    .input::placeholder, .textarea::placeholder { color: rgba(234,240,255,.45); }
+    .panel {
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      border-radius: 18px;
+      padding: 14px;
     }
-
-    .srcText {
-      font-size: 13px;
-      color: rgba(234,240,255,.78);
-      line-height: 1.55;
-    }
-
-    .divider {
-      border:0;
-      border-top: 1px solid rgba(255,255,255,.10);
-      margin: 14px 0;
-    }
-
-    .warn {
-      border-color: rgba(255,180,120,.22);
-      background: rgba(255,180,120,.06);
-    }
-
-    .ok {
-      border-color: rgba(52,211,153,.20);
-      background: rgba(52,211,153,.05);
-    }
-
-    .danger {
-      border-color: rgba(255,120,120,.22);
-      background: rgba(255,120,120,.06);
-    }
-
-    details summary { cursor: pointer; }
-    details summary:hover { opacity: .9; }
-
-    .kv {
-      display:grid;
+    .policy {
+      display: grid;
       grid-template-columns: 1fr;
       gap: 10px;
     }
-    @media (min-width: 980px){ .kv { grid-template-columns: 1fr 1fr; } }
-
-    .kbd {
+    .policy label {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+      cursor: pointer;
+    }
+    .policy input { margin-top: 3px; }
+    .hr { border: 0; border-top: 1px solid rgba(255,255,255,.10); margin: 12px 0; }
+    details.trace > summary {
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+      font-weight: 600;
+    }
+    details.trace > summary::-webkit-details-marker { display: none; }
+    .traceList { display: grid; gap: 10px; margin-top: 10px; }
+    .hit {
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      border-radius: 14px;
+      padding: 10px;
+    }
+    .hitTop {
+      display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+      align-items: baseline;
+    }
+    .scoreBar {
+      width: 160px;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      overflow: hidden;
+    }
+    .scoreFill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(88,211,255,.75), rgba(161,120,255,.75));
+    }
+    .kbd{
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size: 12px;
       padding: 2px 7px;
@@ -148,6 +91,23 @@
       background: rgba(0,0,0,.20);
       color: rgba(234,240,255,.88);
     }
+    .toast {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 18px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.55);
+      color: rgba(234,240,255,.92);
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
+      max-width: min(560px, 92vw);
+    }
+    .toast.show { opacity: 1; }
   </style>
 </head>
 
@@ -158,7 +118,6 @@
         <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
         <span>Neuromorphic Inference Lab</span>
       </div>
-
       <nav class="navlinks" aria-label="Primary navigation">
         <a data-nav href="/">Signal</a>
         <a data-nav class="active" href="/demos/">Systems</a>
@@ -170,156 +129,140 @@
 
   <main class="container">
     <section class="hero">
-      <p class="kicker">System · RAG / LLMOps</p>
+      <p class="kicker">System</p>
       <h1 class="h1">RAG Knowledge Copilot</h1>
       <p class="sub">
-        A browser-only RAG demo that prioritises the hiring signals that matter:
-        <strong>retrieval traceability</strong>, <strong>grounded drafting</strong>, and a minimal <strong>evaluation harness</strong> mindset.
-        Safe for a public Cloudflare site (no backend; no external calls).
+        A client-only RAG demo that surfaces production signals: <strong>retrieval tracing</strong>, <strong>grounded drafting</strong>,
+        <strong>guardrails</strong>, and an <strong>evaluation mindset</strong>. Designed to be reliable on Cloudflare Pages
+        (no backend calls, no CORS failure modes).
       </p>
 
-      <div class="badges" aria-label="ATS keywords">
+      <div class="badges">
         <span class="badge">RAG</span>
         <span class="badge">LLMOps</span>
         <span class="badge">Retrieval Tracing</span>
-        <span class="badge">Evaluation Harness</span>
         <span class="badge">Guardrails</span>
-        <span class="badge">CI/CD for Prompts</span>
+        <span class="badge">Evaluation Harness</span>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <!-- Breadcrumb -->
+      <div class="tags" aria-label="Breadcrumb">
+        <a class="tag" href="/">Signal</a>
+        <span class="tag">→</span>
+        <a class="tag" href="/demos/">Systems</a>
+        <span class="tag">→</span>
+        <a class="tag" href="/evidence/">Proof Ledger</a>
+        <span class="tag">→</span>
+        <a class="tag" href="/evidence/rag-copilot/">Evidence memo</a>
       </div>
 
       <div style="height:14px"></div>
 
       <div class="actions">
-        <a class="btn primary" href="/evidence/rag-copilot/">Read evidence memo</a>
-        <a class="btn" href="/demos/">Back to Systems</a>
-        <a class="btn" href="https://github.com/nepryoon/neuromorphic-inference-lab-site/tree/main/demos/rag-copilot" target="_blank" rel="noopener">Source (site repo)</a>
+        <a class="btn" href="/evidence/#rag-copilot">Proof anchor</a>
+        <a class="btn" href="/evidence/rag-copilot/">Open memo</a>
+        <a class="btn primary" href="/demos/">Systems index</a>
       </div>
     </section>
 
     <section class="section">
-      <div class="demoGrid">
-        <!-- LEFT: INPUT + OUTPUT -->
+      <div class="stack">
+
+        <!-- Main interaction -->
         <article class="card">
-          <h3>Ask a question</h3>
-          <p class="small">
-            Tip: use questions that demand citations (policies, procedures, definitions). The system refuses if retrieval is weak.
-            Shortcut: <span class="kbd">Ctrl</span> + <span class="kbd">Enter</span> to run.
+          <h2>Ask a question</h2>
+          <p class="lead">
+            This demo does not “hallucinate”: it drafts only from retrieved sources. If evidence is weak, it refuses (Strict policy).
           </p>
 
-          <div style="height:10px"></div>
-
-          <div class="row">
-            <div style="min-width:220px;">
-              <div class="label">Corpus</div>
-              <select id="corpus" class="select" aria-label="Select corpus">
-                <option value="ops" selected>Operations Handbook (synthetic)</option>
-                <option value="mlops">MLOps Runbook (synthetic)</option>
-                <option value="security">Security & Governance (synthetic)</option>
-              </select>
-              <div class="helper">Synthetic documents generated for portfolio use; designed to demonstrate retrieval patterns.</div>
-            </div>
-
-            <div style="min-width:220px;">
-              <div class="label">Top-k retrieval</div>
-              <select id="topk" class="select" aria-label="Select top-k">
-                <option value="2">2</option>
-                <option value="3" selected>3</option>
-                <option value="4">4</option>
-              </select>
-              <div class="helper">Higher k increases recall; can reduce precision if corpus is noisy.</div>
-            </div>
-
-            <div style="min-width:220px;">
-              <div class="label">Guardrail</div>
-              <select id="policy" class="select" aria-label="Select guardrail policy">
-                <option value="strict" selected>Strict: refuse on weak retrieval</option>
-                <option value="soft">Soft: answer with caveats</option>
-              </select>
-              <div class="helper">Production-safe default is strict.</div>
-            </div>
+          <div class="field">
+            <label class="tiny" for="q">Query</label>
+            <input id="q" class="input" type="text" placeholder="e.g. What should be monitored for deployed ML models? Provide citations." />
           </div>
 
-          <div style="height:12px"></div>
-
-          <div class="label">Query</div>
-          <textarea id="q" class="textarea" placeholder="Example: What is the recommended monitoring approach for deployed ML models, and which metrics should be tracked? Provide citations."></textarea>
-
-          <div style="height:10px"></div>
-
-          <div class="actions">
+          <div class="row" style="margin-top:10px;">
             <button id="run" class="btn primary" type="button">Run retrieval + draft</button>
-            <button id="copy" class="btn" type="button">Copy answer</button>
-            <button id="export" class="btn" type="button">Export trace JSON</button>
+            <button id="clear" class="btn" type="button">Clear</button>
+            <button id="copyTrace" class="btn" type="button">Export trace JSON</button>
+            <button id="copyCites" class="btn" type="button">Copy citations</button>
           </div>
 
-          <hr class="divider" />
+          <div class="hr"></div>
 
-          <h3>Answer</h3>
-          <div id="status" class="outBox warn" aria-live="polite">
-            <div class="row" style="justify-content:space-between;">
-              <span class="pill">Status: <span id="statusText" class="mono">idle</span></span>
-              <span class="pill">Retrieval: <span id="retQuality" class="mono">—</span></span>
-              <span class="pill">Policy: <span id="polOut" class="mono">strict</span></span>
+          <div class="field">
+            <label class="tiny">Answer (grounded draft)</label>
+            <div id="answer" class="panel">
+              <p class="muted" style="margin:0;">
+                Run a query to see a grounded draft with citations. Use <span class="kbd">Strict</span> to enforce refusals on weak evidence.
+              </p>
             </div>
-            <div style="height:10px"></div>
-            <p id="ans" class="answer">Run the system to generate an answer with citations.</p>
           </div>
 
-          <details style="margin-top:12px;">
-            <summary class="small">Show retrieval trace</summary>
-            <div id="trace" class="trace"></div>
+          <div style="height:10px"></div>
+
+          <details class="trace" id="traceBox">
+            <summary>Retrieval trace (top-k sources, similarity, snippets)</summary>
+            <div id="trace" class="traceList"></div>
           </details>
+
+          <p class="tiny" style="margin-top:10px;">
+            Screening signal: a reviewer can verify faithfulness by comparing the answer to the retrieved snippets.
+          </p>
         </article>
 
-        <!-- RIGHT: WHAT IT PROVES + EVAL MINDSET -->
+        <!-- Right panel -->
         <aside class="card">
-          <h3>What this proves</h3>
-          <p class="small">
-            This demo intentionally emphasises operational signals recruiters expect from a production RAG build.
+          <h2>Policy & examples</h2>
+          <p class="tiny">
+            Choose how strict the system should be when evidence is weak. This models real LLMOps trade-offs.
           </p>
 
-          <div class="kv" style="margin-top:12px;">
-            <div class="outBox ok">
-              <div class="mono" style="font-weight:700;">Retrieval tracing</div>
-              <div class="small" style="margin-top:6px;">
-                Shows top-k sources with similarity, snippets, and citation anchors.
+          <div class="policy" role="radiogroup" aria-label="Policy mode">
+            <label>
+              <input type="radio" name="policy" value="strict" checked />
+              <div>
+                <strong>Strict (recommended)</strong><br />
+                <span class="tiny">Refuses if top similarity is below threshold. Optimised for reliability and auditability.</span>
               </div>
-            </div>
-            <div class="outBox ok">
-              <div class="mono" style="font-weight:700;">Grounded drafting</div>
-              <div class="small" style="margin-top:6px;">
-                The answer is constrained to retrieved context; weak retrieval triggers refusal or caveats.
+            </label>
+
+            <label>
+              <input type="radio" name="policy" value="lenient" />
+              <div>
+                <strong>Lenient</strong><br />
+                <span class="tiny">Drafts a cautious answer even with weaker retrieval, but still cites sources and flags uncertainty.</span>
               </div>
-            </div>
-            <div class="outBox warn">
-              <div class="mono" style="font-weight:700;">Evaluation harness mindset</div>
-              <div class="small" style="margin-top:6px;">
-                Designed for regression prompts, precision@k tracking, and citation correctness checks.
-              </div>
-            </div>
-            <div class="outBox warn">
-              <div class="mono" style="font-weight:700;">Guardrails</div>
-              <div class="small" style="margin-top:6px;">
-                Refuse on low retrieval confidence; mitigate hallucinations by policy.
-              </div>
-            </div>
+            </label>
           </div>
 
-          <hr class="divider" />
+          <div class="hr"></div>
 
-          <h3>Evaluation checklist (production)</h3>
-          <ul class="clean">
-            <li><strong>Retrieval:</strong> precision@k, hit-rate, coverage on a labelled query set.</li>
-            <li><strong>Grounding:</strong> citation correctness, faithfulness, refusal on low evidence.</li>
-            <li><strong>Ops:</strong> latency budget, cost per query, monitoring for drift/regressions.</li>
-            <li><strong>Security:</strong> prompt injection defences, PII redaction, access control.</li>
-          </ul>
+          <h3>Example queries</h3>
+          <div class="tags" aria-label="Example queries">
+            <button class="tag" data-example="What should be monitored for deployed ML models? Provide citations.">Model monitoring</button>
+            <button class="tag" data-example="Explain CI/CD for ML deployment and why model artefact versioning matters. Cite sources.">CI/CD for ML</button>
+            <button class="tag" data-example="What is data drift vs prediction drift, and how do you detect them? Provide citations.">Drift detection</button>
+            <button class="tag" data-example="Describe a safe RAG workflow with guardrails against prompt injection. Cite sources.">RAG guardrails</button>
+            <button class="tag" data-example="What is a feature store and when would you use one? Provide citations.">Feature store</button>
+          </div>
 
-          <div style="height:12px"></div>
+          <p class="tiny" style="margin-top:10px;">
+            ATS keywords surfaced here: <span class="kbd">RAG</span>, <span class="kbd">LLMOps</span>, <span class="kbd">CI/CD for ML</span>,
+            <span class="kbd">Model Serving</span>, <span class="kbd">Monitoring</span>, <span class="kbd">Drift</span>.
+          </p>
+
+          <div class="hr"></div>
+
+          <h3>Local corpus</h3>
+          <p class="tiny">
+            Retrieval runs over a small curated corpus embedded in this page. In production, the same interface maps to a vector store.
+          </p>
 
           <div class="actions">
-            <a class="btn primary" href="/evidence/rag-copilot/">Open evidence memo</a>
-            <a class="btn" href="/evidence/">Proof Ledger index</a>
+            <a class="btn" href="/evidence/rag-copilot/">Read the evidence memo</a>
+            <a class="btn" href="/evidence/#rag-copilot">Go to proof anchor</a>
           </div>
         </aside>
       </div>
@@ -335,387 +278,417 @@
     </footer>
   </main>
 
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
   <script>
     document.getElementById("year").textContent = String(new Date().getFullYear());
+  </script>
+  <script src="/build-info.js"></script>
 
+  <script>
     // -----------------------------
-    // Synthetic corpora (portfolio-safe)
+    // RAG Copilot (client-only)
     // -----------------------------
-    function corpora() {
+
+    const CORPUS = [
+      {
+        id: "doc-ml-monitoring",
+        title: "Model Monitoring: What to Track in Production",
+        source: "Neuromorphic Inference Lab (internal memo)",
+        url: "/evidence/#rag-copilot",
+        text: `
+Monitoring deployed ML requires both engineering and modelling signals. Track service health (latency, throughput, error rates),
+model performance proxies (prediction distribution shift), and delayed ground-truth performance where available.
+Key concepts include data drift vs prediction drift, feature schema validation, and alerting tied to business impact.
+Operationally, define retraining triggers, rollback criteria, and monitoring dashboards for reliability.
+        `.trim()
+      },
+      {
+        id: "doc-cicd-ml",
+        title: "CI/CD for ML: Artefacts, Reproducibility, and Safe Releases",
+        source: "Neuromorphic Inference Lab (internal memo)",
+        url: "/evidence/#mv-grid-fault-risk",
+        text: `
+CI/CD for ML extends software delivery with model-specific gates: data validation, evaluation checks, and artefact versioning.
+A safe release pipeline stores trained models as versioned artefacts, captures lineage metadata, and supports rollbacks.
+Automated tests include schema checks, unit tests for transforms, and regression checks on evaluation metrics.
+        `.trim()
+      },
+      {
+        id: "doc-drift",
+        title: "Drift: Data Drift vs Prediction Drift",
+        source: "Neuromorphic Inference Lab (internal memo)",
+        url: "/evidence/#forecast-studio",
+        text: `
+Data drift describes changes in input feature distributions. Prediction drift describes changes in model outputs over time.
+Both can be monitored using statistical tests, distance metrics, and distribution summaries.
+Drift alerts should be paired with remediation: investigate pipeline changes, update feature engineering, retrain or recalibrate.
+        `.trim()
+      },
+      {
+        id: "doc-feature-store",
+        title: "Feature Stores: When and Why",
+        source: "Neuromorphic Inference Lab (internal memo)",
+        url: "/evidence/#mv-grid-fault-risk",
+        text: `
+A feature store is used when consistent feature computation is needed across training and serving, especially at scale.
+It improves reproducibility, reduces training-serving skew, and enables feature reuse across teams and models.
+Feature stores also support governance: lineage, access control, and monitoring of feature freshness.
+        `.trim()
+      },
+      {
+        id: "doc-rag-guardrails",
+        title: "RAG Guardrails: Grounding, Refusal, and Prompt Injection Defence",
+        source: "Neuromorphic Inference Lab (internal memo)",
+        url: "/evidence/#rag-copilot",
+        text: `
+Reliable RAG requires explicit grounding: answers should be constrained to retrieved evidence.
+If retrieval confidence is weak, the system should refuse or ask clarifying questions.
+Prompt injection defence includes treating retrieved text as untrusted data, applying allow-list behaviour, and auditing traces.
+Evaluation harnesses measure precision@k, citation correctness, and refusal correctness.
+        `.trim()
+      },
+      {
+        id: "doc-evaluation",
+        title: "Evaluation Mindset: Beyond a Single Score",
+        source: "Neuromorphic Inference Lab (internal memo)",
+        url: "/evidence/#forecast-studio",
+        text: `
+Production evaluation is continuous. Use backtesting for forecasting, and structured evaluation datasets for LLM workflows.
+Track performance across slices, horizons, and time windows. Use regression tests to prevent silent metric degradation.
+Always connect metrics to operational consequences: latency budgets, cost constraints, and business impact.
+        `.trim()
+      }
+    ];
+
+    // Simple tokeniser
+    function tokens(s){
+      return (s || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9\s\-]/g, " ")
+        .split(/\s+/)
+        .filter(t => t && t.length > 2);
+    }
+
+    // Build TF-IDF-ish weights (lightweight, deterministic)
+    const DOCS = CORPUS.map(d => {
+      const t = tokens(d.text + " " + d.title);
+      const tf = new Map();
+      for (const w of t) tf.set(w, (tf.get(w) || 0) + 1);
+      return { ...d, tf, len: t.length };
+    });
+
+    const DF = new Map();
+    for (const d of DOCS){
+      for (const w of new Set(d.tf.keys())){
+        DF.set(w, (DF.get(w) || 0) + 1);
+      }
+    }
+
+    function idf(w){
+      const df = DF.get(w) || 0;
+      const N = DOCS.length;
+      return Math.log((N + 1) / (df + 1)) + 1.0;
+    }
+
+    // Vector normalisation helpers
+    function dot(a, b){
+      let s = 0;
+      for (const [k, v] of a){
+        const bv = b.get(k);
+        if (bv) s += v * bv;
+      }
+      return s;
+    }
+    function norm(a){
+      let s = 0;
+      for (const [, v] of a) s += v * v;
+      return Math.sqrt(s) || 1;
+    }
+
+    function toTfidfVectorFromTokens(toks){
+      const tf = new Map();
+      for (const w of toks) tf.set(w, (tf.get(w) || 0) + 1);
+      const v = new Map();
+      for (const [w, c] of tf){
+        v.set(w, (c / toks.length) * idf(w));
+      }
+      return v;
+    }
+
+    // Precompute doc vectors
+    for (const d of DOCS){
+      const toks = tokens(d.text + " " + d.title);
+      d.vec = toTfidfVectorFromTokens(toks);
+      d.n = norm(d.vec);
+    }
+
+    function retrieve(query, k=3){
+      const qtoks = tokens(query);
+      const qvec = toTfidfVectorFromTokens(qtoks);
+      const qn = norm(qvec);
+
+      const scored = DOCS.map(d => {
+        const sim = dot(qvec, d.vec) / (qn * d.n);
+        return { doc: d, sim };
+      }).sort((a,b)=> b.sim - a.sim);
+
+      const top = scored.slice(0, k);
+      const maxSim = top.length ? top[0].sim : 0;
+      return { top, maxSim };
+    }
+
+    function pickSnippets(text, query){
+      // pick up to 2 “sentences” that share tokens with the query
+      const qset = new Set(tokens(query));
+      const sentences = text
+        .replace(/\s+/g, " ")
+        .split(/(?<=[\.\!\?])\s+/)
+        .map(s => s.trim())
+        .filter(Boolean);
+
+      const ranked = sentences.map(s => {
+        const ts = tokens(s);
+        let hit = 0;
+        for (const w of ts) if (qset.has(w)) hit += 1;
+        return { s, hit };
+      }).sort((a,b)=> b.hit - a.hit);
+
+      const chosen = ranked.filter(r => r.hit > 0).slice(0, 2).map(r => r.s);
+      if (chosen.length) return chosen;
+
+      // fallback: first ~180 chars
+      return [text.slice(0, 180) + (text.length > 180 ? "…" : "")];
+    }
+
+    function buildAnswer(query, hits, policy){
+      // This is a *drafting* demo, not an LLM. We produce a structured answer with citations.
+      const top = hits.map((h, i) => {
+        const snippets = pickSnippets(h.doc.text, query);
+        return { i: i+1, title: h.doc.title, url: h.doc.url, snippets };
+      });
+
+      if (!top.length){
+        return { html: `<p class="muted" style="margin:0;">No sources available.</p>`, cites: "" };
+      }
+
+      const cautious = policy === "lenient";
+
+      const bullets = [];
+      // Pull key lines from top sources
+      for (const t of top){
+        const s1 = t.snippets[0] || "";
+        bullets.push(`<li>${escapeHtml(s1)} <span class="mono">[${t.i}]</span></li>`);
+      }
+
+      const preface = cautious
+        ? `<p style="margin:0 0 10px;"><strong>Draft (cautious):</strong> evidence is limited; conclusions are bounded by retrieved sources.</p>`
+        : `<p style="margin:0 0 10px;"><strong>Grounded draft:</strong> constructed strictly from retrieved sources.</p>`;
+
+      const html = `
+        ${preface}
+        <ul class="clean">${bullets.join("")}</ul>
+        <p class="tiny" style="margin-top:10px;">
+          Citations: ${top.map(t => `<span class="mono">[${t.i}]</span> ${escapeHtml(t.title)}`).join(" · ")}
+        </p>
+      `.trim();
+
+      const citeText = top.map(t => `[${t.i}] ${t.title} — ${t.url}`).join("\n");
+      return { html, cites: citeText };
+    }
+
+    function escapeHtml(s){
+      return (s || "").replace(/[&<>"']/g, m => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+
+    function toast(msg){
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.classList.add("show");
+      setTimeout(()=> el.classList.remove("show"), 1400);
+    }
+
+    function currentPolicy(){
+      const v = document.querySelector('input[name="policy"]:checked')?.value || "strict";
+      return v;
+    }
+
+    function strictThreshold(){
+      // tuned for small corpus; in real systems this could be dynamic
+      return 0.13;
+    }
+
+    function renderTrace(hits){
+      const trace = document.getElementById("trace");
+      trace.innerHTML = "";
+
+      if (!hits.length){
+        trace.innerHTML = `<div class="panel"><p class="muted" style="margin:0;">No retrieved sources.</p></div>`;
+        return;
+      }
+
+      const max = Math.max(...hits.map(h => h.sim), 1e-9);
+
+      for (let idx=0; idx<hits.length; idx++){
+        const h = hits[idx];
+        const rank = idx + 1;
+        const pct = Math.max(0, Math.min(100, (h.sim / max) * 100));
+        const snippets = pickSnippets(h.doc.text, document.getElementById("q").value);
+
+        const hit = document.createElement("div");
+        hit.className = "hit";
+        hit.innerHTML = `
+          <div class="hitTop">
+            <div>
+              <strong class="mono">[${rank}]</strong> ${escapeHtml(h.doc.title)}
+              <div class="tiny">${escapeHtml(h.doc.source)} · <a href="${h.doc.url}" class="mono">open</a></div>
+            </div>
+            <div class="row">
+              <div class="tiny mono">sim ${h.sim.toFixed(3)}</div>
+              <div class="scoreBar" aria-label="Similarity score">
+                <div class="scoreFill" style="width:${pct.toFixed(0)}%"></div>
+              </div>
+            </div>
+          </div>
+          <div class="tiny" style="margin-top:8px;">
+            ${snippets.map(s => `<div>• ${escapeHtml(s)}</div>`).join("")}
+          </div>
+        `;
+        trace.appendChild(hit);
+      }
+    }
+
+    let lastTrace = null;
+    let lastCitations = "";
+
+    function run(){
+      const q = document.getElementById("q").value.trim();
+      const policy = currentPolicy();
+
+      if (!q){
+        toast("Please enter a query.");
+        return;
+      }
+
+      const { top, maxSim } = retrieve(q, 3);
+      const threshold = strictThreshold();
+
+      // Strict refusal on weak retrieval
+      if (policy === "strict" && maxSim < threshold){
+        document.getElementById("answer").innerHTML = `
+          <p style="margin:0 0 8px;"><strong>Refusal (Strict policy):</strong> evidence is too weak to answer safely.</p>
+          <p class="tiny" style="margin:0;">
+            Try rephrasing, add more context, or use <span class="kbd">Lenient</span> to get a cautious draft.
+            <span class="mono">top similarity=${maxSim.toFixed(3)}</span>, threshold=${threshold.toFixed(3)}.
+          </p>
+        `;
+        renderTrace(top);
+        document.getElementById("traceBox").open = true;
+
+        lastTrace = buildTraceJson(q, policy, top, maxSim, threshold, true);
+        lastCitations = buildCitations(top);
+        return;
+      }
+
+      // Build grounded draft
+      const answer = buildAnswer(q, top, policy);
+      document.getElementById("answer").innerHTML = answer.html;
+      renderTrace(top);
+      document.getElementById("traceBox").open = true;
+
+      lastTrace = buildTraceJson(q, policy, top, maxSim, threshold, false);
+      lastCitations = answer.cites;
+
+      toast("Draft generated with retrieval trace.");
+    }
+
+    function buildCitations(top){
+      return top.map((h, i) => `[${i+1}] ${h.doc.title} — ${h.doc.url}`).join("\n");
+    }
+
+    function buildTraceJson(q, policy, top, maxSim, threshold, refused){
+      const now = new Date().toISOString();
       return {
-        ops: [
-          {
-            id: "OPS-001",
-            title: "Operations Handbook — Incident Response",
-            body:
-              "Incident response follows triage → containment → resolution → post-incident review. " +
-              "Severity is determined by customer impact, safety risk, and duration. " +
-              "Post-incident reviews must produce corrective actions and monitoring updates. " +
-              "For ML services, incidents include data drift, performance regressions, or serving failures."
-          },
-          {
-            id: "OPS-002",
-            title: "Operations Handbook — Monitoring Principles",
-            body:
-              "Monitoring should cover service health and model quality. Service health includes request rate, error rate, " +
-              "p95 latency, and resource saturation. Model quality includes input data drift, prediction drift, and " +
-              "outcome-based performance when labels arrive. Alerts must map to runbooks and rollback options."
-          },
-          {
-            id: "OPS-003",
-            title: "Operations Handbook — Change Management",
-            body:
-              "Changes require versioned artefacts, a deployment plan, and rollback criteria. " +
-              "For ML, changes include model updates, feature pipeline changes, and retrieval configuration changes. " +
-              "Each change should include evaluation evidence and a release note."
-          },
-          {
-            id: "OPS-004",
-            title: "Operations Handbook — Data Quality Controls",
-            body:
-              "Data quality controls include schema validation, missingness thresholds, range checks, " +
-              "and distribution shift detection. Invalid data should be quarantined with audit logs. " +
-              "Feature pipelines must be reproducible across training and serving."
-          },
-          {
-            id: "OPS-005",
-            title: "Operations Handbook — Reliability Patterns",
-            body:
-              "Reliability patterns include timeouts, circuit breakers, graceful degradation, and " +
-              "idempotent retries. For LLM workflows, use strict citation policies and refuse on weak retrieval. " +
-              "All critical actions must be traceable to sources and configurations."
-          }
-        ],
-        mlops: [
-          {
-            id: "MLOPS-101",
-            title: "MLOps Runbook — CI/CD for ML",
-            body:
-              "CI/CD for ML covers code, data contracts, and model artefacts. Pipelines run unit tests, data validation, " +
-              "and evaluation checks. Promotion to production requires passing quality gates (e.g., minimum F1, calibration, " +
-              "or acceptable drift). Artefacts are stored in a registry with provenance metadata."
-          },
-          {
-            id: "MLOPS-102",
-            title: "MLOps Runbook — Model Serving and Scaling",
-            body:
-              "Model serving should support canary releases and fast rollback. Scaling strategies include horizontal replicas, " +
-              "batching, and caching. Inference optimisation may include quantisation or distillation if latency is constrained. " +
-              "Monitor p95 latency and error rate continuously."
-          },
-          {
-            id: "MLOPS-103",
-            title: "MLOps Runbook — Monitoring and Drift",
-            body:
-              "Monitoring includes data drift (feature distribution shift), prediction drift (score distribution shift), and " +
-              "performance drift once labels arrive. Track input validity, missingness, and schema changes. " +
-              "Retraining triggers are based on drift thresholds, performance degradation, and business impact."
-          },
-          {
-            id: "MLOPS-104",
-            title: "MLOps Runbook — Feature Store Patterns",
-            body:
-              "Feature store patterns standardise feature definitions across training and serving. " +
-              "Use point-in-time correct joins to avoid leakage. Version features and maintain a clear ownership model. " +
-              "Document feature lineage for auditability."
-          },
-          {
-            id: "MLOPS-105",
-            title: "MLOps Runbook — Model Registry and Artefacts",
-            body:
-              "A model registry stores versioned artefacts, evaluation reports, and deployment metadata. " +
-              "Artefacts should include the preprocessing pipeline, model weights, and a minimal model card " +
-              "covering intended use, limitations, and monitoring plan."
-          }
-        ],
-        security: [
-          {
-            id: "SEC-201",
-            title: "Security & Governance — Prompt Injection Defence",
-            body:
-              "Prompt injection defences include strict separation of instructions and data, " +
-              "allow-listing tools, and refusing requests that try to override system policies. " +
-              "For RAG, ignore retrieved content that contains instructions and enforce citation policies."
-          },
-          {
-            id: "SEC-202",
-            title: "Security & Governance — Data Governance",
-            body:
-              "Data governance covers access control, retention policies, and audit logs. " +
-              "Sensitive fields should be minimised, masked, or removed. " +
-              "All data processing should be traceable with versioned schemas and approvals."
-          },
-          {
-            id: "SEC-203",
-            title: "Security & Governance — PII Handling",
-            body:
-              "PII handling requires redaction or tokenisation. " +
-              "Never store raw PII in logs. " +
-              "For LLM systems, redact prompts where necessary and avoid returning sensitive content."
-          },
-          {
-            id: "SEC-204",
-            title: "Security & Governance — Model Risk Controls",
-            body:
-              "Model risk controls include bias checks, robustness testing, and monitoring for unexpected behaviour. " +
-              "High-impact models require documented evaluation and human review for critical decisions."
-          },
-          {
-            id: "SEC-205",
-            title: "Security & Governance — Auditability",
-            body:
-              "Auditability requires provenance: what data, what model version, what retrieval configuration, and what prompt template. " +
-              "Maintain trace IDs and store minimal traces for incident investigations."
-          }
-        ]
+        schema_version: "nil.rag.trace.v1",
+        generated_at: now,
+        policy,
+        refused,
+        thresholds: { strict_similarity_threshold: threshold },
+        query: q,
+        retrieval: {
+          top_k: top.map((h, i) => ({
+            rank: i+1,
+            doc_id: h.doc.id,
+            title: h.doc.title,
+            source: h.doc.source,
+            url: h.doc.url,
+            similarity: Number(h.sim.toFixed(6)),
+            snippets: pickSnippets(h.doc.text, q)
+          })),
+          top_similarity: Number(maxSim.toFixed(6))
+        }
       };
     }
 
-    // -----------------------------
-    // Retrieval: token overlap + normalised score
-    // (Portfolio-safe, no heavy deps)
-    // -----------------------------
-    const STOP = new Set([
-      "the","a","an","and","or","to","of","in","for","with","on","by","is","are","as","it","this","that","be","should",
-      "include","includes","into","from","at","we","you","your","our","must","may","can","will","not","no"
-    ]);
-
-    function normalise(text){
-      return text
-        .toLowerCase()
-        .replace(/[^a-z0-9\s\-]/g," ")
-        .replace(/\s+/g," ")
-        .trim();
-    }
-
-    function tokens(text){
-      return normalise(text)
-        .split(" ")
-        .filter(t => t && t.length > 2 && !STOP.has(t));
-    }
-
-    function score(query, doc){
-      const qt = tokens(query);
-      const dt = tokens(doc.title + " " + doc.body);
-      const qset = new Set(qt);
-      const dset = new Set(dt);
-
-      let hit = 0;
-      for (const t of qset) if (dset.has(t)) hit++;
-
-      // simple normalisation: hits / sqrt(|Q|*|D|) (cosine-like)
-      const denom = Math.sqrt((qset.size || 1) * (dset.size || 1));
-      return hit / (denom || 1);
-    }
-
-    function retrieve(query, docs, k){
-      const scored = docs
-        .map(d => ({...d, sim: score(query, d)}))
-        .sort((a,b) => b.sim - a.sim)
-        .slice(0, k);
-      return scored;
-    }
-
-    // -----------------------------
-    // Drafting: grounded-only template
-    // -----------------------------
-    function groundedDraft(query, sources, policy){
-      const top = sources[0] || null;
-      const avg = sources.reduce((s,x)=>s+x.sim,0) / Math.max(1, sources.length);
-
-      // Heuristic thresholds (tuned for this toy corpus)
-      const weak = (top ? top.sim : 0) < 0.08 || avg < 0.05;
-
-      if (weak && policy === "strict"){
-        return {
-          mode: "refusal",
-          text:
-            "I can’t answer confidently from the available sources.\n\n" +
-            "Reason: retrieval confidence is low.\n" +
-            "Action: rephrase the question with more specific terms (e.g., 'p95 latency', 'data drift', 'model registry'), " +
-            "or select a more relevant corpus.\n\n" +
-            "Citations: none (insufficient evidence)."
-        };
+    async function copyTrace(){
+      if (!lastTrace){
+        toast("Run a query first.");
+        return;
       }
-
-      // Extract 2–3 key lines from top sources (light summarisation)
-      function keyLine(body){
-        const s = body.split(". ").map(x=>x.trim()).filter(Boolean);
-        return s.slice(0, 2).join(". ") + (s.length > 2 ? "." : "");
+      const json = JSON.stringify(lastTrace, null, 2);
+      try {
+        await navigator.clipboard.writeText(json);
+        toast("Trace JSON copied to clipboard.");
+      } catch {
+        toast("Clipboard blocked by browser.");
       }
-
-      const bullets = sources.slice(0,3).map((s, i) => {
-        return `- ${keyLine(s.body)} [${i+1}]`;
-      }).join("\n");
-
-      const caveat = (weak && policy === "soft")
-        ? "\n\nCaveat: retrieval confidence is weak; treat this as guidance and verify against authoritative documentation."
-        : "";
-
-      const text =
-        "Answer (grounded in retrieved sources):\n\n" +
-        bullets + "\n\n" +
-        "Recommended pattern:\n" +
-        "- Track service health (request rate, error rate, p95 latency) alongside model quality (data drift, prediction drift, delayed performance). [1]\n" +
-        "- Maintain runbooks, rollback criteria, and versioned artefacts for changes to models, features, and retrieval configs. [2]\n" +
-        "- Define retraining triggers based on drift thresholds and performance degradation once labels arrive. [3]" +
-        caveat + "\n\n" +
-        "Citations:\n" +
-        sources.slice(0,3).map((s, i) => `[${i+1}] ${s.id} — ${s.title}`).join("\n");
-
-      return { mode: weak ? "caveat" : "ok", text };
     }
 
-    // -----------------------------
-    // UI helpers
-    // -----------------------------
-    function el(id){ return document.getElementById(id); }
-
-    function setStatus(mode, retQuality, policy){
-      el("polOut").textContent = policy;
-      el("retQuality").textContent = retQuality;
-
-      const box = el("status");
-      box.classList.remove("ok","warn","danger");
-
-      if (mode === "ok") box.classList.add("ok");
-      else if (mode === "caveat") box.classList.add("warn");
-      else if (mode === "refusal") box.classList.add("danger");
-      else box.classList.add("warn");
-
-      el("statusText").textContent = mode;
+    async function copyCitations(){
+      if (!lastCitations){
+        toast("Run a query first.");
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(lastCitations);
+        toast("Citations copied.");
+      } catch {
+        toast("Clipboard blocked by browser.");
+      }
     }
 
-    function snippet(text, maxChars){
-      const t = text.replace(/\s+/g," ").trim();
-      return (t.length <= maxChars) ? t : t.slice(0, maxChars - 1) + "…";
+    function clearAll(){
+      document.getElementById("q").value = "";
+      document.getElementById("answer").innerHTML = `<p class="muted" style="margin:0;">Cleared. Run a query to generate a grounded draft.</p>`;
+      document.getElementById("trace").innerHTML = "";
+      document.getElementById("traceBox").open = false;
+      lastTrace = null;
+      lastCitations = "";
+      toast("Cleared.");
     }
 
-    function renderTrace(sources){
-      const wrap = el("trace");
-      wrap.innerHTML = "";
-      sources.forEach((s, idx) => {
-        const div = document.createElement("div");
-        div.className = "src";
-        div.innerHTML =
-          `<div class="srcHead">
-             <div class="srcTitle">[${idx+1}] ${s.title}</div>
-             <div class="srcMeta mono">sim: ${s.sim.toFixed(3)} · ${s.id}</div>
-           </div>
-           <div class="srcText">${snippet(s.body, 240)}</div>`;
-        wrap.appendChild(div);
+    // Wire up UI
+    document.getElementById("run").addEventListener("click", run);
+    document.getElementById("clear").addEventListener("click", clearAll);
+    document.getElementById("copyTrace").addEventListener("click", copyTrace);
+    document.getElementById("copyCites").addEventListener("click", copyCitations);
+
+    document.getElementById("q").addEventListener("keydown", (e) => {
+      if (e.key === "Enter"){
+        e.preventDefault();
+        run();
+      }
+    });
+
+    // Example query buttons
+    for (const btn of document.querySelectorAll("[data-example]")){
+      btn.addEventListener("click", () => {
+        document.getElementById("q").value = btn.getAttribute("data-example") || "";
+        toast("Example query loaded.");
       });
     }
-
-    function exportJSON(payload){
-      const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "rag_trace.json";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    }
-
-    async function copyText(text){
-      try{
-        await navigator.clipboard.writeText(text);
-        return true;
-      }catch(e){
-        return false;
-      }
-    }
-
-    // -----------------------------
-    // Main run
-    // -----------------------------
-    function run(){
-      const query = el("q").value.trim();
-      const corp = el("corpus").value;
-      const topk = parseInt(el("topk").value, 10);
-      const policy = el("policy").value;
-
-      if (!query){
-        setStatus("idle", "—", policy);
-        el("ans").textContent = "Please enter a query.";
-        el("trace").innerHTML = "";
-        return;
-      }
-
-      const docs = corpora()[corp] || [];
-      const sources = retrieve(query, docs, topk);
-
-      // Retrieval quality label
-      const top = sources[0] ? sources[0].sim : 0;
-      const avg = sources.reduce((s,x)=>s+x.sim,0) / Math.max(1, sources.length);
-      const quality =
-        (top > 0.14 && avg > 0.08) ? "strong" :
-        (top > 0.09 && avg > 0.06) ? "moderate" :
-        "weak";
-
-      const draft = groundedDraft(query, sources, policy);
-
-      setStatus(draft.mode, quality, policy);
-      el("ans").textContent = draft.text;
-      renderTrace(sources);
-
-      // store last trace for export/copy
-      window.__RAG_LAST__ = {
-        timestamp: new Date().toISOString(),
-        query,
-        corpus: corp,
-        topk,
-        policy,
-        retrieval_quality: quality,
-        sources: sources.map((s, i) => ({
-          rank: i+1,
-          id: s.id,
-          title: s.title,
-          similarity: Number(s.sim.toFixed(6)),
-          snippet: snippet(s.body, 400)
-        })),
-        answer: draft.text,
-        mode: draft.mode
-      };
-    }
-
-    // Bind
-    el("run").addEventListener("click", run);
-
-    el("copy").addEventListener("click", async () => {
-      const payload = window.__RAG_LAST__;
-      const text = payload ? payload.answer : el("ans").textContent;
-      const ok = await copyText(text);
-      if (ok){
-        const old = el("copy").textContent;
-        el("copy").textContent = "Copied";
-        setTimeout(()=> el("copy").textContent = old, 900);
-      } else {
-        alert("Copy failed (browser permission). You can still select the text manually.");
-      }
-    });
-
-    el("export").addEventListener("click", () => {
-      const payload = window.__RAG_LAST__;
-      if (!payload){
-        alert("Run the system first to generate a trace.");
-        return;
-      }
-      exportJSON(payload);
-    });
-
-    // Ctrl+Enter to run
-    el("q").addEventListener("keydown", (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") run();
-    });
-
-    // default state
-    setStatus("idle", "—", el("policy").value);
-    window.__RAG_LAST__ = null;
   </script>
-
-  <script src="/build-info.js"></script>
 </body>
 </html>
