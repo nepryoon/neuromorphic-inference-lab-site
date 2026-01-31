@@ -8,46 +8,8 @@
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
   <style>
-    /* Page-specific light styling (kept minimal and ATS-friendly) */
-    .metaRow{ display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:7px 10px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.05);
-      font-size:12px; color:rgba(234,240,255,.86);
-    }
     .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-    .kv{
-      display:grid; grid-template-columns: 1fr; gap: 12px;
-      margin-top: 10px;
-    }
-    @media (min-width: 900px){
-      .kv{ grid-template-columns: 1fr 1fr; }
-    }
-    .callout{
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-      border-radius: 16px;
-      padding: 14px;
-    }
-    .callout h4{
-      margin: 0 0 8px;
-      font-size: 14px;
-      letter-spacing: .2px;
-    }
-    .callout p{
-      margin: 0;
-      color: rgba(234,240,255,.74);
-      line-height: 1.6;
-      font-size: 13px;
-    }
-    .tight{ margin-top: 8px; }
     .small{ font-size: 12px; color: rgba(234,240,255,.70); line-height: 1.6; }
-    .linkline{
-      display:flex; flex-wrap:wrap; gap:10px;
-      margin-top: 10px;
-    }
     .kbd{
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size: 12px;
@@ -79,203 +41,112 @@
   <main class="container">
     <section class="hero">
       <p class="kicker">Proof Ledger</p>
-      <h1 class="h1">Claims are cheap. Evidence is clickable.</h1>
+      <h1 class="h1">Evidence that is fast to verify.</h1>
       <p class="sub">
-        This page maps full-stack ML engineering skills to verifiable artefacts:
-        system documentation, reproducible behaviours, and screening-grade signals.
-        Each section has a stable anchor designed to be linked directly from a CV.
+        This page is designed for technical screening: each system has an evidence memo (what it proves, how to verify, risks & mitigations)
+        and a stable proof anchor that can be linked directly from a CV.
       </p>
 
-      <div class="badges" aria-label="Keyword density (ATS)">
+      <div class="badges">
         <span class="badge">Scalable ML Pipelines</span>
         <span class="badge">CI/CD for ML</span>
         <span class="badge">Model Serving</span>
-        <span class="badge">Inference Scaling</span>
         <span class="badge">Monitoring</span>
         <span class="badge">RAG / LLMOps</span>
       </div>
 
-      <div class="metaRow" aria-label="How to use">
-        <span class="pill">CV tip: link <span class="mono">/evidence/#forecast-studio</span></span>
-        <span class="pill">CV tip: link <span class="mono">/evidence/#rag-copilot</span></span>
-        <span class="pill">Shortcut: open Systems → then Evidence</span>
-      </div>
+      <p class="small" style="margin-top:12px;">
+        CV usage: add <span class="kbd">Proof: neuromorphicinference.com/evidence/#rag-copilot</span> under the relevant project line.
+      </p>
     </section>
 
     <section class="section">
       <h2>Evidence index</h2>
-      <p class="lead">
-        Each item below is a “screening memo” condensed into a single card: what is proven, how to verify, and the keywords it triggers.
-      </p>
+      <p class="lead">Each card includes the live system + the memo + the stable proof anchor.</p>
 
       <div class="grid">
 
-        <!-- NeuroGrid -->
         <article id="mv-grid-fault-risk" class="card col-12 anchor">
           <h3>NeuroGrid Fault Risk Scoring Platform</h3>
-          <p>
-            End-to-end tabular risk scoring for medium-voltage networks: feature pipeline + CI-minded training flow + versioned artefacts + live serving.
-          </p>
-
-          <div class="tags" aria-label="Keywords">
+          <p>Medium-voltage fault risk inference: features → training → artefacts → serving (full-stack delivery).</p>
+          <div class="tags">
             <span class="tag">Tabular ML</span>
             <span class="tag">Feature Engineering</span>
             <span class="tag">CI/CD for ML</span>
             <span class="tag">Model Serving</span>
-            <span class="tag">Artefact Versioning</span>
-            <span class="tag">Monitoring-ready Outputs</span>
+            <span class="tag">Versioned Artefacts</span>
           </div>
-
-          <div class="kv">
-            <div class="callout">
-              <h4>Claim (what this proves)</h4>
-              <p>
-                I can take a risk model from data → features → training → artefact packaging → API serving, with an engineering mindset
-                (reproducibility, release discipline, and operational checks).
-              </p>
-            </div>
-            <div class="callout">
-              <h4>How to verify</h4>
-              <p>
-                Open the system docs, check the serving endpoint (OpenAPI), and confirm that “system-level” artefacts are present
-                (inputs/outputs, run logic, and deployment-relevant pieces).
-              </p>
-            </div>
-          </div>
-
-          <div class="linkline">
+          <div class="actions">
             <a class="btn primary" href="/demos/mv-grid-fault-risk/">Open system</a>
-            <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">API docs</a>
+            <a class="btn" href="/evidence/mv-grid-fault-risk/">Evidence memo</a>
+            <a class="btn" href="/evidence/#mv-grid-fault-risk">Proof anchor</a>
             <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Source</a>
           </div>
-
-          <p class="small tight">
-            CV anchor: <span class="kbd">/evidence/#mv-grid-fault-risk</span>
-          </p>
+          <p class="small" style="margin-top:10px;">Anchor: <span class="kbd">/evidence/#mv-grid-fault-risk</span></p>
         </article>
 
-        <!-- Forecast Studio -->
         <article id="forecast-studio" class="card col-12 anchor">
           <h3>Forecast Studio (Time-Series Production Pipeline)</h3>
-          <p>
-            Forecasting treated as engineering: feature pipelines, backtesting discipline, and deployment-ready outputs for planning workflows.
-          </p>
-
-          <div class="tags" aria-label="Keywords">
-            <span class="tag">Time-Series Forecasting</span>
+          <p>Forecasting engineered for operations: repeatable transforms, backtesting, and deployment-ready outputs.</p>
+          <div class="tags">
+            <span class="tag">Time-Series</span>
             <span class="tag">Backtesting</span>
             <span class="tag">MAE / MAPE</span>
+            <span class="tag">MLOps</span>
             <span class="tag">Retraining Triggers</span>
-            <span class="tag">MLOps Patterns</span>
-            <span class="tag">Monitoring-ready Outputs</span>
           </div>
-
-          <div class="kv">
-            <div class="callout">
-              <h4>Claim (what this proves)</h4>
-              <p>
-                I design forecasting workflows that survive operational reality: repeatable transforms, defensible evaluation,
-                and outputs shaped for downstream usage and monitoring.
-              </p>
-            </div>
-            <div class="callout">
-              <h4>How to verify</h4>
-              <p>
-                Open the system docs to view the workflow and the demo backtest logic.
-                Then inspect the repository for pipeline structure and artefact conventions.
-              </p>
-            </div>
-          </div>
-
-          <div class="linkline">
+          <div class="actions">
             <a class="btn primary" href="/demos/forecast-studio/">Open system</a>
             <a class="btn" href="/evidence/forecast-studio/">Evidence memo</a>
+            <a class="btn" href="/evidence/#forecast-studio">Proof anchor</a>
             <a class="btn" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener">Source</a>
           </div>
-
-          <p class="small tight">
-            CV anchor: <span class="kbd">/evidence/#forecast-studio</span>
-          </p>
+          <p class="small" style="margin-top:10px;">Anchor: <span class="kbd">/evidence/#forecast-studio</span></p>
         </article>
 
-        <!-- RAG Copilot -->
         <article id="rag-copilot" class="card col-12 anchor">
           <h3>RAG Knowledge Copilot (LLMOps Reliability)</h3>
-          <p>
-            RAG system with explicit traceability: retrieval trace, similarity signals, grounded drafting, and refusal policies on weak evidence.
-          </p>
-
-          <div class="tags" aria-label="Keywords">
+          <p>Retrieval tracing + grounded drafting + guardrails, designed to evidence production-minded LLMOps.</p>
+          <div class="tags">
             <span class="tag">RAG</span>
             <span class="tag">LLMOps</span>
             <span class="tag">Retrieval Tracing</span>
             <span class="tag">Guardrails</span>
             <span class="tag">Evaluation Harness</span>
-            <span class="tag">Citation Discipline</span>
           </div>
-
-          <div class="kv">
-            <div class="callout">
-              <h4>Claim (what this proves)</h4>
-              <p>
-                I treat LLM systems as production systems: measurable retrieval, grounding policies,
-                and evaluation mindset to prevent silent regressions and hallucinations.
-              </p>
-            </div>
-            <div class="callout">
-              <h4>How to verify</h4>
-              <p>
-                Open the system and run a few queries. Check the retrieved sources and similarity signals.
-                Confirm that weak retrieval triggers refusal (strict policy).
-              </p>
-            </div>
-          </div>
-
-          <div class="linkline">
+          <div class="actions">
             <a class="btn primary" href="/demos/rag-copilot/">Open system</a>
             <a class="btn" href="/evidence/rag-copilot/">Evidence memo</a>
+            <a class="btn" href="/evidence/#rag-copilot">Proof anchor</a>
             <a class="btn" href="https://github.com/nepryoon/neuromorphic-inference-lab-site/tree/main/demos/rag-copilot" target="_blank" rel="noopener">Source (site repo)</a>
           </div>
-
-          <p class="small tight">
-            CV anchor: <span class="kbd">/evidence/#rag-copilot</span>
-          </p>
+          <p class="small" style="margin-top:10px;">Anchor: <span class="kbd">/evidence/#rag-copilot</span></p>
         </article>
 
       </div>
     </section>
 
     <section class="section" id="ats-keywords">
-      <h2>ATS keyword set (deliberately dense)</h2>
-      <p class="lead">
-        This is the vocabulary the site is optimised to surface for Full Stack Machine Learning Engineer / Data Scientist roles.
-      </p>
-
+      <h2>ATS keyword set</h2>
+      <p class="lead">This site is optimised to surface the vocabulary used in Full Stack ML Engineer / Data Scientist job descriptions.</p>
       <div class="grid">
         <article class="card col-12">
           <div class="tags">
             <span class="tag">Scalable ML Pipelines</span>
             <span class="tag">CI/CD for ML</span>
-            <span class="tag">Model Registry</span>
-            <span class="tag">Artifact Versioning</span>
+            <span class="tag">Model Serving</span>
+            <span class="tag">Inference Scaling</span>
             <span class="tag">Feature Engineering</span>
             <span class="tag">Monitoring</span>
             <span class="tag">Data Drift</span>
             <span class="tag">Prediction Drift</span>
             <span class="tag">Retraining Triggers</span>
-            <span class="tag">Model Serving</span>
-            <span class="tag">Inference Scaling</span>
-            <span class="tag">Latency Budget</span>
+            <span class="tag">Backtesting</span>
             <span class="tag">RAG</span>
             <span class="tag">LLMOps</span>
+            <span class="tag">Guardrails</span>
             <span class="tag">Evaluation Harness</span>
-            <span class="tag">Backtesting</span>
           </div>
-
-          <p class="small tight">
-            CV usage pattern: add one line under each project with a clickable proof anchor, e.g.
-            <span class="kbd">Proof: neuromorphicinference.com/evidence/#rag-copilot</span>.
-          </p>
         </article>
       </div>
     </section>
