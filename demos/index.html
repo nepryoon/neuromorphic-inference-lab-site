@@ -29,17 +29,18 @@
   <main class="container">
     <section class="hero">
       <p class="kicker">Systems</p>
-      <h1 class="h1">Engineering intelligent systems under real constraints.</h1>
+      <h1 class="h1">Full-stack ML systems — from data to production.</h1>
       <p class="sub">
-        Each system is documented end-to-end: data → features → training → artefacts → serving → monitoring-ready outputs.
-        Built for technical screening and ATS parsing.
+        These builds are designed to demonstrate a single identity: modelling quality + engineering quality.
+        Each system is documented end-to-end: ingestion → features → training → artefacts → serving → monitoring-ready outputs.
       </p>
 
-      <div class="badges">
+      <div class="badges" aria-label="Core keywords">
         <span class="badge">Scalable ML Pipelines</span>
         <span class="badge">CI/CD for ML</span>
         <span class="badge">Model Serving</span>
         <span class="badge">Inference Scaling</span>
+        <span class="badge">Automated Retraining</span>
         <span class="badge">RAG / LLMOps</span>
       </div>
     </section>
@@ -48,13 +49,19 @@
       <div class="grid">
         <article class="card col-6">
           <h3>NeuroGrid Fault Risk Scoring Platform</h3>
-          <p>Medium-voltage fault risk inference with versioned artefacts, CI training, and live serving.</p>
-          <div class="tags">
+          <p>
+            Medium-voltage fault risk inference with versioned artefacts, CI-friendly training flow, and production API serving.
+            Built to reflect real operational constraints: latency, reliability, and auditability.
+          </p>
+
+          <div class="tags" aria-label="Tags">
             <span class="tag">End-to-End ML</span>
             <span class="tag">FastAPI</span>
-            <span class="tag">Dockerization</span>
+            <span class="tag">Dockerisation</span>
+            <span class="tag">Model Serving</span>
           </div>
-          <div class="actions">
+
+          <div class="actions" aria-label="Actions">
             <a class="btn primary" href="/demos/mv-grid-fault-risk/">Open system</a>
             <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">API docs</a>
             <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Source</a>
@@ -63,16 +70,39 @@
 
         <article class="card col-6">
           <h3>RAG Knowledge Copilot (LLMOps)</h3>
-          <p>Retrieval tracing, grounded drafting, and a minimal evaluation harness for document reality.</p>
-          <div class="tags">
+          <p>
+            Retrieval tracing, grounded drafting, and a minimal evaluation harness for document reality.
+            This demo is static-by-design (safe for a public site) but mirrors production patterns.
+          </p>
+
+          <div class="tags" aria-label="Tags">
             <span class="tag">RAG</span>
             <span class="tag">Evaluation Harness</span>
             <span class="tag">Guardrails</span>
+            <span class="tag">Retrieval Tracing</span>
           </div>
-          <div class="actions">
+
+          <div class="actions" aria-label="Actions">
             <a class="btn primary" href="/demos/rag-copilot/">Open system</a>
             <a class="btn" href="/evidence/rag-copilot/">Evidence memo</a>
             <a class="btn" href="https://github.com/nepryoon/neuromorphic-inference-lab-site" target="_blank" rel="noopener">Site source</a>
+          </div>
+        </article>
+
+        <article class="card col-12">
+          <h3>What “production-minded” means here</h3>
+          <p class="muted" style="margin:0;">
+            These systems emphasise measurable engineering signals: reproducibility, artefact provenance, deployment discipline, and evaluation.
+            Keywords intentionally present for ATS/recruiters: CI/CD for ML, model serving, inference scaling, monitoring, automated retraining,
+            evaluation harness, RAG/LLMOps, and reliability patterns.
+          </p>
+
+          <div class="badges" style="margin-top:12px;">
+            <span class="badge">Reproducibility</span>
+            <span class="badge">Artefact Versioning</span>
+            <span class="badge">Latency Budget</span>
+            <span class="badge">Observability</span>
+            <span class="badge">Regression Tests</span>
           </div>
         </article>
       </div>
@@ -80,7 +110,7 @@
 
     <footer class="footer">
       <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
-      <div class="prov">
+      <div class="prov" aria-label="Build provenance">
         <span id="build-branch">branch: …</span>
         <span id="build-commit">commit: …</span>
         <span id="build-time">built: …</span>
