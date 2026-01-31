@@ -8,8 +8,6 @@
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
   <style>
-    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-    .small{ font-size: 12px; color: rgba(234,240,255,.70); line-height: 1.6; }
     .kbd{
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size: 12px;
@@ -19,6 +17,7 @@
       background: rgba(0,0,0,.20);
       color: rgba(234,240,255,.88);
     }
+    .small{ font-size: 12px; color: rgba(234,240,255,.70); line-height: 1.6; }
   </style>
 </head>
 
@@ -43,8 +42,7 @@
       <p class="kicker">Proof Ledger</p>
       <h1 class="h1">Evidence that is fast to verify.</h1>
       <p class="sub">
-        This page is designed for technical screening: each system has an evidence memo (what it proves, how to verify, risks & mitigations)
-        and a stable proof anchor that can be linked directly from a CV.
+        Each system has an evidence memo (what it proves, how to verify, risks & mitigations) and a stable proof anchor designed for CV linking.
       </p>
 
       <div class="badges">
@@ -55,14 +53,25 @@
         <span class="badge">RAG / LLMOps</span>
       </div>
 
+      <div style="height:12px"></div>
+
+      <!-- Breadcrumb -->
+      <div class="tags" aria-label="Breadcrumb">
+        <a class="tag" href="/">Signal</a>
+        <span class="tag">→</span>
+        <a class="tag" href="/demos/">Systems</a>
+        <span class="tag">→</span>
+        <span class="tag">Proof Ledger</span>
+      </div>
+
       <p class="small" style="margin-top:12px;">
-        CV usage: add <span class="kbd">Proof: neuromorphicinference.com/evidence/#rag-copilot</span> under the relevant project line.
+        CV pattern: <span class="kbd">Proof: neuromorphicinference.com/evidence/#rag-copilot</span>
       </p>
     </section>
 
     <section class="section">
       <h2>Evidence index</h2>
-      <p class="lead">Each card includes the live system + the memo + the stable proof anchor.</p>
+      <p class="lead">Each card includes: live system + memo + stable proof anchor.</p>
 
       <div class="grid">
 
@@ -123,31 +132,6 @@
           <p class="small" style="margin-top:10px;">Anchor: <span class="kbd">/evidence/#rag-copilot</span></p>
         </article>
 
-      </div>
-    </section>
-
-    <section class="section" id="ats-keywords">
-      <h2>ATS keyword set</h2>
-      <p class="lead">This site is optimised to surface the vocabulary used in Full Stack ML Engineer / Data Scientist job descriptions.</p>
-      <div class="grid">
-        <article class="card col-12">
-          <div class="tags">
-            <span class="tag">Scalable ML Pipelines</span>
-            <span class="tag">CI/CD for ML</span>
-            <span class="tag">Model Serving</span>
-            <span class="tag">Inference Scaling</span>
-            <span class="tag">Feature Engineering</span>
-            <span class="tag">Monitoring</span>
-            <span class="tag">Data Drift</span>
-            <span class="tag">Prediction Drift</span>
-            <span class="tag">Retraining Triggers</span>
-            <span class="tag">Backtesting</span>
-            <span class="tag">RAG</span>
-            <span class="tag">LLMOps</span>
-            <span class="tag">Guardrails</span>
-            <span class="tag">Evaluation Harness</span>
-          </div>
-        </article>
       </div>
     </section>
 
