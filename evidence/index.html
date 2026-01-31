@@ -4,108 +4,87 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Proof Ledger — Neuromorphic Inference Lab</title>
-  <meta name="description" content="Evidence-led portfolio: architectures, evaluation, CI/CD for ML, serving, monitoring, and reliability patterns." />
+  <meta name="description" content="Evidence memos mapping claims to artefacts: evaluation signals, monitoring plans, and system trade-offs." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
 </head>
 
 <body>
   <header class="nav">
-    <div class="inner">
-      <a class="brand" href="/" aria-label="Neuromorphic Inference Lab home">
-        <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
-        <span>Neuromorphic Inference Lab</span>
-      </a>
-
-      <nav class="navlinks" aria-label="Primary navigation">
-        <a data-nav href="/">Signal</a>
-        <a data-nav href="/demos/">Systems</a>
-        <a data-nav href="/evidence/" data-active="true">Proof Ledger</a>
-        <a data-nav href="/about/">Identity</a>
-      </nav>
+    <div class="brand">
+      <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+      <span>Neuromorphic Inference Lab</span>
     </div>
+    <nav class="navlinks" aria-label="Primary navigation">
+      <a data-nav href="/">Signal</a>
+      <a data-nav href="/demos/">Systems</a>
+      <a data-nav href="/evidence/">Proof Ledger</a>
+      <a data-nav href="/about/">Identity</a>
+    </nav>
   </header>
 
   <main class="container">
     <section class="hero">
       <p class="kicker">Proof Ledger</p>
-      <h1 class="h1">Evidence over claims.</h1>
+      <h1 class="h1">Evidence memos for technical screening.</h1>
       <p class="sub">
-        Short technical memos that make systems auditable: architecture decisions, evaluation signals,
-        deployment trade-offs, and monitoring plans. Written for technical screening.
+        Short, verifiable notes that map each claim to an artefact: architecture choices, evaluation signals,
+        monitoring plans, and trade-offs made under constraints.
       </p>
-
-      <div class="badges" aria-label="Core keywords">
+      <div class="badges">
         <span class="badge">Evaluation Harness</span>
-        <span class="badge">CI/CD for ML</span>
-        <span class="badge">Model Serving</span>
-        <span class="badge">Monitoring</span>
-        <span class="badge">LLMOps</span>
         <span class="badge">Guardrails</span>
+        <span class="badge">Latency Budget</span>
+        <span class="badge">Observability</span>
+        <span class="badge">Drift Signals</span>
       </div>
     </section>
 
     <section class="section">
       <div class="grid">
+
         <article class="card col-6">
-          <h3>RAG Knowledge Copilot — Evidence Memo</h3>
+          <h3>Forecast Studio — Evidence Memo</h3>
           <p>
-            Retrieval traceability, evaluation harness approach, and reliability patterns for document reality.
-            Includes explicit “what recruiters look for” signals and ATS keyword anchors.
+            Forecasting discipline: backtesting signals, uncertainty bands, and monitoring hooks suitable for production.
           </p>
-
-          <div class="tags" aria-label="Tags">
-            <span class="tag">Retrieval Tracing</span>
-            <span class="tag">Regression Prompts</span>
-            <span class="tag">Prompt Injection Defence</span>
+          <div class="tags">
+            <span class="tag">Backtesting</span>
+            <span class="tag">MAPE / MAE</span>
+            <span class="tag">Retraining Triggers</span>
+            <span class="tag">Drift-ready</span>
           </div>
+          <div class="actions">
+            <a class="btn primary" href="/evidence/forecast-studio/">Open memo</a>
+            <a class="btn" href="/demos/forecast-studio/">Open system</a>
+            <a class="btn" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener">Source</a>
+          </div>
+        </article>
 
-          <div class="actions" aria-label="Actions">
+        <article class="card col-6">
+          <h3>RAG Copilot — Evidence Memo</h3>
+          <p>
+            RAG reliability: retrieval tracing, evaluation harnesses, and guardrails for document-grounded answers.
+          </p>
+          <div class="tags">
+            <span class="tag">RAG</span>
+            <span class="tag">Evaluation</span>
+            <span class="tag">Traceability</span>
+            <span class="tag">Guardrails</span>
+          </div>
+          <div class="actions">
             <a class="btn primary" href="/evidence/rag-copilot/">Open memo</a>
             <a class="btn" href="/demos/rag-copilot/">Open system</a>
+            <a class="btn" href="https://github.com/nepryoon/neuromorphic-inference-lab-site" target="_blank" rel="noopener">Site source</a>
           </div>
         </article>
 
-        <article class="card col-6">
-          <h3>NeuroGrid Fault Risk — Evidence Notes</h3>
-          <p>
-            Operational constraints, deployment integration, and inference serving considerations for grid analytics.
-            Links back to the live system demo and production API.
-          </p>
-
-          <div class="tags" aria-label="Tags">
-            <span class="tag">Inference Serving</span>
-            <span class="tag">Latency Budget</span>
-            <span class="tag">Artefact Versioning</span>
-          </div>
-
-          <div class="actions" aria-label="Actions">
-            <a class="btn primary" href="/demos/mv-grid-fault-risk/">Open system</a>
-            <a class="btn" href="/demos/">Back to systems</a>
-          </div>
-        </article>
-
-        <article class="card col-12">
-          <h3>What this ledger proves</h3>
-          <p class="muted" style="margin:0;">
-            This section exists to remove ambiguity: it links modelling claims to engineering artefacts.
-            It highlights evaluation signals, deployment decisions, monitoring plans, and failure modes — the difference between
-            a demo and a production-ready ML system.
-          </p>
-
-          <div class="badges" style="margin-top:12px;">
-            <span class="badge">Auditability</span>
-            <span class="badge">Failure Modes</span>
-            <span class="badge">Rollback Discipline</span>
-            <span class="badge">Observability</span>
-          </div>
-        </article>
       </div>
     </section>
 
     <footer class="footer">
       <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
-      <div class="prov" aria-label="Build provenance">
+      <div class="prov">
         <span id="build-branch">branch: …</span>
         <span id="build-commit">commit: …</span>
         <span id="build-time">built: …</span>
