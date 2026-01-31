@@ -3,24 +3,48 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RAG Copilot — Evidence Memo</title>
-  <meta name="description" content="Proof memo for the RAG Knowledge Copilot: retrieval, evaluation harness, guardrails, CI/CD for prompts, and monitoring signals." />
+  <title>Evidence Memo — RAG Copilot</title>
+  <meta name="description" content="Evidence memo for RAG Knowledge Copilot: retrieval traceability, grounding policy, guardrails, and evaluation mindset." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
+  <style>
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .small{ font-size: 12px; color: rgba(234,240,255,.70); line-height: 1.6; }
+    .memoGrid{ display:grid; grid-template-columns: 1fr; gap: 14px; }
+    @media (min-width: 980px){ .memoGrid{ grid-template-columns: 1fr 1fr; } }
+    .box{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .box h4{ margin: 0 0 8px; font-size: 14px; letter-spacing: .2px; }
+    .box p{ margin: 0; color: rgba(234,240,255,.78); line-height: 1.65; font-size: 13px; }
+    .sep{ border:0; border-top:1px solid rgba(255,255,255,.10); margin: 14px 0; }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.20);
+      color: rgba(234,240,255,.88);
+    }
+    .list{ margin: 8px 0 0; padding-left: 18px; color: rgba(234,240,255,.74); line-height: 1.7; }
+  </style>
 </head>
 
 <body>
   <header class="nav">
     <div class="inner">
-      <a class="brand" href="/" aria-label="Neuromorphic Inference Lab home">
+      <div class="brand">
         <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
         <span>Neuromorphic Inference Lab</span>
-      </a>
-
+      </div>
       <nav class="navlinks" aria-label="Primary navigation">
         <a data-nav href="/">Signal</a>
         <a data-nav href="/demos/">Systems</a>
-        <a data-nav href="/evidence/" data-active="true">Proof Ledger</a>
+        <a data-nav class="active" href="/evidence/">Proof Ledger</a>
         <a data-nav href="/about/">Identity</a>
       </nav>
     </div>
@@ -28,101 +52,158 @@
 
   <main class="container">
     <section class="hero">
-      <p class="kicker">Proof Ledger · RAG / LLMOps</p>
-      <h1 class="h1">RAG Knowledge Copilot — Evidence Memo</h1>
+      <p class="kicker">Evidence memo</p>
+      <h1 class="h1">RAG Knowledge Copilot</h1>
       <p class="sub">
-        This memo maps system claims to verifiable artefacts. The live demo is static-by-design (safe for a public site),
-        but mirrors a production architecture: ingestion → chunking + metadata → embeddings → vector index → retrieval + reranking →
-        prompt assembly → inference → citations/guardrails → monitoring and feedback loops.
+        This memo explains what the system demonstrates, how to verify it quickly, and which production risks are explicitly addressed.
+        The live demo is browser-only (Cloudflare-safe) and optimised to surface <strong>LLMOps reliability signals</strong>.
       </p>
 
-      <div class="actions" style="margin-top:16px;">
-        <a class="btn primary" href="/demos/rag-copilot/">Open system</a>
-        <a class="btn" href="/evidence/">Back to Proof Ledger</a>
-        <a class="btn" href="/demos/">Back to Systems</a>
-      </div>
-
-      <div class="badges" style="margin-top:14px;" aria-label="Keywords">
+      <div class="badges">
         <span class="badge">RAG</span>
         <span class="badge">LLMOps</span>
-        <span class="badge">Evaluation Harness</span>
         <span class="badge">Retrieval Tracing</span>
         <span class="badge">Guardrails</span>
-        <span class="badge">CI/CD for Prompts</span>
-        <span class="badge">Monitoring</span>
+        <span class="badge">Evaluation Harness</span>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="actions">
+        <a class="btn primary" href="/demos/rag-copilot/">Open live system</a>
+        <a class="btn" href="/evidence/#rag-copilot">Back to anchor</a>
+        <a class="btn" href="/demos/">Systems index</a>
+      </div>
+
+      <p class="small" style="margin-top:10px;">
+        CV anchor: <span class="kbd">/evidence/#rag-copilot</span>
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>What this proves</h2>
+      <p class="lead">
+        The goal is not “a chatbot”. The goal is to demonstrate production-minded RAG: grounded answers, traceability, and refusal policies.
+      </p>
+
+      <div class="grid">
+        <article class="card col-12">
+          <div class="tags">
+            <span class="tag">Grounded Drafting</span>
+            <span class="tag">Citation Discipline</span>
+            <span class="tag">Prompt Injection Defence</span>
+            <span class="tag">Regression Safety</span>
+            <span class="tag">Monitoring Mindset</span>
+          </div>
+          <ul class="clean">
+            <li><strong>Retrieval traceability:</strong> shows top-k sources, similarity signals, and readable snippets.</li>
+            <li><strong>Grounding policy:</strong> answer is constrained to retrieved context; weak retrieval triggers refusal (strict mode).</li>
+            <li><strong>Guardrails:</strong> designed to prevent silent hallucinations and prompt injection patterns.</li>
+            <li><strong>Evaluation mindset:</strong> structured to support labelled queries, precision@k tracking, and citation correctness checks.</li>
+          </ul>
+        </article>
       </div>
     </section>
 
     <section class="section">
+      <h2>How to verify (60 seconds)</h2>
+      <div class="memoGrid">
+        <div class="box">
+          <h4>Step 1 — Run a “monitoring” question</h4>
+          <p>
+            Open the system and ask:
+            <span class="mono">"What should be monitored for deployed ML models? Provide citations."</span>
+          </p>
+          <ul class="list">
+            <li>Expected: retrieved sources appear with similarity scores.</li>
+            <li>Expected: answer includes citations like <span class="mono">[1], [2], [3]</span>.</li>
+          </ul>
+        </div>
+
+        <div class="box">
+          <h4>Step 2 — Test the guardrail</h4>
+          <p>
+            Ask an unrelated question (e.g. about cooking) while in <strong>Strict</strong> policy.
+          </p>
+          <ul class="list">
+            <li>Expected: refusal due to low retrieval confidence.</li>
+            <li>Reason: prevents unsupported answers.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="grid">
+        <article class="card col-12">
+          <h3>Operational design choices</h3>
+          <p class="small">
+            The live demo is intentionally client-only (no network calls) to keep the portfolio reliable, fast, and safe for public hosting.
+            The architecture patterns map directly to production RAG implementations with vector stores and LLM backends.
+          </p>
+          <div class="tags">
+            <span class="tag">Cloudflare Pages</span>
+            <span class="tag">No Backend Calls</span>
+            <span class="tag">CORS-safe</span>
+            <span class="tag">Trace Export</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Production risks & mitigations</h2>
       <div class="grid">
         <article class="card col-6">
-          <h3>What is proven</h3>
-          <p>
-            The demo provides three concrete hiring signals: (1) transparent retrieval traces with similarity scores,
-            (2) grounded drafting constrained by retrieved context, and (3) a minimal regression-style evaluation loop.
-          </p>
-
-          <div class="tags">
-            <span class="tag">Auditability</span>
-            <span class="tag">Grounded Drafting</span>
-            <span class="tag">Mini Eval</span>
-          </div>
+          <h3>Hallucinations</h3>
+          <ul class="clean">
+            <li>Mitigation: strict grounding to retrieved snippets.</li>
+            <li>Mitigation: refusal on weak retrieval confidence.</li>
+            <li>Mitigation: citation discipline and trace display.</li>
+          </ul>
         </article>
-
         <article class="card col-6">
-          <h3>Production design choices</h3>
-          <p>
-            A production implementation adds embeddings + vector store, hybrid retrieval, reranking,
-            strict citations policy, refusal on weak retrieval, and schema-validated outputs.
-            CI/CD covers prompts, retrieval configs, and evaluation sets.
-          </p>
+          <h3>Prompt injection</h3>
+          <ul class="clean">
+            <li>Mitigation: treat retrieved content as data, not instructions.</li>
+            <li>Mitigation: allow-list behaviours; refuse policy overrides.</li>
+            <li>Mitigation: traceability for audit and incident review.</li>
+          </ul>
+        </article>
+      </div>
 
+      <div style="height:12px"></div>
+
+      <div class="grid">
+        <article class="card col-12">
+          <h3>Next improvements (if deployed with an LLM backend)</h3>
+          <ul class="clean">
+            <li>Add a vector store (e.g. pgvector / managed service) + embedding pipeline.</li>
+            <li>Introduce query set + automated eval (precision@k, groundedness, refusal correctness).</li>
+            <li>Implement access control and PII redaction, plus prompt injection filters.</li>
+            <li>Monitor latency, cost per query, and retrieval drift over time.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Keywords (ATS trigger set)</h2>
+      <div class="grid">
+        <article class="card col-12">
           <div class="tags">
-            <span class="tag">Vector Store</span>
-            <span class="tag">Hybrid Retrieval</span>
-            <span class="tag">Schema Validation</span>
+            <span class="tag">RAG</span>
+            <span class="tag">LLMOps</span>
+            <span class="tag">Retrieval Tracing</span>
+            <span class="tag">Vector Search</span>
+            <span class="tag">Evaluation Harness</span>
+            <span class="tag">Guardrails</span>
+            <span class="tag">Prompt Injection Defence</span>
+            <span class="tag">Groundedness</span>
+            <span class="tag">Citation Discipline</span>
           </div>
-        </article>
-
-        <article class="card col-12">
-          <h3>Evaluation harness: what recruiters look for</h3>
-          <p class="muted" style="margin:0;">
-            A credible RAG build ships with measurable signals and a repeatable loop:
-            retrieval hit-rate, precision@k, citation correctness, faithfulness, latency, and cost per query.
-            You maintain a suite of regression prompts and labelled failure cases, replayed on every release.
-          </p>
-
-          <div class="badges" style="margin-top:12px;">
-            <span class="badge">precision@k</span>
-            <span class="badge">faithfulness</span>
-            <span class="badge">citation correctness</span>
-            <span class="badge">latency budget</span>
-            <span class="badge">cost controls</span>
-            <span class="badge">regression prompts</span>
-          </div>
-        </article>
-
-        <article class="card col-12">
-          <h3>Reliability and guardrails</h3>
-          <p class="muted" style="margin:0;">
-            Real-world failure modes are addressed explicitly: prompt injection, missing context, wrong context, and over-confident answers.
-            Reliability patterns include refusal on empty retrieval, source-based claims, structured output validation, and monitoring for drift/regressions.
-          </p>
-
-          <div class="badges" style="margin-top:12px;">
-            <span class="badge">Prompt Injection Defence</span>
-            <span class="badge">Refusal Policy</span>
-            <span class="badge">PII Redaction</span>
-            <span class="badge">Monitoring</span>
-          </div>
-        </article>
-
-        <article class="card col-12">
-          <h3>ATS keyword pack (explicit)</h3>
-          <p class="muted" style="margin:0;">
-            RAG, LLMOps, embeddings, vector database, hybrid retrieval, reranking, chunking, retrieval tracing, citations,
-            evaluation harness, regression prompts, precision@k, faithfulness, prompt injection defence, CI/CD for ML,
-            CI/CD for prompts, monitoring, observability, monitoring-ready outputs.
+          <p class="small" style="margin-top:10px;">
+            Proof anchor for CV: <span class="kbd">/evidence/#rag-copilot</span>
           </p>
         </article>
       </div>
@@ -130,7 +211,7 @@
 
     <footer class="footer">
       <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
-      <div class="prov" aria-label="Build provenance">
+      <div class="prov">
         <span id="build-branch">branch: …</span>
         <span id="build-commit">commit: …</span>
         <span id="build-time">built: …</span>
