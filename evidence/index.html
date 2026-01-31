@@ -4,70 +4,61 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Proof Ledger — Neuromorphic Inference Lab</title>
-  <meta name="description" content="Evidence ledger mapping full-stack ML engineering skills to proof: code, CI workflows, artefacts, and live endpoints." />
+  <meta name="description" content="Evidence-led portfolio: architectures, evaluation, CI/CD, and production trade-offs." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
 </head>
 
 <body>
   <header class="nav">
-    <div class="brand">
-      <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
-      <span>Neuromorphic Inference Lab</span>
+    <div class="inner">
+      <a class="brand" href="/" aria-label="Neuromorphic Inference Lab home">
+        <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+        <span>Neuromorphic Inference Lab</span>
+      </a>
+
+      <nav class="navlinks" aria-label="Primary navigation">
+        <a data-nav href="/">Signal</a>
+        <a data-nav href="/demos/">Systems</a>
+        <a data-nav href="/evidence/" data-active="true">Proof Ledger</a>
+        <a data-nav href="/about/">Identity</a>
+      </nav>
     </div>
-    <nav class="navlinks" aria-label="Primary navigation">
-      <a data-nav href="/">Signal</a>
-      <a data-nav href="/demos/">Systems</a>
-      <a data-nav class="active" href="/evidence/">Proof Ledger</a>
-      <a data-nav href="/about/">Identity</a>
-    </nav>
   </header>
 
   <main class="container">
     <section class="hero">
       <p class="kicker">Proof Ledger</p>
-      <h1 class="h1">Skill → proof mapping, engineered for technical screening.</h1>
+      <h1 class="h1">Evidence over claims.</h1>
       <p class="sub">
-        No vague claims. Each competency is backed by artefacts: repository structure, CI runs, versioned model assets,
-        and live inference endpoints — mirroring how robust systems are validated in production.
+        Short technical memos that make systems auditable: architecture decisions, evaluation signals, deployment trade-offs, and monitoring.
       </p>
 
-      <div class="actions">
-        <a class="btn primary" href="/evidence/mv-grid-fault-risk/">Open MV Grid evidence dossier</a>
-        <a class="btn" href="/demos/mv-grid-fault-risk/">Try the live demo</a>
-        <a class="btn" href="/api/mvgrid/health" target="_blank" rel="noopener">Proxy health</a>
-      </div>
-
       <div class="badges">
-        <span class="badge">Scalable ML Pipelines</span>
         <span class="badge">CI/CD for ML</span>
-        <span class="badge">Artefact Versioning</span>
-        <span class="badge">Model Serving</span>
-        <span class="badge">Monitoring-ready outputs</span>
+        <span class="badge">LLMOps</span>
+        <span class="badge">Monitoring</span>
+        <span class="badge">Data Governance</span>
       </div>
     </section>
 
     <section class="section">
-      <h2>Evidence dossiers</h2>
-      <p>Proof bundles organised as an engineering dossier: architecture, artefacts, and verification paths.</p>
-
       <div class="grid">
-        <article class="card project col-12">
-          <h3>MV Grid Fault Risk Scoring Platform — Evidence Dossier</h3>
-          <p>
-            Full-stack delivery proof: ingestion → features → MLflow training → CI workflow → release artefact → Dockerised serving → live endpoint.
-          </p>
-          <div class="tags">
-            <span class="tag">Data → Model → Production</span>
-            <span class="tag">Reproducible training</span>
-            <span class="tag">Serving reliability</span>
-            <span class="tag">Artefact promotion</span>
-          </div>
+        <article class="card col-6">
+          <h3>RAG Knowledge Copilot — Evidence</h3>
+          <p>Retrieval traceability, evaluation harness approach, and reliability patterns for document reality.</p>
           <div class="actions">
-            <a class="btn primary" href="/evidence/mv-grid-fault-risk/">Open dossier</a>
-            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Repository</a>
-            <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">API docs</a>
-            <a class="btn" href="/api/mvgrid/health" target="_blank" rel="noopener">Proxy health</a>
+            <a class="btn primary" href="/evidence/rag-copilot/">Open memo</a>
+            <a class="btn" href="/demos/rag-copilot/">Open system</a>
+          </div>
+        </article>
+
+        <article class="card col-6">
+          <h3>NeuroGrid Fault Risk — Evidence</h3>
+          <p>Inference serving decisions, latency constraints, model versioning, and production API integration.</p>
+          <div class="actions">
+            <a class="btn primary" href="/demos/mv-grid-fault-risk/">Open system</a>
+            <a class="btn" href="/demos/">Systems</a>
           </div>
         </article>
       </div>
