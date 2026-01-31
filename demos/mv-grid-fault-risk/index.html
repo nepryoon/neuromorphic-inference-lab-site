@@ -3,11 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Evidence Dossier — NeuroGrid Fault Risk Scoring Platform</title>
-  <meta name="description" content="Evidence dossier: full-stack ML delivery proof (data pipeline, MLflow training, CI workflow, artefact versioning, live inference serving)." />
+  <title>NeuroGrid Fault Risk Scoring Platform — Systems</title>
+  <meta name="description" content="End-to-end ML system: feature engineering, MLflow training, CI/CD for ML, artefact versioning, FastAPI serving, and monitoring-ready outputs." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
 </head>
+
 <body>
   <header class="nav">
     <div class="brand">
@@ -16,7 +17,7 @@
     </div>
     <nav class="navlinks" aria-label="Primary navigation">
       <a data-nav href="/">Signal</a>
-      <a data-nav href="/demos/">Systems</a>
+      <a data-nav class="active" href="/demos/">Systems</a>
       <a data-nav href="/evidence/">Proof Ledger</a>
       <a data-nav href="/about/">Identity</a>
     </nav>
@@ -24,132 +25,217 @@
 
   <main class="container">
     <section class="hero">
-      <p class="kicker">Evidence Dossier</p>
+      <p class="kicker">Hero System</p>
       <h1 class="h1">NeuroGrid Fault Risk Scoring Platform</h1>
       <p class="sub">
-        A verification-oriented dossier designed for hiring managers: each claim is tied to a concrete artefact.
-        The system demonstrates full-stack delivery — from data/feature pipelines through MLflow-tracked training,
-        CI execution, versioned model artefacts, and live inference serving.
+        A production-first ML system that predicts medium-voltage fault risk to prioritise preventive interventions.
+        Demonstrates the full delivery loop: ingestion → feature engineering → training (MLflow) → artefact versioning → Dockerised serving (FastAPI) → live inference.
       </p>
 
       <div class="actions">
-        <a class="btn primary" href="/demos/mv-grid-fault-risk/">Open live system</a>
-        <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Repository</a>
-        <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/actions" target="_blank" rel="noopener">CI runs</a>
-        <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/releases/tag/model-v0.1.0" target="_blank" rel="noopener">Model artefact</a>
-        <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">API docs</a>
-        <a class="btn" href="/api/mvgrid/health" target="_blank" rel="noopener">Proxy health</a>
+        <a class="btn primary" href="/evidence/mv-grid-fault-risk/">Open evidence dossier</a>
+        <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">Live API docs</a>
+        <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Source</a>
       </div>
 
       <div class="badges">
-        <span class="badge">Scalable ML Pipelines</span>
         <span class="badge">CI/CD for ML</span>
+        <span class="badge">Inference Serving</span>
+        <span class="badge">Artefact Promotion</span>
+        <span class="badge">Feature Engineering</span>
         <span class="badge">MLflow Tracking</span>
-        <span class="badge">Artefact Versioning</span>
-        <span class="badge">Model Serving</span>
         <span class="badge">Monitoring-ready outputs</span>
       </div>
     </section>
 
     <section class="section">
-      <h2>Skill → proof mapping</h2>
-      <p>
-        The matrix below maps full-stack competencies to verifiable proof. Each item is intentionally linkable.
-      </p>
-
       <div class="grid">
         <article class="card project col-6">
-          <h3>Data pipeline & feature engineering</h3>
+          <h3>Problem → impact</h3>
           <p>
-            Ingestion → validation → training table. Rolling-window features (30/90/180 days), recency features, and asset-age signals.
-            Designed to be reproducible and retraining-ready.
+            Grid operations need a consistent way to rank assets/feeders by fault risk and allocate preventive interventions.
+            A risk score supports earlier dispatch decisions and reduces exposure to unplanned outages.
           </p>
-          <div class="actions">
-            <a class="btn primary" href="https://github.com/nepryoon/mv-grid-fault-risk/tree/main/src/mvgrid" target="_blank" rel="noopener">Pipeline module</a>
-            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Repo root</a>
-          </div>
-          <div class="tags" style="margin-top:12px;">
-            <span class="tag">Feature Engineering</span>
-            <span class="tag">Data Validation</span>
-            <span class="tag">Retraining-ready</span>
-          </div>
-        </article>
 
-        <article class="card project col-6">
-          <h3>Modelling + statistical evaluation</h3>
-          <p>
-            Time-aware split (operational realism) and metrics suitable for risk models (ROC-AUC / PR-AUC / F1).
-            Baseline classifier with an extensible architecture.
-          </p>
-          <div class="actions">
-            <a class="btn primary" href="https://github.com/nepryoon/mv-grid-fault-risk/tree/main/src/mvgrid/train.py" target="_blank" rel="noopener">Training script</a>
-            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/actions" target="_blank" rel="noopener">Training runs</a>
-          </div>
-          <div class="tags" style="margin-top:12px;">
-            <span class="tag">Time-based Split</span>
-            <span class="tag">ROC-AUC / PR-AUC</span>
-            <span class="tag">Reproducibility</span>
-          </div>
-        </article>
+          <h3>Proof links</h3>
+          <p>Recruiter-friendly verification paths (code + CI + release artefact + live endpoint).</p>
 
-        <article class="card project col-6">
-          <h3>CI training workflow (MLOps)</h3>
-          <p>
-            Automated dataset build + training in GitHub Actions. Produces artefacts for deployment and supports
-            repeatable model promotion.
-          </p>
           <div class="actions">
-            <a class="btn primary" href="https://github.com/nepryoon/mv-grid-fault-risk/tree/main/.github/workflows" target="_blank" rel="noopener">Workflow YAML</a>
-            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/actions" target="_blank" rel="noopener">Actions</a>
-          </div>
-          <div class="tags" style="margin-top:12px;">
-            <span class="tag">CI/CD for ML</span>
-            <span class="tag">Automated Training</span>
-            <span class="tag">Artefact Promotion</span>
-          </div>
-        </article>
-
-        <article class="card project col-6">
-          <h3>Artefact versioning + deployment readiness</h3>
-          <p>
-            Model artefact published as a GitHub Release asset. The API fetches the artefact via environment configuration,
-            enabling clean version promotion.
-          </p>
-          <div class="actions">
-            <a class="btn primary" href="https://github.com/nepryoon/mv-grid-fault-risk/releases" target="_blank" rel="noopener">Releases</a>
-            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/releases/download/model-v0.1.0/model_latest.zip" target="_blank" rel="noopener">Model asset</a>
-          </div>
-          <div class="tags" style="margin-top:12px;">
-            <span class="tag">Versioned Artefacts</span>
-            <span class="tag">Deployment-ready</span>
-            <span class="tag">Reproducible Builds</span>
-          </div>
-        </article>
-
-        <article class="card project col-12">
-          <h3>Model serving + live inference</h3>
-          <p>
-            Dockerised FastAPI service deployed on Render. The website demo calls a same-origin Cloudflare proxy,
-            removing CORS and producing stable browser-based testing.
-          </p>
-          <div class="actions">
-            <a class="btn primary" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">Swagger UI</a>
-            <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/health" target="_blank" rel="noopener">Upstream health</a>
+            <a class="btn primary" href="/evidence/mv-grid-fault-risk/">Evidence dossier</a>
+            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/actions" target="_blank" rel="noopener">CI training runs</a>
+            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/releases/tag/model-v0.1.0" target="_blank" rel="noopener">Model artefact</a>
             <a class="btn" href="/api/mvgrid/health" target="_blank" rel="noopener">Proxy health</a>
-            <a class="btn" href="/demos/mv-grid-fault-risk/">Try demo</a>
           </div>
+
           <div class="tags" style="margin-top:12px;">
-            <span class="tag">FastAPI</span>
-            <span class="tag">Docker</span>
-            <span class="tag">Serving Reliability</span>
+            <span class="tag">Time-aware split</span>
+            <span class="tag">Reproducible builds</span>
+            <span class="tag">Deployment-ready artefacts</span>
+          </div>
+        </article>
+
+        <article class="card project col-6">
+          <h3>Live inference demo</h3>
+          <p>
+            Score risk via a same-origin Cloudflare proxy (no CORS). If the upstream service was idle, the first request may take a moment to warm up.
+          </p>
+
+          <div class="card project" style="padding:16px;">
+            <form id="score-form">
+              <div class="grid">
+                <div class="col-6">
+                  <label><span>Asset age (years)</span>
+                    <input name="asset_age_years" type="number" step="0.5" value="15" />
+                  </label>
+                </div>
+                <div class="col-6">
+                  <label><span>Days since last fault</span>
+                    <input name="days_since_last_fault" type="number" step="1" value="365" />
+                  </label>
+                </div>
+
+                <div class="col-4">
+                  <label><span>Faults last 30 days</span>
+                    <input name="faults_last_30d" type="number" step="1" value="0" />
+                  </label>
+                </div>
+                <div class="col-4">
+                  <label><span>Faults last 90 days</span>
+                    <input name="faults_last_90d" type="number" step="1" value="1" />
+                  </label>
+                </div>
+                <div class="col-4">
+                  <label><span>Faults last 180 days</span>
+                    <input name="faults_last_180d" type="number" step="1" value="2" />
+                  </label>
+                </div>
+
+                <div class="col-6">
+                  <label><span>Asset type</span>
+                    <select name="asset_type">
+                      <option value="overhead" selected>overhead</option>
+                      <option value="underground">underground</option>
+                      <option value="substation">substation</option>
+                      <option value="unknown">unknown</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div class="col-6">
+                  <label><span>Region</span>
+                    <select name="region">
+                      <option value="north" selected>north</option>
+                      <option value="centre">centre</option>
+                      <option value="south">south</option>
+                      <option value="unknown">unknown</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div class="col-6">
+                  <label><span>Voltage (kV)</span>
+                    <input name="voltage_kv" type="number" step="1" value="15" />
+                  </label>
+                </div>
+
+                <div class="col-6">
+                  <label><span>Manufacturer</span>
+                    <input name="manufacturer" type="text" value="GenericGridCo" />
+                  </label>
+                </div>
+
+                <div class="col-12" style="margin-top:6px;">
+                  <button class="btn primary" type="submit">Score risk</button>
+                  <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">Open Swagger</a>
+                </div>
+              </div>
+            </form>
+
+            <div id="result" style="margin-top:14px; color: var(--muted);"></div>
           </div>
         </article>
       </div>
     </section>
 
     <section class="section">
-      <h2>ATS keyword pack</h2>
+      <h2>ATS keyword pack (explicit)</h2>
       <p>
         Full-Stack Machine Learning Engineer, Data Scientist, scalable ML pipelines, feature engineering, statistical modelling,
-        MLflow experiment tracking, CI/CD for ML, Dockerization, FastAPI model serving, inference scaling (patterns),
-        artefact versioning, automat
+        MLflow experiment tracking, CI/CD for ML, Dockerization, FastAPI model serving, inference optimisation (patterns),
+        artefact versioning, automated retraining (design pattern), monitoring-ready outputs, reproducible builds, time-based split.
+      </p>
+    </section>
+
+    <footer class="footer">
+      <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
+      <div class="prov">
+        <span id="build-branch">branch: …</span>
+        <span id="build-commit">commit: …</span>
+        <span id="build-time">built: …</span>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById("year").textContent = String(new Date().getFullYear());
+
+    const API_PREDICT = "/api/mvgrid/predict";
+    const API_HEALTH  = "/api/mvgrid/health";
+
+    function toNumber(v) {
+      const n = Number(v);
+      return Number.isFinite(n) ? n : v;
+    }
+
+    function pillRow(items) {
+      return `<div class="prov">${items.map(x => `<span>${x}</span>`).join("")}</div>`;
+    }
+
+    document.getElementById("score-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = new FormData(form);
+
+      const features = {};
+      for (const [k, v] of data.entries()) {
+        const vv = (typeof v === "string") ? v.trim() : v;
+        features[k] = vv === "" ? null : toNumber(vv);
+      }
+
+      const resultEl = document.getElementById("result");
+      resultEl.textContent = "Scoring… (If the service was idle, it may take a moment to warm up.)";
+
+      try { await fetch(API_HEALTH, { cache: "no-store" }); } catch (_) {}
+
+      try {
+        const res = await fetch(API_PREDICT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ features })
+        });
+
+        const txt = await res.text();
+        if (!res.ok) throw new Error(`API error (${res.status}): ${txt}`);
+
+        const out = JSON.parse(txt);
+        const prob = Number(out.fault_probability_30d);
+        const band = String(out.risk_band || "unknown").toUpperCase();
+        const model = String(out.model_source || "model");
+
+        resultEl.innerHTML =
+          pillRow([
+            `fault probability (30d): <strong>${Number.isFinite(prob) ? prob.toFixed(3) : out.fault_probability_30d}</strong>`,
+            `risk band: <strong>${band}</strong>`,
+            `model: ${model}`
+          ]) +
+          `<div style="margin-top:10px;"><small>Live inference via Cloudflare proxy → Render FastAPI → versioned model artefact.</small></div>`;
+
+      } catch (err) {
+        resultEl.textContent = "Request failed: " + err.message;
+      }
+    });
+  </script>
+
+  <script src="/build-info.js"></script>
+</body>
+</html>
