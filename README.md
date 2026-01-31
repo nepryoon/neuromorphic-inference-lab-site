@@ -1,106 +1,153 @@
 # Neuromorphic Inference Lab — Site
 
-> **Live site:** [https://www.neuromorphicinference.com/](https://www.neuromorphicinference.com/)
-> **Demos hub:** [https://www.neuromorphicinference.com/demos](https://www.neuromorphicinference.com/demos)
-> **Evidence index:** [https://www.neuromorphicinference.com/evidence](https://www.neuromorphicinference.com/evidence)
-> **Build metadata (commit/branch):** [https://www.neuromorphicinference.com/api/build](https://www.neuromorphicinference.com/api/build)
+**Live site:** https://www.neuromorphicinference.com/  
+**Systems (demos hub):** https://www.neuromorphicinference.com/demos/  
+**Proof Ledger (evidence index):** https://www.neuromorphicinference.com/evidence/  
+**Build provenance (commit/branch):** https://www.neuromorphicinference.com/api/build  
 
-## What this repo is
+This repository contains the source for the Neuromorphic Inference Lab website: **static HTML pages + lightweight Cloudflare Pages Functions**.
+The site is designed as an **applied Full-Stack Machine Learning Engineering portfolio**, where every claim is backed by **clickable proof**.
 
-This repository contains the **source of the Neuromorphic Inference Lab website** (static pages + lightweight Cloudflare Pages Functions).
-The site is designed as an **applied AI portfolio** with *evidence-based competence*: every claim should be verifiable through:
+---
 
-* **Live docs** hosted on the domain (this site)
-* **Exact source code** hosted in dedicated GitHub repos (e.g., EdgePulse / nil-* repos)
+## What recruiters can verify in 60 seconds
+
+1. **Systems**: each project is presented as an end-to-end system (data → features → training → artefacts → serving → monitoring-ready outputs).  
+2. **Proof Ledger**: skill-to-proof mapping with stable anchors intended to be linked from a CV.  
+3. **Build provenance**: the footer shows commit/branch to demonstrate traceability.
+
+---
+
+## Hero systems (the “front door”)
+
+### 1) MV Grid Fault Risk Scoring Platform
+**Live docs:** https://www.neuromorphicinference.com/demos/mv-grid-fault-risk/  
+**API (live):** https://mv-grid-fault-risk-api.onrender.com/docs  
+**Source:** https://github.com/nepryoon/mv-grid-fault-risk  
+
+A production-first pipeline for medium-voltage fault risk inference:
+- feature engineering + model training (tracked)
+- artefact versioning
+- model serving (API)
+- demo UI for interactive scoring
+
+Key keywords: CI/CD for ML, inference serving, model artefacts, pipeline automation, monitoring-ready outputs.
+
+### 2) RAG Copilot (LLMOps)
+**Live docs:** https://www.neuromorphicinference.com/demos/rag-copilot/  
+**Source:** https://github.com/nepryoon/nil-rag-copilot  
+
+A RAG chatbot built to be auditable and regression-tested:
+- citations and retrieval transparency
+- evaluation harness for quality regression
+- guardrails for prompt injection / unsafe requests
+- production-ready structure (API + containerisation)
+
+Key keywords: RAG, LLMOps, evaluation harness, guardrails, citations.
+
+### 3) Forecast Studio
+**Live docs:** https://www.neuromorphicinference.com/demos/forecast-studio/  
+**Source:** https://github.com/nepryoon/nil-forecast-studio  
+
+A forecasting system designed to escape the “notebook trap”:
+- data ingestion + validation
+- backtesting and model comparison
+- artefacts (reports) and scheduled runs
+- dashboard-style presentation for decision-makers
+
+Key keywords: time series, backtesting, reproducibility, artefacts, scheduling.
+
+---
 
 ## Principles
 
-* **Evidence-based competence:** no “skill listing” without a clickable proof (live + code).
-* **Production-first framing:** demos are described as *systems* (ingest → store → score → operate), not papers.
-* **Stable URLs:** `/demos/*` and `/evidence#*` are intended to be referenced from the CV.
+- **Evidence-based competence**: no “skill listing” without clickable proof (live + code).
+- **Production-first framing**: projects are described as systems, not papers.
+- **Stable URLs**: `/demos/*` and `/evidence#*` are intended to be referenced from the CV.
+
+---
 
 ## How the portfolio is structured
 
-* `/demos` → catalog of projects (each has Live/Docs + Code)
-* `/demos/<project>` → “live documentation” (case study / roadmap / verification path)
-* `/evidence` → skill-to-proof index (anchors meant to be linked from CV)
-* `/about` → positioning
-* `/research` → archive (kept for continuity, intentionally secondary)
+- `/` → positioning (Signal)
+- `/demos/` → systems catalogue
+- `/demos/<project>/` → live documentation (case study, architecture, verification path)
+- `/evidence/` → Proof Ledger (skill-to-proof index)
+- `/about/` → identity / narrative
+- `/research/` → archive (intentionally secondary)
+
+---
 
 ## Repo layout (high level)
 
-* `index.html` → home
-* `style.css` → shared styling (optional if used)
-* `build-info.js` → client script that populates footer build provenance by calling `/api/build`
-* `demos/` → demo pages (live docs)
-* `evidence/`, `about/`, `research/` → section pages
-* `functions/api/build.js` → Cloudflare Pages Function returning build metadata as JSON
+- `index.html` → home
+- `style.css` → shared styling
+- `build-info.js` → fetches `/api/build` and populates footer provenance
+- `demos/` → demo pages (live docs)
+- `evidence/`, `about/`, `research/` → section pages
+- `functions/api/build.js` → Cloudflare Pages Function returning build metadata as JSON
+
+---
 
 ## Build provenance (commit + branch)
 
-Cloudflare Pages exposes build information as environment variables (e.g., commit SHA, branch).
-Since these variables are not directly available in the browser, the site uses:
+Cloudflare Pages provides build context (for example, branch and commit) at deploy time.
+Because this information is not directly available to client-side scripts, the site uses:
 
-* **Function endpoint:** `/api/build` (served by `functions/api/build.js`)
-* **Client script:** `build-info.js` fetches `/api/build` and updates the footer
+- Function endpoint: `/api/build` (served by `functions/api/build.js`)
+- Client script: `build-info.js` fetches `/api/build` and updates the footer
 
-This provides a lightweight “build provenance” signal recruiters/engineers can audit.
+This provides a lightweight traceability signal engineers can audit.
+
+---
 
 ## Local development
 
-This site is static HTML. You can run it locally with any static server. Examples:
+### Option A — Static-only preview (fastest)
+Run with any static server:
 
-* Python:
+- Python:
+  - `python -m http.server 8080`
+- Node:
+  - `npx serve .`
 
-  * `python -m http.server 8080`
-* Node:
+Open: `http://localhost:8080`
 
-  * `npx serve .`
+Note: this does not run Pages Functions.
 
-Then open: `http://localhost:8080`
+### Option B — Local dev with Pages Functions (recommended)
+Use Cloudflare Wrangler to run static assets **and** Functions locally:
 
-> Note: Cloudflare Pages Functions won’t run in a plain static server. To test Functions locally, use Cloudflare tooling (Wrangler) or test on the deployed environment.
+- `npx wrangler pages dev .`
+
+This serves the site locally and runs Functions under `/functions`.
+
+---
 
 ## Deployment (Cloudflare Pages)
 
-This repo is connected to **Cloudflare Pages** (git-driven deploy). Typical setup:
+This repo is connected to Cloudflare Pages (git-driven deploy).
 
-* **Build command:** none / empty (static)
-* **Output directory:** `/` (repo root)
-* **Functions directory:** `functions/` (auto-detected by Pages)
+Typical setup:
+- Build command: none / empty (static)
+- Output directory: root (this repository)
 
-After pushing to the main branch, Cloudflare Pages deploys automatically.
+On each push to the production branch, Cloudflare Pages builds and deploys the site.
 
-## Adding a new demo (standard)
+---
 
-When adding a new project, do all of the following:
+## Content conventions
 
-1. Create a **live docs page** under `/demos/<slug>/index.html`
-2. Create a **code repo** on GitHub (or link an existing one)
-3. Update:
+- Each system page aims to be self-contained:
+  - What it solves (problem + business impact)
+  - Architecture (components + flow)
+  - Verification path (how to reproduce / validate)
+  - Links: live demo/docs + source repository
+- The Proof Ledger maps skills → evidence anchors and should stay stable over time.
 
-   * `/demos/index.html` (add card with Live/Docs + Code)
-   * `/evidence/index.html` (add/update proofs for relevant skills)
-4. Ensure **bidirectional links**:
+---
 
-   * Demo page links to GitHub repo
-   * GitHub README links back to the live docs page + `/evidence`
+## Licence
 
-## Related repos (code)
-
-This site links to dedicated repositories for each demo/system, e.g.:
-
-* `edgepulse` (case study + system implementation)
-* `nil-rag-copilot`, `nil-forecast-studio`, `nil-tabular-risk`, `nil-visual-inspector`
-* `nil-infra-template`
-
-(See `/demos` for the authoritative list.)
-
-## License
-
-Choose a license appropriate for how you want the site content reused (MIT is common for code; content may require a separate policy).
-If you intend open reuse, add a `LICENSE` file and reference it here.
-
-## Contact
-
-GitHub: [https://github.com/nepryoon](https://github.com/nepryoon)
+Unless stated otherwise, content in this repository is licensed under the repository’s licence.
+Project repositories may have different licences — see each project repo for details.
