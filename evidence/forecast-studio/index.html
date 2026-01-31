@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Forecast Studio — Evidence Memo</title>
+  <meta name="description" content="Evidence memo: Forecast Studio. Claims, evaluation signals, and production trade-offs for a forecasting workbench." />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    .memo h2 { margin-top: 18px; }
+    .memo ul { margin: 10px 0 0 18px; }
+    .memo .callout { border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); border-radius: 16px; padding: 14px; }
+    .memo .kv { display:grid; gap:10px; grid-template-columns: 1fr; }
+    @media (min-width: 900px) { .memo .kv { grid-template-columns: 1fr 1fr; } }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  </style>
+</head>
+
+<body>
+  <header class="nav">
+    <div class="brand">
+      <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+      <span>Neuromorphic Inference Lab</span>
+    </div>
+    <nav class="navlinks" aria-label="Primary navigation">
+      <a data-nav href="/">Signal</a>
+      <a data-nav href="/demos/">Systems</a>
+      <a data-nav href="/evidence/">Proof Ledger</a>
+      <a data-nav href="/about/">Identity</a>
+    </nav>
+  </header>
+
+  <main class="container memo">
+    <section class="hero">
+      <p class="kicker">Evidence Memo</p>
+      <h1 class="h1">Forecast Studio</h1>
+      <p class="sub">
+        A forecasting workbench focused on production discipline: backtesting, uncertainty-aware outputs,
+        artefact versioning, and monitoring hooks for drift and retraining triggers.
+      </p>
+
+      <div class="actions" style="margin-top:14px;">
+        <a class="btn primary" href="/demos/forecast-studio/">Open system</a>
+        <a class="btn" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener">Source repository</a>
+        <a class="btn" href="/evidence/">Back to Proof Ledger</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="grid">
+        <article class="card col-12">
+          <h3>Claims (what I am proving)</h3>
+          <ul>
+            <li><strong>Backtesting-first workflow</strong>: evaluation is a first-class artefact (MAE/MAPE, rolling windows, baselines).</li>
+            <li><strong>Uncertainty-aware outputs</strong>: prediction intervals alongside point forecasts, suitable for planning decisions.</li>
+            <li><strong>Deployment-minded artefacts</strong>: forecast outputs packaged for serving (API-ready payloads, batch artefacts, monitoring hooks).</li>
+            <li><strong>MLOps readiness</strong>: versioned inputs/outputs, retraining triggers, drift indicators and reproducible runs.</li>
+          </ul>
+        </article>
+
+        <article class="card col-6">
+          <h3>Evaluation signals</h3>
+          <div class="callout">
+            <div class="kv">
+              <div>
+                <div class="hint">Primary metrics</div>
+                <div class="mono">MAE, MAPE, sMAPE (optional)</div>
+              </div>
+              <div>
+                <div class="hint">Backtest protocol</div>
+                <div class="mono">rolling-origin / walk-forward</div>
+              </div>
+              <div>
+                <div class="hint">Baselines</div>
+                <div class="mono">seasonal naive, trend+seasonal</div>
+              </div>
+              <div>
+                <div class="hint">Operational checks</div>
+                <div class="mono">latency budget, payload size, failures</div>
+              </div>
+            </div>
+          </div>
+          <p class="hint" style="margin-top:10px;">
+            The demo page includes an in-browser backtest illustration. The repository contains the production-grade version (pipelines, artefacts).
+          </p>
+        </article>
+
+        <article class="card col-6">
+          <h3>Production trade-offs</h3>
+          <ul>
+            <li><strong>Accuracy vs stability</strong>: forecasting is judged by out-of-sample stability, not leaderboard spikes.</li>
+            <li><strong>Intervals matter</strong>: planning decisions need uncertainty, not just a point estimate.</li>
+            <li><strong>Monitoring hooks</strong>: drift signals and retraining triggers are designed upfront.</li>
+            <li><strong>Reproducibility</strong>: deterministic runs, versioned datasets and artefacts.</li>
+          </ul>
+        </article>
+
+        <article class="card col-12">
+          <h3>Artefact mapping (where to verify)</h3>
+          <ul>
+            <li><strong>System demo:</strong> <a href="/demos/forecast-studio/">/demos/forecast-studio/</a></li>
+            <li><strong>Source repository:</strong> <a href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener">github.com/nepryoon/nil-forecast-studio</a></li>
+            <li><strong>Proof ledger index:</strong> <a href="/evidence/">/evidence/</a></li>
+          </ul>
+          <p class="hint">
+            If you want, the next iteration is to add: (1) explicit “Run locally” instructions, (2) CI badges, (3) a small dataset link, (4) reproducibility notes.
+          </p>
+        </article>
+
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
+      <div class="prov">
+        <span id="build-branch">branch: …</span>
+        <span id="build-commit">commit: …</span>
+        <span id="build-time">built: …</span>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById("year").textContent = String(new Date().getFullYear());
+  </script>
+  <script src="/build-info.js"></script>
+</body>
+</html>
