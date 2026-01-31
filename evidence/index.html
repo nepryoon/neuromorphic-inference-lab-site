@@ -4,81 +4,132 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Proof Ledger — Neuromorphic Inference Lab</title>
-  <meta name="description" content="Evidence memos mapping claims to artefacts: evaluation signals, monitoring plans, and system trade-offs." />
+  <meta name="description" content="Proof Ledger: skill-to-proof mapping for full-stack machine learning engineering (pipelines, deployment, monitoring, and LLMOps)." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
 </head>
 
 <body>
   <header class="nav">
-    <div class="brand">
-      <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
-      <span>Neuromorphic Inference Lab</span>
+    <div class="inner">
+      <div class="brand">
+        <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+        <span>Neuromorphic Inference Lab</span>
+      </div>
+      <nav class="navlinks" aria-label="Primary navigation">
+        <a data-nav href="/">Signal</a>
+        <a data-nav href="/demos/">Systems</a>
+        <a data-nav class="active" href="/evidence/">Proof Ledger</a>
+        <a data-nav href="/about/">Identity</a>
+      </nav>
     </div>
-    <nav class="navlinks" aria-label="Primary navigation">
-      <a data-nav href="/">Signal</a>
-      <a data-nav href="/demos/">Systems</a>
-      <a data-nav href="/evidence/">Proof Ledger</a>
-      <a data-nav href="/about/">Identity</a>
-    </nav>
   </header>
 
   <main class="container">
     <section class="hero">
       <p class="kicker">Proof Ledger</p>
-      <h1 class="h1">Evidence memos for technical screening.</h1>
+      <h1 class="h1">Claims are cheap. Evidence is clickable.</h1>
       <p class="sub">
-        Short, verifiable notes that map each claim to an artefact: architecture choices, evaluation signals,
-        monitoring plans, and trade-offs made under constraints.
+        This page maps full-stack ML engineering skills to verifiable artefacts: live docs, source code, and measurable outcomes.
+        Anchors are designed to be referenced directly from a CV.
       </p>
       <div class="badges">
-        <span class="badge">Evaluation Harness</span>
-        <span class="badge">Guardrails</span>
-        <span class="badge">Latency Budget</span>
-        <span class="badge">Observability</span>
-        <span class="badge">Drift Signals</span>
+        <span class="badge">Scalable ML Pipelines</span>
+        <span class="badge">CI/CD for Model Deployment</span>
+        <span class="badge">Model Serving</span>
+        <span class="badge">Monitoring-ready Outputs</span>
+        <span class="badge">LLMOps / RAG</span>
       </div>
     </section>
 
     <section class="section">
+      <h2>Evidence index (CV-friendly)</h2>
+      <p class="lead">Use these anchors in your CV to provide instant proof for ATS/recruiter screening.</p>
+
       <div class="grid">
 
-        <article class="card col-6">
-          <h3>Forecast Studio — Evidence Memo</h3>
+        <article id="mv-grid-fault-risk" class="card col-12 anchor">
+          <h3>NeuroGrid Fault Risk Scoring Platform</h3>
           <p>
-            Forecasting discipline: backtesting signals, uncertainty bands, and monitoring hooks suitable for production.
+            End-to-end risk scoring: feature pipeline + training workflow + versioned model artefacts + production API serving.
           </p>
           <div class="tags">
-            <span class="tag">Backtesting</span>
-            <span class="tag">MAPE / MAE</span>
-            <span class="tag">Retraining Triggers</span>
-            <span class="tag">Drift-ready</span>
+            <span class="tag">Model Serving</span>
+            <span class="tag">CI/CD for ML</span>
+            <span class="tag">Inference</span>
+            <span class="tag">Versioned Artefacts</span>
           </div>
           <div class="actions">
-            <a class="btn primary" href="/evidence/forecast-studio/">Open memo</a>
-            <a class="btn" href="/demos/forecast-studio/">Open system</a>
-            <a class="btn" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener">Source</a>
+            <a class="btn primary" href="/demos/mv-grid-fault-risk/">Live docs</a>
+            <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">API docs</a>
+            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Source</a>
           </div>
         </article>
 
-        <article class="card col-6">
-          <h3>RAG Copilot — Evidence Memo</h3>
+        <article id="forecast-studio" class="card col-12 anchor">
+          <h3>Forecast Studio (Time-Series Production Pipeline)</h3>
           <p>
-            RAG reliability: retrieval tracing, evaluation harnesses, and guardrails for document-grounded answers.
+            Time-series forecasting engineered for production: repeatable transforms, backtesting harness, and deployment-ready outputs.
+          </p>
+          <div class="tags">
+            <span class="tag">Time-Series</span>
+            <span class="tag">Feature Engineering</span>
+            <span class="tag">Backtesting</span>
+            <span class="tag">MLOps</span>
+          </div>
+          <div class="actions">
+            <a class="btn primary" href="/demos/forecast-studio/">Live docs</a>
+            <a class="btn" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener">Source</a>
+            <a class="btn" href="#ats-keywords">ATS keywords</a>
+          </div>
+        </article>
+
+        <article id="rag-copilot" class="card col-12 anchor">
+          <h3>RAG Copilot (LLMOps Reliability)</h3>
+          <p>
+            Retrieval-augmented generation with evaluation hooks, prompt hygiene, and reliability patterns for “document reality”.
           </p>
           <div class="tags">
             <span class="tag">RAG</span>
+            <span class="tag">LLMOps</span>
             <span class="tag">Evaluation</span>
-            <span class="tag">Traceability</span>
-            <span class="tag">Guardrails</span>
+            <span class="tag">Safety Patterns</span>
           </div>
           <div class="actions">
-            <a class="btn primary" href="/evidence/rag-copilot/">Open memo</a>
-            <a class="btn" href="/demos/rag-copilot/">Open system</a>
-            <a class="btn" href="https://github.com/nepryoon/neuromorphic-inference-lab-site" target="_blank" rel="noopener">Site source</a>
+            <a class="btn primary" href="/demos/rag-copilot/">Live docs</a>
+            <a class="btn" href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener">Source</a>
+            <a class="btn" href="#ats-keywords">ATS keywords</a>
           </div>
         </article>
 
+      </div>
+    </section>
+
+    <section class="section" id="ats-keywords">
+      <h2>ATS keyword set (dense, role-aligned)</h2>
+      <p class="lead">These are the terms this site is intentionally optimised to surface (Full Stack ML Engineer / Data Scientist).</p>
+
+      <div class="grid">
+        <div class="card col-12">
+          <div class="tags">
+            <span class="tag">CI/CD for ML</span>
+            <span class="tag">Model Serving</span>
+            <span class="tag">Inference Scaling</span>
+            <span class="tag">Feature Stores</span>
+            <span class="tag">Automated Retraining</span>
+            <span class="tag">MLflow</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Monitoring</span>
+            <span class="tag">RAG</span>
+            <span class="tag">LLMOps</span>
+            <span class="tag">Evaluation Harness</span>
+            <span class="tag">Time-Series Forecasting</span>
+            <span class="tag">Backtesting</span>
+          </div>
+          <p class="small">
+            Tip: link directly to anchors like <code>/evidence/#forecast-studio</code> from your CV for instant verification.
+          </p>
+        </div>
       </div>
     </section>
 
