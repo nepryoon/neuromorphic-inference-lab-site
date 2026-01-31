@@ -3,111 +3,209 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Forecast Studio — Evidence Memo</title>
-  <meta name="description" content="Evidence memo: Forecast Studio. Claims, evaluation signals, and production trade-offs for a forecasting workbench." />
+  <title>Evidence Memo — Forecast Studio</title>
+  <meta name="description" content="Evidence memo for Forecast Studio: time-series forecasting pipeline, backtesting discipline, and deployment-ready outputs." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
   <style>
-    .memo h2 { margin-top: 18px; }
-    .memo ul { margin: 10px 0 0 18px; }
-    .memo .callout { border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); border-radius: 16px; padding: 14px; }
-    .memo .kv { display:grid; gap:10px; grid-template-columns: 1fr; }
-    @media (min-width: 900px) { .memo .kv { grid-template-columns: 1fr 1fr; } }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .small{ font-size: 12px; color: rgba(234,240,255,.70); line-height: 1.6; }
+    .memoGrid{ display:grid; grid-template-columns: 1fr; gap: 14px; }
+    @media (min-width: 980px){ .memoGrid{ grid-template-columns: 1fr 1fr; } }
+    .box{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .box h4{ margin: 0 0 8px; font-size: 14px; letter-spacing: .2px; }
+    .box p{ margin: 0; color: rgba(234,240,255,.78); line-height: 1.65; font-size: 13px; }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.20);
+      color: rgba(234,240,255,.88);
+    }
+    .list{ margin: 8px 0 0; padding-left: 18px; color: rgba(234,240,255,.74); line-height: 1.7; }
   </style>
 </head>
 
 <body>
   <header class="nav">
-    <div class="brand">
-      <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
-      <span>Neuromorphic Inference Lab</span>
+    <div class="inner">
+      <div class="brand">
+        <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+        <span>Neuromorphic Inference Lab</span>
+      </div>
+      <nav class="navlinks" aria-label="Primary navigation">
+        <a data-nav href="/">Signal</a>
+        <a data-nav href="/demos/">Systems</a>
+        <a data-nav class="active" href="/evidence/">Proof Ledger</a>
+        <a data-nav href="/about/">Identity</a>
+      </nav>
     </div>
-    <nav class="navlinks" aria-label="Primary navigation">
-      <a data-nav href="/">Signal</a>
-      <a data-nav href="/demos/">Systems</a>
-      <a data-nav href="/evidence/">Proof Ledger</a>
-      <a data-nav href="/about/">Identity</a>
-    </nav>
   </header>
 
-  <main class="container memo">
+  <main class="container">
     <section class="hero">
-      <p class="kicker">Evidence Memo</p>
+      <p class="kicker">Evidence memo</p>
       <h1 class="h1">Forecast Studio</h1>
       <p class="sub">
-        A forecasting workbench focused on production discipline: backtesting, uncertainty-aware outputs,
-        artefact versioning, and monitoring hooks for drift and retraining triggers.
+        This memo clarifies what Forecast Studio demonstrates: forecasting as an operational system, not a notebook.
+        It prioritises <strong>backtesting discipline</strong>, <strong>feature pipeline thinking</strong>, and <strong>deployment-ready outputs</strong>.
       </p>
 
-      <div class="actions" style="margin-top:14px;">
-        <a class="btn primary" href="/demos/forecast-studio/">Open system</a>
-        <a class="btn" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener">Source repository</a>
-        <a class="btn" href="/evidence/">Back to Proof Ledger</a>
+      <div class="badges">
+        <span class="badge">Time-Series</span>
+        <span class="badge">Backtesting</span>
+        <span class="badge">MAE / MAPE</span>
+        <span class="badge">MLOps Patterns</span>
+        <span class="badge">Monitoring-ready Outputs</span>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="actions">
+        <a class="btn primary" href="/demos/forecast-studio/">Open live system</a>
+        <a class="btn" href="/evidence/#forecast-studio">Back to anchor</a>
+        <a class="btn" href="/demos/">Systems index</a>
+      </div>
+
+      <p class="small" style="margin-top:10px;">
+        CV anchor: <span class="kbd">/evidence/#forecast-studio</span>
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>What this proves</h2>
+      <p class="lead">
+        Forecasting systems often fail in production because evaluation is weak, pipelines are not repeatable, and outputs are not operational.
+        This build focuses on those failure modes.
+      </p>
+
+      <div class="grid">
+        <article class="card col-12">
+          <div class="tags">
+            <span class="tag">Feature Pipelines</span>
+            <span class="tag">Backtesting Harness</span>
+            <span class="tag">Error Reporting</span>
+            <span class="tag">Retraining Triggers</span>
+            <span class="tag">Monitoring Mindset</span>
+          </div>
+          <ul class="clean">
+            <li><strong>Evaluation discipline:</strong> backtesting mindset rather than a single split score.</li>
+            <li><strong>Operational pipeline thinking:</strong> repeatable transforms and deployment-shaped outputs.</li>
+            <li><strong>Full-stack framing:</strong> modelling choices plus engineering constraints (latency/cost where applicable).</li>
+            <li><strong>Production narrative:</strong> clear hand-off points for deployment, monitoring, and retraining decisions.</li>
+          </ul>
+        </article>
       </div>
     </section>
 
     <section class="section">
+      <h2>How to verify (60 seconds)</h2>
+      <div class="memoGrid">
+        <div class="box">
+          <h4>Step 1 — Open the system and run the demo</h4>
+          <p>
+            The demo is an in-browser illustration that shows horizon selection and baseline comparison logic.
+            It is intentionally lightweight and reliable for public hosting.
+          </p>
+          <ul class="list">
+            <li>Expected: horizon selection changes the forecast behaviour.</li>
+            <li>Expected: output shows a demo MAE computed on a simple split.</li>
+          </ul>
+        </div>
+
+        <div class="box">
+          <h4>Step 2 — Inspect the repo structure</h4>
+          <p>
+            Verify that the project is organised as a system: data handling, modelling, evaluation, and artefacts.
+          </p>
+          <ul class="list">
+            <li>Expected: separation of data transforms vs training vs evaluation.</li>
+            <li>Expected: conventions for outputs and reproducibility.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
+
       <div class="grid">
         <article class="card col-12">
-          <h3>Claims (what I am proving)</h3>
-          <ul>
-            <li><strong>Backtesting-first workflow</strong>: evaluation is a first-class artefact (MAE/MAPE, rolling windows, baselines).</li>
-            <li><strong>Uncertainty-aware outputs</strong>: prediction intervals alongside point forecasts, suitable for planning decisions.</li>
-            <li><strong>Deployment-minded artefacts</strong>: forecast outputs packaged for serving (API-ready payloads, batch artefacts, monitoring hooks).</li>
-            <li><strong>MLOps readiness</strong>: versioned inputs/outputs, retraining triggers, drift indicators and reproducible runs.</li>
-          </ul>
-        </article>
-
-        <article class="card col-6">
-          <h3>Evaluation signals</h3>
-          <div class="callout">
-            <div class="kv">
-              <div>
-                <div class="hint">Primary metrics</div>
-                <div class="mono">MAE, MAPE, sMAPE (optional)</div>
-              </div>
-              <div>
-                <div class="hint">Backtest protocol</div>
-                <div class="mono">rolling-origin / walk-forward</div>
-              </div>
-              <div>
-                <div class="hint">Baselines</div>
-                <div class="mono">seasonal naive, trend+seasonal</div>
-              </div>
-              <div>
-                <div class="hint">Operational checks</div>
-                <div class="mono">latency budget, payload size, failures</div>
-              </div>
-            </div>
+          <h3>Key design choice</h3>
+          <p class="small">
+            The portfolio demo is intentionally client-only. In production, the same structure maps to a scheduled job or service
+            that writes forecasts to a store and exposes them via API for downstream planning.
+          </p>
+          <div class="tags">
+            <span class="tag">Cloudflare Pages</span>
+            <span class="tag">No Backend Calls</span>
+            <span class="tag">CORS-safe</span>
+            <span class="tag">System Thinking</span>
           </div>
-          <p class="hint" style="margin-top:10px;">
-            The demo page includes an in-browser backtest illustration. The repository contains the production-grade version (pipelines, artefacts).
-          </p>
         </article>
+      </div>
+    </section>
 
+    <section class="section">
+      <h2>Production risks & mitigations</h2>
+      <div class="grid">
         <article class="card col-6">
-          <h3>Production trade-offs</h3>
-          <ul>
-            <li><strong>Accuracy vs stability</strong>: forecasting is judged by out-of-sample stability, not leaderboard spikes.</li>
-            <li><strong>Intervals matter</strong>: planning decisions need uncertainty, not just a point estimate.</li>
-            <li><strong>Monitoring hooks</strong>: drift signals and retraining triggers are designed upfront.</li>
-            <li><strong>Reproducibility</strong>: deterministic runs, versioned datasets and artefacts.</li>
+          <h3>Leakage & evaluation bias</h3>
+          <ul class="clean">
+            <li>Mitigation: backtesting mindset and explicit splitting.</li>
+            <li>Mitigation: consistent transforms across train/test logic.</li>
+            <li>Mitigation: prefer error reporting across horizons.</li>
           </ul>
         </article>
-
-        <article class="card col-12">
-          <h3>Artefact mapping (where to verify)</h3>
-          <ul>
-            <li><strong>System demo:</strong> <a href="/demos/forecast-studio/">/demos/forecast-studio/</a></li>
-            <li><strong>Source repository:</strong> <a href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener">github.com/nepryoon/nil-forecast-studio</a></li>
-            <li><strong>Proof ledger index:</strong> <a href="/evidence/">/evidence/</a></li>
+        <article class="card col-6">
+          <h3>Drift & retraining</h3>
+          <ul class="clean">
+            <li>Mitigation: define monitoring signals (input drift, error drift).</li>
+            <li>Mitigation: establish retraining triggers tied to business impact.</li>
+            <li>Mitigation: version outputs for auditability.</li>
           </ul>
-          <p class="hint">
-            If you want, the next iteration is to add: (1) explicit “Run locally” instructions, (2) CI badges, (3) a small dataset link, (4) reproducibility notes.
+        </article>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="grid">
+        <article class="card col-12">
+          <h3>Next improvements (production path)</h3>
+          <ul class="clean">
+            <li>Add a data validation layer (schema checks, missingness thresholds).</li>
+            <li>Implement scheduled runs + model registry + forecast store.</li>
+            <li>Add performance monitoring once realised outcomes are available.</li>
+            <li>Support multiple models with champion/challenger evaluation.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Keywords (ATS trigger set)</h2>
+      <div class="grid">
+        <article class="card col-12">
+          <div class="tags">
+            <span class="tag">Time-Series Forecasting</span>
+            <span class="tag">Backtesting</span>
+            <span class="tag">MAE</span>
+            <span class="tag">MAPE</span>
+            <span class="tag">Feature Engineering</span>
+            <span class="tag">MLOps</span>
+            <span class="tag">Monitoring</span>
+            <span class="tag">Retraining Triggers</span>
+            <span class="tag">Deployment-ready Outputs</span>
+          </div>
+          <p class="small" style="margin-top:10px;">
+            Proof anchor for CV: <span class="kbd">/evidence/#forecast-studio</span>
           </p>
         </article>
-
       </div>
     </section>
 
