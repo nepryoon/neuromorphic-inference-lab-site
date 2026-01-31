@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>RAG Knowledge Copilot — Neuromorphic Inference Lab</title>
-  <meta name="description" content="RAG Knowledge Copilot: retrieval tracing, grounded drafting, guardrails, and evaluation harness — a Cloudflare-safe, client-only LLMOps demo." />
+  <meta name="description" content="RAG Knowledge Copilot: retrieval tracing, grounded drafting, guardrails, evaluation harness, and production mapping — Cloudflare-safe client-only LLMOps demo." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
 
@@ -50,6 +50,7 @@
     }
     .policy input { margin-top: 3px; }
     .hr { border: 0; border-top: 1px solid rgba(255,255,255,.10); margin: 12px 0; }
+
     details.trace > summary {
       cursor: pointer;
       list-style: none;
@@ -121,7 +122,6 @@
       color: rgba(234,240,255,.86);
     }
     .pill b { font-weight: 700; }
-    .evalGrid { display: grid; grid-template-columns: 1fr; gap: 10px; }
     .evalTableWrap {
       overflow-x: auto;
       border: 1px solid rgba(255,255,255,.10);
@@ -152,6 +152,18 @@
     .ok { color: rgba(138,255,186,.95); font-weight: 700; }
     .bad { color: rgba(255,130,130,.95); font-weight: 700; }
     .warn { color: rgba(255,211,120,.95); font-weight: 700; }
+
+    /* Production mapping */
+    .grid2 { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    @media (min-width: 980px){ .grid2 { grid-template-columns: 1fr 1fr; } }
+    .box {
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      border-radius: 18px;
+      padding: 14px;
+    }
+    .box h3 { margin: 0 0 8px; }
+    .box p { margin: 0; }
   </style>
 </head>
 
@@ -177,7 +189,7 @@
       <h1 class="h1">RAG Knowledge Copilot</h1>
       <p class="sub">
         A client-only RAG demo that surfaces production signals: <strong>retrieval tracing</strong>, <strong>grounded drafting</strong>,
-        <strong>guardrails</strong>, and a lightweight <strong>evaluation harness</strong>.
+        <strong>guardrails</strong>, a lightweight <strong>evaluation harness</strong>, and a pragmatic <strong>production mapping</strong>.
         Designed to be reliable on Cloudflare Pages (no backend calls, no CORS failure modes).
       </p>
 
@@ -254,8 +266,7 @@
 
           <h2>Evaluation harness</h2>
           <p class="tiny">
-            A lightweight, deterministic evaluation set for screening. Tests include positive queries (should retrieve relevant sources)
-            and negative queries (should refuse in Strict mode).
+            A lightweight, deterministic evaluation set for screening. Includes positive queries and a negative control.
           </p>
 
           <div class="row" style="margin:10px 0;">
@@ -295,8 +306,88 @@
           </div>
 
           <p class="tiny" style="margin-top:10px;">
-            Interpretation: this is not a benchmark against other LLMs; it demonstrates <strong>production evaluation habits</strong>
-            (refusal correctness, retrieval quality proxies, traceability).
+            Interpretation: not a benchmark against other models; it demonstrates evaluation habits (retrieval quality proxies,
+            refusal correctness, traceability).
+          </p>
+
+          <div class="hr"></div>
+
+          <h2>Production mapping</h2>
+          <p class="tiny">
+            This portfolio build is client-only by design. Below is how the same system maps to a production architecture
+            and the operational controls that typically matter.
+          </p>
+
+          <div class="grid2" style="margin-top:10px;">
+            <div class="box">
+              <h3>Reference architecture</h3>
+              <p class="tiny">
+                <span class="mono">Ingestion</span> → <span class="mono">Chunking</span> → <span class="mono">Embeddings</span> →
+                <span class="mono">Vector store</span> → <span class="mono">RAG API</span> → <span class="mono">Model/router</span> →
+                <span class="mono">Traces</span> + <span class="mono">Eval</span>.
+              </p>
+              <div class="tags" style="margin-top:10px;">
+                <span class="tag">Vector Store</span>
+                <span class="tag">pgvector</span>
+                <span class="tag">Pinecone</span>
+                <span class="tag">OpenSearch</span>
+                <span class="tag">Redis Cache</span>
+                <span class="tag">Rate Limiting</span>
+              </div>
+            </div>
+
+            <div class="box">
+              <h3>Observability & governance</h3>
+              <p class="tiny">
+                Production RAG is an observability problem: capture retrieval traces, prompt/response metadata,
+                latency and cost budgets, and enforce access controls for sensitive documents.
+              </p>
+              <div class="tags" style="margin-top:10px;">
+                <span class="tag">OpenTelemetry</span>
+                <span class="tag">Tracing</span>
+                <span class="tag">RBAC</span>
+                <span class="tag">PII Redaction</span>
+                <span class="tag">Audit Logs</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid2" style="margin-top:12px;">
+            <div class="box">
+              <h3>Safety controls</h3>
+              <ul class="clean">
+                <li><strong>Prompt injection defence:</strong> treat retrieved content as untrusted data; allow-list behaviours.</li>
+                <li><strong>Grounding policy:</strong> refuse or ask clarifying questions when evidence is weak.</li>
+                <li><strong>Output constraints:</strong> structured responses and citation requirements for high-stakes domains.</li>
+              </ul>
+              <div class="tags">
+                <span class="tag">Guardrails</span>
+                <span class="tag">Refusal Policies</span>
+                <span class="tag">Groundedness</span>
+              </div>
+            </div>
+
+            <div class="box">
+              <h3>Operational checklist</h3>
+              <ul class="clean">
+                <li><strong>Latency budgets:</strong> cache hot queries; optimise top-k; stream responses when possible.</li>
+                <li><strong>Cost control:</strong> routing + prompt compression; fall back to smaller models.</li>
+                <li><strong>Evaluation:</strong> regression tests on labelled queries (precision@k, citation correctness).</li>
+                <li><strong>Incidents:</strong> trace export for debugging; rollback on prompt/policy changes.</li>
+              </ul>
+              <div class="tags">
+                <span class="tag">Caching</span>
+                <span class="tag">Routing</span>
+                <span class="tag">Regression Tests</span>
+                <span class="tag">Rollback</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="tiny" style="margin-top:10px;">
+            ATS triggers surfaced here: <span class="kbd">OpenTelemetry</span>, <span class="kbd">Vector Store</span>,
+            <span class="kbd">pgvector</span>, <span class="kbd">RBAC</span>, <span class="kbd">PII Redaction</span>,
+            <span class="kbd">Rate Limiting</span>, <span class="kbd">Caching</span>.
           </p>
         </article>
 
@@ -320,7 +411,7 @@
               <input type="radio" name="policy" value="lenient" />
               <div>
                 <strong>Lenient</strong><br />
-                <span class="tiny">Drafts a cautious answer even with weaker retrieval, but still cites sources and flags uncertainty.</span>
+                <span class="tiny">Drafts a cautious answer even with weaker retrieval, but still cites sources.</span>
               </div>
             </label>
           </div>
@@ -336,22 +427,18 @@
             <button class="tag" data-example="What is a feature store and when would you use one? Provide citations.">Feature store</button>
           </div>
 
-          <p class="tiny" style="margin-top:10px;">
-            ATS keywords surfaced here: <span class="kbd">RAG</span>, <span class="kbd">LLMOps</span>, <span class="kbd">CI/CD for ML</span>,
-            <span class="kbd">Model Serving</span>, <span class="kbd">Monitoring</span>, <span class="kbd">Drift</span>.
-          </p>
-
           <div class="hr"></div>
 
-          <h3>Local corpus</h3>
-          <p class="tiny">
-            Retrieval runs over a small curated corpus embedded in this page. In production, the same interface maps to a vector store.
-          </p>
-
+          <h3>Links</h3>
           <div class="actions">
             <a class="btn" href="/evidence/rag-copilot/">Read the evidence memo</a>
             <a class="btn" href="/evidence/#rag-copilot">Go to proof anchor</a>
+            <a class="btn" href="/demos/">Back to systems</a>
           </div>
+
+          <p class="tiny" style="margin-top:10px;">
+            Reviewer tip: click <span class="kbd">Export eval report JSON</span> and attach it to a technical screen if needed.
+          </p>
         </aside>
       </div>
     </section>
@@ -374,131 +461,54 @@
   <script src="/build-info.js"></script>
 
   <script>
-    // -----------------------------
-    // RAG Copilot (client-only)
-    // -----------------------------
-
     const CORPUS = [
-      {
-        id: "doc-ml-monitoring",
-        title: "Model Monitoring: What to Track in Production",
-        source: "Neuromorphic Inference Lab (internal memo)",
-        url: "/evidence/#rag-copilot",
-        text: `
-Monitoring deployed ML requires both engineering and modelling signals. Track service health (latency, throughput, error rates),
+      { id:"doc-ml-monitoring", title:"Model Monitoring: What to Track in Production", source:"Neuromorphic Inference Lab (internal memo)", url:"/evidence/#rag-copilot",
+        text:`Monitoring deployed ML requires both engineering and modelling signals. Track service health (latency, throughput, error rates),
 model performance proxies (prediction distribution shift), and delayed ground-truth performance where available.
 Key concepts include data drift vs prediction drift, feature schema validation, and alerting tied to business impact.
-Operationally, define retraining triggers, rollback criteria, and monitoring dashboards for reliability.
-        `.trim()
+Operationally, define retraining triggers, rollback criteria, and monitoring dashboards for reliability.`.trim()
       },
-      {
-        id: "doc-cicd-ml",
-        title: "CI/CD for ML: Artefacts, Reproducibility, and Safe Releases",
-        source: "Neuromorphic Inference Lab (internal memo)",
-        url: "/evidence/#mv-grid-fault-risk",
-        text: `
-CI/CD for ML extends software delivery with model-specific gates: data validation, evaluation checks, and artefact versioning.
+      { id:"doc-cicd-ml", title:"CI/CD for ML: Artefacts, Reproducibility, and Safe Releases", source:"Neuromorphic Inference Lab (internal memo)", url:"/evidence/#mv-grid-fault-risk",
+        text:`CI/CD for ML extends software delivery with model-specific gates: data validation, evaluation checks, and artefact versioning.
 A safe release pipeline stores trained models as versioned artefacts, captures lineage metadata, and supports rollbacks.
-Automated tests include schema checks, unit tests for transforms, and regression checks on evaluation metrics.
-        `.trim()
+Automated tests include schema checks, unit tests for transforms, and regression checks on evaluation metrics.`.trim()
       },
-      {
-        id: "doc-drift",
-        title: "Drift: Data Drift vs Prediction Drift",
-        source: "Neuromorphic Inference Lab (internal memo)",
-        url: "/evidence/#forecast-studio",
-        text: `
-Data drift describes changes in input feature distributions. Prediction drift describes changes in model outputs over time.
+      { id:"doc-drift", title:"Drift: Data Drift vs Prediction Drift", source:"Neuromorphic Inference Lab (internal memo)", url:"/evidence/#forecast-studio",
+        text:`Data drift describes changes in input feature distributions. Prediction drift describes changes in model outputs over time.
 Both can be monitored using statistical tests, distance metrics, and distribution summaries.
-Drift alerts should be paired with remediation: investigate pipeline changes, update feature engineering, retrain or recalibrate.
-        `.trim()
+Drift alerts should be paired with remediation: investigate pipeline changes, update feature engineering, retrain or recalibrate.`.trim()
       },
-      {
-        id: "doc-feature-store",
-        title: "Feature Stores: When and Why",
-        source: "Neuromorphic Inference Lab (internal memo)",
-        url: "/evidence/#mv-grid-fault-risk",
-        text: `
-A feature store is used when consistent feature computation is needed across training and serving, especially at scale.
+      { id:"doc-feature-store", title:"Feature Stores: When and Why", source:"Neuromorphic Inference Lab (internal memo)", url:"/evidence/#mv-grid-fault-risk",
+        text:`A feature store is used when consistent feature computation is needed across training and serving, especially at scale.
 It improves reproducibility, reduces training-serving skew, and enables feature reuse across teams and models.
-Feature stores also support governance: lineage, access control, and monitoring of feature freshness.
-        `.trim()
+Feature stores also support governance: lineage, access control, and monitoring of feature freshness.`.trim()
       },
-      {
-        id: "doc-rag-guardrails",
-        title: "RAG Guardrails: Grounding, Refusal, and Prompt Injection Defence",
-        source: "Neuromorphic Inference Lab (internal memo)",
-        url: "/evidence/#rag-copilot",
-        text: `
-Reliable RAG requires explicit grounding: answers should be constrained to retrieved evidence.
+      { id:"doc-rag-guardrails", title:"RAG Guardrails: Grounding, Refusal, and Prompt Injection Defence", source:"Neuromorphic Inference Lab (internal memo)", url:"/evidence/#rag-copilot",
+        text:`Reliable RAG requires explicit grounding: answers should be constrained to retrieved evidence.
 If retrieval confidence is weak, the system should refuse or ask clarifying questions.
 Prompt injection defence includes treating retrieved text as untrusted data, applying allow-list behaviour, and auditing traces.
-Evaluation harnesses measure precision@k, citation correctness, and refusal correctness.
-        `.trim()
+Evaluation harnesses measure precision@k, citation correctness, and refusal correctness.`.trim()
       },
-      {
-        id: "doc-evaluation",
-        title: "Evaluation Mindset: Beyond a Single Score",
-        source: "Neuromorphic Inference Lab (internal memo)",
-        url: "/evidence/#forecast-studio",
-        text: `
-Production evaluation is continuous. Use backtesting for forecasting, and structured evaluation datasets for LLM workflows.
+      { id:"doc-evaluation", title:"Evaluation Mindset: Beyond a Single Score", source:"Neuromorphic Inference Lab (internal memo)", url:"/evidence/#forecast-studio",
+        text:`Production evaluation is continuous. Use backtesting for forecasting, and structured evaluation datasets for LLM workflows.
 Track performance across slices, horizons, and time windows. Use regression tests to prevent silent metric degradation.
-Always connect metrics to operational consequences: latency budgets, cost constraints, and business impact.
-        `.trim()
+Always connect metrics to operational consequences: latency budgets, cost constraints, and business impact.`.trim()
       }
     ];
 
-    // Evaluation set (deterministic)
     const EVAL_SET = [
-      {
-        id: "eval-01-monitoring",
-        name: "Monitoring basics",
-        query: "What should be monitored for deployed ML models? Provide citations.",
-        expected: { should_refuse: false, must_retrieve: ["doc-ml-monitoring"], min_top_sim: 0.13 }
-      },
-      {
-        id: "eval-02-cicd",
-        name: "CI/CD for ML",
-        query: "Explain CI/CD for ML deployment and why model artefact versioning matters. Cite sources.",
-        expected: { should_refuse: false, must_retrieve: ["doc-cicd-ml"], min_top_sim: 0.13 }
-      },
-      {
-        id: "eval-03-drift",
-        name: "Drift detection",
-        query: "What is data drift vs prediction drift, and how do you detect them? Provide citations.",
-        expected: { should_refuse: false, must_retrieve: ["doc-drift"], min_top_sim: 0.13 }
-      },
-      {
-        id: "eval-04-feature-store",
-        name: "Feature store",
-        query: "What is a feature store and when would you use one? Provide citations.",
-        expected: { should_refuse: false, must_retrieve: ["doc-feature-store"], min_top_sim: 0.13 }
-      },
-      {
-        id: "eval-05-prompt-injection",
-        name: "RAG guardrails",
-        query: "Describe a safe RAG workflow with guardrails against prompt injection. Cite sources.",
-        expected: { should_refuse: false, must_retrieve: ["doc-rag-guardrails"], min_top_sim: 0.13 }
-      },
-      {
-        id: "eval-06-negative",
-        name: "Negative control",
-        query: "Give me a detailed recipe for lasagne, step by step.",
-        expected: { should_refuse: true, must_retrieve: [], min_top_sim: 0.13 }
-      }
+      { id:"eval-01", name:"Monitoring basics", query:"What should be monitored for deployed ML models? Provide citations.", expected:{ should_refuse:false, must_retrieve:["doc-ml-monitoring"], min_top_sim:0.13 } },
+      { id:"eval-02", name:"CI/CD for ML", query:"Explain CI/CD for ML deployment and why model artefact versioning matters. Cite sources.", expected:{ should_refuse:false, must_retrieve:["doc-cicd-ml"], min_top_sim:0.13 } },
+      { id:"eval-03", name:"Drift detection", query:"What is data drift vs prediction drift, and how do you detect them? Provide citations.", expected:{ should_refuse:false, must_retrieve:["doc-drift"], min_top_sim:0.13 } },
+      { id:"eval-04", name:"Feature store", query:"What is a feature store and when would you use one? Provide citations.", expected:{ should_refuse:false, must_retrieve:["doc-feature-store"], min_top_sim:0.13 } },
+      { id:"eval-05", name:"RAG guardrails", query:"Describe a safe RAG workflow with guardrails against prompt injection. Cite sources.", expected:{ should_refuse:false, must_retrieve:["doc-rag-guardrails"], min_top_sim:0.13 } },
+      { id:"eval-06", name:"Negative control", query:"Give me a detailed recipe for lasagne, step by step.", expected:{ should_refuse:true, must_retrieve:[], min_top_sim:0.13 } }
     ];
 
-    // Simple tokeniser
     function tokens(s){
-      return (s || "")
-        .toLowerCase()
-        .replace(/[^a-z0-9\s\-]/g, " ")
-        .split(/\s+/)
-        .filter(t => t && t.length > 2);
+      return (s || "").toLowerCase().replace(/[^a-z0-9\s\-]/g, " ").split(/\s+/).filter(t => t && t.length > 2);
     }
 
-    // Build TF-IDF-ish weights
     const DOCS = CORPUS.map(d => {
       const t = tokens(d.text + " " + d.title);
       const tf = new Map();
@@ -508,17 +518,13 @@ Always connect metrics to operational consequences: latency budgets, cost constr
 
     const DF = new Map();
     for (const d of DOCS){
-      for (const w of new Set(d.tf.keys())){
-        DF.set(w, (DF.get(w) || 0) + 1);
-      }
+      for (const w of new Set(d.tf.keys())) DF.set(w, (DF.get(w) || 0) + 1);
     }
-
     function idf(w){
       const df = DF.get(w) || 0;
       const N = DOCS.length;
       return Math.log((N + 1) / (df + 1)) + 1.0;
     }
-
     function dot(a, b){
       let s = 0;
       for (const [k, v] of a){
@@ -532,18 +538,13 @@ Always connect metrics to operational consequences: latency budgets, cost constr
       for (const [, v] of a) s += v * v;
       return Math.sqrt(s) || 1;
     }
-
     function toTfidfVectorFromTokens(toks){
       const tf = new Map();
       for (const w of toks) tf.set(w, (tf.get(w) || 0) + 1);
       const v = new Map();
-      for (const [w, c] of tf){
-        v.set(w, (c / toks.length) * idf(w));
-      }
+      for (const [w, c] of tf) v.set(w, (c / toks.length) * idf(w));
       return v;
     }
-
-    // Precompute doc vectors
     for (const d of DOCS){
       const toks = tokens(d.text + " " + d.title);
       d.vec = toTfidfVectorFromTokens(toks);
@@ -567,11 +568,7 @@ Always connect metrics to operational consequences: latency budgets, cost constr
 
     function pickSnippets(text, query){
       const qset = new Set(tokens(query));
-      const sentences = text
-        .replace(/\s+/g, " ")
-        .split(/(?<=[\.\!\?])\s+/)
-        .map(s => s.trim())
-        .filter(Boolean);
+      const sentences = text.replace(/\s+/g, " ").split(/(?<=[\.\!\?])\s+/).map(s => s.trim()).filter(Boolean);
 
       const ranked = sentences.map(s => {
         const ts = tokens(s);
@@ -586,23 +583,18 @@ Always connect metrics to operational consequences: latency budgets, cost constr
       return [text.slice(0, 180) + (text.length > 180 ? "…" : "")];
     }
 
-    function buildAnswer(query, hits, policy){
-      const top = hits.map((h, i) => {
-        const snippets = pickSnippets(h.doc.text, query);
-        return { i: i+1, title: h.doc.title, url: h.doc.url, snippets };
-      });
+    function escapeHtml(s){
+      return (s || "").replace(/[&<>"']/g, m => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
 
-      if (!top.length){
-        return { html: `<p class="muted" style="margin:0;">No sources available.</p>`, cites: "" };
-      }
+    function buildAnswer(query, hits, policy){
+      const top = hits.map((h, i) => ({ i: i+1, title: h.doc.title, url: h.doc.url, snippets: pickSnippets(h.doc.text, query) }));
+      if (!top.length) return { html:`<p class="muted" style="margin:0;">No sources available.</p>`, cites:"" };
 
       const cautious = policy === "lenient";
-
-      const bullets = [];
-      for (const t of top){
-        const s1 = t.snippets[0] || "";
-        bullets.push(`<li>${escapeHtml(s1)} <span class="mono">[${t.i}]</span></li>`);
-      }
+      const bullets = top.map(t => `<li>${escapeHtml(t.snippets[0] || "")} <span class="mono">[${t.i}]</span></li>`).join("");
 
       const preface = cautious
         ? `<p style="margin:0 0 10px;"><strong>Draft (cautious):</strong> evidence is limited; conclusions are bounded by retrieved sources.</p>`
@@ -610,7 +602,7 @@ Always connect metrics to operational consequences: latency budgets, cost constr
 
       const html = `
         ${preface}
-        <ul class="clean">${bullets.join("")}</ul>
+        <ul class="clean">${bullets}</ul>
         <p class="tiny" style="margin-top:10px;">
           Citations: ${top.map(t => `<span class="mono">[${t.i}]</span> ${escapeHtml(t.title)}`).join(" · ")}
         </p>
@@ -618,12 +610,6 @@ Always connect metrics to operational consequences: latency budgets, cost constr
 
       const citeText = top.map(t => `[${t.i}] ${t.title} — ${t.url}`).join("\n");
       return { html, cites: citeText };
-    }
-
-    function escapeHtml(s){
-      return (s || "").replace(/[&<>"']/g, m => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-      }[m]));
     }
 
     function toast(msg){
@@ -634,30 +620,25 @@ Always connect metrics to operational consequences: latency budgets, cost constr
     }
 
     function currentPolicy(){
-      const v = document.querySelector('input[name="policy"]:checked')?.value || "strict";
-      return v;
+      return document.querySelector('input[name="policy"]:checked')?.value || "strict";
     }
-
-    function strictThreshold(){
-      return 0.13;
-    }
+    function strictThreshold(){ return 0.13; }
 
     function renderTrace(hits){
       const trace = document.getElementById("trace");
       trace.innerHTML = "";
-
       if (!hits.length){
         trace.innerHTML = `<div class="panel"><p class="muted" style="margin:0;">No retrieved sources.</p></div>`;
         return;
       }
-
       const max = Math.max(...hits.map(h => h.sim), 1e-9);
+      const q = document.getElementById("q").value;
 
       for (let idx=0; idx<hits.length; idx++){
         const h = hits[idx];
         const rank = idx + 1;
         const pct = Math.max(0, Math.min(100, (h.sim / max) * 100));
-        const snippets = pickSnippets(h.doc.text, document.getElementById("q").value);
+        const snippets = pickSnippets(h.doc.text, q);
 
         const hit = document.createElement("div");
         hit.className = "hit";
@@ -682,58 +663,10 @@ Always connect metrics to operational consequences: latency budgets, cost constr
       }
     }
 
-    let lastTrace = null;
-    let lastCitations = "";
-    let lastEvalReport = null;
-
-    function run(){
-      const q = document.getElementById("q").value.trim();
-      const policy = currentPolicy();
-
-      if (!q){
-        toast("Please enter a query.");
-        return;
-      }
-
-      const { top, maxSim } = retrieve(q, 3);
-      const threshold = strictThreshold();
-
-      if (policy === "strict" && maxSim < threshold){
-        document.getElementById("answer").innerHTML = `
-          <p style="margin:0 0 8px;"><strong>Refusal (Strict policy):</strong> evidence is too weak to answer safely.</p>
-          <p class="tiny" style="margin:0;">
-            Try rephrasing, add more context, or use <span class="kbd">Lenient</span> to get a cautious draft.
-            <span class="mono">top similarity=${maxSim.toFixed(3)}</span>, threshold=${threshold.toFixed(3)}.
-          </p>
-        `;
-        renderTrace(top);
-        document.getElementById("traceBox").open = true;
-
-        lastTrace = buildTraceJson(q, policy, top, maxSim, threshold, true);
-        lastCitations = buildCitations(top);
-        return;
-      }
-
-      const answer = buildAnswer(q, top, policy);
-      document.getElementById("answer").innerHTML = answer.html;
-      renderTrace(top);
-      document.getElementById("traceBox").open = true;
-
-      lastTrace = buildTraceJson(q, policy, top, maxSim, threshold, false);
-      lastCitations = answer.cites;
-
-      toast("Draft generated with retrieval trace.");
-    }
-
-    function buildCitations(top){
-      return top.map((h, i) => `[${i+1}] ${h.doc.title} — ${h.doc.url}`).join("\n");
-    }
-
     function buildTraceJson(q, policy, top, maxSim, threshold, refused){
-      const now = new Date().toISOString();
       return {
         schema_version: "nil.rag.trace.v1",
-        generated_at: now,
+        generated_at: new Date().toISOString(),
         policy,
         refused,
         thresholds: { strict_similarity_threshold: threshold },
@@ -753,45 +686,63 @@ Always connect metrics to operational consequences: latency budgets, cost constr
       };
     }
 
+    let lastTrace = null;
+    let lastCitations = "";
+    let lastEvalReport = null;
+
+    function buildCitations(top){
+      return top.map((h, i) => `[${i+1}] ${h.doc.title} — ${h.doc.url}`).join("\n");
+    }
+
     async function copyTrace(){
-      if (!lastTrace){
-        toast("Run a query first.");
-        return;
-      }
-      const json = JSON.stringify(lastTrace, null, 2);
-      try {
-        await navigator.clipboard.writeText(json);
-        toast("Trace JSON copied to clipboard.");
-      } catch {
-        toast("Clipboard blocked by browser.");
-      }
+      if (!lastTrace) return toast("Run a query first.");
+      try { await navigator.clipboard.writeText(JSON.stringify(lastTrace, null, 2)); toast("Trace JSON copied."); }
+      catch { toast("Clipboard blocked by browser."); }
     }
-
     async function copyCitations(){
-      if (!lastCitations){
-        toast("Run a query first.");
-        return;
-      }
-      try {
-        await navigator.clipboard.writeText(lastCitations);
-        toast("Citations copied.");
-      } catch {
-        toast("Clipboard blocked by browser.");
-      }
+      if (!lastCitations) return toast("Run a query first.");
+      try { await navigator.clipboard.writeText(lastCitations); toast("Citations copied."); }
+      catch { toast("Clipboard blocked by browser."); }
+    }
+    async function copyEval(){
+      if (!lastEvalReport) return toast("Run an evaluation first.");
+      try { await navigator.clipboard.writeText(JSON.stringify(lastEvalReport, null, 2)); toast("Eval report JSON copied."); }
+      catch { toast("Clipboard blocked by browser."); }
     }
 
-    async function copyEval(){
-      if (!lastEvalReport){
-        toast("Run an evaluation first.");
+    function run(){
+      const q = document.getElementById("q").value.trim();
+      const policy = currentPolicy();
+      if (!q) return toast("Please enter a query.");
+
+      const { top, maxSim } = retrieve(q, 3);
+      const threshold = strictThreshold();
+
+      if (policy === "strict" && maxSim < threshold){
+        document.getElementById("answer").innerHTML = `
+          <p style="margin:0 0 8px;"><strong>Refusal (Strict policy):</strong> evidence is too weak to answer safely.</p>
+          <p class="tiny" style="margin:0;">
+            Try rephrasing, add more context, or use <span class="kbd">Lenient</span>.
+            <span class="mono">top similarity=${maxSim.toFixed(3)}</span>, threshold=${threshold.toFixed(3)}.
+          </p>
+        `;
+        renderTrace(top);
+        document.getElementById("traceBox").open = true;
+
+        lastTrace = buildTraceJson(q, policy, top, maxSim, threshold, true);
+        lastCitations = buildCitations(top);
         return;
       }
-      const json = JSON.stringify(lastEvalReport, null, 2);
-      try {
-        await navigator.clipboard.writeText(json);
-        toast("Eval report JSON copied.");
-      } catch {
-        toast("Clipboard blocked by browser.");
-      }
+
+      const ans = buildAnswer(q, top, policy);
+      document.getElementById("answer").innerHTML = ans.html;
+      renderTrace(top);
+      document.getElementById("traceBox").open = true;
+
+      lastTrace = buildTraceJson(q, policy, top, maxSim, threshold, false);
+      lastCitations = ans.cites;
+
+      toast("Draft generated with retrieval trace.");
     }
 
     function clearAll(){
@@ -804,10 +755,7 @@ Always connect metrics to operational consequences: latency budgets, cost constr
       toast("Cleared.");
     }
 
-    // -----------------------------
-    // Evaluation Harness
-    // -----------------------------
-
+    // Eval harness
     function setEvalPills({overall, refusal, retrieval, citations, trace}){
       document.getElementById("evalScore").textContent = overall;
       document.getElementById("evalRefusal").textContent = refusal;
@@ -815,15 +763,39 @@ Always connect metrics to operational consequences: latency budgets, cost constr
       document.getElementById("evalCitations").textContent = citations;
       document.getElementById("evalTrace").textContent = trace;
     }
+    function fmtPct(x){ return `${Math.round(x * 100)}%`; }
 
-    function fmtPct(x){
-      const v = Math.round(x * 100);
-      return `${v}%`;
+    function renderEvalTable(rows){
+      const body = document.getElementById("evalBody");
+      body.innerHTML = "";
+      for (const r of rows){
+        const tr = document.createElement("tr");
+        const refusalOkClass = r.refusalCorrect ? "ok" : "bad";
+        const refusalTxt = r.refused ? "REFUSED" : "ANSWERED";
+
+        let retrievalCell = "n/a";
+        if (r.retrievalOk !== null){
+          retrievalCell = r.retrievalOk ? `<span class="ok">OK</span>` : `<span class="bad">MISS</span>`;
+        }
+        const citesCell = r.citesOk ? `<span class="ok">OK</span>` : `<span class="bad">NO</span>`;
+        tr.innerHTML = `
+          <td><strong>${escapeHtml(r.name)}</strong></td>
+          <td>${escapeHtml(r.query)}</td>
+          <td><span class="mono">${escapeHtml(r.expected)}</span></td>
+          <td><span class="${refusalOkClass}">${refusalTxt}</span></td>
+          <td>${retrievalCell}</td>
+          <td>${citesCell}</td>
+          <td><span class="mono">${r.maxSim.toFixed(3)}</span></td>
+          <td class="tiny">${escapeHtml(r.notes || "")}</td>
+        `;
+        body.appendChild(tr);
+      }
     }
 
     function runEvaluation(policy){
       const threshold = strictThreshold();
       const rows = [];
+
       let okRefusal = 0, totRefusal = 0;
       let okRetrieval = 0, totRetrieval = 0;
       let okCites = 0, totCites = 0;
@@ -832,36 +804,30 @@ Always connect metrics to operational consequences: latency budgets, cost constr
       for (const t of EVAL_SET){
         const { top, maxSim } = retrieve(t.query, 3);
         const shouldRefuse = t.expected.should_refuse === true;
-
         const refused = (policy === "strict" && maxSim < threshold);
+
         totRefusal += 1;
         const refusalCorrect = (shouldRefuse && refused) || (!shouldRefuse && !refused);
         if (refusalCorrect) okRefusal += 1;
 
-        // Retrieval@k proxy: must_retrieve docs appear in top-k doc_id list (for positive tests)
         const topIds = top.map(h => h.doc.id);
-        let retrievalOk = true;
+        let retrievalOk = null;
         if (t.expected.must_retrieve && t.expected.must_retrieve.length){
           totRetrieval += 1;
           retrievalOk = t.expected.must_retrieve.every(id => topIds.includes(id));
           if (retrievalOk) okRetrieval += 1;
         }
 
-        // Citation presence: if not refused, answer should include at least one [1] style citation
         totCites += 1;
         let citesOk = true;
-        let citesText = "";
         if (!refused){
-          const answer = buildAnswer(t.query, top, policy);
-          citesText = answer.cites || "";
-          citesOk = /\[\d+\]/.test(answer.html);
+          const ans = buildAnswer(t.query, top, policy);
+          citesOk = /\[\d+\]/.test(ans.html);
         } else {
-          // in refusal we still allow citations to be empty; keep it "ok" if refused correctly
           citesOk = refusalCorrect;
         }
         if (citesOk) okCites += 1;
 
-        // Trace completeness: must have top_k entries and include similarity + snippets
         totTrace += 1;
         const traceJson = buildTraceJson(t.query, policy, top, maxSim, threshold, refused);
         const traceOk =
@@ -872,13 +838,10 @@ Always connect metrics to operational consequences: latency budgets, cost constr
         if (traceOk) okTrace += 1;
 
         const expectedLabel = shouldRefuse ? "Refuse" : "Answer";
-        const refusalLabel = refused ? `<span class="ok">REFUSED</span>` : `<span class="warn">ANSWERED</span>`;
-
-        const simLabel = maxSim.toFixed(3);
         const notes = [];
         if (policy === "strict" && !shouldRefuse && refused) notes.push("Over-refusal risk");
         if (policy === "strict" && shouldRefuse && !refused) notes.push("Under-refusal risk");
-        if (t.expected.must_retrieve?.length && !retrievalOk) notes.push("Missed expected source");
+        if (retrievalOk === false) notes.push("Missed expected source");
         if (!citesOk) notes.push("No citations in answer");
         if (!traceOk) notes.push("Trace incomplete");
 
@@ -888,7 +851,7 @@ Always connect metrics to operational consequences: latency budgets, cost constr
           expected: expectedLabel,
           refused,
           refusalCorrect,
-          retrievalOk: t.expected.must_retrieve?.length ? retrievalOk : null,
+          retrievalOk,
           citesOk,
           maxSim,
           notes: notes.join("; ")
@@ -896,19 +859,13 @@ Always connect metrics to operational consequences: latency budgets, cost constr
       }
 
       const refusalRate = okRefusal / Math.max(1, totRefusal);
-      const retrievalRate = okRetrieval / Math.max(1, totRetrieval || 1); // avoid div0
+      const retrievalRate = okRetrieval / Math.max(1, (totRetrieval || 1));
       const citeRate = okCites / Math.max(1, totCites);
       const traceRate = okTrace / Math.max(1, totTrace);
 
-      // Overall score weighting: refusal 40%, retrieval 25%, citations 20%, trace 15%
-      const overall =
-        0.40 * refusalRate +
-        0.25 * retrievalRate +
-        0.20 * citeRate +
-        0.15 * traceRate;
+      const overall = 0.40 * refusalRate + 0.25 * retrievalRate + 0.20 * citeRate + 0.15 * traceRate;
 
-      renderEvalTable(rows, policy);
-
+      renderEvalTable(rows);
       setEvalPills({
         overall: fmtPct(overall),
         refusal: fmtPct(refusalRate),
@@ -947,44 +904,7 @@ Always connect metrics to operational consequences: latency budgets, cost constr
       toast(`Evaluation complete (${policy}).`);
     }
 
-    function renderEvalTable(rows, policy){
-      const body = document.getElementById("evalBody");
-      body.innerHTML = "";
-
-      for (const r of rows){
-        const tr = document.createElement("tr");
-
-        const refusalOkClass = r.refusalCorrect ? "ok" : "bad";
-        const refusalTxt = r.refused ? "REFUSED" : "ANSWERED";
-
-        let retrievalCell = "—";
-        if (r.retrievalOk === null){
-          retrievalCell = "n/a";
-        } else {
-          retrievalCell = r.retrievalOk ? `<span class="ok">OK</span>` : `<span class="bad">MISS</span>`;
-        }
-
-        const citesCell = r.citesOk ? `<span class="ok">OK</span>` : `<span class="bad">NO</span>`;
-        const simCell = `<span class="mono">${r.maxSim.toFixed(3)}</span>`;
-
-        tr.innerHTML = `
-          <td><strong>${escapeHtml(r.name)}</strong></td>
-          <td>${escapeHtml(r.query)}</td>
-          <td><span class="mono">${escapeHtml(r.expected)}</span></td>
-          <td><span class="${refusalOkClass}">${refusalTxt}</span></td>
-          <td>${retrievalCell}</td>
-          <td>${citesCell}</td>
-          <td>${simCell}</td>
-          <td class="tiny">${escapeHtml(r.notes || "")}</td>
-        `;
-        body.appendChild(tr);
-      }
-    }
-
-    // -----------------------------
-    // Wire up UI
-    // -----------------------------
-
+    // Wire up
     document.getElementById("run").addEventListener("click", run);
     document.getElementById("clear").addEventListener("click", clearAll);
     document.getElementById("copyTrace").addEventListener("click", copyTrace);
@@ -995,10 +915,7 @@ Always connect metrics to operational consequences: latency budgets, cost constr
     document.getElementById("runEvalLenient").addEventListener("click", () => runEvaluation("lenient"));
 
     document.getElementById("q").addEventListener("keydown", (e) => {
-      if (e.key === "Enter"){
-        e.preventDefault();
-        run();
-      }
+      if (e.key === "Enter"){ e.preventDefault(); run(); }
     });
 
     for (const btn of document.querySelectorAll("[data-example]")){
@@ -1008,8 +925,9 @@ Always connect metrics to operational consequences: latency budgets, cost constr
       });
     }
 
-    // Initialise eval pills
-    setEvalPills({ overall: "—", refusal: "—", retrieval: "—", citations: "—", trace: "—" });
+    setEvalPills({ overall:"—", refusal:"—", retrieval:"—", citations:"—", trace:"—" });
+
+    document.getElementById("year").textContent = String(new Date().getFullYear());
   </script>
 </body>
 </html>
