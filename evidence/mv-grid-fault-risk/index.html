@@ -3,156 +3,204 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Evidence Dossier — NeuroGrid Fault Risk Scoring Platform</title>
-  <meta name="description" content="Evidence dossier: full-stack ML delivery proof (data pipeline, MLflow training, CI workflow, artefact versioning, live inference serving)." />
+  <title>Evidence Memo — NeuroGrid Fault Risk</title>
+  <meta name="description" content="Evidence memo for NeuroGrid Fault Risk Scoring: end-to-end pipeline, CI-minded training, artefact versioning, and production API serving." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
+  <style>
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .small{ font-size: 12px; color: rgba(234,240,255,.70); line-height: 1.6; }
+    .memoGrid{ display:grid; grid-template-columns: 1fr; gap: 14px; }
+    @media (min-width: 980px){ .memoGrid{ grid-template-columns: 1fr 1fr; } }
+    .box{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .box h4{ margin: 0 0 8px; font-size: 14px; letter-spacing: .2px; }
+    .box p{ margin: 0; color: rgba(234,240,255,.78); line-height: 1.65; font-size: 13px; }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.20);
+      color: rgba(234,240,255,.88);
+    }
+    .list{ margin: 8px 0 0; padding-left: 18px; color: rgba(234,240,255,.74); line-height: 1.7; }
+  </style>
 </head>
 
 <body>
   <header class="nav">
-    <div class="brand">
-      <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
-      <span>Neuromorphic Inference Lab</span>
+    <div class="inner">
+      <div class="brand">
+        <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+        <span>Neuromorphic Inference Lab</span>
+      </div>
+      <nav class="navlinks" aria-label="Primary navigation">
+        <a data-nav href="/">Signal</a>
+        <a data-nav href="/demos/">Systems</a>
+        <a data-nav class="active" href="/evidence/">Proof Ledger</a>
+        <a data-nav href="/about/">Identity</a>
+      </nav>
     </div>
-    <nav class="navlinks" aria-label="Primary navigation">
-      <a data-nav href="/">Signal</a>
-      <a data-nav href="/demos/">Systems</a>
-      <a data-nav class="active" href="/evidence/">Proof Ledger</a>
-      <a data-nav href="/about/">Identity</a>
-    </nav>
   </header>
 
   <main class="container">
     <section class="hero">
-      <p class="kicker">Evidence Dossier</p>
+      <p class="kicker">Evidence memo</p>
       <h1 class="h1">NeuroGrid Fault Risk Scoring Platform</h1>
       <p class="sub">
-        A verification-oriented dossier designed for hiring managers: each claim is tied to a concrete artefact.
-        The system demonstrates full-stack delivery — from data/feature pipelines through MLflow-tracked training,
-        CI execution, versioned model artefacts, and live inference serving.
+        This memo captures the full-stack signal: a tabular risk model engineered as a system —
+        data/feature pipeline thinking, CI-minded training flow, versioned artefacts, and production API serving.
       </p>
 
-      <div class="actions">
-        <a class="btn primary" href="/demos/mv-grid-fault-risk/">Open live system</a>
-        <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Repository</a>
-        <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/actions" target="_blank" rel="noopener">CI runs</a>
-        <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/releases/tag/model-v0.1.0" target="_blank" rel="noopener">Model artefact</a>
-        <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">API docs</a>
-        <a class="btn" href="/api/mvgrid/health" target="_blank" rel="noopener">Proxy health</a>
+      <div class="badges">
+        <span class="badge">Tabular ML</span>
+        <span class="badge">Feature Engineering</span>
+        <span class="badge">CI/CD for ML</span>
+        <span class="badge">Model Serving</span>
+        <span class="badge">Artefact Versioning</span>
       </div>
 
-      <div class="badges">
-        <span class="badge">Scalable ML Pipelines</span>
-        <span class="badge">CI/CD for ML</span>
-        <span class="badge">MLflow Tracking</span>
-        <span class="badge">Artefact Versioning</span>
-        <span class="badge">Model Serving</span>
-        <span class="badge">Monitoring-ready outputs</span>
+      <div style="height:14px"></div>
+
+      <div class="actions">
+        <a class="btn primary" href="/demos/mv-grid-fault-risk/">Open system</a>
+        <a class="btn" href="/evidence/#mv-grid-fault-risk">Back to anchor</a>
+        <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">API docs</a>
       </div>
+
+      <p class="small" style="margin-top:10px;">
+        CV anchor: <span class="kbd">/evidence/#mv-grid-fault-risk</span>
+      </p>
     </section>
 
     <section class="section">
-      <h2>Skill → proof mapping</h2>
-      <p>
-        The matrix below maps full-stack competencies to verifiable proof. Each item is intentionally linkable.
+      <h2>What this proves</h2>
+      <p class="lead">
+        The objective is not a model score in isolation — it is end-to-end delivery under operational constraints.
       </p>
 
       <div class="grid">
-        <article class="card project col-6">
-          <h3>Data pipeline & feature engineering</h3>
-          <p>
-            Ingestion → validation → training table. Rolling-window features (30/90/180 days), recency features, and asset-age signals.
-            Designed to be reproducible and retraining-ready.
-          </p>
-          <div class="actions">
-            <a class="btn primary" href="https://github.com/nepryoon/mv-grid-fault-risk/tree/main/src/mvgrid" target="_blank" rel="noopener">Pipeline module</a>
-            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Repo root</a>
-          </div>
-          <div class="tags mt-12">
-            <span class="tag">Feature Engineering</span>
-            <span class="tag">Data Validation</span>
-            <span class="tag">Retraining-ready</span>
-          </div>
-        </article>
-
-        <article class="card project col-6">
-          <h3>Modelling + statistical evaluation</h3>
-          <p>
-            Time-aware split and metrics suitable for risk models (ROC-AUC / PR-AUC / F1). Baseline classifier with an extensible architecture.
-          </p>
-          <div class="actions">
-            <a class="btn primary" href="https://github.com/nepryoon/mv-grid-fault-risk/tree/main/src/mvgrid/train.py" target="_blank" rel="noopener">Training script</a>
-            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/actions" target="_blank" rel="noopener">Training runs</a>
-          </div>
-          <div class="tags mt-12">
-            <span class="tag">Time-based Split</span>
-            <span class="tag">ROC-AUC / PR-AUC</span>
+        <article class="card col-12">
+          <div class="tags">
+            <span class="tag">End-to-End ML</span>
             <span class="tag">Reproducibility</span>
+            <span class="tag">Release Discipline</span>
+            <span class="tag">Serving</span>
+            <span class="tag">Monitoring-ready Outputs</span>
           </div>
+          <ul class="clean">
+            <li><strong>Full-stack ownership:</strong> problem framing → features → model training → artefact packaging → serving endpoint.</li>
+            <li><strong>Engineering maturity:</strong> versioned artefacts, predictable outputs, and deployment-aware structure.</li>
+            <li><strong>Operational narrative:</strong> reliability and maintainability considerations visible to reviewers.</li>
+          </ul>
         </article>
+      </div>
+    </section>
 
-        <article class="card project col-6">
-          <h3>CI training workflow (MLOps)</h3>
-          <p>
-            Automated dataset build + training in GitHub Actions. Produces artefacts for deployment and supports repeatable model promotion.
-          </p>
-          <div class="actions">
-            <a class="btn primary" href="https://github.com/nepryoon/mv-grid-fault-risk/tree/main/.github/workflows" target="_blank" rel="noopener">Workflow YAML</a>
-            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/actions" target="_blank" rel="noopener">Actions</a>
-          </div>
-          <div class="tags mt-12">
-            <span class="tag">CI/CD for ML</span>
-            <span class="tag">Automated Training</span>
-            <span class="tag">Artefact Promotion</span>
-          </div>
-        </article>
+    <section class="section">
+      <h2>How to verify (60 seconds)</h2>
 
-        <article class="card project col-6">
-          <h3>Artefact versioning + deployment readiness</h3>
-          <p>
-            Model artefact published as a GitHub Release asset. The API fetches the artefact via environment configuration,
-            enabling clean version promotion.
-          </p>
-          <div class="actions">
-            <a class="btn primary" href="https://github.com/nepryoon/mv-grid-fault-risk/releases" target="_blank" rel="noopener">Releases</a>
-            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/releases/download/model-v0.1.0/model_latest.zip" target="_blank" rel="noopener">Model asset</a>
-          </div>
-          <div class="tags mt-12">
-            <span class="tag">Versioned Artefacts</span>
-            <span class="tag">Deployment-ready</span>
-            <span class="tag">Reproducible Builds</span>
-          </div>
-        </article>
+      <div class="memoGrid">
+        <div class="box">
+          <h4>Step 1 — Verify serving</h4>
+          <p>Open the API documentation and confirm the service responds with predictable schema.</p>
+          <ul class="list">
+            <li>Expected: OpenAPI docs load successfully.</li>
+            <li>Expected: endpoints show request/response structure.</li>
+          </ul>
+        </div>
 
-        <article class="card project col-12">
-          <h3>Model serving + live inference</h3>
-          <p>
-            Dockerised FastAPI service deployed on Render. The website demo calls a same-origin Cloudflare proxy,
-            removing CORS and producing stable browser-based testing.
+        <div class="box">
+          <h4>Step 2 — Verify system documentation</h4>
+          <p>Open the system page and confirm the flow is described end-to-end (data → features → training → serving).</p>
+          <ul class="list">
+            <li>Expected: clear pipeline narrative and operational framing.</li>
+            <li>Expected: links to source and artefacts are present.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="grid">
+        <article class="card col-12">
+          <h3>Design choices</h3>
+          <p class="small">
+            Public portfolio constraints require predictable behaviour and low operational risk.
+            This system prioritises traceability and deployability signals that generalise to production stacks (CI, registry, monitoring).
           </p>
-          <div class="actions">
-            <a class="btn primary" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">Swagger UI</a>
-            <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/health" target="_blank" rel="noopener">Upstream health</a>
-            <a class="btn" href="/api/mvgrid/health" target="_blank" rel="noopener">Proxy health</a>
-            <a class="btn" href="/demos/mv-grid-fault-risk/">Try demo</a>
-          </div>
-          <div class="tags mt-12">
-            <span class="tag">FastAPI</span>
-            <span class="tag">Docker</span>
-            <span class="tag">Serving Reliability</span>
+          <div class="tags">
+            <span class="tag">Traceability</span>
+            <span class="tag">Versioning</span>
+            <span class="tag">Operational Checks</span>
+            <span class="tag">Rollback Mindset</span>
           </div>
         </article>
       </div>
     </section>
 
     <section class="section">
-      <h2>ATS keyword pack</h2>
-      <p>
-        Full-Stack Machine Learning Engineer, Data Scientist, scalable ML pipelines, feature engineering, statistical modelling,
-        MLflow experiment tracking, CI/CD for ML, Dockerization, FastAPI model serving, inference scaling (patterns),
-        artefact versioning, automated retraining (design pattern), monitoring-ready outputs, reproducible builds.
-      </p>
+      <h2>Production risks & mitigations</h2>
+      <div class="grid">
+        <article class="card col-6">
+          <h3>Data quality & drift</h3>
+          <ul class="clean">
+            <li>Mitigation: schema/range checks at ingestion; missingness thresholds.</li>
+            <li>Mitigation: drift monitoring on key features and prediction distribution.</li>
+            <li>Mitigation: retraining triggers tied to performance degradation.</li>
+          </ul>
+        </article>
+        <article class="card col-6">
+          <h3>Serving reliability</h3>
+          <ul class="clean">
+            <li>Mitigation: stable request/response contracts and versioned releases.</li>
+            <li>Mitigation: timeouts, retries, and basic health metrics.</li>
+            <li>Mitigation: fast rollback to previous artefact version.</li>
+          </ul>
+        </article>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="grid">
+        <article class="card col-12">
+          <h3>Next improvements (production path)</h3>
+          <ul class="clean">
+            <li>Add full CI gates (data validation, unit tests, evaluation checks).</li>
+            <li>Introduce a model registry with lineage metadata and model cards.</li>
+            <li>Add monitoring dashboards for latency, errors, drift and delayed outcomes.</li>
+            <li>Support canary deployments and champion/challenger evaluation.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Keywords (ATS trigger set)</h2>
+      <div class="grid">
+        <article class="card col-12">
+          <div class="tags">
+            <span class="tag">Tabular ML</span>
+            <span class="tag">Feature Engineering</span>
+            <span class="tag">CI/CD for ML</span>
+            <span class="tag">Model Serving</span>
+            <span class="tag">Inference</span>
+            <span class="tag">Monitoring</span>
+            <span class="tag">Data Drift</span>
+            <span class="tag">Retraining Triggers</span>
+            <span class="tag">Artefact Versioning</span>
+          </div>
+          <p class="small" style="margin-top:10px;">
+            Proof anchor for CV: <span class="kbd">/evidence/#mv-grid-fault-risk</span>
+          </p>
+        </article>
+      </div>
     </section>
 
     <footer class="footer">
