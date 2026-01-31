@@ -250,3 +250,12 @@ form .grid{gap:12px}
   padding: 6px 10px;
   background: rgba(16,24,38,.36);
 }
+
+/* Utilities used by pages */
+.muted{color:var(--muted)}
+.mt-6{margin-top:6px}
+.mt-10{margin-top:10px}
+.mt-12{margin-top:12px}
+.mt-14{margin-top:14px}
+.p-16{padding:16px}
+
