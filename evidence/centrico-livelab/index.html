@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Evidence Memo — Centrico LiveLab MLOps</title>
+  <meta name="description" content="Evidence memo for Centrico LiveLab: end-to-end MLOps pipeline with data engineering, training, inference API, monitoring, and CI quality gates." />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .small{ font-size: 12px; color: rgba(234,240,255,.70); line-height: 1.6; }
+    .memoGrid{ display:grid; grid-template-columns: 1fr; gap: 14px; }
+    @media (min-width: 980px){ .memoGrid{ grid-template-columns: 1fr 1fr; } }
+    .box{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .box h4{ margin: 0 0 8px; font-size: 14px; letter-spacing: .2px; }
+    .box p{ margin: 0; color: rgba(234,240,255,.78); line-height: 1.65; font-size: 13px; }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.20);
+      color: rgba(234,240,255,.88);
+    }
+    .list{ margin: 8px 0 0; padding-left: 18px; color: rgba(234,240,255,.74); line-height: 1.7; }
+  </style>
+</head>
+
+<body>
+  <header class="nav">
+    <div class="inner">
+      <div class="brand">
+        <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+        <span>Neuromorphic Inference Lab</span>
+      </div>
+      <nav class="navlinks" aria-label="Primary navigation">
+        <a data-nav href="/">Signal</a>
+        <a data-nav href="/demos/">Systems</a>
+        <a data-nav class="active" href="/evidence/">Proof Ledger</a>
+        <a data-nav href="/about/">Identity</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <p class="kicker">Evidence memo</p>
+      <h1 class="h1">Centrico LiveLab — End-to-End MLOps</h1>
+      <p class="sub">
+        This memo captures the full-stack MLOps signal: a complete pipeline from data ingestion through training,
+        serving, and monitoring — demonstrating data engineering + ML development + operationalization discipline.
+      </p>
+
+      <div class="badges">
+        <span class="badge">Data Engineering</span>
+        <span class="badge">MLOps Pipeline</span>
+        <span class="badge">CI/CD</span>
+        <span class="badge">Model Serving</span>
+        <span class="badge">Monitoring</span>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <!-- Breadcrumb -->
+      <div class="tags" aria-label="Breadcrumb">
+        <a class="tag" href="/">Signal</a>
+        <span class="tag">→</span>
+        <a class="tag" href="/demos/">Systems</a>
+        <span class="tag">→</span>
+        <a class="tag" href="/evidence/">Proof Ledger</a>
+        <span class="tag">→</span>
+        <span class="tag">Centrico LiveLab Memo</span>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="actions">
+        <a class="btn primary" href="/demos/centrico-livelab/">Open system</a>
+        <a class="btn" href="/evidence/#centrico-livelab">Back to anchor</a>
+        <a class="btn" href="https://github.com/nepryoon/centrico-livelab-mlops" target="_blank" rel="noopener">Source</a>
+      </div>
+
+      <p class="small" style="margin-top:10px;">
+        CV anchor: <span class="kbd">/evidence/#centrico-livelab</span>
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>What this proves</h2>
+      <p class="lead">
+        The objective is not a single model metric — it is demonstrating the complete MLOps lifecycle with production discipline.
+      </p>
+
+      <div class="grid">
+        <article class="card col-12">
+          <div class="tags">
+            <span class="tag">End-to-End MLOps</span>
+            <span class="tag">Data Engineering</span>
+            <span class="tag">Operational Excellence</span>
+            <span class="tag">Quality Gates</span>
+            <span class="tag">Monitoring</span>
+          </div>
+          <ul class="clean">
+            <li><strong>Full pipeline ownership:</strong> Data ingestion → feature engineering → training → artifact versioning → inference serving → monitoring.</li>
+            <li><strong>Engineering maturity:</strong> Docker Compose orchestration, CI quality gates, versioned artifacts, Prometheus metrics.</li>
+            <li><strong>Operational narrative:</strong> Production-ready patterns visible throughout (health checks, graceful degradation, observability).</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>How to verify (60 seconds)</h2>
+
+      <div class="memoGrid">
+        <div class="box">
+          <h4>Step 1 — Verify CI pipeline</h4>
+          <p>Open the GitHub Actions workflows and confirm automated testing with quality gates.</p>
+          <ul class="list">
+            <li>Expected: CI runs show contract tests + synthetic training.</li>
+            <li>Expected: Model quality gate enforces minimum F1 score.</li>
+          </ul>
+        </div>
+
+        <div class="box">
+          <h4>Step 2 — Verify system documentation</h4>
+          <p>Open the repository README and confirm end-to-end architecture is documented.</p>
+          <ul class="list">
+            <li>Expected: Clear pipeline narrative from data → train → serve → monitor.</li>
+            <li>Expected: Docker Compose setup for reproducible local development.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="grid">
+        <article class="card col-12">
+          <h3>Design choices</h3>
+          <p class="small">
+            This system prioritizes demonstrable operational skills: data engineering patterns (PostgreSQL + JSONB),
+            training reproducibility (Docker + versioned artifacts), serving discipline (FastAPI + health checks),
+            and observability (Prometheus + Grafana). Each component is production-minded.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Technical skills demonstrated</h2>
+
+      <div class="grid">
+        <article class="card col-6">
+          <h3>Data Engineering</h3>
+          <ul class="clean">
+            <li><strong>API Integration:</strong> Real-time ingestion from CityBikes and Open-Meteo public APIs</li>
+            <li><strong>Raw Storage:</strong> PostgreSQL with JSONB for flexible schema evolution</li>
+            <li><strong>Schema Management:</strong> SQL initialization scripts for repeatable setup</li>
+            <li><strong>Feature Pipeline:</strong> Pandas-based transformation logic separated from training</li>
+          </ul>
+        </article>
+
+        <article class="card col-6">
+          <h3>ML Development</h3>
+          <ul class="clean">
+            <li><strong>Training Pipeline:</strong> scikit-learn with reproducible Docker-based builds</li>
+            <li><strong>Artifact Management:</strong> Versioned model.joblib + metadata.json + metrics.json</li>
+            <li><strong>Quality Thresholds:</strong> Adaptive quantile-based targets to handle class imbalance</li>
+            <li><strong>Synthetic Testing:</strong> DB-free training tests for CI reliability</li>
+          </ul>
+        </article>
+
+        <article class="card col-6">
+          <h3>Operationalization</h3>
+          <ul class="clean">
+            <li><strong>Inference API:</strong> FastAPI with OpenAPI documentation</li>
+            <li><strong>Health Endpoints:</strong> Liveness checks + model status reporting</li>
+            <li><strong>DB-backed Predictions:</strong> Latest feature snapshot for automated inference</li>
+            <li><strong>Manual Features:</strong> Explicit feature input for testing/debugging</li>
+          </ul>
+        </article>
+
+        <article class="card col-6">
+          <h3>Monitoring & Observability</h3>
+          <ul class="clean">
+            <li><strong>Prometheus Metrics:</strong> Request counts, latency distributions (P95/P99), model version</li>
+            <li><strong>Grafana Dashboards:</strong> Visual monitoring of service health and performance</li>
+            <li><strong>Alert Rules:</strong> ModelNotLoaded, HighErrorRate, HighPredictionLatency, InferenceServiceDown</li>
+            <li><strong>AlertManager:</strong> Configured for webhook notifications (Slack/PagerDuty ready)</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Advanced features</h2>
+      <p class="lead">
+        Recent roadmap completions that elevate the system to production-grade maturity.
+      </p>
+
+      <div class="grid">
+        <article class="card col-4">
+          <h3>Prometheus Alerting</h3>
+          <p>
+            Alert rules monitor critical system health signals with configurable thresholds and inhibition rules.
+            AlertManager provides grouping and webhook integration for incident response.
+          </p>
+          <div class="tags mt-12">
+            <span class="tag">Prometheus</span>
+            <span class="tag">AlertManager</span>
+            <span class="tag">SRE Patterns</span>
+          </div>
+        </article>
+
+        <article class="card col-4">
+          <h3>Scheduled Retraining</h3>
+          <p>
+            GitHub Actions workflow runs daily retraining with quality gate enforcement,
+            S3 artifact upload, and automatic ECS deployment. Manual trigger available via UI.
+          </p>
+          <div class="tags mt-12">
+            <span class="tag">Automation</span>
+            <span class="tag">AWS S3</span>
+            <span class="tag">ECS Deployment</span>
+          </div>
+        </article>
+
+        <article class="card col-4">
+          <h3>LLM Explanations</h3>
+          <p>
+            /explain endpoint integrates OpenAI GPT-4o-mini for prediction interpretability,
+            with Italian language output and graceful fallback when API key is not configured.
+          </p>
+          <div class="tags mt-12">
+            <span class="tag">OpenAI</span>
+            <span class="tag">Interpretability</span>
+            <span class="tag">Cost-Efficient</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Repo structure & workflow</h2>
+      <p class="lead">
+        The repository is organized for clarity and operational discipline.
+      </p>
+
+      <div class="grid">
+        <article class="card col-12">
+          <h3>Directory layout</h3>
+          <div class="mono small" style="background: rgba(0,0,0,.20); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,.08);">
+            <pre style="margin:0; overflow-x: auto;">
+services/
+  ├── ingestion/     # Data collection from CityBikes + Open-Meteo
+  ├── trainer/       # Model training with artifact output
+  └── inference/     # FastAPI serving with Prometheus metrics
+
+db/
+  └── init.sql       # Schema initialization
+
+monitoring/
+  ├── prometheus/    # Prometheus config + alert rules
+  └── grafana/       # Grafana provisioning
+
+tests/
+  ├── test_inference_contract.py    # API schema verification
+  └── test_trainer_synthetic.py     # DB-free training test
+
+.github/workflows/
+  ├── ci.yml                        # CI pipeline with quality gate
+  └── scheduled-retrain.yml         # Daily retraining workflow
+
+docker-compose.*.yml   # Orchestration files for each service layer
+            </pre>
+          </div>
+        </article>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="grid">
+        <article class="card col-6">
+          <h3>Local development workflow</h3>
+          <ol class="clean">
+            <li>Start stack: <span class="kbd">docker compose -f docker-compose.local.yml -f docker-compose.monitoring.yml -f docker-compose.data.yml up</span></li>
+            <li>Run ingestion: <span class="kbd">docker compose run --rm ingestion</span></li>
+            <li>Train model: <span class="kbd">docker compose -f docker-compose.train.yml run --rm trainer</span></li>
+            <li>Query API: <span class="kbd">curl http://localhost:8000/health</span></li>
+            <li>View metrics: <span class="kbd">http://localhost:9090</span> (Prometheus)</li>
+            <li>View dashboards: <span class="kbd">http://localhost:3000</span> (Grafana)</li>
+          </ol>
+        </article>
+
+        <article class="card col-6">
+          <h3>CI/CD workflow</h3>
+          <ol class="clean">
+            <li>Push to repository triggers CI pipeline</li>
+            <li>pytest runs contract + synthetic training tests</li>
+            <li>Quality gate asserts F1 >= 0.60</li>
+            <li>Artifacts uploaded for inspection</li>
+            <li>Scheduled workflow handles daily retraining</li>
+            <li>S3 upload + ECS deployment automated</li>
+          </ol>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Why this matters for Centrico (and similar environments)</h2>
+      <p class="lead">
+        The patterns demonstrated here map directly to enterprise ML use cases.
+      </p>
+
+      <div class="grid">
+        <article class="card col-12">
+          <h3>Transferable patterns</h3>
+          <ul class="clean">
+            <li><strong>Open Banking context:</strong> Replace CityBikes/Open-Meteo with PSD2/OpenAPI sources → same ingestion discipline</li>
+            <li><strong>Credit/fraud models:</strong> Replace bike availability with transaction features → same training/serving flow</li>
+            <li><strong>Regulated environments:</strong> Artifact versioning + metadata tracking provide audit trails</li>
+            <li><strong>Operational excellence:</strong> Health checks, monitoring, alerts, rollback capability are day-one requirements</li>
+            <li><strong>Team collaboration:</strong> Docker Compose + clear repo structure enable reproducible environments</li>
+          </ul>
+        </article>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="grid">
+        <article class="card col-6">
+          <h3>Engineering signals</h3>
+          <ul class="clean">
+            <li>Reproducible builds (Docker)</li>
+            <li>Automated testing (CI)</li>
+            <li>Quality gates (F1 threshold)</li>
+            <li>Versioned artifacts (metadata.json)</li>
+            <li>Observability (Prometheus + Grafana)</li>
+          </ul>
+        </article>
+
+        <article class="card col-6">
+          <h3>Operational signals</h3>
+          <ul class="clean">
+            <li>Health endpoints (liveness checks)</li>
+            <li>Graceful degradation (fallback handling)</li>
+            <li>Alert rules (SRE patterns)</li>
+            <li>Deployment automation (ECS)</li>
+            <li>Cost awareness (GPT-4o-mini for LLM)</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Risks & mitigations</h2>
+
+      <div class="grid">
+        <article class="card col-6">
+          <h3>Identified risks</h3>
+          <ul class="clean">
+            <li><strong>Public API availability:</strong> CityBikes/Open-Meteo may experience downtime</li>
+            <li><strong>Data drift:</strong> Bike availability patterns change over time</li>
+            <li><strong>Model staleness:</strong> Without retraining, performance degrades</li>
+            <li><strong>Deployment complexity:</strong> Multi-container orchestration requires infrastructure</li>
+          </ul>
+        </article>
+
+        <article class="card col-6">
+          <h3>Mitigations</h3>
+          <ul class="clean">
+            <li><strong>Graceful fallback:</strong> Inference API returns informative errors on model load failure</li>
+            <li><strong>Scheduled retraining:</strong> Daily workflow refreshes model with latest data</li>
+            <li><strong>Quality gates:</strong> CI prevents deployment of poorly-performing models</li>
+            <li><strong>Monitoring alerts:</strong> Prometheus rules catch service degradation early</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Verification checklist</h2>
+
+      <div class="grid">
+        <article class="card col-12">
+          <h3>Fast verification (recruiters / technical screeners)</h3>
+          <ol class="clean">
+            <li>Open <a href="https://github.com/nepryoon/centrico-livelab-mlops#readme" target="_blank" rel="noopener">GitHub repository</a> and confirm README completeness</li>
+            <li>Check <a href="https://github.com/nepryoon/centrico-livelab-mlops/actions" target="_blank" rel="noopener">CI pipeline</a> for green builds and quality gate enforcement</li>
+            <li>Review <span class="kbd">services/</span> directory structure for separation of concerns</li>
+            <li>Inspect <span class="kbd">.github/workflows/ci.yml</span> for testing discipline</li>
+            <li>Confirm <span class="kbd">monitoring/prometheus/</span> contains alert rules</li>
+            <li>Verify <span class="kbd">docker-compose.*.yml</span> files for reproducible orchestration</li>
+          </ol>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
+      <div class="prov">
+        <span id="build-branch">branch: …</span>
+        <span id="build-commit">commit: …</span>
+        <span id="build-time">built: …</span>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById("year").textContent = String(new Date().getFullYear());
+  </script>
+  <script src="/build-info.js"></script>
+</body>
+</html>
