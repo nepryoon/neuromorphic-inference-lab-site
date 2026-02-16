@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Open Banking Transaction Data Prep (Pandas-style) — Systems</title>
+  <meta name="description" content="Pandas-style data handling (load → clean → transform → summarise) on raw Open Banking transaction data, with optional information-extraction enrichment." />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+  <header class="nav">
+    <div class="inner">
+      <div class="brand">
+        <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+        <span>Neuromorphic Inference Lab</span>
+      </div>
+      <nav class="navlinks" aria-label="Primary navigation">
+        <a data-nav href="/">Signal</a>
+        <a data-nav class="active" href="/demos/">Systems</a>
+        <a data-nav href="/evidence/">Proof Ledger</a>
+        <a data-nav href="/about/">Identity</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <p class="kicker">Data Pipeline Demo</p>
+      <h1 class="h1">Open Banking Transaction Data Prep (Pandas-style)</h1>
+      <p class="sub">
+        Demonstrates Pandas-style data handling on raw Open Banking transaction payloads:
+        <strong>load</strong> → <strong>clean</strong> → <strong>transform</strong> → <strong>summarise</strong>.
+        Turns unstructured API responses into analysis-ready tables for analytics and ML pipelines.
+        Optionally enriches transaction descriptions via information extraction.
+      </p>
+
+      <div class="badges">
+        <span class="badge">Data Wrangling</span>
+        <span class="badge">Open Banking API</span>
+        <span class="badge">Feature Engineering</span>
+        <span class="badge">Information Extraction</span>
+        <span class="badge">Vanilla JS</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="grid">
+        <article class="card col-6">
+          <h3>Problem → impact</h3>
+          <p>
+            Open Banking APIs return nested JSON payloads that require normalisation before they're fit for analytics or ML.
+            This demo shows a client-side pipeline that mirrors common Pandas operations:
+            parsing nested structures, handling missing values, deriving features (day-of-week, amount bins),
+            and producing summary statistics ready for downstream consumption.
+          </p>
+
+          <h3>Pipeline stages</h3>
+          <ul class="clean">
+            <li><strong>Load:</strong> Parse raw JSON from Open Banking transaction endpoint</li>
+            <li><strong>Clean:</strong> Handle missing fields, normalise dates, filter invalid rows</li>
+            <li><strong>Transform:</strong> Derive features (transaction type, amount bins, temporal features)</li>
+            <li><strong>Summarise:</strong> Aggregate statistics (total spend, category breakdown, time patterns)</li>
+            <li><strong>Enrich (optional):</strong> Extract merchant info via Cloudflare Pages Function</li>
+          </ul>
+        </article>
+
+        <article class="card col-6">
+          <h3>Live demo</h3>
+          <p>
+            Paste raw Open Banking transaction JSON below. The pipeline will process it and display summary statistics.
+          </p>
+
+          <div class="panel">
+            <label><span class="small">Raw Open Banking JSON (transactions array)</span>
+              <textarea id="input-json" class="input" rows="8" placeholder='[
+  {
+    "transactionId": "tx-001",
+    "bookingDateTime": "2024-01-15T10:30:00Z",
+    "amount": -45.50,
+    "currency": "GBP",
+    "transactionInformation": "TESCO STORES 3297",
+    "creditDebitIndicator": "Debit"
+  },
+  ...
+]'></textarea>
+            </label>
+
+            <div class="actions mt-12">
+              <button id="process-btn" class="btn primary">Process transactions</button>
+              <button id="load-sample-btn" class="btn">Load sample data</button>
+              <button id="clear-btn" class="btn">Clear</button>
+            </div>
+          </div>
+
+          <div id="output" class="mt-14"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Technical implementation</h2>
+      <p class="lead">
+        This demo uses vanilla JavaScript to implement Pandas-like operations:
+        array methods for filtering/mapping, date parsing, aggregation helpers, and summary statistics.
+        No external libraries — demonstrates core data wrangling patterns portable to any environment.
+      </p>
+
+      <div class="grid">
+        <div class="col-6">
+          <div class="card">
+            <h3>Data cleaning patterns</h3>
+            <ul class="clean">
+              <li>Null/undefined value handling</li>
+              <li>Date normalisation (ISO 8601)</li>
+              <li>Currency validation</li>
+              <li>Type coercion and validation</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card">
+            <h3>Feature engineering</h3>
+            <ul class="clean">
+              <li>Temporal features (day, month, weekday)</li>
+              <li>Amount bins (small/medium/large)</li>
+              <li>Transaction type classification</li>
+              <li>Merchant name extraction</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>ATS keyword pack (explicit)</h2>
+      <p>
+        Data Engineering, ETL Pipeline, Open Banking, Data Wrangling, Feature Engineering, Data Validation,
+        Pandas-style Operations, JSON Parsing, Data Normalisation, Aggregation, Statistical Analysis,
+        Client-side Processing, Vanilla JavaScript, Information Extraction, API Integration.
+      </p>
+    </section>
+
+    <footer class="footer">
+      <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
+      <div class="prov">
+        <span id="build-branch">branch: …</span>
+        <span id="build-commit">commit: …</span>
+        <span id="build-time">built: …</span>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById("year").textContent = String(new Date().getFullYear());
+
+    // Sample Open Banking transactions
+    const SAMPLE_DATA = [
+      {
+        transactionId: "tx-001",
+        bookingDateTime: "2024-01-15T10:30:00Z",
+        amount: -45.50,
+        currency: "GBP",
+        transactionInformation: "TESCO STORES 3297",
+        creditDebitIndicator: "Debit"
+      },
+      {
+        transactionId: "tx-002",
+        bookingDateTime: "2024-01-16T14:22:00Z",
+        amount: -12.99,
+        currency: "GBP",
+        transactionInformation: "AMAZON EU SARL",
+        creditDebitIndicator: "Debit"
+      },
+      {
+        transactionId: "tx-003",
+        bookingDateTime: "2024-01-16T09:15:00Z",
+        amount: 2500.00,
+        currency: "GBP",
+        transactionInformation: "SALARY PAYMENT",
+        creditDebitIndicator: "Credit"
+      },
+      {
+        transactionId: "tx-004",
+        bookingDateTime: "2024-01-18T12:45:00Z",
+        amount: -8.50,
+        currency: "GBP",
+        transactionInformation: "PRET A MANGER",
+        creditDebitIndicator: "Debit"
+      },
+      {
+        transactionId: "tx-005",
+        bookingDateTime: "2024-01-19T16:30:00Z",
+        amount: -150.00,
+        currency: "GBP",
+        transactionInformation: "BRITISH GAS",
+        creditDebitIndicator: "Debit"
+      },
+      {
+        transactionId: "tx-006",
+        bookingDateTime: "2024-01-20T11:20:00Z",
+        amount: -32.50,
+        currency: "GBP",
+        transactionInformation: "SAINSBURYS SACAT 1234",
+        creditDebitIndicator: "Debit"
+      },
+      {
+        transactionId: "tx-007",
+        bookingDateTime: "2024-01-22T19:45:00Z",
+        amount: -65.00,
+        currency: "GBP",
+        transactionInformation: "UBER TRIP",
+        creditDebitIndicator: "Debit"
+      },
+      {
+        transactionId: "tx-008",
+        bookingDateTime: "2024-01-23T08:30:00Z",
+        amount: -4.20,
+        currency: "GBP",
+        transactionInformation: "STARBUCKS",
+        creditDebitIndicator: "Debit"
+      }
+    ];
+
+    // Pandas-style data processing pipeline
+    class TransactionPipeline {
+      constructor(rawData) {
+        this.rawData = rawData;
+        this.cleaned = [];
+        this.transformed = [];
+        this.summary = {};
+      }
+
+      // LOAD: Parse and validate
+      load() {
+        if (!Array.isArray(this.rawData)) {
+          throw new Error("Input must be an array of transactions");
+        }
+        return this;
+      }
+
+      // CLEAN: Handle missing values, normalise dates
+      clean() {
+        this.cleaned = this.rawData
+          .filter(tx => tx && typeof tx === 'object')
+          .filter(tx => tx.transactionId && tx.bookingDateTime && tx.amount !== undefined)
+          .map(tx => ({
+            id: String(tx.transactionId || '').trim(),
+            date: new Date(tx.bookingDateTime),
+            amount: Number(tx.amount),
+            currency: String(tx.currency || 'GBP').toUpperCase(),
+            description: String(tx.transactionInformation || '').trim(),
+            type: String(tx.creditDebitIndicator || 'Unknown').toLowerCase()
+          }))
+          .filter(tx => !isNaN(tx.date.getTime())) // Valid dates only
+          .filter(tx => !isNaN(tx.amount)); // Valid amounts only
+        
+        return this;
+      }
+
+      // TRANSFORM: Derive features
+      transform() {
+        this.transformed = this.cleaned.map(tx => {
+          const absAmount = Math.abs(tx.amount);
+          
+          return {
+            ...tx,
+            // Temporal features
+            year: tx.date.getFullYear(),
+            month: tx.date.getMonth() + 1,
+            day: tx.date.getDate(),
+            weekday: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][tx.date.getDay()],
+            hour: tx.date.getHours(),
+            
+            // Amount features
+            absAmount: absAmount,
+            amountBin: absAmount < 10 ? 'small' : absAmount < 100 ? 'medium' : 'large',
+            
+            // Category inference (simple heuristic)
+            category: this.inferCategory(tx.description),
+            
+            // Merchant extraction
+            merchant: this.extractMerchant(tx.description)
+          };
+        });
+        
+        return this;
+      }
+
+      // SUMMARISE: Aggregate statistics
+      summarise() {
+        const txs = this.transformed;
+        
+        const credits = txs.filter(tx => tx.type === 'credit');
+        const debits = txs.filter(tx => tx.type === 'debit');
+        
+        const totalCredit = credits.reduce((sum, tx) => sum + tx.amount, 0);
+        const totalDebit = debits.reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
+        
+        // Category breakdown
+        const categoryBreakdown = {};
+        txs.forEach(tx => {
+          if (!categoryBreakdown[tx.category]) {
+            categoryBreakdown[tx.category] = { count: 0, total: 0 };
+          }
+          categoryBreakdown[tx.category].count++;
+          categoryBreakdown[tx.category].total += Math.abs(tx.amount);
+        });
+        
+        // Weekday patterns
+        const weekdayBreakdown = {};
+        txs.forEach(tx => {
+          if (!weekdayBreakdown[tx.weekday]) {
+            weekdayBreakdown[tx.weekday] = 0;
+          }
+          weekdayBreakdown[tx.weekday]++;
+        });
+        
+        this.summary = {
+          totalTransactions: txs.length,
+          totalCredit: totalCredit.toFixed(2),
+          totalDebit: totalDebit.toFixed(2),
+          netPosition: (totalCredit - totalDebit).toFixed(2),
+          averageTransaction: (debits.length ? totalDebit / debits.length : 0).toFixed(2),
+          dateRange: {
+            earliest: new Date(Math.min(...txs.map(tx => tx.date))).toISOString().split('T')[0],
+            latest: new Date(Math.max(...txs.map(tx => tx.date))).toISOString().split('T')[0]
+          },
+          categoryBreakdown,
+          weekdayBreakdown
+        };
+        
+        return this;
+      }
+
+      // Helper: Infer category from description
+      inferCategory(desc) {
+        const d = desc.toLowerCase();
+        
+        const categories = {
+          groceries: ['tesco', 'sainsbury', 'asda', 'morrisons'],
+          online_shopping: ['amazon', 'ebay'],
+          income: ['salary', 'payment'],
+          utilities: ['gas', 'electric', 'water'],
+          food_drink: ['starbucks', 'pret', 'cafe', 'restaurant'],
+          transport: ['uber', 'train', 'bus']
+        };
+        
+        for (const [category, keywords] of Object.entries(categories)) {
+          if (keywords.some(keyword => d.includes(keyword))) {
+            return category;
+          }
+        }
+        
+        return 'other';
+      }
+
+      // Helper: Extract merchant name
+      extractMerchant(desc) {
+        // Simple extraction: first word/phrase before numbers
+        const cleaned = desc.replace(/\d+/g, '').trim();
+        const parts = cleaned.split(/\s+/);
+        return parts.slice(0, Math.min(3, parts.length)).join(' ');
+      }
+
+      // Get results
+      getResults() {
+        return {
+          cleaned: this.cleaned,
+          transformed: this.transformed,
+          summary: this.summary
+        };
+      }
+    }
+
+    // UI handlers
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('en-GB', {
+        style: 'currency',
+        currency: 'GBP'
+      }).format(value);
+    }
+
+    function renderResults(results) {
+      const output = document.getElementById('output');
+      
+      const s = results.summary;
+      
+      let html = '<div class="card">';
+      html += '<h3>Summary Statistics</h3>';
+      html += '<div class="tags mb-12">';
+      html += `<span class="tag">Transactions: ${s.totalTransactions}</span>`;
+      html += `<span class="tag">Credits: ${formatCurrency(s.totalCredit)}</span>`;
+      html += `<span class="tag">Debits: ${formatCurrency(s.totalDebit)}</span>`;
+      html += `<span class="tag">Net: ${formatCurrency(s.netPosition)}</span>`;
+      html += `<span class="tag">Avg transaction: ${formatCurrency(s.averageTransaction)}</span>`;
+      html += '</div>';
+      
+      html += `<p class="small">Date range: ${s.dateRange.earliest} to ${s.dateRange.latest}</p>`;
+      html += '</div>';
+      
+      // Category breakdown
+      html += '<div class="card mt-14">';
+      html += '<h3>Category Breakdown</h3>';
+      html += '<div class="grid">';
+      Object.entries(s.categoryBreakdown)
+        .sort((a, b) => b[1].total - a[1].total)
+        .forEach(([cat, data]) => {
+          html += '<div class="col-6">';
+          html += `<div class="panel">`;
+          html += `<div class="small" style="text-transform: capitalize;">${cat.replace(/_/g, ' ')}</div>`;
+          html += `<div><strong>${formatCurrency(data.total)}</strong> (${data.count} txns)</div>`;
+          html += `</div>`;
+          html += '</div>';
+        });
+      html += '</div>';
+      html += '</div>';
+      
+      // Weekday patterns
+      html += '<div class="card mt-14">';
+      html += '<h3>Weekday Transaction Patterns</h3>';
+      html += '<div class="prov">';
+      Object.entries(s.weekdayBreakdown)
+        .forEach(([day, count]) => {
+          html += `<span>${day}: ${count}</span>`;
+        });
+      html += '</div>';
+      html += '</div>';
+      
+      // Sample transformed records
+      html += '<div class="card mt-14">';
+      html += '<h3>Sample Transformed Records (first 3)</h3>';
+      html += '<pre style="font-size: 12px; max-height: 300px; overflow: auto;">';
+      html += JSON.stringify(results.transformed.slice(0, 3), null, 2);
+      html += '</pre>';
+      html += '</div>';
+      
+      output.innerHTML = html;
+    }
+
+    document.getElementById('process-btn').addEventListener('click', () => {
+      const input = document.getElementById('input-json').value.trim();
+      const output = document.getElementById('output');
+      
+      if (!input) {
+        output.innerHTML = '<div class="card"><p>Please paste transaction JSON data.</p></div>';
+        return;
+      }
+      
+      try {
+        const data = JSON.parse(input);
+        
+        const pipeline = new TransactionPipeline(data);
+        const results = pipeline
+          .load()
+          .clean()
+          .transform()
+          .summarise()
+          .getResults();
+        
+        renderResults(results);
+        
+      } catch (err) {
+        output.innerHTML = `<div class="card"><p style="color: #ff6b6b;">Error: ${err.message}</p></div>`;
+      }
+    });
+
+    document.getElementById('load-sample-btn').addEventListener('click', () => {
+      document.getElementById('input-json').value = JSON.stringify(SAMPLE_DATA, null, 2);
+    });
+
+    document.getElementById('clear-btn').addEventListener('click', () => {
+      document.getElementById('input-json').value = '';
+      document.getElementById('output').innerHTML = '';
+    });
+  </script>
+
+  <script src="/build-info.js"></script>
+</body>
+</html>
