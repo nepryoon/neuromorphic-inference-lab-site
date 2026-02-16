@@ -323,7 +323,7 @@
           totalCredit: totalCredit.toFixed(2),
           totalDebit: totalDebit.toFixed(2),
           netPosition: (totalCredit - totalDebit).toFixed(2),
-          averageTransaction: (totalDebit / debits.length || 0).toFixed(2),
+          averageTransaction: (debits.length ? totalDebit / debits.length : 0).toFixed(2),
           dateRange: {
             earliest: new Date(Math.min(...txs.map(tx => tx.date))).toISOString().split('T')[0],
             latest: new Date(Math.max(...txs.map(tx => tx.date))).toISOString().split('T')[0]
@@ -338,12 +338,22 @@
       // Helper: Infer category from description
       inferCategory(desc) {
         const d = desc.toLowerCase();
-        if (d.includes('tesco') || d.includes('sainsbury') || d.includes('asda') || d.includes('morrisons')) return 'groceries';
-        if (d.includes('amazon') || d.includes('ebay')) return 'online_shopping';
-        if (d.includes('salary') || d.includes('payment')) return 'income';
-        if (d.includes('gas') || d.includes('electric') || d.includes('water')) return 'utilities';
-        if (d.includes('starbucks') || d.includes('pret') || d.includes('cafe') || d.includes('restaurant')) return 'food_drink';
-        if (d.includes('uber') || d.includes('train') || d.includes('bus')) return 'transport';
+        
+        const categories = {
+          groceries: ['tesco', 'sainsbury', 'asda', 'morrisons'],
+          online_shopping: ['amazon', 'ebay'],
+          income: ['salary', 'payment'],
+          utilities: ['gas', 'electric', 'water'],
+          food_drink: ['starbucks', 'pret', 'cafe', 'restaurant'],
+          transport: ['uber', 'train', 'bus']
+        };
+        
+        for (const [category, keywords] of Object.entries(categories)) {
+          if (keywords.some(keyword => d.includes(keyword))) {
+            return category;
+          }
+        }
+        
         return 'other';
       }
 
