@@ -172,6 +172,37 @@ After pushing to `main`, Cloudflare Pages deploys automatically.
 
 ---
 
+## Monitoring & Observability
+
+The platform includes a complete monitoring stack with Prometheus and Grafana.
+
+### Dashboard
+
+Grafana is auto-provisioned with a pre-built ML dashboard at startup:
+- **Model F1 Score** — current quality gate metric
+- **Predictions/min** — throughput
+- **P95 Latency** — inference performance
+- **Prediction Score Distribution** — heatmap for drift detection
+- **Predictions by Class** — class balance over time
+
+Access: http://localhost:3000 (admin / centrico)
+
+Prediction history is logged to the `prediction_log` table.
+
+### Quick Start
+
+```bash
+docker compose -f docker-compose.monitoring.yml up --build
+```
+
+The stack includes:
+- **Inference API** with Prometheus metrics at `/metrics`
+- **Prometheus** scraping metrics every 10s
+- **Grafana** with pre-configured dashboards and datasources
+- **PostgreSQL** for prediction logging
+
+---
+
 ## AWS Infrastructure (Terraform)
 
 Complete Terraform configuration for deploying the full Neuromorphic Inference Lab stack on AWS:

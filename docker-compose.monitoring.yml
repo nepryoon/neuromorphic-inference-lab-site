@@ -45,11 +45,12 @@ services:
 
   # Prometheus
   prometheus:
-    image: prom/prometheus:v2.48.0
+    image: prom/prometheus:v2.53.0
     container_name: mlops-prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
       - '--web.console.libraries=/usr/share/prometheus/console_libraries'
       - '--web.console.templates=/usr/share/prometheus/consoles'
     ports:
@@ -64,12 +65,13 @@ services:
 
   # Grafana
   grafana:
-    image: grafana/grafana:10.2.2
+    image: grafana/grafana:11.1.0
     container_name: mlops-grafana
     environment:
       GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_SECURITY_ADMIN_PASSWORD: centrico
       GF_PATHS_PROVISIONING: /etc/grafana/provisioning
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/ml-predictions.json
       GF_INSTALL_PLUGINS: ""
     ports:
       - "3000:3000"
