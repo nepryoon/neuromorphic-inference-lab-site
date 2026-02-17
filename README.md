@@ -13,7 +13,7 @@ every claim is backed by **clickable proof** (live docs + source code).
 
 ---
 
-## What recruiters can verify in 60 seconds
+## Quick verification
 
 1. **End-to-end systems thinking**  
    Each project is framed as a system (data → features → training → artefacts → serving → evaluation → ops).
