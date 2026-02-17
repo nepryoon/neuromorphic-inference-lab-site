@@ -53,7 +53,7 @@ resource "aws_ecr_lifecycle_policy" "open_banking" {
 
 # ALB Target Group for Open Banking service
 resource "aws_lb_target_group" "open_banking" {
-  name        = "${var.project_prefix}-openbank-tg"
+  name        = "${var.project_prefix}-open-banking-tg"
   port        = 8000
   protocol    = "HTTP"
   vpc_id      = aws_vpc.main.id

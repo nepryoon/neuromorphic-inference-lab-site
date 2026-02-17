@@ -95,7 +95,7 @@
             </div>
           </div>
 
-          <div id="output" class="mt-14"></div>
+          <div id="output" class="mt-16"></div>
         </article>
       </div>
     </section>
@@ -322,12 +322,6 @@
           signals.push('Food Delivery');
         }
 
-        // Weekend transaction signal
-        const now = new Date();
-        if (now.getDay() === 0 || now.getDay() === 6) {
-          signals.push('Weekend Transaction');
-        }
-
         return signals.length > 0 ? signals : ['Standard Transaction'];
       }
 
@@ -339,7 +333,7 @@
         if (category !== 'Other') confidence += 0.15;
         if (signals.length > 1) confidence += 0.05;
 
-        return Math.min(confidence, 0.95).toFixed(2);
+        return Math.min(confidence, 0.95);
       }
     }
 
@@ -395,7 +389,7 @@
 
       // Show comparison if rule-based result available
       if (ruleResult) {
-        html += '<div class="card mt-14">';
+        html += '<div class="card mt-16">';
         html += '<h3>Rule-Based Extraction (for comparison)</h3>';
         html += '<div class="panel">';
         html += `<div class="grid">`;
@@ -409,7 +403,7 @@
       }
 
       // Show cleaned version
-      html += '<div class="card mt-14">';
+      html += '<div class="card mt-16">';
       html += '<h3>Structured Output (JSON)</h3>';
       html += '<pre style="font-size: 12px; max-height: 300px; overflow: auto; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px;">';
       html += JSON.stringify(aiResult, null, 2);
