@@ -163,12 +163,20 @@ After pushing to `main`, Cloudflare Pages deploys automatically.
 
 ## Related repositories (code)
 
-- https://github.com/nepryoon/mv-grid-fault-risk
-- https://github.com/nepryoon/nil-rag-copilot
-- https://github.com/nepryoon/nil-forecast-studio
-- https://github.com/nepryoon/edgepulse
+### Core Systems
+- **MV Grid Fault Risk:** https://github.com/nepryoon/mv-grid-fault-risk
+- **RAG Copilot (LLMOps):** https://github.com/nepryoon/nil-rag-copilot
+- **Forecast Studio:** https://github.com/nepryoon/nil-forecast-studio
+- **Centrico LiveLab (MLOps):** https://github.com/nepryoon/centrico-livelab-mlops
 
-(See `/demos/` for the authoritative list.)
+### Additional Microservices
+- **Open Banking Transaction Enrichment:** https://github.com/nepryoon/open-banking-transaction-enrichment
+- **Visual Inspector:** https://github.com/nepryoon/nil-visual-inspector
+- **Tabular Risk:** https://github.com/nepryoon/nil-tabular-risk
+- **EdgePulse:** https://github.com/nepryoon/edgepulse
+- **Infrastructure Templates:** https://github.com/nepryoon/nil-infra-template
+
+(See `/demos/` for the authoritative list with live demos.)
 
 ---
 

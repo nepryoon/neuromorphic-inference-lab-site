@@ -359,3 +359,119 @@ select {
     grid-template-columns: 1fr;
   }
 }
+
+/* --- Utility Classes --- */
+.mt-4{ margin-top: 4px; }
+.mt-8{ margin-top: 8px; }
+.mt-12{ margin-top: 12px; }
+.mt-16{ margin-top: 16px; }
+.mt-20{ margin-top: 20px; }
+.mt-24{ margin-top: 24px; }
+
+.mb-4{ margin-bottom: 4px; }
+.mb-8{ margin-bottom: 8px; }
+.mb-12{ margin-bottom: 12px; }
+.mb-16{ margin-bottom: 16px; }
+.mb-20{ margin-bottom: 20px; }
+.mb-24{ margin-bottom: 24px; }
+
+.p-16{ padding: 16px; }
+.p-20{ padding: 20px; }
+.p-24{ padding: 24px; }
+
+/* --- Enhanced Neon Accents --- */
+.card.highlight{
+  border-color: rgba(110,231,255,.25);
+  box-shadow: 
+    var(--shadow),
+    0 0 20px rgba(110,231,255,.08);
+}
+
+.card.highlight:hover{
+  border-color: rgba(110,231,255,.35);
+  box-shadow: 
+    var(--shadow),
+    0 0 30px rgba(110,231,255,.12);
+  transform: translateY(-2px);
+  transition: all .2s ease;
+}
+
+/* Glow effect for live badges */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(52,211,153,.3); }
+  50% { box-shadow: 0 0 15px rgba(52,211,153,.5); }
+}
+
+.badge.live{
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* Enhanced focus states for accessibility */
+input:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid rgba(110,231,255,.6);
+  outline-offset: 2px;
+}
+
+/* Textarea styling */
+textarea.input{
+  min-height: 120px;
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+/* Label styling */
+label{
+  display: block;
+  width: 100%;
+}
+
+label > span{
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(234,240,255,.85);
+}
+
+/* Data mode indicators */
+[data-mode="api"]::before{
+  content: "API";
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(110,231,255,.12);
+  border: 1px solid rgba(110,231,255,.25);
+  color: rgba(110,231,255,.90);
+  font-weight: 700;
+  letter-spacing: .1em;
+}
+
+[data-mode="client"]::before{
+  content: "CLIENT";
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(167,139,250,.12);
+  border: 1px solid rgba(167,139,250,.25);
+  color: rgba(167,139,250,.90);
+  font-weight: 700;
+  letter-spacing: .1em;
+}
+
+.card.project{
+  position: relative;
+}
+
+/* Smooth scrolling */
+html{
+  scroll-behavior: smooth;
+}
