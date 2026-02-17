@@ -24,8 +24,8 @@
       // Extract values
       var branch = data.branch || "unknown";
       var sha = data.sha || "";
-      var shaShort = (sha || "unknown").substring(0, 7);
-      var builtAt = data.builtAt || data.deployedAt || new Date().toISOString().split("T")[0];
+      var shaShort = sha ? sha.substring(0, 7) : "dev";
+      var builtAt = data.builtAt || data.deployedAt || "—";
 
       branchEl.textContent = "branch: " + branch;
       commitEl.textContent = "commit: " + shaShort;
