@@ -1,0 +1,8 @@
+{
+  "version": "1.0.0",
+  "f1_score": 0.87,
+  "accuracy": 0.89,
+  "model_type": "Random Forest Classifier",
+  "training_date": "2024-01-15",
+  "features": ["feature_1", "feature_2", "feature_3"]
+}
