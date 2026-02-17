@@ -13,13 +13,13 @@ every claim is backed by **clickable proof** (live docs + source code).
 
 ---
 
-## What recruiters can verify in 60 seconds
+## Quick verification
 
 1. **End-to-end systems thinking**  
    Each project is framed as a system (data → features → training → artefacts → serving → evaluation → ops).
 
-2. **Evidence-based competence (ATS-friendly)**  
-   The Proof Ledger maps “skills” to stable anchors intended to be linked from a CV.
+2. **Evidence-based competence**  
+   The Proof Ledger maps “skills” to stable anchors for direct linking.
 
 3. **Traceability / provenance**  
    Footer build provenance shows commit + branch from `/api/build`.

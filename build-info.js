@@ -21,28 +21,19 @@
       if (!res.ok) throw new Error("build endpoint not ok");
       var data = await res.json();
 
-      // Accept a few likely key names to be resilient.
-      var branch = data.branch || data.BRANCH || data.gitBranch || "unknown";
-      var sha = data.sha || data.commit || data.COMMIT || data.gitCommit || "";
-      var shaShort = data.shaShort || (sha ? String(sha).slice(0, 7) : "");
-      var builtAt = data.built || data.builtAt || data.time || data.timestamp || "";
-      var commitUrl = data.commitUrl || "";
+      // Extract values
+      var branch = data.branch || "unknown";
+      var sha = data.sha || "";
+      var shaShort = sha ? sha.substring(0, 7) : "dev";
+      var builtAt = data.builtAt || data.deployedAt || "—";
 
-      branchEl.textContent = "branch: " + (branch || "unavailable");
-      
-      // Make commit a clickable link if commitUrl is available
-      if (commitUrl && shaShort) {
-        commitEl.innerHTML = "commit: <a href=\"" + commitUrl + "\" target=\"_blank\" rel=\"noopener\" style=\"color: inherit; text-decoration: underline;\">" + shaShort + "</a>";
-      } else {
-        commitEl.textContent = "commit: " + (shaShort || "unavailable");
-      }
-      
-      // Use shaShort as fallback when builtAt is empty
-      timeEl.textContent = builtAt ? ("built: " + builtAt) : (shaShort ? ("built: " + shaShort) : "built: unavailable");
+      branchEl.textContent = "branch: " + branch;
+      commitEl.textContent = "commit: " + shaShort;
+      timeEl.textContent = "built: " + builtAt;
     } catch (e) {
       branchEl.textContent = "branch: local";
-      commitEl.textContent = "commit: unavailable";
-      timeEl.textContent = "built: unavailable";
+      commitEl.textContent = "commit: dev";
+      timeEl.textContent = "built: —";
     }
   }
 
