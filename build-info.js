@@ -24,8 +24,8 @@
       // Accept a few likely key names to be resilient.
       var branch = data.branch || data.BRANCH || data.gitBranch || "unknown";
       var sha = data.sha || data.commit || data.COMMIT || data.gitCommit || "";
-      var shaShort = data.shaShort || (sha ? String(sha).slice(0, 12) : "");
-      var builtAt = data.builtAt || data.time || data.timestamp || "";
+      var shaShort = data.shaShort || (sha ? String(sha).slice(0, 7) : "");
+      var builtAt = data.built || data.builtAt || data.time || data.timestamp || "";
       var commitUrl = data.commitUrl || "";
 
       branchEl.textContent = "branch: " + (branch || "unavailable");
@@ -40,7 +40,7 @@
       // Use shaShort as fallback when builtAt is empty
       timeEl.textContent = builtAt ? ("built: " + builtAt) : (shaShort ? ("built: " + shaShort) : "built: unavailable");
     } catch (e) {
-      branchEl.textContent = "branch: unavailable";
+      branchEl.textContent = "branch: local";
       commitEl.textContent = "commit: unavailable";
       timeEl.textContent = "built: unavailable";
     }
