@@ -8,10 +8,16 @@ export function onRequestGet(context) {
   const repo = "nepryoon/neuromorphic-inference-lab-site";
   const commitUrl = sha ? `https://github.com/${repo}/commit/${sha}` : "";
 
+  // Get build timestamp from CF_PAGES environment
+  const buildDate = context.env.CF_PAGES_BUILD_DATE || "";
+  
   const data = {
     sha,
     shaShort: sha ? sha.slice(0, 12) : "",
+    commit: sha,  // Add 'commit' alias for client compatibility
     branch,
+    builtAt: buildDate,
+    timestamp: buildDate,  // Add 'timestamp' alias for client compatibility
     url,
     commitUrl
   };
