@@ -27,13 +27,10 @@
 
   <main class="container">
     <section class="hero">
-      <p class="kicker">MLOps System</p>
-      <h1 class="h1">Centrico LiveLab — End-to-End MLOps</h1>
+      <p class="kicker">Hero System</p>
+      <h1 class="h1">Centrico LiveLab — End-to-End MLOps Pipeline</h1>
       <p class="sub">
-        A working, end-to-end MLOps pipeline built to demonstrate production-ready skills:
-        <strong>data engineering</strong>, <strong>ML training</strong>, <strong>deployment-ready inference API</strong>,
-        <strong>monitoring</strong>, and <strong>automated CI quality gates</strong>.
-        Designed to showcase the complete lifecycle from data → train → serve → monitor.
+        Data ingestion → training → inference API → monitoring → CI quality gate.
       </p>
 
       <div class="actions">
@@ -45,10 +42,24 @@
       <div class="badges">
         <span class="badge">Data Engineering</span>
         <span class="badge">MLOps Pipeline</span>
-        <span class="badge">FastAPI Serving</span>
+        <span class="badge">FastAPI</span>
         <span class="badge">Prometheus + Grafana</span>
         <span class="badge">CI Quality Gates</span>
-        <span class="badge">Docker Compose</span>
+        <span class="badge">AWS</span>
+        <span class="badge">Docker</span>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <!-- Breadcrumb -->
+      <div class="tags" aria-label="Breadcrumb">
+        <a class="tag" href="/">Signal</a>
+        <span class="tag">→</span>
+        <a class="tag" href="/demos/">Systems</a>
+        <span class="tag">→</span>
+        <a class="tag" href="/evidence/">Proof Ledger</a>
+        <span class="tag">→</span>
+        <a class="tag" href="/evidence/centrico-livelab/">Evidence memo</a>
       </div>
     </section>
 
@@ -106,7 +117,68 @@
             <span class="tag">Automated Quality Gates</span>
           </div>
         </article>
+    </section>
+
+    <section class="section">
+      <h2>System architecture</h2>
+      <p class="lead">
+        Complete MLOps delivery loop demonstrating production-ready engineering discipline.
+      </p>
+
+      <div class="grid">
+        <article class="card col-12">
+          <h3>Data flow</h3>
+          <p>
+            <strong>Public APIs</strong> (CityBikes + Open-Meteo)
+            → <strong>Ingestion Container</strong> 
+            → <strong>PostgreSQL</strong> (raw JSONB)
+            → <strong>Trainer Container</strong> (scikit-learn + feature engineering)
+            → <strong>Inference API</strong> (FastAPI: /predict, /health, /metrics, /explain)
+            → <strong>Prometheus</strong> 
+            → <strong>Grafana</strong>
+          </p>
+          <p>
+            <strong>CI/CD:</strong> GitHub Actions with quality gate (F1 ≥ 0.60)
+            → <strong>AWS ECS Fargate</strong> (via OIDC, no long-lived credentials)
+            → <strong>S3</strong> (versioned model artefacts) + <strong>ECR</strong> (Docker images)
+          </p>
+        </article>
       </div>
+    </section>
+
+    <section class="section">
+      <h2>Key design decisions</h2>
+      <div class="grid">
+        <article class="card col-6">
+          <h3>Quality & reliability</h3>
+          <ul class="clean">
+            <li><strong>Adaptive quantile threshold:</strong> Avoids single-class training failures when data is imbalanced</li>
+            <li><strong>Model quality gate:</strong> F1 ≥ 0.60 enforced in CI before any deployment</li>
+            <li><strong>Prometheus metrics:</strong> Every /predict call emits latency + model_loaded + version</li>
+            <li><strong>LLM /explain endpoint:</strong> gpt-4o-mini with graceful fallback when key not set</li>
+          </ul>
+        </article>
+
+        <article class="card col-6">
+          <h3>Infrastructure & security</h3>
+          <ul class="clean">
+            <li><strong>AWS deployment via GitHub OIDC:</strong> No long-lived credentials</li>
+            <li><strong>Terraform IaC:</strong> Full infra (VPC, ECS, ALB, ECR, S3, IAM, SSM, CloudWatch)</li>
+            <li><strong>Target:</strong> AWS account 102724112773, region eu-south-1</li>
+            <li><strong>Secrets management:</strong> SSM Parameter Store</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>ATS keyword pack (explicit)</h2>
+      <p>
+        MLOps, CI/CD for ML, FastAPI model serving, Prometheus, Grafana, Docker, AWS ECS Fargate, 
+        Terraform, Infrastructure as Code, GitHub Actions, PostgreSQL, scikit-learn, artefact versioning,
+        model quality gates, LLMOps, OpenAI API integration, data engineering, feature engineering,
+        observability, monitoring, IaC, cloud deployment, container orchestration, API design.
+      </p>
     </section>
 
     <section class="section">
