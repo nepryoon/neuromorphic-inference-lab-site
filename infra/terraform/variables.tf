@@ -123,3 +123,35 @@ variable "grafana_version" {
   type        = string
   default     = "11.1.0"
 }
+
+# Open Banking Service Configuration
+variable "open_banking_cpu" {
+  description = "CPU units for Open Banking task (1024 = 1 vCPU)"
+  type        = number
+  default     = 256
+}
+
+variable "open_banking_memory" {
+  description = "Memory for Open Banking task in MiB"
+  type        = number
+  default     = 512
+}
+
+variable "open_banking_desired_count" {
+  description = "Desired number of Open Banking service tasks"
+  type        = number
+  default     = 1
+}
+
+variable "open_banking_min_count" {
+  description = "Minimum number of Open Banking service tasks for auto-scaling"
+  type        = number
+  default     = 1
+}
+
+variable "open_banking_max_count" {
+  description = "Maximum number of Open Banking service tasks for auto-scaling"
+  type        = number
+  default     = 3
+}
+

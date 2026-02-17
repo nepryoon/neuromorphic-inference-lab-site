@@ -79,6 +79,11 @@ output "ecr_rag_copilot_url" {
   value       = aws_ecr_repository.rag_copilot.repository_url
 }
 
+output "ecr_open_banking_url" {
+  description = "ECR repository URL for Open Banking service"
+  value       = aws_ecr_repository.open_banking.repository_url
+}
+
 # ECS Outputs
 output "ecs_cluster_name" {
   description = "ECS cluster name"
