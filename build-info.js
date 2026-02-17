@@ -26,13 +26,13 @@
       var commit = data.commit || data.COMMIT || data.gitCommit || "unknown";
       var builtAt = data.builtAt || data.time || data.timestamp || "";
 
-      branchEl.textContent = "branch: " + branch;
-      commitEl.textContent = "commit: " + String(commit).slice(0, 12);
-      timeEl.textContent = builtAt ? ("built: " + builtAt) : "built: unknown";
+      branchEl.textContent = "branch: " + (branch || "unavailable");
+      commitEl.textContent = "commit: " + (commit ? String(commit).slice(0, 12) : "unavailable");
+      timeEl.textContent = builtAt ? ("built: " + builtAt) : "built: unavailable";
     } catch (e) {
-      branchEl.textContent = "branch: unknown";
-      commitEl.textContent = "commit: unknown";
-      timeEl.textContent = "built: unknown";
+      branchEl.textContent = "branch: unavailable";
+      commitEl.textContent = "commit: unavailable";
+      timeEl.textContent = "built: unavailable";
     }
   }
 
