@@ -16,7 +16,7 @@ export function onRequestGet(context) {
     shaShort: sha ? sha.slice(0, 7) : "",
     commit: sha,  // Add 'commit' alias for client compatibility
     branch,
-    built: new Date().toISOString(),  // Always return current ISO timestamp
+    built: buildDate,  // Use build date as primary timestamp
     builtAt: buildDate,
     timestamp: buildDate,  // Add 'timestamp' alias for client compatibility
     url,
