@@ -1,0 +1,22 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'mlops-monitoring'
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Inference service metrics
+  - job_name: 'inference'
+    metrics_path: /metrics
+    scrape_interval: 15s
+    static_configs:
+      - targets: ['inference:8000']
+        labels:
+          service: 'inference-api'
+          environment: 'production'

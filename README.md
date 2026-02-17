@@ -96,6 +96,7 @@ Keywords: time series, backtesting, reproducibility, artefacts, scheduling.
 - `demos/` → systems pages
 - `evidence/`, `about/`, `research/` → section pages
 - `functions/api/build.js` → Cloudflare Pages Function returning build metadata as JSON
+- `infra/terraform/` → **AWS infrastructure code (Terraform)** for hosting the complete ML stack
 
 ---
 
@@ -168,6 +169,45 @@ After pushing to `main`, Cloudflare Pages deploys automatically.
 - https://github.com/nepryoon/edgepulse
 
 (See `/demos/` for the authoritative list.)
+
+---
+
+## AWS Infrastructure (Terraform)
+
+Complete Terraform configuration for deploying the full Neuromorphic Inference Lab stack on AWS:
+
+📍 **Location:** `infra/terraform/`
+
+### What's Included
+
+- **VPC & Networking:** Multi-AZ setup with public/private subnets
+- **ECS Fargate:** Container orchestration with 4 services (inference, RAG, Prometheus, Grafana)
+- **ECR:** Container registries for all services
+- **ALB:** HTTPS load balancing with path-based routing
+- **RDS:** PostgreSQL 16 database with encryption
+- **Monitoring:** Prometheus + Grafana with persistent storage
+- **Security:** IAM roles, security groups, secrets management
+
+### Quick Start
+
+```bash
+cd infra/terraform
+cp terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars with your configuration
+terraform init
+terraform plan
+terraform apply
+```
+
+📚 **Documentation:**
+- [README.md](infra/terraform/README.md) - Overview and quick start
+- [DEPLOYMENT_GUIDE.md](infra/terraform/DEPLOYMENT_GUIDE.md) - Step-by-step deployment
+- [ARCHITECTURE.md](infra/terraform/ARCHITECTURE.md) - Visual architecture diagram
+- [QUICK_REFERENCE.md](infra/terraform/QUICK_REFERENCE.md) - Command cheat sheet
+
+**Region:** eu-south-1 (Milano)  
+**Estimated Cost:** ~$120-170/month  
+**Resources:** ~60 AWS resources
 
 ---
 
