@@ -60,7 +60,7 @@ export async function onRequest(context) {
       status: "degraded",
       backend: "unreachable",
       timestamp: new Date().toISOString(),
-      error: error.name === "AbortError" ? "timeout" : "unreachable"
+      error: error.name === "AbortError" ? "timeout" : (error.message || "unreachable")
     };
 
     return new Response(JSON.stringify(fallbackResponse), {

@@ -61,7 +61,7 @@ export async function onRequest(context) {
         inference: "unreachable"
       },
       timestamp: new Date().toISOString(),
-      error: error.name === "AbortError" ? "timeout" : "unreachable"
+      error: error.name === "AbortError" ? "timeout" : (error.message || "unreachable")
     };
 
     return new Response(JSON.stringify(fallbackResponse), {
