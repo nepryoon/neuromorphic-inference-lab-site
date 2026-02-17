@@ -23,12 +23,22 @@
 
       // Accept a few likely key names to be resilient.
       var branch = data.branch || data.BRANCH || data.gitBranch || "unknown";
-      var commit = data.commit || data.COMMIT || data.gitCommit || "unknown";
+      var sha = data.sha || data.commit || data.COMMIT || data.gitCommit || "";
+      var shaShort = data.shaShort || (sha ? String(sha).slice(0, 12) : "");
       var builtAt = data.builtAt || data.time || data.timestamp || "";
+      var commitUrl = data.commitUrl || "";
 
       branchEl.textContent = "branch: " + (branch || "unavailable");
-      commitEl.textContent = "commit: " + (commit ? String(commit).slice(0, 12) : "unavailable");
-      timeEl.textContent = builtAt ? ("built: " + builtAt) : "built: unavailable";
+      
+      // Make commit a clickable link if commitUrl is available
+      if (commitUrl && shaShort) {
+        commitEl.innerHTML = "commit: <a href=\"" + commitUrl + "\" target=\"_blank\" rel=\"noopener\" style=\"color: inherit; text-decoration: underline;\">" + shaShort + "</a>";
+      } else {
+        commitEl.textContent = "commit: " + (shaShort || "unavailable");
+      }
+      
+      // Use shaShort as fallback when builtAt is empty
+      timeEl.textContent = builtAt ? ("built: " + builtAt) : (shaShort ? ("built: " + shaShort) : "built: unavailable");
     } catch (e) {
       branchEl.textContent = "branch: unavailable";
       commitEl.textContent = "commit: unavailable";
