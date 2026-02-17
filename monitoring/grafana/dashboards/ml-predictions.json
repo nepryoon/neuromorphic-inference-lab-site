@@ -446,8 +446,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "ML Predictions Dashboard",
-  "uid": "ml-predictions",
+  "title": "Centrico LiveLab — ML Predictions",
+  "uid": "centrico-ml-predictions",
   "version": 0,
   "weekStart": ""
 }

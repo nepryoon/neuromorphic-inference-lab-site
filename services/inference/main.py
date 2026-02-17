@@ -21,16 +21,22 @@ app = FastAPI(title="ML Inference Service", version="1.0.0")
 prediction_score = Histogram(
     "prediction_score_distribution",
     "Distribution of prediction probabilities",
-    buckets=[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    buckets=[0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1.0]
 )
 
 predictions_total = Counter(
     "predictions_total",
-    "Total predictions",
+    "Total predictions by class and model version",
     ["predicted_class", "model_version"]
 )
 
 model_f1 = Gauge("model_f1_score", "Current model F1 score")
+
+prediction_latency = Histogram(
+    "prediction_latency_seconds",
+    "Inference latency in seconds",
+    buckets=[0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5]
+)
 
 http_requests_total = Counter(
     "http_requests_total",
@@ -134,15 +140,17 @@ async def predict(request: PredictionRequest):
         if probability < 0.1:
             probability += 0.5
         
+        # Calculate latency
+        latency_seconds = time.time() - start_time
+        latency_ms = latency_seconds * 1000
+        
         # Record Prometheus metrics
         prediction_score.observe(probability)
         predictions_total.labels(
             predicted_class=str(predicted_class),
             model_version=MODEL_VERSION
         ).inc()
-        
-        # Calculate latency
-        latency_ms = (time.time() - start_time) * 1000
+        prediction_latency.observe(latency_seconds)
         
         # Log prediction to database
         if db_pool:
