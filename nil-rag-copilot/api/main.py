@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.routers import ingest, chat, eval
+from .routers import ingest, chat, eval as eval_router
 
 app = FastAPI(
     title="NIL RAG Copilot API",
@@ -30,7 +30,7 @@ def health():
 # Include API routers
 app.include_router(ingest.router, prefix="/api/v1", tags=["ingest"])
 app.include_router(chat.router, prefix="/api/v1", tags=["chat"])
-app.include_router(eval.router, prefix="/api/v1", tags=["evaluation"])
+app.include_router(eval_router.router, prefix="/api/v1", tags=["eval"])
 
 @app.get("/")
 def root():

@@ -1,4 +1,9 @@
-fastapi==0.115.0
-uvicorn[standard]==0.32.0
-python-multipart==0.0.22
-pydantic==2.9.2
+fastapi>=0.100.0
+uvicorn[standard]>=0.30.0
+python-multipart>=0.0.20
+pdfplumber>=0.10.0
+sentence-transformers>=2.5.0
+faiss-cpu>=1.7.0
+openai>=1.0.0
+numpy>=1.24.0
+pandas>=2.0.0
