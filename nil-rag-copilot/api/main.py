@@ -3,7 +3,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
 
 try:
     from .routers import ingest
@@ -56,9 +55,11 @@ app.include_router(ingest.router, prefix="/api/v1", tags=["ingest"])
 app.include_router(chat.router, prefix="/api/v1", tags=["chat"])
 app.include_router(eval_router.router, prefix="/api/v1", tags=["eval"])
 
-# List registered routes at startup
-for route in app.routes:
-    logger.info(f"Route: {getattr(route, 'methods', '-')} {route.path}")
+@app.on_event("startup")
+async def log_routes():
+    """Log all registered routes at startup for debugging."""
+    for route in app.routes:
+        logger.info(f"Route: {getattr(route, 'methods', '-')} {route.path}")
 
 @app.get("/")
 def root():
