@@ -691,11 +691,11 @@
           const errorDetail = escapeHtml(data.error || data.detail || 'Unknown error');
           let errorMsg = `✗ Error ${response.status}: ${errorDetail}`;
           if (response.status === 404) {
-            const escapedApiBase = escapeHtml(API_BASE);
+            // API_BASE is our own constant, no need to escape
             errorMsg += '<br><small>Backend route not found. Please verify:<br>' +
                         '1. Backend service is deployed and running<br>' +
                         '2. API_BASE URL in code matches deployed service<br>' +
-                        `3. Expected route: ${escapedApiBase}/ingest</small>`;
+                        `3. Expected route: ${API_BASE}/ingest</small>`;
           }
           showIngestResult('error', errorMsg);
           ingestBtn.disabled = false;
@@ -726,9 +726,13 @@
     
     function showIngestResult(type, message) {
       ingestResult.className = `ingest-result ${type}`;
-      // message contains both escaped dynamic content and intentional HTML tags (<br>, <small>)
-      // Dynamic parts (error messages, URLs) are pre-escaped using escapeHtml()
-      // Static HTML structure is safe and controlled by us
+      // Security model: Message contains pre-escaped dynamic content (error messages from
+      // backend/JS) mixed with intentional HTML tags (<br>, <small>) for formatting.
+      // Only untrusted data (backend errors, JS error messages) is escaped via escapeHtml().
+      // Trusted HTML structure is controlled by our code and safe to render.
+      // Note: This approach is acceptable for this use case but requires careful attention
+      // when adding new error messages. Consider using DOM methods or a template library
+      // for more complex scenarios.
       ingestResult.innerHTML = message;
       ingestResult.classList.remove('hidden');
     }

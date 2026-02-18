@@ -56,4 +56,4 @@ echo "4. Test health: curl http://localhost:8080/health"
 echo "5. View API docs: http://localhost:8080/docs"
 
 exit 0
-
+exit 0
