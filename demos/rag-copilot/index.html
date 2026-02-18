@@ -273,7 +273,7 @@
     <!-- Section 1: Hero -->
     <section class="hero">
       <p class="kicker">PDF Knowledge Demo</p>
-      <h1 class="h1">RAG Copilot — PDF Knowledge Demo</h1>
+      <h1 class="h1">RAG Copilot — Document Q&A with Citations</h1>
       <p class="sub">
         Upload a PDF document (max 5000 words), build a vector index, and interact with contextual chat over your document with full citation tracing.
         Run automated benchmarks to evaluate retrieval precision, answer relevance, and context coverage.
@@ -467,6 +467,7 @@
   <script>
     // Configuration
     const API_BASE = "https://nil-rag-copilot.onrender.com/api/v1";
+    const API_ROOT = "https://nil-rag-copilot.onrender.com";
     
     // State
     let sessionId = null;
@@ -491,13 +492,12 @@
     const systemStatus = document.getElementById('systemStatus');
     
     // Initialize
-    document.getElementById('year').textContent = String(new Date().getFullYear());
     checkSystemHealth();
     
     // System health check
     async function checkSystemHealth() {
       try {
-        const response = await fetch(`${API_BASE.replace('/api/v1', '')}/health`, {
+        const response = await fetch(`${API_ROOT}/health`, {
           method: 'GET',
           mode: 'cors'
         });
@@ -544,7 +544,7 @@
     function handleFileSelect(file) {
       // Validate PDF
       if (file.type !== 'application/pdf') {
-        showMessage('error', 'Please select a PDF file.');
+        showIngestResult('error', '✗ Please select a PDF file.');
         return;
       }
       
@@ -563,7 +563,7 @@
       ingestResult.classList.add('hidden');
       progressContainer.classList.remove('hidden');
       
-      // Simulate progress steps
+      // Simulate progress steps (visual feedback only - actual progress depends on server processing time)
       updateProgress(30, 'Extracting text…');
       
       const formData = new FormData();
@@ -797,6 +797,7 @@
       
       // Colors
       const colors = ['#00ff88', '#4fc3f7', '#ff9800'];
+      const GRADIENT_ALPHA = '66'; // 40% opacity for gradient fade
       
       // Draw Y-axis
       ctx.strokeStyle = '#333';
@@ -832,7 +833,7 @@
         // Gradient fill
         const gradient = ctx.createLinearGradient(x, y, x, height - padding);
         gradient.addColorStop(0, colors[i]);
-        gradient.addColorStop(1, colors[i] + '66');
+        gradient.addColorStop(1, colors[i] + GRADIENT_ALPHA);
         ctx.fillStyle = gradient;
         ctx.fillRect(x, y, barWidth, barHeight);
         
