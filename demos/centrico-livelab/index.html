@@ -1,22 +1,370 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-GB">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centrico Livelab</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Centrico LiveLab — End-to-End MLOps — Systems</title>
+  <meta name="description" content="Centrico LiveLab: a complete MLOps pipeline demonstrating data engineering, training, inference serving, monitoring with Prometheus + Grafana, and CI quality gates." />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/style.css" />
 </head>
+
 <body>
-    <!-- Other content here -->
-    <div class="actions">
-        <!-- Existing action buttons here -->
-        <a href="http://localhost:3000" class="btn btn-primary">Dashboard (local)</a>
+  <header class="nav">
+    <div class="inner">
+      <div class="brand">
+        <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+        <span>Neuromorphic Inference Lab</span>
+      </div>
+      <nav class="navlinks" aria-label="Primary navigation">
+        <a data-nav href="/">Signal</a>
+        <a data-nav class="active" href="/demos/">Systems</a>
+        <a data-nav href="/evidence/">Proof Ledger</a>
+        <a data-nav href="/about/">Identity</a>
+      </nav>
     </div>
-    <div class="badges mt-12">
-        <!-- Badges here -->
-    </div>
-    <div class="tags mt-12">
-        <!-- Breadcrumb tags here -->
-    </div>
-    <!-- Other content here -->
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <p class="kicker">System</p>
+      <h1 class="h1">Centrico LiveLab — End-to-End MLOps</h1>
+      <p class="sub">
+        A production-grade MLOps reference implementation covering the complete lifecycle: data ingestion and preparation,
+        feature engineering, model training with versioning, inference API serving, observability (Prometheus + Grafana),
+        and CI/CD quality gates. Designed to demonstrate full-stack ML engineering discipline.
+      </p>
+
+      <div class="badges">
+        <span class="badge">Data Engineering</span>
+        <span class="badge">MLOps Pipeline</span>
+        <span class="badge">Model Serving</span>
+        <span class="badge">Prometheus + Grafana</span>
+        <span class="badge">CI Quality Gates</span>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="actions">
+        <a class="btn primary" href="https://github.com/nepryoon/centrico-livelab-mlops" target="_blank" rel="noopener">Source repository</a>
+        <a class="btn" href="/evidence/centrico-livelab/">Evidence memo</a>
+        <a class="btn" href="/evidence/#centrico-livelab">Proof anchor</a>
+        <a class="btn" href="/demos/">Back to Systems</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>What problem it solves</h2>
+      <p class="lead">
+        Most ML projects stop at "model in a notebook." Centrico LiveLab demonstrates production operationalization:
+        repeatable data pipelines, training orchestration, versioned artefacts, live serving, monitoring infrastructure,
+        and automated quality checks in CI.
+      </p>
+
+      <div class="grid">
+        <div class="card col-6">
+          <h3>Business impact</h3>
+          <ul class="clean">
+            <li>End-to-end visibility: from raw data ingestion to inference results.</li>
+            <li>Reliable deployment pipeline with quality gates (prevents broken models from reaching production).</li>
+            <li>Monitoring and alerting infrastructure for operational confidence.</li>
+            <li>Reproducible training runs with versioned artefacts and lineage tracking.</li>
+          </ul>
+        </div>
+
+        <div class="card col-6">
+          <h3>System architecture</h3>
+          <ul class="clean">
+            <li><strong>Data layer</strong>: ingestion pipelines with validation and schema enforcement.</li>
+            <li><strong>Training layer</strong>: orchestrated training with experiment tracking and model registry.</li>
+            <li><strong>Serving layer</strong>: FastAPI inference endpoint with health checks and metrics.</li>
+            <li><strong>Observability</strong>: Prometheus metrics collection + Grafana dashboards.</li>
+            <li><strong>CI/CD</strong>: automated tests, model evaluation gates, and deployment workflows.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>System components</h2>
+      <p class="lead">
+        The system is structured as modular components, each with clear responsibilities and interfaces.
+        This separation enables independent development, testing, and deployment of each layer.
+      </p>
+
+      <div class="grid">
+        <article class="card col-12">
+          <h3>1. Data Engineering Pipeline</h3>
+          <p>
+            Ingestion from multiple sources (CSV, databases, APIs) with validation, cleaning, and transformation logic.
+            Schema enforcement ensures data quality at ingestion time. Feature stores enable consistent feature generation
+            across training and inference.
+          </p>
+          <div class="tags mt-12">
+            <span class="tag">Schema Validation</span>
+            <span class="tag">Data Quality Checks</span>
+            <span class="tag">Feature Store</span>
+            <span class="tag">Pipeline Orchestration</span>
+          </div>
+        </article>
+
+        <article class="card col-12">
+          <h3>2. Training & Model Management</h3>
+          <p>
+            Reproducible training pipeline with experiment tracking (MLflow), hyperparameter tuning, and model registry.
+            Each training run produces versioned artefacts (model binaries, metrics, metadata) that are stored and
+            tracked for lineage and rollback capabilities.
+          </p>
+          <div class="tags mt-12">
+            <span class="tag">MLflow Tracking</span>
+            <span class="tag">Model Registry</span>
+            <span class="tag">Versioned Artefacts</span>
+            <span class="tag">Hyperparameter Tuning</span>
+          </div>
+        </article>
+
+        <article class="card col-12">
+          <h3>3. Inference API & Serving</h3>
+          <p>
+            FastAPI-based inference service with standardized request/response schemas, health endpoints, and readiness probes.
+            Containerized for consistent deployment across environments. Supports batch and real-time inference patterns.
+          </p>
+          <div class="tags mt-12">
+            <span class="tag">FastAPI</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Health Checks</span>
+            <span class="tag">Batch & Real-time</span>
+          </div>
+        </article>
+
+        <article class="card col-12">
+          <h3>4. Monitoring & Observability</h3>
+          <p>
+            Prometheus scrapes metrics from the inference API (request counts, latencies, error rates, model predictions distribution).
+            Grafana dashboards visualize system health, model performance drift indicators, and infrastructure metrics.
+            Alerting rules trigger notifications for anomalies.
+          </p>
+          <div class="tags mt-12">
+            <span class="tag">Prometheus</span>
+            <span class="tag">Grafana</span>
+            <span class="tag">Alerting</span>
+            <span class="tag">Drift Detection</span>
+          </div>
+        </article>
+
+        <article class="card col-12">
+          <h3>5. CI/CD & Quality Gates</h3>
+          <p>
+            Automated CI pipeline validates code quality (linting, type checking), runs unit and integration tests,
+            evaluates model performance on hold-out data, and enforces quality gates before promotion to production.
+            Deployment workflows support blue-green and canary deployment strategies.
+          </p>
+          <div class="tags mt-12">
+            <span class="tag">GitHub Actions</span>
+            <span class="tag">Quality Gates</span>
+            <span class="tag">Automated Testing</span>
+            <span class="tag">Deployment Strategies</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Architecture diagram</h2>
+      <p class="lead">
+        High-level system flow showing data movement from sources through training and serving layers,
+        with observability and CI/CD as cross-cutting concerns.
+      </p>
+
+      <div class="card">
+        <pre style="line-height: 1.6; color: rgba(234,240,255,.86); font-size: 13px; overflow-x: auto;">
+┌─────────────────────┐
+│  Data Sources       │
+│  (CSV, DB, APIs)    │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│  Data Pipeline      │
+│  • Ingestion        │
+│  • Validation       │
+│  • Feature Eng      │
+└──────────┬──────────┘
+           │
+           ├──────────────────────┐
+           │                      │
+           ▼                      ▼
+┌─────────────────────┐  ┌─────────────────────┐
+│  Training Pipeline  │  │  Feature Store      │
+│  • MLflow           │  │  (Inference Ready)  │
+│  • Model Registry   │  └──────────┬──────────┘
+└──────────┬──────────┘             │
+           │                        │
+           ▼                        ▼
+┌─────────────────────┐  ┌─────────────────────┐
+│  Model Artefacts    │  │  Inference API      │
+│  (Versioned)        │─▶│  • FastAPI          │
+└─────────────────────┘  │  • Health Checks    │
+                         └──────────┬──────────┘
+                                    │
+                                    ▼
+                         ┌─────────────────────┐
+                         │  Monitoring Stack   │
+                         │  • Prometheus       │
+                         │  • Grafana          │
+                         │  • Alerting         │
+                         └─────────────────────┘
+
+Cross-Cutting: CI/CD pipeline with quality gates at each stage
+        </pre>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Local setup & verification</h2>
+      <p class="lead">
+        The system can be run entirely locally using Docker Compose, enabling developers to test
+        and verify the complete stack without cloud dependencies.
+      </p>
+
+      <div class="grid">
+        <div class="card col-6">
+          <h3>Quick start</h3>
+          <ol class="clean" style="padding-left: 20px;">
+            <li>Clone the repository: <code style="font-size: 12px; padding: 2px 6px; background: rgba(0,0,0,.3); border-radius: 4px;">git clone https://github.com/nepryoon/centrico-livelab-mlops</code></li>
+            <li>Run setup: <code style="font-size: 12px; padding: 2px 6px; background: rgba(0,0,0,.3); border-radius: 4px;">docker-compose up</code></li>
+            <li>Access services:
+              <ul style="margin-top: 6px;">
+                <li>API docs: <code style="font-size: 12px; padding: 2px 6px; background: rgba(0,0,0,.3); border-radius: 4px;">http://localhost:8000/docs</code></li>
+                <li>Grafana: <code style="font-size: 12px; padding: 2px 6px; background: rgba(0,0,0,.3); border-radius: 4px;">http://localhost:3000</code></li>
+                <li>Prometheus: <code style="font-size: 12px; padding: 2px 6px; background: rgba(0,0,0,.3); border-radius: 4px;">http://localhost:9090</code></li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+
+        <div class="card col-6">
+          <h3>Verification checklist</h3>
+          <ul class="clean">
+            <li>✓ Data pipeline runs without errors</li>
+            <li>✓ Training produces versioned model artefacts</li>
+            <li>✓ Inference API responds to health checks</li>
+            <li>✓ Prometheus collects metrics from API</li>
+            <li>✓ Grafana dashboards display system metrics</li>
+            <li>✓ CI pipeline passes all quality gates</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Key capabilities demonstrated</h2>
+      <p class="lead">
+        This system serves as a reference implementation for MLOps patterns and production ML engineering practices.
+      </p>
+
+      <div class="grid">
+        <div class="card col-4">
+          <h3>Data Engineering</h3>
+          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
+            Schema validation, data quality checks, feature engineering pipelines, and feature store patterns
+            for consistent feature generation.
+          </p>
+        </div>
+
+        <div class="card col-4">
+          <h3>MLOps Practices</h3>
+          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
+            Experiment tracking, model registry, versioned artefacts, reproducible training,
+            and automated model evaluation.
+          </p>
+        </div>
+
+        <div class="card col-4">
+          <h3>Production Serving</h3>
+          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
+            Containerized inference API with health checks, metrics instrumentation, and support for
+            multiple deployment patterns.
+          </p>
+        </div>
+
+        <div class="card col-4">
+          <h3>Observability</h3>
+          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
+            Comprehensive monitoring with Prometheus and Grafana, including model performance metrics,
+            system health, and drift detection.
+          </p>
+        </div>
+
+        <div class="card col-4">
+          <h3>Quality Assurance</h3>
+          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
+            CI/CD pipelines with automated testing, code quality checks, model evaluation gates,
+            and deployment automation.
+          </p>
+        </div>
+
+        <div class="card col-4">
+          <h3>Documentation</h3>
+          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
+            Comprehensive documentation including architecture diagrams, setup instructions, API documentation,
+            and operational runbooks.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Evidence & verification</h2>
+      <p class="lead">
+        Complete traceability from requirements to implementation to deployment, with multiple verification paths.
+      </p>
+
+      <div class="card">
+        <div class="grid">
+          <div class="col-6">
+            <h3 style="font-size: 16px; margin-bottom: 12px;">Verification paths</h3>
+            <ul class="clean">
+              <li><strong>Source code:</strong> Complete implementation in GitHub repository</li>
+              <li><strong>CI/CD:</strong> GitHub Actions workflows with visible run history</li>
+              <li><strong>Documentation:</strong> README, architecture docs, API specs</li>
+              <li><strong>Evidence memo:</strong> Detailed capability mapping and proof structure</li>
+            </ul>
+          </div>
+
+          <div class="col-6">
+            <h3 style="font-size: 16px; margin-bottom: 12px;">Skills demonstrated</h3>
+            <ul class="clean">
+              <li>Python (data processing, ML, API development)</li>
+              <li>Docker & containerization</li>
+              <li>CI/CD automation (GitHub Actions)</li>
+              <li>Monitoring & observability (Prometheus, Grafana)</li>
+              <li>API design (FastAPI, OpenAPI)</li>
+              <li>MLOps tooling (MLflow, model registry)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="height: 16px;"></div>
+
+        <div class="actions">
+          <a class="btn primary" href="https://github.com/nepryoon/centrico-livelab-mlops" target="_blank" rel="noopener">View source repository</a>
+          <a class="btn" href="/evidence/centrico-livelab/">Read evidence memo</a>
+          <a class="btn" href="/evidence/#centrico-livelab">Evidence anchor</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>© 2025 Neuromorphic Inference Lab</div>
+      <div class="prov">
+        <span id="build-branch">branch: …</span>
+        <span id="build-commit">commit: …</span>
+        <span id="build-time">built: …</span>
+      </div>
+    </footer>
+  </main>
+
+  <script src="/build-info.js"></script>
 </body>
 </html>
