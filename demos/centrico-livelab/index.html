@@ -1,22 +1,206 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-GB">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centrico Livelab</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Centrico LiveLab — End-to-End MLOps — Systems</title>
+  <meta name="description" content="Complete MLOps pipeline: data ingestion → training → inference API → monitoring → CI quality gates. Demonstrates full production delivery with FastAPI, Prometheus, Grafana, AWS, and Docker." />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/style.css" />
 </head>
+
 <body>
-    <!-- Other content here -->
-    <div class="actions">
-        <!-- Existing action buttons here -->
-        <a href="http://localhost:3000" class="btn btn-primary">Dashboard (local)</a>
+  <header class="nav">
+    <div class="inner">
+      <div class="brand">
+        <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+        <span>Neuromorphic Inference Lab</span>
+      </div>
+      <nav class="navlinks" aria-label="Primary navigation">
+        <a data-nav href="/">Signal</a>
+        <a data-nav class="active" href="/demos/">Systems</a>
+        <a data-nav href="/evidence/">Proof Ledger</a>
+        <a data-nav href="/about/">Identity</a>
+      </nav>
     </div>
-    <div class="badges mt-12">
-        <!-- Badges here -->
-    </div>
-    <div class="tags mt-12">
-        <!-- Breadcrumb tags here -->
-    </div>
-    <!-- Other content here -->
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <p class="kicker">Hero System</p>
+      <h1 class="h1">Centrico LiveLab — End-to-End MLOps</h1>
+      <p class="sub">
+        A complete MLOps pipeline demonstrating the full production delivery loop:
+        data ingestion → feature engineering → training → inference API → monitoring → CI quality gates.
+        Built with FastAPI, Prometheus, Grafana, Docker, and AWS.
+      </p>
+
+      <div class="actions">
+        <a class="btn primary" href="/evidence/centrico-livelab/">Open evidence dossier</a>
+        <a class="btn" href="https://github.com/nepryoon/edgepulse" target="_blank" rel="noopener">Source</a>
+        <a class="btn" href="https://github.com/nepryoon/edgepulse/actions" target="_blank" rel="noopener">CI Pipeline</a>
+      </div>
+
+      <div class="badges">
+        <span class="badge">Data Engineering</span>
+        <span class="badge">MLOps Pipeline</span>
+        <span class="badge">FastAPI</span>
+        <span class="badge">Prometheus + Grafana</span>
+        <span class="badge">CI Quality Gates</span>
+        <span class="badge">AWS</span>
+        <span class="badge">Docker</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="grid">
+        <article class="card project col-6">
+          <h3>Problem → impact</h3>
+          <p>
+            Production ML systems require more than a trained model — they need reliable ingestion,
+            reproducible training, versioned artefacts, a serving layer, and observable monitoring.
+            Centrico LiveLab demonstrates the entire stack end-to-end, from raw data to live inference
+            with metrics scraped by Prometheus and visualised in Grafana.
+          </p>
+
+          <h3>Proof links</h3>
+          <p>Verification paths (code + CI runs + artefacts + live endpoint).</p>
+
+          <div class="actions">
+            <a class="btn primary" href="/evidence/centrico-livelab/">Evidence dossier</a>
+            <a class="btn" href="https://github.com/nepryoon/edgepulse/actions" target="_blank" rel="noopener">CI runs</a>
+            <a class="btn" href="https://github.com/nepryoon/edgepulse/releases" target="_blank" rel="noopener">Artefacts</a>
+            <a class="btn" href="/api/centrico/health" target="_blank" rel="noopener">Proxy health</a>
+          </div>
+
+          <div class="tags mt-12">
+            <span class="tag">End-to-End ML</span>
+            <span class="tag">Reproducible builds</span>
+            <span class="tag">Deployment-ready artefacts</span>
+          </div>
+        </article>
+
+        <article class="card project col-6">
+          <h3>Monitoring dashboard</h3>
+          <p>
+            Representative pipeline metrics. The live Grafana dashboard is available
+            when the MLOps stack is running locally — sample data shown below.
+          </p>
+
+          <p class="dashboard-notice">
+            📊 Grafana live dashboard available with the local MLOps stack active.
+            Sample data shown below.
+          </p>
+
+          <div class="dashboard-grid">
+            <div class="chart-card">
+              <h3>Training Loss per Epoch</h3>
+              <canvas id="chart-loss" aria-label="Training loss per epoch" role="img"></canvas>
+            </div>
+            <div class="chart-card">
+              <h3>Inference Latency (ms)</h3>
+              <canvas id="chart-latency" aria-label="Inference latency by stage" role="img"></canvas>
+            </div>
+            <div class="chart-card">
+              <h3>Pipeline Throughput (rec/s)</h3>
+              <canvas id="chart-throughput" aria-label="Pipeline throughput over time" role="img"></canvas>
+            </div>
+            <div class="chart-card">
+              <h3>CI Quality Gates</h3>
+              <canvas id="chart-ci" aria-label="CI quality gate results" role="img"></canvas>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>© 2025 Neuromorphic Inference Lab</div>
+      <div class="prov">
+        <span id="build-branch">branch: …</span>
+        <span id="build-commit">commit: …</span>
+        <span id="build-time">built: …</span>
+      </div>
+    </footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script>
+    (function () {
+      var accent = '#7c6af7';
+      Chart.defaults.color = 'rgba(255,255,255,0.6)';
+      Chart.defaults.borderColor = 'rgba(255,255,255,0.07)';
+
+      new Chart(document.getElementById('chart-loss'), {
+        type: 'line',
+        data: {
+          labels: ['Ep1','Ep2','Ep3','Ep4','Ep5','Ep6','Ep7','Ep8','Ep9','Ep10'],
+          datasets: [{
+            label: 'Loss',
+            data: [0.92, 0.74, 0.61, 0.50, 0.41, 0.34, 0.28, 0.23, 0.19, 0.16],
+            borderColor: accent,
+            backgroundColor: 'transparent',
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { y: { title: { display: true, text: 'Loss' } } }
+        }
+      });
+
+      new Chart(document.getElementById('chart-latency'), {
+        type: 'bar',
+        data: {
+          labels: ['Ingest', 'Training', 'Serving', 'Monitoring'],
+          datasets: [{
+            label: 'ms',
+            data: [18, 142, 9, 5],
+            backgroundColor: accent + 'cc'
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { x: { title: { display: true, text: 'ms' } } }
+        }
+      });
+
+      new Chart(document.getElementById('chart-throughput'), {
+        type: 'line',
+        data: {
+          labels: ['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10'],
+          datasets: [{
+            label: 'rec/s',
+            data: [1200, 1350, 1410, 1480, 1390, 1520, 1600, 1575, 1640, 1700],
+            borderColor: accent,
+            backgroundColor: 'transparent',
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { y: { title: { display: true, text: 'rec/s' } } }
+        }
+      });
+
+      new Chart(document.getElementById('chart-ci'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Passed', 'Failed', 'Skipped'],
+          datasets: [{
+            data: [14, 0, 1],
+            backgroundColor: [accent, '#e05c5c', 'rgba(255,255,255,0.2)']
+          }]
+        },
+        options: { responsive: true }
+      });
+    })();
+  </script>
+
+  <script src="/build-info.js"></script>
 </body>
 </html>
