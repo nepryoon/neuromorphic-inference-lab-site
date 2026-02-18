@@ -1,0 +1,41 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Inject build provenance
+        run: |
+          # Get build metadata
+          BRANCH="${GITHUB_REF#refs/heads/}"
+          COMMIT_SHA_SHORT="${GITHUB_SHA:0:7}"
+          BUILD_TIME=$(date -u '+%Y-%m-%d %H:%M UTC')
+          
+          echo "Injecting provenance: branch=$BRANCH, commit=$COMMIT_SHA_SHORT, built=$BUILD_TIME"
+          
+          # Replace placeholders in all HTML files
+          find . -name "*.html" -type f -not -path './.git/*' | while read -r file; do
+            sed -i "s|branch: …|branch: $BRANCH|g" "$file"
+            sed -i "s|commit: …|commit: $COMMIT_SHA_SHORT|g" "$file"
+            sed -i "s|built: …|built: $BUILD_TIME|g" "$file"
+          done
+          
+          echo "Provenance injection complete"
+      
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: neuromorphic-inference-lab-site
+          directory: .
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
