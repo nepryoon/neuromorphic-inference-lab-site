@@ -3,167 +3,253 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RAG Knowledge Copilot — Neuromorphic Inference Lab</title>
-  <meta name="description" content="RAG Knowledge Copilot: retrieval tracing, grounded drafting, guardrails, evaluation harness, and production mapping — Cloudflare-safe client-only LLMOps demo." />
+  <title>RAG Copilot — PDF Knowledge Demo — Neuromorphic Inference Lab</title>
+  <meta name="description" content="RAG Knowledge Copilot: PDF upload, vector indexing, contextual chat with citations, and automated benchmark evaluation." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
 
   <style>
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-    .muted { color: rgba(234,240,255,.74); }
-    .tiny { font-size: 12px; line-height: 1.55; color: rgba(234,240,255,.72); }
-    .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-    .stack { display: grid; grid-template-columns: 1fr; gap: 12px; }
-    @media (min-width: 980px){ .stack { grid-template-columns: 1.25fr .75fr; } }
-    .field { display: grid; gap: 8px; }
-    .input, .textarea, .select {
-      width: 100%;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      color: rgba(234,240,255,.92);
-      padding: 12px 12px;
-      outline: none;
-    }
-    .textarea { min-height: 120px; resize: vertical; }
-    .input::placeholder, .textarea::placeholder { color: rgba(234,240,255,.45); }
-    .panel {
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-      border-radius: 18px;
-      padding: 14px;
-    }
-    .policy {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-    .policy label {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      padding: 10px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.03);
+    /* Upload Zone */
+    .upload-zone {
+      border: 2px dashed #333;
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
       cursor: pointer;
+      transition: border-color .2s;
+      margin: 1rem 0;
     }
-    .policy input { margin-top: 3px; }
-    .hr { border: 0; border-top: 1px solid rgba(255,255,255,.10); margin: 12px 0; }
-
-    details.trace > summary {
-      cursor: pointer;
-      list-style: none;
-      user-select: none;
-      font-weight: 600;
+    .upload-zone:hover {
+      border-color: #00ff88;
     }
-    details.trace > summary::-webkit-details-marker { display: none; }
-    .traceList { display: grid; gap: 10px; margin-top: 10px; }
-    .hit {
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
-      border-radius: 14px;
-      padding: 10px;
+    .upload-zone.drag-over {
+      border-color: #4fc3f7;
+      background: rgba(79, 195, 247, 0.05);
     }
-    .hitTop {
-      display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;
-      align-items: baseline;
-    }
-    .scoreBar {
-      width: 160px;
-      height: 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
+    
+    /* Progress Bar */
+    .progress-bar-wrapper {
+      background: #1a1a1a;
+      border-radius: 4px;
+      height: 6px;
       overflow: hidden;
+      margin: .8rem 0;
     }
-    .scoreFill {
+    .progress-bar {
       height: 100%;
+      background: linear-gradient(90deg, #00ff88, #4fc3f7);
       width: 0%;
-      background: linear-gradient(90deg, rgba(88,211,255,.75), rgba(161,120,255,.75));
+      transition: width .4s ease;
     }
-    .kbd{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 12px;
-      padding: 2px 7px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.20);
-      color: rgba(234,240,255,.88);
+    
+    /* Ingest Result */
+    .ingest-result {
+      padding: 1rem;
+      border-radius: 6px;
+      margin-top: 1rem;
+      font-family: monospace;
+      font-size: .9rem;
     }
-    .toast {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: 18px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.55);
-      color: rgba(234,240,255,.92);
-      font-size: 13px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .2s ease;
-      max-width: min(720px, 92vw);
+    .ingest-result.success {
+      background: #0a1f0f;
+      border: 1px solid #00ff88;
+      color: #00ff88;
     }
-    .toast.show { opacity: 1; }
-
-    /* Eval harness */
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
-      font-size: 12px;
-      color: rgba(234,240,255,.86);
+    .ingest-result.error {
+      background: #1f0a0a;
+      border: 1px solid #ff4444;
+      color: #ff6666;
     }
-    .pill b { font-weight: 700; }
-    .evalTableWrap {
-      overflow-x: auto;
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 16px;
-      background: rgba(0,0,0,.12);
+    
+    /* Chat Window */
+    .chat-window {
+      background: #0d0d0d;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 1rem;
+      height: 350px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: .8rem;
+      margin-bottom: 1rem;
     }
-    table.eval {
+    .chat-message {
+      padding: .7rem 1rem;
+      border-radius: 6px;
+      max-width: 85%;
+      font-size: .9rem;
+      line-height: 1.6;
+    }
+    .chat-message.user {
+      background: #1a2a1a;
+      border: 1px solid #2a4a2a;
+      align-self: flex-end;
+      color: #ccc;
+    }
+    .chat-message.assistant {
+      background: #111;
+      border: 1px solid #333;
+      align-self: flex-start;
+      color: #eee;
+    }
+    .chat-message.system {
+      background: #0e1520;
+      border: 1px solid #1e3a5a;
+      align-self: center;
+      color: #4fc3f7;
+      font-size: .8rem;
+    }
+    .chat-message.error {
+      background: #1f0a0a;
+      border: 1px solid #ff4444;
+      color: #ff6666;
+    }
+    
+    /* Citations Block */
+    .citations-block {
+      margin-top: .8rem;
+      padding-top: .8rem;
+      border-top: 1px solid #2a2a2a;
+      font-size: .8rem;
+    }
+    .citation {
+      color: #888;
+      margin: .3rem 0;
+      padding: .4rem;
+      background: #0a0a0a;
+      border-radius: 4px;
+    }
+    .citation-toggle {
+      cursor: pointer;
+      color: #4fc3f7;
+      text-decoration: underline;
+      font-size: .75rem;
+      margin-top: .5rem;
+      display: inline-block;
+    }
+    
+    /* Chat Input */
+    .chat-input-row {
+      display: flex;
+      gap: .5rem;
+    }
+    .chat-input-row input {
+      flex: 1;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: .7rem 1rem;
+      color: #eee;
+      font-family: monospace;
+    }
+    .chat-input-row input:focus {
+      outline: none;
+      border-color: #00ff88;
+    }
+    
+    /* Metrics Table */
+    .metrics-table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 760px;
-      font-size: 12px;
+      margin-top: 1.5rem;
+      font-size: .85rem;
     }
-    table.eval th, table.eval td {
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      padding: 10px 10px;
+    .metrics-table th,
+    .metrics-table td {
+      padding: .7rem 1rem;
+      border: 1px solid #222;
       text-align: left;
-      vertical-align: top;
-      color: rgba(234,240,255,.84);
     }
-    table.eval th {
-      position: sticky;
-      top: 0;
-      background: rgba(10,12,18,.85);
-      backdrop-filter: blur(8px);
-      z-index: 1;
-      color: rgba(234,240,255,.92);
+    .metrics-table th {
+      background: #111;
+      color: #4fc3f7;
     }
-    .ok { color: rgba(138,255,186,.95); font-weight: 700; }
-    .bad { color: rgba(255,130,130,.95); font-weight: 700; }
-    .warn { color: rgba(255,211,120,.95); font-weight: 700; }
-
-    /* Production mapping */
-    .grid2 { display: grid; grid-template-columns: 1fr; gap: 12px; }
-    @media (min-width: 980px){ .grid2 { grid-template-columns: 1fr 1fr; } }
-    .box {
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-      border-radius: 18px;
-      padding: 14px;
+    .score-cell {
+      font-family: monospace;
+      color: #00ff88;
+      font-weight: bold;
     }
-    .box h3 { margin: 0 0 8px; }
-    .box p { margin: 0; }
+    
+    /* Chart */
+    #metricsChart {
+      background: #0d0d0d;
+      border: 1px solid #222;
+      border-radius: 8px;
+      display: block;
+      margin: 1.5rem auto;
+      max-width: 100%;
+    }
+    
+    /* Architecture Diagram */
+    .architecture-diagram pre {
+      background: #0a0a0a;
+      border: 1px solid #222;
+      border-radius: 6px;
+      padding: 1.2rem;
+      overflow-x: auto;
+      font-size: .78rem;
+      color: #4fc3f7;
+      line-height: 1.5;
+    }
+    
+    /* Spinner */
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #333;
+      border-top-color: #00ff88;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin-right: .5rem;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Status Badge */
+    .status-badge {
+      display: inline-block;
+      padding: .4rem .8rem;
+      border-radius: 999px;
+      font-size: .75rem;
+      font-weight: 600;
+      margin-left: .5rem;
+    }
+    .status-badge.online {
+      background: rgba(52, 211, 153, 0.15);
+      border: 1px solid rgba(52, 211, 153, 0.40);
+      color: #34d399;
+    }
+    .status-badge.offline {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.40);
+      color: #ef4444;
+    }
+    
+    /* Section visibility */
+    .hidden {
+      display: none;
+    }
+    
+    /* File info */
+    .file-info {
+      margin-top: .8rem;
+      padding: .6rem;
+      background: #111;
+      border-radius: 6px;
+      font-size: .85rem;
+      color: #aaa;
+    }
+    
+    /* Progress steps */
+    .progress-steps {
+      margin-top: .5rem;
+      font-size: .8rem;
+      color: #4fc3f7;
+      font-family: monospace;
+    }
   </style>
 </head>
 
@@ -184,262 +270,192 @@
   </header>
 
   <main class="container">
+    <!-- Section 1: Hero -->
     <section class="hero">
-      <p class="kicker">System</p>
-      <h1 class="h1">RAG Knowledge Copilot</h1>
+      <p class="kicker">PDF Knowledge Demo</p>
+      <h1 class="h1">RAG Copilot — Document Q&A with Citations</h1>
       <p class="sub">
-        A client-only RAG demo that surfaces production signals: <strong>retrieval tracing</strong>, <strong>grounded drafting</strong>,
-        <strong>guardrails</strong>, a lightweight <strong>evaluation harness</strong>, and a pragmatic <strong>production mapping</strong>.
-        Designed to be reliable on Cloudflare Pages (no backend calls, no CORS failure modes).
+        Upload a PDF document (max 5000 words), build a vector index, and interact with contextual chat over your document with full citation tracing.
+        Run automated benchmarks to evaluate retrieval precision, answer relevance, and context coverage.
       </p>
-
       <div class="badges">
         <span class="badge">RAG</span>
-        <span class="badge">LLMOps</span>
-        <span class="badge">Retrieval Tracing</span>
-        <span class="badge">Guardrails</span>
-        <span class="badge">Evaluation Harness</span>
-      </div>
-
-      <div style="height:12px"></div>
-
-      <div class="tags" aria-label="Breadcrumb">
-        <a class="tag" href="/">Signal</a>
-        <span class="tag">→</span>
-        <a class="tag" href="/demos/">Systems</a>
-        <span class="tag">→</span>
-        <a class="tag" href="/evidence/">Proof Ledger</a>
-        <span class="tag">→</span>
-        <a class="tag" href="/evidence/rag-copilot/">Evidence memo</a>
-      </div>
-
-      <div style="height:14px"></div>
-
-      <div class="actions">
-        <a class="btn" href="/evidence/#rag-copilot">Proof anchor</a>
-        <a class="btn" href="/evidence/rag-copilot/">Open memo</a>
-        <a class="btn primary" href="/demos/">Systems index</a>
+        <span class="badge">FAISS</span>
+        <span class="badge">Citations</span>
+        <span class="badge">Evaluation</span>
+        <span id="systemStatus" class="status-badge offline">System Offline</span>
       </div>
     </section>
 
-    <section class="section">
-      <div class="stack">
+    <!-- Section 2: Upload & Ingest -->
+    <section class="section card">
+      <h2>1. Upload & Index PDF</h2>
+      <p class="sub">Select a PDF file (max 5000 words). The system will extract text, chunk it with sliding windows, and build a FAISS vector index.</p>
+      
+      <div id="uploadZone" class="upload-zone">
+        <div style="font-size: 2rem; margin-bottom: .5rem;">📄</div>
+        <div style="font-weight: 600; margin-bottom: .3rem;">Drop PDF here or click to browse</div>
+        <div style="font-size: .85rem; color: #888;">Maximum 5000 words</div>
+        <input type="file" id="fileInput" accept=".pdf" style="display: none;" />
+      </div>
+      
+      <div id="fileInfo" class="file-info hidden"></div>
+      
+      <div style="margin-top: 1rem;">
+        <button id="ingestBtn" class="btn primary" disabled>▶ Start indexing</button>
+      </div>
+      
+      <div id="progressContainer" class="hidden" style="margin-top: 1rem;">
+        <div class="progress-bar-wrapper">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
+        <div id="progressSteps" class="progress-steps"></div>
+      </div>
+      
+      <div id="ingestResult" class="ingest-result hidden"></div>
+    </section>
 
-        <!-- Main interaction -->
-        <article class="card">
-          <h2>Ask a question</h2>
-          <p class="lead">
-            This demo drafts only from retrieved sources. If evidence is weak, it refuses (Strict policy).
-          </p>
+    <!-- Section 3: Chat -->
+    <section id="chatSection" class="section card hidden">
+      <h2>2. Chat with Your Document</h2>
+      <p class="sub">Ask questions about your document. The system retrieves relevant chunks and generates contextual answers with citations.</p>
+      
+      <div id="chatWindow" class="chat-window"></div>
+      
+      <div class="chat-input-row">
+        <input type="text" id="chatInput" placeholder="Ask a question about your document..." />
+        <button id="sendBtn" class="btn primary">Send</button>
+      </div>
+    </section>
 
-          <div class="field">
-            <label class="tiny" for="q">Query</label>
-            <input id="q" class="input" type="text" placeholder="e.g. What should be monitored for deployed ML models? Provide citations." />
-          </div>
+    <!-- Section 4: Benchmark -->
+    <section id="benchmarkSection" class="section card hidden">
+      <h2>3. Run Automated Benchmark</h2>
+      <p class="sub">Generate synthetic test questions and evaluate the RAG pipeline with three reference-free metrics.</p>
+      
+      <div style="margin-top: 1rem;">
+        <button id="benchmarkBtn" class="btn primary">⚡ Run benchmark</button>
+      </div>
+      
+      <div id="benchmarkResults" class="hidden" style="margin-top: 1.5rem;">
+        <canvas id="metricsChart" width="600" height="300"></canvas>
+        
+        <table class="metrics-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Score</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody id="metricsTableBody"></tbody>
+        </table>
+        
+        <details style="margin-top: 1.5rem; padding: 1rem; background: #111; border-radius: 6px;">
+          <summary style="cursor: pointer; font-weight: 600; margin-bottom: .5rem;">View Test Questions & Answers</summary>
+          <div id="testQuestionsContainer" style="margin-top: 1rem;"></div>
+        </details>
+      </div>
+    </section>
 
-          <div class="row" style="margin-top:10px;">
-            <button id="run" class="btn primary" type="button">Run retrieval + draft</button>
-            <button id="clear" class="btn" type="button">Clear</button>
-            <button id="copyTrace" class="btn" type="button">Export trace JSON</button>
-            <button id="copyCites" class="btn" type="button">Copy citations</button>
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="field">
-            <label class="tiny">Answer (grounded draft)</label>
-            <div id="answer" class="panel">
-              <p class="muted" style="margin:0;">
-                Run a query to see a grounded draft with citations. Use <span class="kbd">Strict</span> to enforce refusals on weak evidence.
-              </p>
-            </div>
-          </div>
-
-          <div style="height:10px"></div>
-
-          <details class="trace" id="traceBox">
-            <summary>Retrieval trace (top-k sources, similarity, snippets)</summary>
-            <div id="trace" class="traceList"></div>
-          </details>
-
-          <div class="hr"></div>
-
-          <h2>Evaluation harness</h2>
-          <p class="tiny">
-            A lightweight, deterministic evaluation set for screening. Includes positive queries and a negative control.
-          </p>
-
-          <div class="row" style="margin:10px 0;">
-            <button id="runEvalStrict" class="btn primary" type="button">Run evaluation (Strict)</button>
-            <button id="runEvalLenient" class="btn" type="button">Run evaluation (Lenient)</button>
-            <button id="copyEval" class="btn" type="button">Export eval report JSON</button>
-          </div>
-
-          <div class="row" style="margin:10px 0;">
-            <span class="pill"><b id="evalScore">—</b> overall score</span>
-            <span class="pill"><b id="evalRefusal">—</b> refusal correctness</span>
-            <span class="pill"><b id="evalRetrieval">—</b> retrieval@k</span>
-            <span class="pill"><b id="evalCitations">—</b> citation presence</span>
-            <span class="pill"><b id="evalTrace">—</b> trace completeness</span>
-          </div>
-
-          <div class="evalTableWrap">
-            <table class="eval" aria-label="Evaluation results">
-              <thead>
-                <tr>
-                  <th style="width: 190px;">Test</th>
-                  <th>Query</th>
-                  <th style="width: 120px;">Expected</th>
-                  <th style="width: 110px;">Refusal</th>
-                  <th style="width: 120px;">Retrieval@k</th>
-                  <th style="width: 120px;">Citations</th>
-                  <th style="width: 140px;">Top similarity</th>
-                  <th style="width: 160px;">Notes</th>
-                </tr>
-              </thead>
-              <tbody id="evalBody">
-                <tr>
-                  <td colspan="8" class="muted">Run an evaluation to populate results.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p class="tiny" style="margin-top:10px;">
-            Interpretation: not a benchmark against other models; it demonstrates evaluation habits (retrieval quality proxies,
-            refusal correctness, traceability).
-          </p>
-
-          <div class="hr"></div>
-
-          <h2>Production mapping</h2>
-          <p class="tiny">
-            This portfolio build is client-only by design. Below is how the same system maps to a production architecture
-            and the operational controls that typically matter.
-          </p>
-
-          <div class="grid2" style="margin-top:10px;">
-            <div class="box">
-              <h3>Reference architecture</h3>
-              <p class="tiny">
-                <span class="mono">Ingestion</span> → <span class="mono">Chunking</span> → <span class="mono">Embeddings</span> →
-                <span class="mono">Vector store</span> → <span class="mono">RAG API</span> → <span class="mono">Model/router</span> →
-                <span class="mono">Traces</span> + <span class="mono">Eval</span>.
-              </p>
-              <div class="tags" style="margin-top:10px;">
-                <span class="tag">Vector Store</span>
-                <span class="tag">pgvector</span>
-                <span class="tag">Pinecone</span>
-                <span class="tag">OpenSearch</span>
-                <span class="tag">Redis Cache</span>
-                <span class="tag">Rate Limiting</span>
-              </div>
-            </div>
-
-            <div class="box">
-              <h3>Observability & governance</h3>
-              <p class="tiny">
-                Production RAG is an observability problem: capture retrieval traces, prompt/response metadata,
-                latency and cost budgets, and enforce access controls for sensitive documents.
-              </p>
-              <div class="tags" style="margin-top:10px;">
-                <span class="tag">OpenTelemetry</span>
-                <span class="tag">Tracing</span>
-                <span class="tag">RBAC</span>
-                <span class="tag">PII Redaction</span>
-                <span class="tag">Audit Logs</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="grid2" style="margin-top:12px;">
-            <div class="box">
-              <h3>Safety controls</h3>
-              <ul class="clean">
-                <li><strong>Prompt injection defence:</strong> treat retrieved content as untrusted data; allow-list behaviours.</li>
-                <li><strong>Grounding policy:</strong> refuse or ask clarifying questions when evidence is weak.</li>
-                <li><strong>Output constraints:</strong> structured responses and citation requirements for high-stakes domains.</li>
-              </ul>
-              <div class="tags">
-                <span class="tag">Guardrails</span>
-                <span class="tag">Refusal Policies</span>
-                <span class="tag">Groundedness</span>
-              </div>
-            </div>
-
-            <div class="box">
-              <h3>Operational checklist</h3>
-              <ul class="clean">
-                <li><strong>Latency budgets:</strong> cache hot queries; optimise top-k; stream responses when possible.</li>
-                <li><strong>Cost control:</strong> routing + prompt compression; fall back to smaller models.</li>
-                <li><strong>Evaluation:</strong> regression tests on labelled queries (precision@k, citation correctness).</li>
-                <li><strong>Incidents:</strong> trace export for debugging; rollback on prompt/policy changes.</li>
-              </ul>
-              <div class="tags">
-                <span class="tag">Caching</span>
-                <span class="tag">Routing</span>
-                <span class="tag">Regression Tests</span>
-                <span class="tag">Rollback</span>
-              </div>
-            </div>
-          </div>
-
-        </article>
-
-        <!-- Right panel -->
-        <aside class="card">
-          <h2>Policy & examples</h2>
-          <p class="tiny">
-            Choose how strict the system should be when evidence is weak. This models real LLMOps trade-offs.
-          </p>
-
-          <div class="policy" role="radiogroup" aria-label="Policy mode">
-            <label>
-              <input type="radio" name="policy" value="strict" checked />
-              <div>
-                <strong>Strict (recommended)</strong><br />
-                <span class="tiny">Refuses if top similarity is below threshold. Optimised for reliability and auditability.</span>
-              </div>
-            </label>
-
-            <label>
-              <input type="radio" name="policy" value="lenient" />
-              <div>
-                <strong>Lenient</strong><br />
-                <span class="tiny">Drafts a cautious answer even with weaker retrieval, but still cites sources.</span>
-              </div>
-            </label>
-          </div>
-
-          <div class="hr"></div>
-
-          <h3>Example queries</h3>
-          <div class="tags" aria-label="Example queries">
-            <button class="tag" data-example="What should be monitored for deployed ML models? Provide citations.">Model monitoring</button>
-            <button class="tag" data-example="Explain CI/CD for ML deployment and why model artefact versioning matters. Cite sources.">CI/CD for ML</button>
-            <button class="tag" data-example="What is data drift vs prediction drift, and how do you detect them? Provide citations.">Drift detection</button>
-            <button class="tag" data-example="Describe a safe RAG workflow with guardrails against prompt injection. Cite sources.">RAG guardrails</button>
-            <button class="tag" data-example="What is a feature store and when would you use one? Provide citations.">Feature store</button>
-          </div>
-
-          <div class="hr"></div>
-
-          <h3>Links</h3>
-          <div class="actions">
-            <a class="btn" href="/evidence/rag-copilot/">Read the evidence memo</a>
-            <a class="btn" href="/evidence/#rag-copilot">Go to proof anchor</a>
-            <a class="btn" href="/demos/">Back to systems</a>
-          </div>
-
-          <p class="tiny" style="margin-top:10px;">
-            Reviewer tip: click <span class="kbd">Export eval report JSON</span> and attach it to a technical screen if needed.
-          </p>
-        </aside>
+    <!-- Section 5: Technical Explanation -->
+    <section class="section card">
+      <h2>4. Technical Architecture</h2>
+      
+      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">Ingest Pipeline</h3>
+      <p style="color: var(--muted); line-height: 1.6;">
+        The ingest pipeline uses <strong>pdfplumber</strong> for text extraction, validates against a 5000-word hard limit,
+        then applies sliding-window chunking (200 words per chunk, 40-word overlap). Each chunk is embedded using
+        <strong>sentence-transformers (all-MiniLM-L6-v2)</strong> and indexed in a <strong>FAISS IndexFlatIP</strong>
+        (cosine similarity on normalized embeddings). The index is stored in-memory per session.
+      </p>
+      
+      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">RAG Pipeline</h3>
+      <p style="color: var(--muted); line-height: 1.6;">
+        For each user query, the system embeds the question, retrieves the top-4 most similar chunks from FAISS,
+        injects them as context into <strong>GPT-4o Mini</strong>, and generates an answer. The system prompt constrains
+        the model to answer only from provided context and refuse out-of-scope questions. Each response includes
+        citations with chunk IDs, text snippets, cosine scores, and retrieval latency.
+      </p>
+      
+      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">Guardrails</h3>
+      <ul style="color: var(--muted); line-height: 1.8; padding-left: 1.5rem;">
+        <li><strong>Input validation:</strong> PDF-only upload, 5000-word hard limit enforced server-side</li>
+        <li><strong>System prompt constraints:</strong> Model instructed to answer only from context</li>
+        <li><strong>Citation auditability:</strong> All answers traced back to source chunks with scores</li>
+      </ul>
+      
+      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">Evaluation Harness</h3>
+      <p style="color: var(--muted); line-height: 1.6;">
+        The benchmark generates 5 synthetic test questions by sampling chunks and extracting their first sentences.
+        Three reference-free metrics are computed:
+      </p>
+      <ul style="color: var(--muted); line-height: 1.8; padding-left: 1.5rem;">
+        <li><strong>Retrieval Precision:</strong> Average top-1 FAISS cosine score across test questions (measures retrieval quality)</li>
+        <li><strong>Answer Relevance:</strong> Average cosine similarity between question embeddings and generated answer embeddings (measures answer-question alignment)</li>
+        <li><strong>Context Coverage:</strong> Fraction of distinct chunks used at least once across all retrievals (measures index utilization)</li>
+      </ul>
+      
+      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">Stack & Deployment</h3>
+      <p style="color: var(--muted); line-height: 1.6;">
+        Backend: <strong>FastAPI + Docker</strong> deployed on Render. Frontend: <strong>Static HTML</strong> on Cloudflare Pages.
+        No build pipeline required. CORS configured for production domain. <code>OPENAI_API_KEY</code> injected at runtime (never hardcoded).
+      </p>
+      
+      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">Demo Limitations</h3>
+      <ul style="color: var(--muted); line-height: 1.8; padding-left: 1.5rem;">
+        <li>In-memory index with no persistence (session-scoped only)</li>
+        <li>5000-word document cap for demo purposes</li>
+        <li>Reference-free metrics (production would use RAGAS or similar with ground truth)</li>
+        <li>Single-user sessions (no multi-tenancy or authentication)</li>
+      </ul>
+      
+      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">Architecture Diagram</h3>
+      <div class="architecture-diagram">
+        <pre>
+┌─────────────────────────────────────────────────────────────────┐
+│                        CLIENT (Browser)                          │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
+│  │ PDF Upload   │  │ Chat UI      │  │ Benchmark UI │          │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘          │
+└─────────┼──────────────────┼──────────────────┼──────────────────┘
+          │                  │                  │
+          │ POST /ingest     │ POST /chat       │ POST /eval
+          │ (multipart/form) │ (JSON)           │ (JSON)
+          ▼                  ▼                  ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    FASTAPI BACKEND (Render)                      │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │ Routers: /api/v1/ingest, /chat, /eval                    │   │
+│  └────────────┬──────────────────┬──────────────┬───────────┘   │
+│               │                  │              │                │
+│  ┌────────────▼─────┐  ┌─────────▼───────┐  ┌──▼─────────────┐ │
+│  │ PDF Parser       │  │ Retriever       │  │ Evaluator      │ │
+│  │ (pdfplumber)     │  │ (FAISS search)  │  │ (metrics calc) │ │
+│  └────────┬─────────┘  └─────────┬───────┘  └────────────────┘ │
+│           │                      │                               │
+│  ┌────────▼─────────┐  ┌─────────▼────────┐                    │
+│  │ Chunker          │  │ GPT-4o Mini      │                    │
+│  │ (sliding window) │  │ (OpenAI API)     │                    │
+│  └────────┬─────────┘  └──────────────────┘                    │
+│           │                                                      │
+│  ┌────────▼─────────────────────────┐                          │
+│  │ Embedder (sentence-transformers) │                          │
+│  │ Model: all-MiniLM-L6-v2          │                          │
+│  │ FAISS IndexFlatIP (cosine sim)   │                          │
+│  └──────────────────────────────────┘                          │
+│                                                                  │
+│  ┌──────────────────────────────────┐                          │
+│  │ Session Store (in-memory)        │                          │
+│  │ {session_id: {index, chunks, …}} │                          │
+│  └──────────────────────────────────┘                          │
+└─────────────────────────────────────────────────────────────────┘
+        </pre>
       </div>
     </section>
 
     <footer class="footer">
-      <div>© 2025 Neuromorphic Inference Lab</div>
+      <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
       <div class="prov">
         <span id="build-branch">branch: …</span>
         <span id="build-commit">commit: …</span>
@@ -448,478 +464,402 @@
     </footer>
   </main>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-  <script src="/build-info.js"></script>
-
   <script>
-    const CORPUS = [
-      { id:"doc-ml-monitoring", title:"Model Monitoring: What to Track in Production", source:"Neuromorphic Inference Lab (internal memo)", url:"/evidence/#rag-copilot",
-        text:`Monitoring deployed ML requires both engineering and modelling signals. Track service health (latency, throughput, error rates),
-model performance proxies (prediction distribution shift), and delayed ground-truth performance where available.
-Key concepts include data drift vs prediction drift, feature schema validation, and alerting tied to business impact.
-Operationally, define retraining triggers, rollback criteria, and monitoring dashboards for reliability.`.trim()
-      },
-      { id:"doc-cicd-ml", title:"CI/CD for ML: Artefacts, Reproducibility, and Safe Releases", source:"Neuromorphic Inference Lab (internal memo)", url:"/evidence/#mv-grid-fault-risk",
-        text:`CI/CD for ML extends software delivery with model-specific gates: data validation, evaluation checks, and artefact versioning.
-A safe release pipeline stores trained models as versioned artefacts, captures lineage metadata, and supports rollbacks.
-Automated tests include schema checks, unit tests for transforms, and regression checks on evaluation metrics.`.trim()
-      },
-      { id:"doc-drift", title:"Drift: Data Drift vs Prediction Drift", source:"Neuromorphic Inference Lab (internal memo)", url:"/evidence/#forecast-studio",
-        text:`Data drift describes changes in input feature distributions. Prediction drift describes changes in model outputs over time.
-Both can be monitored using statistical tests, distance metrics, and distribution summaries.
-Drift alerts should be paired with remediation: investigate pipeline changes, update feature engineering, retrain or recalibrate.`.trim()
-      },
-      { id:"doc-feature-store", title:"Feature Stores: When and Why", source:"Neuromorphic Inference Lab (internal memo)", url:"/evidence/#mv-grid-fault-risk",
-        text:`A feature store is used when consistent feature computation is needed across training and serving, especially at scale.
-It improves reproducibility, reduces training-serving skew, and enables feature reuse across teams and models.
-Feature stores also support governance: lineage, access control, and monitoring of feature freshness.`.trim()
-      },
-      { id:"doc-rag-guardrails", title:"RAG Guardrails: Grounding, Refusal, and Prompt Injection Defence", source:"Neuromorphic Inference Lab (internal memo)", url:"/evidence/#rag-copilot",
-        text:`Reliable RAG requires explicit grounding: answers should be constrained to retrieved evidence.
-If retrieval confidence is weak, the system should refuse or ask clarifying questions.
-Prompt injection defence includes treating retrieved text as untrusted data, applying allow-list behaviour, and auditing traces.
-Evaluation harnesses measure precision@k, citation correctness, and refusal correctness.`.trim()
-      },
-      { id:"doc-evaluation", title:"Evaluation Mindset: Beyond a Single Score", source:"Neuromorphic Inference Lab (internal memo)", url:"/evidence/#forecast-studio",
-        text:`Production evaluation is continuous. Use backtesting for forecasting, and structured evaluation datasets for LLM workflows.
-Track performance across slices, horizons, and time windows. Use regression tests to prevent silent metric degradation.
-Always connect metrics to operational consequences: latency budgets, cost constraints, and business impact.`.trim()
-      }
-    ];
-
-    const EVAL_SET = [
-      { id:"eval-01", name:"Monitoring basics", query:"What should be monitored for deployed ML models? Provide citations.", expected:{ should_refuse:false, must_retrieve:["doc-ml-monitoring"], min_top_sim:0.13 } },
-      { id:"eval-02", name:"CI/CD for ML", query:"Explain CI/CD for ML deployment and why model artefact versioning matters. Cite sources.", expected:{ should_refuse:false, must_retrieve:["doc-cicd-ml"], min_top_sim:0.13 } },
-      { id:"eval-03", name:"Drift detection", query:"What is data drift vs prediction drift, and how do you detect them? Provide citations.", expected:{ should_refuse:false, must_retrieve:["doc-drift"], min_top_sim:0.13 } },
-      { id:"eval-04", name:"Feature store", query:"What is a feature store and when would you use one? Provide citations.", expected:{ should_refuse:false, must_retrieve:["doc-feature-store"], min_top_sim:0.13 } },
-      { id:"eval-05", name:"RAG guardrails", query:"Describe a safe RAG workflow with guardrails against prompt injection. Cite sources.", expected:{ should_refuse:false, must_retrieve:["doc-rag-guardrails"], min_top_sim:0.13 } },
-      { id:"eval-06", name:"Negative control", query:"Give me a detailed recipe for lasagne, step by step.", expected:{ should_refuse:true, must_retrieve:[], min_top_sim:0.13 } }
-    ];
-
-    function tokens(s){
-      return (s || "").toLowerCase().replace(/[^a-z0-9\s\-]/g, " ").split(/\s+/).filter(t => t && t.length > 2);
-    }
-
-    const DOCS = CORPUS.map(d => {
-      const t = tokens(d.text + " " + d.title);
-      const tf = new Map();
-      for (const w of t) tf.set(w, (tf.get(w) || 0) + 1);
-      return { ...d, tf, len: t.length };
-    });
-
-    const DF = new Map();
-    for (const d of DOCS){
-      for (const w of new Set(d.tf.keys())) DF.set(w, (DF.get(w) || 0) + 1);
-    }
-    function idf(w){
-      const df = DF.get(w) || 0;
-      const N = DOCS.length;
-      return Math.log((N + 1) / (df + 1)) + 1.0;
-    }
-    function dot(a, b){
-      let s = 0;
-      for (const [k, v] of a){
-        const bv = b.get(k);
-        if (bv) s += v * bv;
-      }
-      return s;
-    }
-    function norm(a){
-      let s = 0;
-      for (const [, v] of a) s += v * v;
-      return Math.sqrt(s) || 1;
-    }
-    function toTfidfVectorFromTokens(toks){
-      const tf = new Map();
-      for (const w of toks) tf.set(w, (tf.get(w) || 0) + 1);
-      const v = new Map();
-      for (const [w, c] of tf) v.set(w, (c / toks.length) * idf(w));
-      return v;
-    }
-    for (const d of DOCS){
-      const toks = tokens(d.text + " " + d.title);
-      d.vec = toTfidfVectorFromTokens(toks);
-      d.n = norm(d.vec);
-    }
-
-    function retrieve(query, k=3){
-      const qtoks = tokens(query);
-      const qvec = toTfidfVectorFromTokens(qtoks);
-      const qn = norm(qvec);
-
-      const scored = DOCS.map(d => {
-        const sim = dot(qvec, d.vec) / (qn * d.n);
-        return { doc: d, sim };
-      }).sort((a,b)=> b.sim - a.sim);
-
-      const top = scored.slice(0, k);
-      const maxSim = top.length ? top[0].sim : 0;
-      return { top, maxSim };
-    }
-
-    function pickSnippets(text, query){
-      const qset = new Set(tokens(query));
-      const sentences = text.replace(/\s+/g, " ").split(/(?<=[\.\!\?])\s+/).map(s => s.trim()).filter(Boolean);
-
-      const ranked = sentences.map(s => {
-        const ts = tokens(s);
-        let hit = 0;
-        for (const w of ts) if (qset.has(w)) hit += 1;
-        return { s, hit };
-      }).sort((a,b)=> b.hit - a.hit);
-
-      const chosen = ranked.filter(r => r.hit > 0).slice(0, 2).map(r => r.s);
-      if (chosen.length) return chosen;
-
-      return [text.slice(0, 180) + (text.length > 180 ? "…" : "")];
-    }
-
-    function escapeHtml(s){
-      return (s || "").replace(/[&<>"']/g, m => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-      }[m]));
-    }
-
-    function buildAnswer(query, hits, policy){
-      const top = hits.map((h, i) => ({ i: i+1, title: h.doc.title, url: h.doc.url, snippets: pickSnippets(h.doc.text, query) }));
-      if (!top.length) return { html:`<p class="muted" style="margin:0;">No sources available.</p>`, cites:"" };
-
-      const cautious = policy === "lenient";
-      const bullets = top.map(t => `<li>${escapeHtml(t.snippets[0] || "")} <span class="mono">[${t.i}]</span></li>`).join("");
-
-      const preface = cautious
-        ? `<p style="margin:0 0 10px;"><strong>Draft (cautious):</strong> evidence is limited; conclusions are bounded by retrieved sources.</p>`
-        : `<p style="margin:0 0 10px;"><strong>Grounded draft:</strong> constructed strictly from retrieved sources.</p>`;
-
-      const html = `
-        ${preface}
-        <ul class="clean">${bullets}</ul>
-        <p class="tiny" style="margin-top:10px;">
-          Citations: ${top.map(t => `<span class="mono">[${t.i}]</span> ${escapeHtml(t.title)}`).join(" · ")}
-        </p>
-      `.trim();
-
-      const citeText = top.map(t => `[${t.i}] ${t.title} — ${t.url}`).join("\n");
-      return { html, cites: citeText };
-    }
-
-    function toast(msg){
-      const el = document.getElementById("toast");
-      el.textContent = msg;
-      el.classList.add("show");
-      setTimeout(()=> el.classList.remove("show"), 1400);
-    }
-
-    function currentPolicy(){
-      return document.querySelector('input[name="policy"]:checked')?.value || "strict";
-    }
-    function strictThreshold(){ return 0.13; }
-
-    function renderTrace(hits){
-      const trace = document.getElementById("trace");
-      trace.innerHTML = "";
-      if (!hits.length){
-        trace.innerHTML = `<div class="panel"><p class="muted" style="margin:0;">No retrieved sources.</p></div>`;
-        return;
-      }
-      const max = Math.max(...hits.map(h => h.sim), 1e-9);
-      const q = document.getElementById("q").value;
-
-      for (let idx=0; idx<hits.length; idx++){
-        const h = hits[idx];
-        const rank = idx + 1;
-        const pct = Math.max(0, Math.min(100, (h.sim / max) * 100));
-        const snippets = pickSnippets(h.doc.text, q);
-
-        const hit = document.createElement("div");
-        hit.className = "hit";
-        hit.innerHTML = `
-          <div class="hitTop">
-            <div>
-              <strong class="mono">[${rank}]</strong> ${escapeHtml(h.doc.title)}
-              <div class="tiny">${escapeHtml(h.doc.source)} · <a href="${h.doc.url}" class="mono">open</a></div>
-            </div>
-            <div class="row">
-              <div class="tiny mono">sim ${h.sim.toFixed(3)}</div>
-              <div class="scoreBar" aria-label="Similarity score">
-                <div class="scoreFill" style="width:${pct.toFixed(0)}%"></div>
-              </div>
-            </div>
-          </div>
-          <div class="tiny" style="margin-top:8px;">
-            ${snippets.map(s => `<div>• ${escapeHtml(s)}</div>`).join("")}
-          </div>
-        `;
-        trace.appendChild(hit);
-      }
-    }
-
-    function buildTraceJson(q, policy, top, maxSim, threshold, refused){
-      return {
-        schema_version: "nil.rag.trace.v1",
-        generated_at: new Date().toISOString(),
-        policy,
-        refused,
-        thresholds: { strict_similarity_threshold: threshold },
-        query: q,
-        retrieval: {
-          top_k: top.map((h, i) => ({
-            rank: i+1,
-            doc_id: h.doc.id,
-            title: h.doc.title,
-            source: h.doc.source,
-            url: h.doc.url,
-            similarity: Number(h.sim.toFixed(6)),
-            snippets: pickSnippets(h.doc.text, q)
-          })),
-          top_similarity: Number(maxSim.toFixed(6))
-        }
-      };
-    }
-
-    let lastTrace = null;
-    let lastCitations = "";
-    let lastEvalReport = null;
-
-    function buildCitations(top){
-      return top.map((h, i) => `[${i+1}] ${h.doc.title} — ${h.doc.url}`).join("\n");
-    }
-
-    async function copyTrace(){
-      if (!lastTrace) return toast("Run a query first.");
-      try { await navigator.clipboard.writeText(JSON.stringify(lastTrace, null, 2)); toast("Trace JSON copied."); }
-      catch { toast("Clipboard blocked by browser."); }
-    }
-    async function copyCitations(){
-      if (!lastCitations) return toast("Run a query first.");
-      try { await navigator.clipboard.writeText(lastCitations); toast("Citations copied."); }
-      catch { toast("Clipboard blocked by browser."); }
-    }
-    async function copyEval(){
-      if (!lastEvalReport) return toast("Run an evaluation first.");
-      try { await navigator.clipboard.writeText(JSON.stringify(lastEvalReport, null, 2)); toast("Eval report JSON copied."); }
-      catch { toast("Clipboard blocked by browser."); }
-    }
-
-    function run(){
-      const q = document.getElementById("q").value.trim();
-      const policy = currentPolicy();
-      if (!q) return toast("Please enter a query.");
-
-      const { top, maxSim } = retrieve(q, 3);
-      const threshold = strictThreshold();
-
-      if (policy === "strict" && maxSim < threshold){
-        document.getElementById("answer").innerHTML = `
-          <p style="margin:0 0 8px;"><strong>Refusal (Strict policy):</strong> evidence is too weak to answer safely.</p>
-          <p class="tiny" style="margin:0;">
-            Try rephrasing, add more context, or use <span class="kbd">Lenient</span>.
-            <span class="mono">top similarity=${maxSim.toFixed(3)}</span>, threshold=${threshold.toFixed(3)}.
-          </p>
-        `;
-        renderTrace(top);
-        document.getElementById("traceBox").open = true;
-
-        lastTrace = buildTraceJson(q, policy, top, maxSim, threshold, true);
-        lastCitations = buildCitations(top);
-        return;
-      }
-
-      const ans = buildAnswer(q, top, policy);
-      document.getElementById("answer").innerHTML = ans.html;
-      renderTrace(top);
-      document.getElementById("traceBox").open = true;
-
-      lastTrace = buildTraceJson(q, policy, top, maxSim, threshold, false);
-      lastCitations = ans.cites;
-
-      toast("Draft generated with retrieval trace.");
-    }
-
-    function clearAll(){
-      document.getElementById("q").value = "";
-      document.getElementById("answer").innerHTML = `<p class="muted" style="margin:0;">Cleared. Run a query to generate a grounded draft.</p>`;
-      document.getElementById("trace").innerHTML = "";
-      document.getElementById("traceBox").open = false;
-      lastTrace = null;
-      lastCitations = "";
-      toast("Cleared.");
-    }
-
-    // Eval harness
-    function setEvalPills({overall, refusal, retrieval, citations, trace}){
-      document.getElementById("evalScore").textContent = overall;
-      document.getElementById("evalRefusal").textContent = refusal;
-      document.getElementById("evalRetrieval").textContent = retrieval;
-      document.getElementById("evalCitations").textContent = citations;
-      document.getElementById("evalTrace").textContent = trace;
-    }
-    function fmtPct(x){ return `${Math.round(x * 100)}%`; }
-
-    function renderEvalTable(rows){
-      const body = document.getElementById("evalBody");
-      body.innerHTML = "";
-      for (const r of rows){
-        const tr = document.createElement("tr");
-        const refusalOkClass = r.refusalCorrect ? "ok" : "bad";
-        const refusalTxt = r.refused ? "REFUSED" : "ANSWERED";
-
-        let retrievalCell = "n/a";
-        if (r.retrievalOk !== null){
-          retrievalCell = r.retrievalOk ? `<span class="ok">OK</span>` : `<span class="bad">MISS</span>`;
-        }
-        const citesCell = r.citesOk ? `<span class="ok">OK</span>` : `<span class="bad">NO</span>`;
-        tr.innerHTML = `
-          <td><strong>${escapeHtml(r.name)}</strong></td>
-          <td>${escapeHtml(r.query)}</td>
-          <td><span class="mono">${escapeHtml(r.expected)}</span></td>
-          <td><span class="${refusalOkClass}">${refusalTxt}</span></td>
-          <td>${retrievalCell}</td>
-          <td>${citesCell}</td>
-          <td><span class="mono">${r.maxSim.toFixed(3)}</span></td>
-          <td class="tiny">${escapeHtml(r.notes || "")}</td>
-        `;
-        body.appendChild(tr);
-      }
-    }
-
-    function runEvaluation(policy){
-      const threshold = strictThreshold();
-      const rows = [];
-
-      let okRefusal = 0, totRefusal = 0;
-      let okRetrieval = 0, totRetrieval = 0;
-      let okCites = 0, totCites = 0;
-      let okTrace = 0, totTrace = 0;
-
-      for (const t of EVAL_SET){
-        const { top, maxSim } = retrieve(t.query, 3);
-        const shouldRefuse = t.expected.should_refuse === true;
-        const refused = (policy === "strict" && maxSim < threshold);
-
-        totRefusal += 1;
-        const refusalCorrect = (shouldRefuse && refused) || (!shouldRefuse && !refused);
-        if (refusalCorrect) okRefusal += 1;
-
-        const topIds = top.map(h => h.doc.id);
-        let retrievalOk = null;
-        if (t.expected.must_retrieve && t.expected.must_retrieve.length){
-          totRetrieval += 1;
-          retrievalOk = t.expected.must_retrieve.every(id => topIds.includes(id));
-          if (retrievalOk) okRetrieval += 1;
-        }
-
-        totCites += 1;
-        let citesOk = true;
-        if (!refused){
-          const ans = buildAnswer(t.query, top, policy);
-          citesOk = /\[\d+\]/.test(ans.html);
-        } else {
-          citesOk = refusalCorrect;
-        }
-        if (citesOk) okCites += 1;
-
-        totTrace += 1;
-        const traceJson = buildTraceJson(t.query, policy, top, maxSim, threshold, refused);
-        const traceOk =
-          Array.isArray(traceJson.retrieval?.top_k) &&
-          traceJson.retrieval.top_k.length > 0 &&
-          typeof traceJson.retrieval.top_k[0].similarity === "number" &&
-          Array.isArray(traceJson.retrieval.top_k[0].snippets);
-        if (traceOk) okTrace += 1;
-
-        const expectedLabel = shouldRefuse ? "Refuse" : "Answer";
-        const notes = [];
-        if (policy === "strict" && !shouldRefuse && refused) notes.push("Over-refusal risk");
-        if (policy === "strict" && shouldRefuse && !refused) notes.push("Under-refusal risk");
-        if (retrievalOk === false) notes.push("Missed expected source");
-        if (!citesOk) notes.push("No citations in answer");
-        if (!traceOk) notes.push("Trace incomplete");
-
-        rows.push({
-          name: t.name,
-          query: t.query,
-          expected: expectedLabel,
-          refused,
-          refusalCorrect,
-          retrievalOk,
-          citesOk,
-          maxSim,
-          notes: notes.join("; ")
+    // Configuration
+    const API_ROOT = "https://nil-rag-copilot.onrender.com";
+    const API_BASE = `${API_ROOT}/api/v1`;
+    
+    // State
+    let sessionId = null;
+    let selectedFile = null;
+    
+    // DOM Elements
+    const uploadZone = document.getElementById('uploadZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const ingestBtn = document.getElementById('ingestBtn');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+    const progressSteps = document.getElementById('progressSteps');
+    const ingestResult = document.getElementById('ingestResult');
+    const chatSection = document.getElementById('chatSection');
+    const chatWindow = document.getElementById('chatWindow');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const benchmarkSection = document.getElementById('benchmarkSection');
+    const benchmarkBtn = document.getElementById('benchmarkBtn');
+    const benchmarkResults = document.getElementById('benchmarkResults');
+    const systemStatus = document.getElementById('systemStatus');
+    
+    // Initialize
+    document.getElementById('year').textContent = String(new Date().getFullYear());
+    checkSystemHealth();
+    
+    // System health check
+    async function checkSystemHealth() {
+      try {
+        const response = await fetch(`${API_ROOT}/health`, {
+          method: 'GET',
+          mode: 'cors'
         });
+        if (response.ok) {
+          systemStatus.textContent = 'System Online';
+          systemStatus.classList.remove('offline');
+          systemStatus.classList.add('online');
+        }
+      } catch (err) {
+        console.error('Health check failed:', err);
+        systemStatus.textContent = 'System Offline';
+        systemStatus.classList.remove('online');
+        systemStatus.classList.add('offline');
       }
-
-      const refusalRate = okRefusal / Math.max(1, totRefusal);
-      const retrievalRate = okRetrieval / Math.max(1, (totRetrieval || 1));
-      const citeRate = okCites / Math.max(1, totCites);
-      const traceRate = okTrace / Math.max(1, totTrace);
-
-      const overall = 0.40 * refusalRate + 0.25 * retrievalRate + 0.20 * citeRate + 0.15 * traceRate;
-
-      renderEvalTable(rows);
-      setEvalPills({
-        overall: fmtPct(overall),
-        refusal: fmtPct(refusalRate),
-        retrieval: fmtPct(retrievalRate),
-        citations: fmtPct(citeRate),
-        trace: fmtPct(traceRate)
-      });
-
-      lastEvalReport = {
-        schema_version: "nil.rag.eval.v1",
-        generated_at: new Date().toISOString(),
-        policy,
-        strict_similarity_threshold: threshold,
-        corpus_size: DOCS.length,
-        top_k: 3,
-        scores: {
-          overall: Number(overall.toFixed(6)),
-          refusal_correctness: Number(refusalRate.toFixed(6)),
-          retrieval_at_k: Number(retrievalRate.toFixed(6)),
-          citation_presence: Number(citeRate.toFixed(6)),
-          trace_completeness: Number(traceRate.toFixed(6))
-        },
-        results: rows.map(r => ({
-          test: r.name,
-          query: r.query,
-          expected: r.expected,
-          refused: r.refused,
-          refusal_correct: r.refusalCorrect,
-          retrieval_ok: r.retrievalOk,
-          citations_ok: r.citesOk,
-          top_similarity: Number(r.maxSim.toFixed(6)),
-          notes: r.notes
-        }))
-      };
-
-      toast(`Evaluation complete (${policy}).`);
     }
-
-    // Wire up
-    document.getElementById("run").addEventListener("click", run);
-    document.getElementById("clear").addEventListener("click", clearAll);
-    document.getElementById("copyTrace").addEventListener("click", copyTrace);
-    document.getElementById("copyCites").addEventListener("click", copyCitations);
-    document.getElementById("copyEval").addEventListener("click", copyEval);
-
-    document.getElementById("runEvalStrict").addEventListener("click", () => runEvaluation("strict"));
-    document.getElementById("runEvalLenient").addEventListener("click", () => runEvaluation("lenient"));
-
-    document.getElementById("q").addEventListener("keydown", (e) => {
-      if (e.key === "Enter"){ e.preventDefault(); run(); }
+    
+    // File upload handlers
+    uploadZone.addEventListener('click', () => fileInput.click());
+    
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('drag-over');
     });
-
-    for (const btn of document.querySelectorAll("[data-example]")){
-      btn.addEventListener("click", () => {
-        document.getElementById("q").value = btn.getAttribute("data-example") || "";
-        toast("Example query loaded.");
+    
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('drag-over');
+    });
+    
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('drag-over');
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        handleFileSelect(files[0]);
+      }
+    });
+    
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        handleFileSelect(e.target.files[0]);
+      }
+    });
+    
+    function handleFileSelect(file) {
+      // Validate PDF
+      if (file.type !== 'application/pdf') {
+        showIngestResult('error', '✗ Please select a PDF file.');
+        return;
+      }
+      
+      selectedFile = file;
+      const sizeKB = (file.size / 1024).toFixed(2);
+      fileInfo.innerHTML = `<strong>${file.name}</strong> (${sizeKB} KB)`;
+      fileInfo.classList.remove('hidden');
+      ingestBtn.disabled = false;
+    }
+    
+    // Ingest handler
+    ingestBtn.addEventListener('click', async () => {
+      if (!selectedFile) return;
+      
+      ingestBtn.disabled = true;
+      ingestResult.classList.add('hidden');
+      progressContainer.classList.remove('hidden');
+      
+      // Simulate progress steps (visual feedback only - actual progress depends on server processing time)
+      updateProgress(30, 'Extracting text…');
+      
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      
+      try {
+        setTimeout(() => updateProgress(60, 'Building vector index…'), 500);
+        
+        const response = await fetch(`${API_BASE}/ingest`, {
+          method: 'POST',
+          body: formData,
+          mode: 'cors'
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          updateProgress(100, 'Done');
+          sessionId = data.session_id;
+          
+          setTimeout(() => {
+            progressContainer.classList.add('hidden');
+            showIngestResult('success', 
+              `✓ ${data.message}<br>` +
+              `Session ID: ${data.session_id}<br>` +
+              `Words: ${data.word_count} | Chunks: ${data.chunk_count}`
+            );
+            
+            // Show chat and benchmark sections
+            chatSection.classList.remove('hidden');
+            benchmarkSection.classList.remove('hidden');
+            addSystemMessage('Index ready. You can now ask questions about your document.');
+          }, 500);
+        } else {
+          progressContainer.classList.add('hidden');
+          showIngestResult('error', `✗ Error: ${data.error || data.detail || 'Unknown error'}`);
+          ingestBtn.disabled = false;
+        }
+      } catch (err) {
+        progressContainer.classList.add('hidden');
+        showIngestResult('error', `✗ Network error: ${err.message}`);
+        ingestBtn.disabled = false;
+      }
+    });
+    
+    function updateProgress(percent, step) {
+      progressBar.style.width = `${percent}%`;
+      progressSteps.textContent = step;
+    }
+    
+    function showIngestResult(type, message) {
+      ingestResult.className = `ingest-result ${type}`;
+      ingestResult.innerHTML = message;
+      ingestResult.classList.remove('hidden');
+    }
+    
+    // Chat handlers
+    sendBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+    
+    async function sendMessage() {
+      const question = chatInput.value.trim();
+      if (!question || !sessionId) return;
+      
+      // Add user message
+      addMessage('user', question);
+      chatInput.value = '';
+      sendBtn.disabled = true;
+      
+      try {
+        const response = await fetch(`${API_BASE}/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ session_id: sessionId, question }),
+          mode: 'cors'
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          addAssistantMessage(data.answer, data.citations, data.retrieval_latency_ms);
+        } else {
+          addMessage('error', `Error: ${data.error || data.detail || 'Unknown error'}`);
+        }
+      } catch (err) {
+        addMessage('error', `Network error: ${err.message}`);
+      } finally {
+        sendBtn.disabled = false;
+      }
+    }
+    
+    function addMessage(type, text) {
+      const msg = document.createElement('div');
+      msg.className = `chat-message ${type}`;
+      msg.textContent = text;
+      chatWindow.appendChild(msg);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+    
+    function addSystemMessage(text) {
+      addMessage('system', text);
+    }
+    
+    function addAssistantMessage(answer, citations, latency) {
+      const msg = document.createElement('div');
+      msg.className = 'chat-message assistant';
+      
+      const answerDiv = document.createElement('div');
+      answerDiv.textContent = answer;
+      msg.appendChild(answerDiv);
+      
+      if (citations && citations.length > 0) {
+        const citationsDiv = document.createElement('div');
+        citationsDiv.className = 'citations-block';
+        
+        const toggle = document.createElement('div');
+        toggle.className = 'citation-toggle';
+        toggle.textContent = `▸ Show ${citations.length} citation(s) | Latency: ${latency}ms`;
+        
+        const citationsList = document.createElement('div');
+        citationsList.style.display = 'none';
+        citationsList.style.marginTop = '.5rem';
+        
+        citations.forEach(cit => {
+          const citDiv = document.createElement('div');
+          citDiv.className = 'citation';
+          citDiv.innerHTML = 
+            `<strong>Chunk ${cit.chunk_id}</strong> (score: ${cit.score.toFixed(3)})<br>` +
+            `<em>${cit.text_snippet}</em>`;
+          citationsList.appendChild(citDiv);
+        });
+        
+        toggle.addEventListener('click', () => {
+          const isHidden = citationsList.style.display === 'none';
+          citationsList.style.display = isHidden ? 'block' : 'none';
+          toggle.textContent = `${isHidden ? '▾' : '▸'} ${isHidden ? 'Hide' : 'Show'} ${citations.length} citation(s) | Latency: ${latency}ms`;
+        });
+        
+        citationsDiv.appendChild(toggle);
+        citationsDiv.appendChild(citationsList);
+        msg.appendChild(citationsDiv);
+      }
+      
+      chatWindow.appendChild(msg);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+    
+    // Benchmark handler
+    benchmarkBtn.addEventListener('click', async () => {
+      if (!sessionId) return;
+      
+      benchmarkBtn.disabled = true;
+      benchmarkBtn.innerHTML = '<span class="spinner"></span>Running benchmark...';
+      
+      try {
+        const response = await fetch(`${API_BASE}/eval`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ session_id: sessionId }),
+          mode: 'cors'
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          displayBenchmarkResults(data);
+        } else {
+          alert(`Error: ${data.error || data.detail || 'Unknown error'}`);
+        }
+      } catch (err) {
+        alert(`Network error: ${err.message}`);
+      } finally {
+        benchmarkBtn.disabled = false;
+        benchmarkBtn.innerHTML = '⚡ Run benchmark';
+      }
+    });
+    
+    function displayBenchmarkResults(data) {
+      benchmarkResults.classList.remove('hidden');
+      
+      // Render chart
+      renderMetricsChart(data.metrics);
+      
+      // Populate table
+      const tbody = document.getElementById('metricsTableBody');
+      tbody.innerHTML = '';
+      data.metrics.forEach(m => {
+        const row = tbody.insertRow();
+        row.insertCell(0).textContent = m.name;
+        const scoreCell = row.insertCell(1);
+        scoreCell.className = 'score-cell';
+        scoreCell.textContent = m.score.toFixed(3);
+        row.insertCell(2).textContent = m.description;
+      });
+      
+      // Show test Q&A
+      const qaContainer = document.getElementById('testQuestionsContainer');
+      qaContainer.innerHTML = '';
+      data.test_questions.forEach((q, i) => {
+        const qaDiv = document.createElement('div');
+        qaDiv.style.marginBottom = '1rem';
+        qaDiv.style.padding = '.8rem';
+        qaDiv.style.background = '#0a0a0a';
+        qaDiv.style.borderRadius = '6px';
+        qaDiv.innerHTML = 
+          `<strong style="color: #4fc3f7;">Q${i+1}:</strong> ${q}<br>` +
+          `<strong style="color: #00ff88;">A:</strong> ${data.answers[i]}`;
+        qaContainer.appendChild(qaDiv);
       });
     }
-
-    setEvalPills({ overall:"—", refusal:"—", retrieval:"—", citations:"—", trace:"—" });
-
-    document.getElementById("year").textContent = String(new Date().getFullYear());
+    
+    function renderMetricsChart(metrics) {
+      const canvas = document.getElementById('metricsChart');
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+      
+      // Clear canvas
+      ctx.fillStyle = '#0d0d0d';
+      ctx.fillRect(0, 0, width, height);
+      
+      // Chart settings
+      const padding = 50;
+      const barWidth = 80;
+      const maxValue = 1.0;
+      const chartHeight = height - padding * 2;
+      const chartWidth = width - padding * 2;
+      const barSpacing = (chartWidth - (barWidth * metrics.length)) / (metrics.length + 1);
+      
+      // Colors
+      const colors = ['#00ff88', '#4fc3f7', '#ff9800'];
+      const GRADIENT_ALPHA = '66'; // 40% opacity (0x66 = 102/255 ≈ 0.4)
+      
+      // Draw Y-axis
+      ctx.strokeStyle = '#333';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(padding, padding);
+      ctx.lineTo(padding, height - padding);
+      ctx.stroke();
+      
+      // Draw Y-axis labels
+      ctx.fillStyle = '#888';
+      ctx.font = '12px monospace';
+      ctx.textAlign = 'right';
+      for (let i = 0; i <= 5; i++) {
+        const y = padding + (chartHeight * i / 5);
+        const value = (1 - i / 5).toFixed(1);
+        ctx.fillText(value, padding - 10, y + 4);
+        
+        // Grid lines
+        ctx.strokeStyle = '#1a1a1a';
+        ctx.beginPath();
+        ctx.moveTo(padding, y);
+        ctx.lineTo(width - padding, y);
+        ctx.stroke();
+      }
+      
+      // Draw bars
+      metrics.forEach((metric, i) => {
+        const x = padding + barSpacing + i * (barWidth + barSpacing);
+        const barHeight = (metric.score / maxValue) * chartHeight;
+        const y = height - padding - barHeight;
+        
+        // Gradient fill
+        const gradient = ctx.createLinearGradient(x, y, x, height - padding);
+        gradient.addColorStop(0, colors[i]);
+        gradient.addColorStop(1, colors[i] + GRADIENT_ALPHA);
+        ctx.fillStyle = gradient;
+        ctx.fillRect(x, y, barWidth, barHeight);
+        
+        // Border
+        ctx.strokeStyle = colors[i];
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, y, barWidth, barHeight);
+        
+        // Value label
+        ctx.fillStyle = colors[i];
+        ctx.font = 'bold 14px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(metric.score.toFixed(3), x + barWidth / 2, y - 10);
+        
+        // Metric name
+        ctx.fillStyle = '#ccc';
+        ctx.font = '11px monospace';
+        const words = metric.name.split(' ');
+        words.forEach((word, wi) => {
+          ctx.fillText(word, x + barWidth / 2, height - padding + 20 + wi * 14);
+        });
+      });
+    }
   </script>
+  
+  <script src="/build-info.js"></script>
 </body>
 </html>
