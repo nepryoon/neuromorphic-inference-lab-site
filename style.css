@@ -133,6 +133,7 @@ img{ max-width:100%; height:auto; display:block; }
   display:flex;
   gap: 8px;
   flex-wrap: wrap;
+  margin-bottom: 12px;
 }
 .badge{
   font-size: 12px;
