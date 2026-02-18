@@ -35,8 +35,8 @@ expected_routes=(
 )
 
 for route in "${expected_routes[@]}"; do
-    method=$(echo $route | awk '{print tolower($1)}')
-    path=$(echo $route | awk '{print $2}')
+    method=$(awk '{print tolower($1)}' <<< "$route")
+    path=$(awk '{print $2}' <<< "$route")
     if grep -q "@app.$method(\"$path\"" api/main.py; then
         echo "  ✓ Found: $route"
     else

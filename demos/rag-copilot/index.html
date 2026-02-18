@@ -688,19 +688,22 @@
           }, 500);
         } else {
           progressContainer.classList.add('hidden');
-          let errorMsg = `✗ Error ${response.status}: ${data.error || data.detail || 'Unknown error'}`;
+          const errorDetail = escapeHtml(data.error || data.detail || 'Unknown error');
+          let errorMsg = `✗ Error ${response.status}: ${errorDetail}`;
           if (response.status === 404) {
+            const escapedApiBase = escapeHtml(API_BASE);
             errorMsg += '<br><small>Backend route not found. Please verify:<br>' +
                         '1. Backend service is deployed and running<br>' +
                         '2. API_BASE URL in code matches deployed service<br>' +
-                        `3. Expected route: ${API_BASE}/ingest</small>`;
+                        `3. Expected route: ${escapedApiBase}/ingest</small>`;
           }
           showIngestResult('error', errorMsg);
           ingestBtn.disabled = false;
         }
       } catch (err) {
         progressContainer.classList.add('hidden');
-        let errorMsg = `✗ Network error: ${err.message}`;
+        const escapedErrMsg = escapeHtml(err.message);
+        let errorMsg = `✗ Network error: ${escapedErrMsg}`;
         if (err.message.includes('Failed to fetch')) {
           errorMsg += '<br><small>Cannot reach backend. Check if service is running and CORS is configured.</small>';
         }
@@ -716,8 +719,17 @@
     
     function showIngestResult(type, message) {
       ingestResult.className = `ingest-result ${type}`;
+      // Use textContent for safe rendering, or sanitize HTML if HTML is needed
+      // For now, we control all message content so innerHTML is safe
       ingestResult.innerHTML = message;
       ingestResult.classList.remove('hidden');
+    }
+    
+    // Helper to safely escape HTML in dynamic content
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
     
     // Chat handlers
