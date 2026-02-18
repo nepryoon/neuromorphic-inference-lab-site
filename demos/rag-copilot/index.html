@@ -220,12 +220,46 @@
     .status-badge.online {
       background: rgba(52, 211, 153, 0.15);
       border: 1px solid rgba(52, 211, 153, 0.40);
-      color: #34d399;
+      color: #00ff88;
     }
     .status-badge.offline {
       background: rgba(239, 68, 68, 0.15);
       border: 1px solid rgba(239, 68, 68, 0.40);
-      color: #ef4444;
+      color: #ff4444;
+    }
+    .status-badge.pending {
+      background: rgba(255, 152, 0, 0.15);
+      border: 1px solid rgba(255, 152, 0, 0.40);
+      color: #ff9800;
+    }
+    
+    /* Offline Banner */
+    .offline-banner {
+      background: #1f0a0a;
+      border: 1px solid #ff4444;
+      border-radius: 6px;
+      color: #ff8888;
+      padding: 1rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+    .offline-banner ul {
+      margin: 0.5rem 0 0 1.2rem;
+      padding: 0;
+    }
+    .offline-banner li {
+      margin: 0.2rem 0;
+    }
+    .offline-banner code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.1rem 0.3rem;
+      border-radius: 3px;
+      font-family: monospace;
+      font-size: 0.85em;
+    }
+    .offline-banner strong {
+      color: #ffaaaa;
     }
     
     /* Section visibility */
@@ -286,6 +320,9 @@
         <span id="systemStatus" class="status-badge offline">System Offline</span>
       </div>
     </section>
+
+    <!-- Offline Banner (initially hidden) -->
+    <div id="offlineBanner" class="offline-banner" style="display:none"></div>
 
     <!-- Section 2: Upload & Ingest -->
     <section class="section card">
@@ -493,27 +530,67 @@
     
     // Initialize
     document.getElementById('year').textContent = String(new Date().getFullYear());
-    checkSystemHealth();
     
-    // System health check
-    async function checkSystemHealth() {
-      try {
-        const response = await fetch(`${API_ROOT}/health`, {
-          method: 'GET',
-          mode: 'cors'
-        });
-        if (response.ok) {
-          systemStatus.textContent = 'System Online';
-          systemStatus.classList.remove('offline');
-          systemStatus.classList.add('online');
+    // System health check with retry logic
+    const HEALTH_URL = API_ROOT + "/health";
+
+    async function checkBackendHealth() {
+      const badge = document.getElementById("systemStatus");
+      badge.textContent = "⏳ Connecting…";
+      badge.className = "status-badge pending";
+
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          const res = await fetch(HEALTH_URL, {
+            method: "GET",
+            signal: AbortSignal.timeout(8000),
+          });
+          if (res.ok) {
+            badge.textContent = "● System online";
+            badge.className = "status-badge online";
+            return true;
+          }
+        } catch (err) {
+          console.error(`Health check attempt ${attempt} failed:`, err);
+          if (attempt < 3) {
+            badge.textContent = `⏳ Retrying… (${attempt}/3)`;
+            await new Promise(r => setTimeout(r, 3000));
+          }
         }
-      } catch (err) {
-        console.error('Health check failed:', err);
-        systemStatus.textContent = 'System Offline';
-        systemStatus.classList.remove('online');
-        systemStatus.classList.add('offline');
       }
+
+      badge.textContent = "⚠ System Offline";
+      badge.className = "status-badge offline";
+
+      const banner = document.getElementById("offlineBanner");
+      if (banner) {
+        banner.style.display = "block";
+        banner.innerHTML = `
+          <strong>⚠ Backend not reachable</strong><br>
+          The API at <code>${HEALTH_URL}</code> did not respond.<br>
+          <strong>Likely causes:</strong>
+          <ul>
+            <li>Backend not deployed yet — push to GitHub and deploy on Render.</li>
+            <li>Render free tier is cold-starting (wait 30–60 s, then refresh).</li>
+            <li><code>API_BASE</code> in the HTML points to a wrong URL.</li>
+            <li>CORS not configured for this origin on the backend.</li>
+          </ul>
+        `;
+      }
+      return false;
     }
+
+    // Run health check on page load
+    document.addEventListener("DOMContentLoaded", async () => {
+      const isOnline = await checkBackendHealth();
+      if (!isOnline) {
+        const btn = document.getElementById("ingestBtn");
+        if (btn) {
+          btn.disabled = true;
+          btn.title = "Backend offline — deploy the API first";
+        }
+      }
+    });
     
     // File upload handlers
     uploadZone.addEventListener('click', () => fileInput.click());
