@@ -449,7 +449,7 @@
   </section>
 
   <footer>
-    <div>© <span id="year"></span> Neuromorphic Inference Lab — Tabular Forecast Dashboard</div>
+    <div>© 2025 Neuromorphic Inference Lab — Tabular Forecast Dashboard</div>
   </footer>
 </main>
 
@@ -457,7 +457,6 @@
   const API_BASE = "https://api.neuromorphicinference.com";
 
   const els = {
-    year: document.getElementById("year"),
     series: document.getElementById("series"),
     method: document.getElementById("method"),
     window: document.getElementById("window"),
@@ -473,7 +472,6 @@ z
   const API_BASE2 = "https://api.neuromorphicinference.com";
 
   const ui = {
-    year: document.getElementById("year"),
     series: document.getElementById("series"),
     method: document.getElementById("method"),
     window: document.getElementById("window"),
@@ -491,8 +489,6 @@ z
     chart: document.getElementById("chart"),
     useApi: document.getElementById("useApi"),
   };
-
-  ui.year.textContent = new Date().getFullYear();
 
   function setBadge(el, text, state) {
     el.textContent = text;

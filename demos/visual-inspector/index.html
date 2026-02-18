@@ -218,14 +218,13 @@
     </aside>
   </section>
 
-  <footer>© <span id="year"></span> Neuromorphic Inference Lab — Visual Inspector</footer>
+  <footer>© 2025 Neuromorphic Inference Lab — Visual Inspector</footer>
 </main>
 
 <script>
   const API_BASE = "https://api.neuromorphicinference.com";
 
   const el = {
-    year: document.getElementById("year"),
     file: document.getElementById("file"),
     btnRun: document.getElementById("btnRun"),
     btnClear: document.getElementById("btnClear"),
@@ -236,8 +235,6 @@
     modeLocal: document.getElementById("modeLocal"),
     modeApi: document.getElementById("modeApi"),
   };
-
-  el.year.textContent = new Date().getFullYear();
 
   let mode = "local";
   let imgEl = null;
