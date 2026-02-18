@@ -392,7 +392,7 @@ Could you please check the invoice and issue a refund? Thanks.</textarea>
   </section>
 
   <footer>
-    <div>© <span id="year"></span> Neuromorphic Inference Lab — Document Classifier</div>
+    <div>© 2025 Neuromorphic Inference Lab — Document Classifier</div>
   </footer>
 </main>
 
@@ -400,7 +400,6 @@ Could you please check the invoice and issue a refund? Thanks.</textarea>
   const API_BASE = "https://api.neuromorphicinference.com";
 
   const ui = {
-    year: document.getElementById("year"),
     labelSet: document.getElementById("labelSet"),
     useApi: document.getElementById("useApi"),
     text: document.getElementById("text"),
@@ -417,8 +416,6 @@ Could you please check the invoice and issue a refund? Thanks.</textarea>
     annotated: document.getElementById("annotated"),
     scores: document.getElementById("scores"),
   };
-
-  ui.year.textContent = new Date().getFullYear();
 
   function setBadge(el, text, state) {
     el.textContent = text;

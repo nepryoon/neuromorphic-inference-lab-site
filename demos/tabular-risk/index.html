@@ -313,14 +313,13 @@
     </aside>
   </section>
 
-  <footer>© <span id="year"></span> Neuromorphic Inference Lab — Tabular Risk</footer>
+  <footer>© 2025 Neuromorphic Inference Lab — Tabular Risk</footer>
 </main>
 
 <script>
   const API_BASE = "https://api.neuromorphicinference.com";
 
   const el = {
-    year: document.getElementById("year"),
     age: document.getElementById("age"),
     ageR: document.getElementById("ageR"),
     income: document.getElementById("income"),
@@ -346,8 +345,6 @@
     errBox: document.getElementById("errBox"),
     errMsg: document.getElementById("errMsg"),
   };
-
-  el.year.textContent = new Date().getFullYear();
 
   let mode = "local";
 

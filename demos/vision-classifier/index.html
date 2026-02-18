@@ -388,7 +388,7 @@
   </section>
 
   <footer>
-    <div>© <span id="year"></span> Neuromorphic Inference Lab — Vision Classifier</div>
+    <div>© 2025 Neuromorphic Inference Lab — Vision Classifier</div>
   </footer>
 </main>
 
@@ -396,7 +396,6 @@
   const API_BASE = "https://api.neuromorphicinference.com";
 
   const ui = {
-    year: document.getElementById("year"),
     file: document.getElementById("file"),
     useApi: document.getElementById("useApi"),
     btnAnalyse: document.getElementById("btnAnalyse"),
@@ -413,8 +412,6 @@
     errBox: document.getElementById("errBox"),
     errMsg: document.getElementById("errMsg"),
   };
-
-  ui.year.textContent = new Date().getFullYear();
 
   function setBadge(el, text, state) {
     el.textContent = text;

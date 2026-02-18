@@ -121,7 +121,10 @@
           </div>
         </article>
 
-        <article class="card col-6" data-mode="client">
+        <!-- Preview status: intentionally has 2 action buttons (Open demo, Proof anchor) instead of 3.
+             Live projects have: Open system, Evidence memo, Proof anchor.
+             Preview projects only have anchor points in /evidence/, not full memo pages. -->
+        <article class="card col-6 card--preview" data-mode="client">
           <h3>Tabular Risk <span class="badge preview">preview</span></h3>
           <p>
             Interactive tabular risk scoring with client-side baseline model and optional API integration for deployed endpoints.
@@ -139,7 +142,10 @@
           </div>
         </article>
 
-        <article class="card col-6" data-mode="client">
+        <!-- Preview status: intentionally has 2 action buttons (Open demo, Proof anchor) instead of 3.
+             Live projects have: Open system, Evidence memo, Proof anchor.
+             Preview projects only have anchor points in /evidence/, not full memo pages. -->
+        <article class="card col-6 card--preview" data-mode="client">
           <h3>Visual Inspector <span class="badge preview">preview</span></h3>
           <p>
             Image analysis tool with local property inspection and optional API integration for deployed vision models.
@@ -180,7 +186,7 @@
     </section>
 
     <footer class="footer">
-      <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
+      <div>© 2025 Neuromorphic Inference Lab</div>
       <div class="prov">
         <span id="build-branch">branch: …</span>
         <span id="build-commit">commit: …</span>
@@ -189,9 +195,6 @@
     </footer>
   </main>
 
-  <script>
-    document.getElementById("year").textContent = String(new Date().getFullYear());
-  </script>
   <script src="/build-info.js"></script>
 </body>
 </html>
