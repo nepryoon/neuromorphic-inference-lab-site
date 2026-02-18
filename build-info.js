@@ -37,8 +37,15 @@
     }
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
+  function init() {
     setActiveNav();
     loadBuildProvenance();
-  });
+  }
+
+  // Run immediately if DOM is already loaded, otherwise wait for DOMContentLoaded
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 })();
