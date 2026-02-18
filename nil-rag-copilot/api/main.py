@@ -84,11 +84,23 @@ def get_model() -> SentenceTransformer:
         logger.info("Model loaded.")
     return _model
 
+# ── OpenAI client (loaded once) ───────────────────────────────────────────────
+_openai_client = None
+
+def get_openai_client() -> openai.OpenAI:
+    global _openai_client
+    if _openai_client is None:
+        logger.info("Initializing OpenAI client...")
+        _openai_client = openai.OpenAI(api_key=os.environ.get("OPENAI_API_KEY", ""))
+        logger.info("OpenAI client initialized.")
+    return _openai_client
+
 # ── Services ──────────────────────────────────────────────────────────────────
 MAX_WORDS = 5000
 CHUNK_SIZE = 200
 OVERLAP = 40
 TOP_K = 4
+MAX_SNIPPET_LENGTH = 150
 
 def extract_text(file_bytes: bytes) -> str:
     parts = []
@@ -103,8 +115,8 @@ def validate_words(text: str) -> int:
     wc = len(text.split())
     if wc > MAX_WORDS:
         raise ValueError(
-            f"Il documento contiene {wc} parole. "
-            f"La demo accetta un massimo di {MAX_WORDS} parole."
+            f"The document contains {wc} words. "
+            f"This demo accepts a maximum of {MAX_WORDS} words."
         )
     return wc
 
@@ -134,8 +146,8 @@ def retrieve(query: str, index, chunks: List[str]):
     return [(int(i), chunks[i], float(s))
             for s, i in zip(scores[0], indices[0]) if i >= 0]
 
-def llm(messages, max_tokens=600, temperature=0.1) -> str:
-    client = openai.OpenAI(api_key=os.environ.get("OPENAI_API_KEY", ""))
+def call_openai_chat(messages, max_tokens=600, temperature=0.1) -> str:
+    client = get_openai_client()
     resp = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=messages,
@@ -188,7 +200,7 @@ async def chat(req: ChatRequest):
     results = retrieve(req.question, session["index"], session["chunks"])
     latency = (time.perf_counter() - t0) * 1000
     context = "\n\n".join(f"[Chunk {i}]: {t}" for i, t, _ in results)
-    answer = llm([
+    answer = call_openai_chat([
         {"role": "system", "content": (
             "You are an expert assistant on the uploaded documentation. "
             "Answer ONLY from the provided context. "
@@ -200,7 +212,7 @@ async def chat(req: ChatRequest):
     ])
     return ChatResponse(
         answer=answer,
-        citations=[Citation(chunk_id=i, text_snippet=t[:150] + "…", score=s)
+        citations=[Citation(chunk_id=i, text_snippet=t[:MAX_SNIPPET_LENGTH] + "…", score=s)
                    for i, t, s in results],
         retrieval_latency_ms=round(latency, 2),
     )
@@ -228,7 +240,7 @@ async def run_eval(req: EvalRequest):
     for q in questions:
         results = retrieve(q, index, chunks)
         context = "\n\n".join(f"[Chunk {i}]: {t}" for i, t, _ in results)
-        a = llm([
+        a = call_openai_chat([
             {"role": "system", "content": "Answer only from the context."},
             {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {q}"},
         ], max_tokens=200, temperature=0.0)
