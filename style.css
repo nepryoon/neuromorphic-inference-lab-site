@@ -133,7 +133,7 @@ img{ max-width:100%; height:auto; display:block; }
   display:flex;
   gap: 8px;
   flex-wrap: wrap;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 .badge{
   font-size: 12px;
@@ -221,6 +221,7 @@ img{ max-width:100%; height:auto; display:block; }
   display:flex;
   gap: 10px;
   flex-wrap: wrap;
+  margin-bottom: 14px;
 }
 .btn{
   display:inline-flex;
