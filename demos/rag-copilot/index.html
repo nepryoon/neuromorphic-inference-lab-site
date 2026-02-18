@@ -712,6 +712,13 @@
       }
     });
     
+    // Helper to safely escape HTML in dynamic content (e.g., error messages from backend)
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
     function updateProgress(percent, step) {
       progressBar.style.width = `${percent}%`;
       progressSteps.textContent = step;
@@ -719,17 +726,11 @@
     
     function showIngestResult(type, message) {
       ingestResult.className = `ingest-result ${type}`;
-      // Use textContent for safe rendering, or sanitize HTML if HTML is needed
-      // For now, we control all message content so innerHTML is safe
+      // message contains both escaped dynamic content and intentional HTML tags (<br>, <small>)
+      // Dynamic parts (error messages, URLs) are pre-escaped using escapeHtml()
+      // Static HTML structure is safe and controlled by us
       ingestResult.innerHTML = message;
       ingestResult.classList.remove('hidden');
-    }
-    
-    // Helper to safely escape HTML in dynamic content
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
     }
     
     // Chat handlers

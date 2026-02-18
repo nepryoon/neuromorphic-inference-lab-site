@@ -54,3 +54,6 @@ echo "2. Set environment variable: export OPENAI_API_KEY=your-key"
 echo "3. Start server: uvicorn api.main:app --reload --port 8080"
 echo "4. Test health: curl http://localhost:8080/health"
 echo "5. View API docs: http://localhost:8080/docs"
+
+exit 0
+
