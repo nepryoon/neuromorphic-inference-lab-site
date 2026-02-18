@@ -20,5 +20,9 @@ async def evaluate(request: EvalRequest):
             message="Evaluation complete (mock data)"
         )
     
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        # Log the error internally but don't expose details to client
+        print(f"Error running evaluation: {e}")
+        raise HTTPException(status_code=500, detail="An error occurred while running evaluation")

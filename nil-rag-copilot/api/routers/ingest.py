@@ -31,5 +31,9 @@ async def ingest_document(file: UploadFile = File(...)):
             chunk_count=max(1, chunk_count)
         )
     
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        # Log the error internally but don't expose details to client
+        print(f"Error processing document: {e}")
+        raise HTTPException(status_code=500, detail="An error occurred while processing the document")

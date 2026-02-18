@@ -25,5 +25,9 @@ async def chat(request: ChatRequest):
             retrieval_latency_ms=150
         )
     
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        # Log the error internally but don't expose details to client
+        print(f"Error processing chat request: {e}")
+        raise HTTPException(status_code=500, detail="An error occurred while processing your question")
