@@ -1,6 +1,30 @@
+import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import ingest, chat, eval as eval_router
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+
+try:
+    from .routers import ingest
+    logger.info("ingest router imported OK")
+except Exception as e:
+    logger.error(f"Failed to import ingest router: {e}")
+    raise
+
+try:
+    from .routers import chat
+    logger.info("chat router imported OK")
+except Exception as e:
+    logger.error(f"Failed to import chat router: {e}")
+    raise
+
+try:
+    from .routers import eval as eval_router
+    logger.info("eval router imported OK")
+except Exception as e:
+    logger.error(f"Failed to import eval router: {e}")
+    raise
 
 app = FastAPI(
     title="NIL RAG Copilot API",
@@ -31,6 +55,10 @@ def health():
 app.include_router(ingest.router, prefix="/api/v1", tags=["ingest"])
 app.include_router(chat.router, prefix="/api/v1", tags=["chat"])
 app.include_router(eval_router.router, prefix="/api/v1", tags=["eval"])
+
+# List registered routes at startup
+for route in app.routes:
+    logger.info(f"Route: {getattr(route, 'methods', '-')} {route.path}")
 
 @app.get("/")
 def root():
