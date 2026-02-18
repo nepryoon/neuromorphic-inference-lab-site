@@ -20,8 +20,8 @@ def validate_word_limit(text: str) -> int:
     wc = len(text.split())
     if wc > MAX_WORDS:
         raise ValueError(
-            f"Il documento contiene {wc} parole. "
-            f"La demo accetta un massimo di {MAX_WORDS} parole."
+            f"The document contains {wc} words. "
+            f"This demo accepts a maximum of {MAX_WORDS} words."
         )
     return wc
 

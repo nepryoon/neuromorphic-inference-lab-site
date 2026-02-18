@@ -8,6 +8,16 @@ from ..services.retriever import retrieve
 
 router = APIRouter()
 
+# Initialize OpenAI client once at module level
+_openai_client = None
+
+def get_openai_client() -> openai.OpenAI:
+    """Get or create OpenAI client instance."""
+    global _openai_client
+    if _openai_client is None:
+        _openai_client = openai.OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+    return _openai_client
+
 SYSTEM_PROMPT = (
     "You are an expert assistant on the uploaded documentation. "
     "Answer ONLY from the provided context. "
@@ -36,7 +46,7 @@ async def chat(req: ChatRequest):
     context = "\n\n".join(f"[Chunk {i}]: {t}" for i, t, _ in results)
     
     # Generate answer using OpenAI
-    client = openai.OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+    client = get_openai_client()
     resp = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
@@ -47,11 +57,20 @@ async def chat(req: ChatRequest):
         max_tokens=600
     )
     
+    # Safely truncate text snippets at word boundaries
+    citations = []
+    for i, t, s in results:
+        snippet = t[:150]
+        if len(t) > 150:
+            # Find last space to avoid cutting words
+            last_space = snippet.rfind(' ')
+            if last_space > 0:
+                snippet = snippet[:last_space]
+            snippet += "…"
+        citations.append(Citation(chunk_id=i, text_snippet=snippet, score=s))
+    
     return ChatResponse(
         answer=resp.choices[0].message.content,
-        citations=[
-            Citation(chunk_id=i, text_snippet=t[:150]+"…", score=s)
-            for i, t, s in results
-        ],
+        citations=citations,
         retrieval_latency_ms=round(latency, 2)
     )

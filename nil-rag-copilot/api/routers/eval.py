@@ -13,6 +13,16 @@ from ..services.retriever import retrieve
 
 router = APIRouter()
 
+# Initialize OpenAI client once at module level
+_openai_client = None
+
+def get_openai_client() -> openai.OpenAI:
+    """Get or create OpenAI client instance."""
+    global _openai_client
+    if _openai_client is None:
+        _openai_client = openai.OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+    return _openai_client
+
 @router.post("/eval", response_model=EvalResponse)
 async def run_eval(req: EvalRequest):
     """
@@ -33,7 +43,7 @@ async def run_eval(req: EvalRequest):
         raise HTTPException(422, "Could not generate test questions from chunks.")
     
     # Generate answers for each question
-    client = openai.OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+    client = get_openai_client()
     answers = []
     
     for q in questions:

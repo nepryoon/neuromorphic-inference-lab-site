@@ -21,7 +21,14 @@ def generate_test_questions(chunks: List[str], n: int = 5) -> List[str]:
         # Take first sentence from chunk
         sentence = chunks[i].split(".")[0].strip()
         if len(sentence) > 15:
-            questions.append(f"What does this content describe: '{sentence[:80]}'?")
+            # Safely truncate at word boundary
+            truncated = sentence[:80]
+            if len(sentence) > 80:
+                # Find last space to avoid cutting words
+                last_space = truncated.rfind(' ')
+                if last_space > 0:
+                    truncated = truncated[:last_space]
+            questions.append(f"What does this content describe: '{truncated}'?")
     
     return questions[:n]
 
