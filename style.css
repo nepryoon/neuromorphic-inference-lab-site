@@ -234,6 +234,7 @@ img{ max-width:100%; height:auto; display:block; }
   color: rgba(234,240,255,.92);
   font-weight: 650;
   font-size: 14px;
+  line-height: 1.4;
   transition: transform .15s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
 }
 .btn:hover{
