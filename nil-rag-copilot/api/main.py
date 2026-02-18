@@ -10,7 +10,7 @@ import openai
 
 from typing import List, Dict, Any
 from pydantic import BaseModel
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from sentence_transformers import SentenceTransformer
 
@@ -33,6 +33,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Create API router with /api/v1 prefix
+api_router = APIRouter(prefix="/api/v1")
 
 # ── Schemas ───────────────────────────────────────────────────────────────────
 class IngestResponse(BaseModel):
@@ -162,7 +165,7 @@ def health():
     return {"status": "ok", "version": "0.2.0"}
 
 
-@app.post("/api/v1/ingest", response_model=IngestResponse)
+@api_router.post("/ingest", response_model=IngestResponse)
 async def ingest_pdf(file: UploadFile = File(...)):
     if not file.filename.lower().endswith(".pdf"):
         raise HTTPException(400, "Only PDF files are accepted.")
@@ -191,7 +194,7 @@ async def ingest_pdf(file: UploadFile = File(...)):
     )
 
 
-@app.post("/api/v1/chat", response_model=ChatResponse)
+@api_router.post("/chat", response_model=ChatResponse)
 async def chat(req: ChatRequest):
     if req.session_id not in _sessions:
         raise HTTPException(404, "Session not found. Run /ingest first.")
@@ -224,7 +227,7 @@ async def chat(req: ChatRequest):
     )
 
 
-@app.post("/api/v1/eval", response_model=EvalResponse)
+@api_router.post("/eval", response_model=EvalResponse)
 async def run_eval(req: EvalRequest):
     if req.session_id not in _sessions:
         raise HTTPException(404, "Session not found. Run /ingest first.")
@@ -293,3 +296,7 @@ async def run_eval(req: EvalRequest):
         test_questions=questions,
         answers=answers,
     )
+
+# ── Include API Router ────────────────────────────────────────────────────────
+# Mount the API router with /api/v1 prefix
+app.include_router(api_router)
