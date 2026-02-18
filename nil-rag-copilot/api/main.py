@@ -212,8 +212,14 @@ async def chat(req: ChatRequest):
     ])
     return ChatResponse(
         answer=answer,
-        citations=[Citation(chunk_id=i, text_snippet=t[:MAX_SNIPPET_LENGTH] + "…", score=s)
-                   for i, t, s in results],
+        citations=[
+            Citation(
+                chunk_id=i,
+                text_snippet=t[:MAX_SNIPPET_LENGTH] + ("…" if len(t) > MAX_SNIPPET_LENGTH else ""),
+                score=s
+            )
+            for i, t, s in results
+        ],
         retrieval_latency_ms=round(latency, 2),
     )
 

@@ -4,6 +4,6 @@ python-multipart
 pdfplumber
 sentence-transformers
 faiss-cpu
-openai>=1.0.0
+openai
 numpy
 pandas
