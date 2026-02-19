@@ -5,53 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Visual Inspector | Neuromorphic Inference Lab</title>
   <meta name="description" content="Visual Inspector: upload an image, inspect basic properties locally, and optionally call an API endpoint." />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/style.css" />
 
   <style>
-    :root{
-      --bg:#070A12;--surface:rgba(255,255,255,.06);--border:rgba(255,255,255,.12);
-      --text:rgba(255,255,255,.92);--muted:rgba(255,255,255,.68);
-      --accent:#64FFDA;--accent2:#7C5CFF;--ok:#43FBA4;--warn:#FFCE57;--danger:#FF4D6D;
-      --shadow:0 10px 30px rgba(0,0,0,.35);--radius:18px;--max:1100px;
-      --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-      --sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
-    }
-    *{box-sizing:border-box;}
-    html,body{height:100%;}
-    body{
-      margin:0;font-family:var(--sans);color:var(--text);line-height:1.55;
-      background:
-        radial-gradient(900px 600px at 20% 10%, rgba(124,92,255,.18), transparent 55%),
-        radial-gradient(900px 600px at 80% 20%, rgba(100,255,218,.14), transparent 55%),
-        radial-gradient(700px 450px at 40% 80%, rgba(124,92,255,.12), transparent 60%),
-        var(--bg);
-    }
-    a{color:inherit;text-decoration:none;}
-    a:hover{text-decoration:underline;text-underline-offset:3px;}
-    .wrap{max-width:var(--max);margin:0 auto;padding:20px 18px 46px;}
-
-    header{
-      position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);
-      background:linear-gradient(to bottom, rgba(7,10,18,.82), rgba(7,10,18,.50));
-      border-bottom:1px solid rgba(255,255,255,.06);
-    }
-    .nav{max-width:var(--max);margin:0 auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px;}
-    .logo{
-      width:34px;height:34px;border-radius:10px;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(100,255,218,.95), rgba(100,255,218,.15) 58%, transparent 60%),
-        radial-gradient(circle at 70% 70%, rgba(124,92,255,.9), rgba(124,92,255,.18) 55%, transparent 57%),
-        rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow:0 8px 22px rgba(0,0,0,.25);
-    }
-    nav ul{list-style:none;display:flex;gap:10px;padding:0;margin:0;flex-wrap:wrap;justify-content:flex-end;}
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);color:var(--muted);font-size:14px;
-    }
-    .pill.active{color:var(--text);border-color:rgba(100,255,218,.35);background:rgba(100,255,218,.08);}
-
+    /* Visual Inspector-specific styles */
     .hero{
       margin-top:22px;padding:22px;border-radius:var(--radius);border:1px solid var(--border);
       background:linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
@@ -69,39 +27,23 @@
     .subtitle{margin:0;color:var(--muted);max-width:92ch;}
 
     .rowWrap{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
-    .btn{
-      display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);
-      color:var(--text);font-weight:600;font-size:14px;line-height:1.4;box-shadow:0 10px 20px rgba(0,0,0,.18);cursor:pointer;
-    }
-    .btn:hover{background:rgba(255,255,255,.08);text-decoration:none;}
-    .btn.primary{
-      border-color:rgba(100,255,218,.40);
-      background:linear-gradient(135deg, rgba(100,255,218,.18), rgba(124,92,255,.12));
-    }
-    .btn.ghost{background:transparent;border-color:rgba(255,255,255,.10);box-shadow:none;}
-    .btn:disabled{opacity:.6;cursor:not-allowed;}
 
     .kbd{
-      font-family:var(--mono);font-size:12px;padding:2px 8px;border:1px solid rgba(255,255,255,.14);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      font-size:12px;padding:2px 8px;border:1px solid rgba(255,255,255,.14);
       background:rgba(0,0,0,.25);border-radius:999px;color:rgba(255,255,255,.78);
     }
-    .badge{
-      display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);
-      font-size:12px;color:rgba(255,255,255,.78);font-family:var(--mono);white-space:nowrap;
-    }
+
     .badge.ok{border-color:rgba(67,251,164,.35);background:rgba(67,251,164,.10);color:rgba(255,255,255,.90);}
     .badge.bad{border-color:rgba(255,77,109,.35);background:rgba(255,77,109,.10);color:rgba(255,255,255,.90);}
     .badge.warn{border-color:rgba(255,206,87,.30);background:rgba(255,206,87,.10);color:rgba(255,255,255,.90);}
 
     .grid{margin-top:16px;display:grid;gap:12px;grid-template-columns:1.2fr .8fr;align-items:start;}
     @media (max-width:980px){.grid{grid-template-columns:1fr;}}
-    .card{border-radius:var(--radius);border:1px solid var(--border);background:rgba(255,255,255,.05);box-shadow:0 10px 24px rgba(0,0,0,.22);padding:16px;}
-    .card h2{margin:0 0 8px;font-size:18px;letter-spacing:.2px;}
+
     .muted{color:var(--muted);}
     .small{font-size:14px;}
-    .mono{font-family:var(--mono);}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;}
     .divider{height:1px;background:rgba(255,255,255,.08);margin:14px 0;}
 
     .toggle{
@@ -131,32 +73,29 @@
       display:flex;align-items:center;justify-content:center;min-height:240px;
     }
     .preview img{max-width:100%;max-height:360px;display:block;}
-    pre{
-      margin:10px 0 0;padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.25);overflow:auto;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.82);
-    }
+
     footer{margin-top:24px;color:rgba(255,255,255,.55);font-size:13px;}
   </style>
 </head>
 
 <body>
-<header>
-  <div class="nav">
-    <a class="brand" href="/" aria-label="Neuromorphic Inference Lab Home">
-      <span class="logo" aria-hidden="true"></span>
+<header class="nav">
+  <div class="inner">
+    <a class="brand" href="/" aria-label="Neuromorphic Inference Lab home">
+      <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
       <span>Neuromorphic Inference Lab</span>
     </a>
-    <nav aria-label="Main navigation">
-      <ul>
-        <li><a class="pill" href="/">Home</a></li>
-        <li><a class="pill active" href="/demos/">Demos</a></li>
-        <li><a class="pill" href="/evidence/">Evidence</a></li>
-      </ul>
+
+    <nav class="navlinks" aria-label="Primary navigation">
+      <a data-nav href="/">Signal</a>
+      <a data-nav href="/demos/" data-active="true">Systems</a>
+      <a data-nav href="/evidence/">Proof Ledger</a>
+      <a data-nav href="/about/">Identity</a>
     </nav>
   </div>
 </header>
 
-<main class="wrap">
+<main class="container">
   <section class="hero">
     <h1>Visual Inspector</h1>
     <p class="subtitle">
