@@ -27,10 +27,9 @@
   <main class="container">
     <section class="hero">
       <p class="kicker">About Me</p>
-      <h1 class="h1">Machine Learning Engineer</h1>
+      <h1 class="h1">Machine Learning Engineer &bull; MLOps & Production ML &bull; GenAI / LLMOps / RAG</h1>
       <p class="sub">
-        I build machine learning systems that work in production. My focus is on the complete pipeline:
-        data engineering, model development, deployment infrastructure, and monitoring.
+        Full-stack Machine Learning Engineer and MLOps specialist with a strong bias for end-to-end system architecture, production reliability, and measurable outcomes. Designs and delivers complete ML systems---from raw data ingestion and feature engineering through model training, versioning, containerised deployment, and real-time monitoring---with a focus on reproducibility, scalability, and operational excellence. Recent work spans GenAI/LLMOps and production Retrieval-Augmented Generation (RAG) pipelines with retrieval, reranking, evaluation harnesses, and auditable citation trails. Comfortable owning the full delivery lifecycle: CI/CD quality gates, Docker/Kubernetes runtimes, AWS infrastructure, and runbook-driven release discipline.
       </p>
 
       <div class="actions">
@@ -44,43 +43,69 @@
         <article class="card col-12">
           <h3>Background</h3>
           <p>
-            I work on machine learning systems that need to run reliably in production environments. 
-            My projects cover the full ML lifecycle: ingesting and validating data, engineering features, 
-            training and evaluating models, packaging artefacts, deploying inference endpoints, and 
-            implementing monitoring.
-          </p>
-          <p>
-            For language model applications, I implement retrieval-augmented generation patterns with 
-            source citations, guardrails, and evaluation frameworks. The focus is on building systems 
-            that can be tested, debugged, and maintained.
-          </p>
-        </article>
-
-        <article class="card col-6">
-          <h3>Technical Approach</h3>
-          <p>
-            I prioritise reproducibility through containerisation, versioned datasets, and fixed random seeds. 
-            Models are evaluated using relevant metrics (precision, recall, MAE, MAPE) and compared against 
-            baselines. Deployment includes health checks, logging, and drift monitoring.
-          </p>
-          <p>
-            The projects on this site demonstrate working systems rather than proof-of-concept notebooks. 
-            Each includes documentation of architecture decisions, technology choices, and trade-offs.
+            <ul>
+              <li>Architected an end-to-end ML delivery platform: designed SQL-based data extraction pipelines with automated validation checks, curated model-ready datasets, and established reproducible build artefacts using DVC and Docker—<strong>reducing data processing cycle time by 30% within three months</strong>.</li>
+              <li>Engineered and deployed a production-grade RAG service on AWS (ECS / ALB / ECR): implemented hybrid retrieval with dense reranking, citation/audit trails, and an evaluation harness with regression-style quality gates—<strong>achieving sub-200 ms P95 inference latency</strong> at launch.</li>
+              <li>Implemented a full CI/CD pipeline (GitHub Actions) with automated unit, integration, and acceptance tests; enforced accuracy/latency trade-off thresholds as mandatory quality gates before every production promotion.</li>
+              <li>Established release discipline through versioned runbooks, blue/green rollback patterns, Kubernetes-compatible health-check probes, and operational telemetry (structured logs, Prometheus metrics)—<strong>achieving zero unplanned downtime</strong> across all releases.</li>
+              <li>Exposed versioned inference endpoints via FastAPI, containerised all runtimes with Docker, and adopted Terraform for repeatable infrastructure provisioning across environments.</li>
+              <li>Designed and operationalised end-to-end predictive analytics systems for LV/MV grid operations: architected SQL + Python pipelines ingesting <strong>5 TB+ of operational data</strong>, engineered domain-specific features, and delivered batch inference workflows sustaining <strong>99.9% operational uptime</strong>.</li>
+              <li>Built and standardised a data quality framework (schema validation, referential-integrity checks, automated refresh logic) that unified KPI definitions across teams and <strong>reduced decision-making latency by 40%</strong> through monitoring-friendly dashboards.</li>
+              <li>Orchestrated fault-detection modelling lifecycle from raw sensor data through feature engineering, model selection (AUC/F1 evaluation), and deployment of batch inference jobs integrated with operational monitoring systems.</li>
+              <li>Scaled and led a technical unit of 10+ engineers within six months; established execution cadences, incident-response runbooks, and delivery-predictability frameworks that reduced mean-time-to-recovery (MTTR) for grid incidents.</li>
+              <li>Received internal <strong>Enel Innovation Award (2017)</strong> for designing an AR-enabled smart helmet prototype to monitor subcontractor work quality and enhance operational safety compliance.</li>
+            </ul>
           </p>
         </article>
 
         <article class="card col-6">
-          <h3>Technical Stack</h3>
+          <h3>Technical Skills</h3>
           <p>
-            Python for ML pipelines and model development. FastAPI for inference serving. 
-            Docker for containerisation. MLflow for experiment tracking. Prometheus and Grafana 
-            for monitoring. GitHub Actions for CI/CD.
+            <ul>
+              <li><strong>Programming:</strong> Python, JavaScript/TypeScript, C, Assembly, SQL, Bash, HTML/CSS, Git</li>
+              <li><strong>Machine Learning:</strong> scikit-learn, PyTorch, TensorFlow; feature engineering, model validation, error analysis, calibration, AUC / F1 / PR-AUC, hyperparameter optimisation, model selection</li>
+              <li><strong>GenAI / LLMOps:</strong> RAG pipelines (retrieval, reranking, hybrid search), prompt engineering, evaluation harnesses (regression-style checks), guardrails, citation &amp; audit trails, LangChain, vector databases</li>
+              <li><strong>Data Engineering:</strong> PostgreSQL, ETL/ELT design, data quality validation, dataset curation, batch &amp; streaming ingestion patterns, Apache Airflow (orchestration)</li>
+              <li><strong>MLOps / Platform:</strong> FastAPI, Flask, Docker, Kubernetes (CKA in progress), CI/CD (GitHub Actions, GitLab CI), MLflow (experiment tracking &amp; model registry), DVC, monitoring (Prometheus, logs/metrics), runbooks, rollback patterns, health checks</li>
+              <li><strong>Cloud &amp; Infra:</strong> AWS (ECS, ECR, ALB, S3, Lambda, SageMaker patterns), GCP &amp; Azure familiarity, Terraform (IaC), Kubernetes deployment patterns</li>
+             </ul>
           </p>
+
+        </article>
+
+        <article class="card col-6">
+          <h3>Education</h3>
           <p>
-            For LLM applications: retrieval with vector databases, prompt orchestration, 
-            and evaluation harnesses. When appropriate, I use established libraries 
-            rather than building custom solutions.
+            <table style="width: 100%; text-align: left; border-collapse: collapse;">
+             <tbody>
+               <tr>
+                 <td style="vertical-align: top; padding-right: 15px; padding-bottom: 5px;"><strong>Programming</strong></td>
+                 <td style="padding-bottom: 5px;">Python, JavaScript/TypeScript, C, Assembly, SQL, Bash, HTML/CSS, Git</td>
+               </tr>
+               <tr>
+                 <td style="vertical-align: top; padding-right: 15px; padding-bottom: 5px;"><strong>Machine Learning</strong></td>
+                 <td style="padding-bottom: 5px;">scikit-learn, PyTorch, TensorFlow; feature engineering, model validation, error analysis, calibration, AUC / F1 / PR-AUC, hyperparameter optimisation, model selection</td>
+               </tr>
+               <tr>
+                 <td style="vertical-align: top; padding-right: 15px; padding-bottom: 5px;"><strong>GenAI / LLMOps</strong></td>
+                 <td style="padding-bottom: 5px;">RAG pipelines (retrieval, reranking, hybrid search), prompt engineering, evaluation harnesses (regression-style checks), guardrails, citation &amp; audit trails, LangChain, vector databases</td>
+               </tr>
+               <tr>
+                 <td style="vertical-align: top; padding-right: 15px; padding-bottom: 5px;"><strong>Data Engineering</strong></td>
+                 <td style="padding-bottom: 5px;">PostgreSQL, ETL/ELT design, data quality validation, dataset curation, batch &amp; streaming ingestion patterns, Apache Airflow (orchestration)</td>
+               </tr>
+               <tr>
+                 <td style="vertical-align: top; padding-right: 15px; padding-bottom: 5px;"><strong>MLOps / Platform</strong></td>
+                 <td style="padding-bottom: 5px;">FastAPI, Flask, Docker, Kubernetes (CKA in progress), CI/CD (GitHub Actions, GitLab CI), MLflow (experiment tracking &amp; model registry), DVC, monitoring (Prometheus, logs/metrics), runbooks, rollback patterns, health checks</td>
+               </tr>
+               <tr>
+                 <td style="vertical-align: top; padding-right: 15px;"><strong>Cloud &amp; Infra</strong></td>
+                 <td>AWS (ECS, ECR, ALB, S3, Lambda, SageMaker patterns), GCP &amp; Azure familiarity, Terraform (IaC), Kubernetes deployment patterns</td>
+               </tr>
+             </tbody>
+           </table>
           </p>
+
         </article>
       </div>
     </section>
