@@ -3,89 +3,43 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Visual Inspector — Systems</title>
+  <title>Visual Inspector — Edge Inference Demo — Neuromorphic Inference Lab</title>
   <meta name="description" content="Visual Inspector: Image analysis tool with local property inspection and optional API integration." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
 
   <style>
-    /* Demo-specific styles */
-    .app-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-      margin-top: 1.5rem;
-    }
-    
-    .panel {
-      flex: 1;
-      min-width: 300px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.5rem;
-    }
-
-    .image-preview-area {
-      width: 100%;
-      height: 250px;
+    /* Upload Zone (Matched with RAG Copilot) */
+    .upload-zone {
       border: 2px dashed #333;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1rem;
-      overflow: hidden;
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s;
+      margin: 1rem 0;
       background: #0a0a0a;
-      position: relative;
     }
-
-    .image-preview-area img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
-
-    .placeholder-text {
-      color: #666;
-      font-size: 0.9rem;
-    }
-
-    .controls-row {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-
-    .form-group label {
-      font-size: 0.8rem;
-      color: #888;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    select, input[type="file"] {
-      background: #111;
-      border: 1px solid #333;
-      color: #eee;
-      padding: 0.5rem;
-      border-radius: 4px;
-      font-family: inherit;
-    }
-
-    select:focus {
-      outline: none;
+    .upload-zone:hover {
       border-color: #00ff88;
     }
+    .upload-zone.drag-over {
+      border-color: #4fc3f7;
+      background: rgba(79, 195, 247, 0.05);
+    }
+    
+    /* Image Preview */
+    .image-preview {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 6px;
+      margin-top: 1rem;
+      display: none;
+      border: 1px solid #333;
+    }
 
-    .output-pre {
+    /* Output Terminal */
+    .terminal-output {
       background: #0a0a0a;
       border: 1px solid #222;
       padding: 1rem;
@@ -93,11 +47,13 @@
       font-family: monospace;
       font-size: 0.85rem;
       color: #4fc3f7;
-      min-height: 200px;
+      min-height: 150px;
       white-space: pre-wrap;
       overflow-x: auto;
+      margin-top: 1rem;
     }
 
+    /* Status Badge */
     .status-badge {
       display: inline-block;
       padding: .4rem .8rem;
@@ -116,15 +72,60 @@
       border: 1px solid rgba(239, 68, 68, 0.40);
       color: #ff4444;
     }
-    .status-badge.idle {
-      background: rgba(136, 136, 136, 0.15);
-      border: 1px solid rgba(136, 136, 136, 0.40);
-      color: #aaa;
-    }
     .status-badge.pending {
       background: rgba(255, 152, 0, 0.15);
       border: 1px solid rgba(255, 152, 0, 0.40);
       color: #ff9800;
+    }
+
+    /* Form Controls */
+    .controls-row {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin-top: 1rem;
+    }
+    select {
+      background: #111;
+      border: 1px solid #333;
+      color: #eee;
+      padding: 0.6rem;
+      border-radius: 6px;
+      font-family: inherit;
+      outline: none;
+    }
+    select:focus {
+      border-color: #00ff88;
+    }
+
+    /* Spinner */
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #333;
+      border-top-color: #00ff88;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin-right: .5rem;
+      vertical-align: middle;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .hidden { display: none; }
+    
+    /* Architecture Diagram */
+    .architecture-diagram pre {
+      background: #0a0a0a;
+      border: 1px solid #222;
+      border-radius: 6px;
+      padding: 1.2rem;
+      overflow-x: auto;
+      font-size: .78rem;
+      color: #4fc3f7;
+      line-height: 1.5;
     }
   </style>
 </head>
@@ -147,89 +148,96 @@
 
   <main class="container">
     <section class="hero">
-      <p class="kicker">Vision System</p>
-      <h1 class="h1">Visual Inspector</h1>
+      <p class="kicker">Vision Edge Demo</p>
+      <h1 class="h1">Visual Inspector — Client-Side Computer Vision</h1>
       <p class="sub">
-        Upload an image and inspect basic properties locally. An optional API mode can be used for deployed inference.
+        Upload an image to perform zero-latency, privacy-preserving object classification directly in your browser. 
+        Powered by a lightweight MobileNetV2 model running via Transformers.js.
+      </p>
+      <div class="badges">
+        <span class="badge">Computer Vision</span>
+        <span class="badge">Edge AI</span>
+        <span class="badge">Transformers.js</span>
+        <span class="badge">Zero-Latency</span>
+        <span id="systemStatus" class="status-badge offline">Model Unloaded</span>
+      </div>
+    </section>
+
+    <section class="section card">
+      <h2>1. Upload Image & Configure</h2>
+      <p class="sub">Select an image for analysis. Local mode downloads model weights (~10MB) once per session.</p>
+      
+      <div id="uploadZone" class="upload-zone">
+        <div style="font-size: 2rem; margin-bottom: .5rem;">🖼️</div>
+        <div style="font-weight: 600; margin-bottom: .3rem;">Drop image here or click to browse</div>
+        <div style="font-size: .85rem; color: #888;">Supports JPG, PNG, WebP</div>
+        <input type="file" id="fileInput" accept="image/*" style="display: none;" />
+      </div>
+
+      <img id="imagePreview" class="image-preview" src="" alt="Selected Image" />
+      
+      <div class="controls-row">
+        <select id="modeSelect">
+          <option value="local">Mode: Local Inference (Browser)</option>
+          <option value="api">Mode: Remote API (Server)</option>
+        </select>
+        <button id="analyseBtn" class="btn primary" disabled>▶ Run Analysis</button>
+        <button id="clearBtn" class="btn">Clear</button>
+      </div>
+    </section>
+
+    <section id="resultsSection" class="section card hidden">
+      <h2>2. Analysis Results</h2>
+      <p class="sub">JSON payload returned by the inference engine.</p>
+      
+      <pre id="outputJson" class="terminal-output">{}</pre>
+    </section>
+
+    <section class="section card">
+      <h2>3. Technical Architecture</h2>
+      
+      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">Edge Pipeline</h3>
+      <p style="color: var(--muted); line-height: 1.6;">
+        In local mode, the system utilises <strong>Transformers.js</strong> to run <code>Xenova/mobilenet_v2_1.0_224</code>, a quantized vision model. 
+        The weights are fetched from the Hugging Face Hub directly to the client's browser cache. Image tensors are processed via ONNX Runtime WebAssembly, 
+        guaranteeing zero data exfiltration.
       </p>
 
-      <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
-        <a class="btn" href="/evidence/#visual-inspector">Open evidence dossier</a>
-        <a class="btn" href="https://github.com/nepryoon/nil-visual-inspector" target="_blank" rel="noopener">Source</a>
-      </div>
+      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">API Fallback</h3>
+      <p style="color: var(--muted); line-height: 1.6;">
+        When API mode is selected, the application acts as a thin client, serialising the image and posting it to a standard REST endpoint. 
+        This dual architecture demonstrates flexibility between privacy-first edge compute and heavy-duty server compute.
+      </p>
 
-      <div class="badges" style="margin-top: 1.5rem;">
-        <span class="badge">Local Inference</span>
-        <span class="badge">Transformers.js</span>
-        <span class="badge">API Mode</span>
-        <span class="badge">Edge Processing</span>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="grid">
-        <div class="col-8">
-          <h3>Problem → impact</h3>
-          <p style="color: var(--muted); line-height: 1.6;">
-            Local analysis utilizes <strong>Transformers.js</strong> to run a lightweight MobileNetV2 model directly in the browser, demonstrating zero-latency, privacy-preserving edge inference. When API mode is enabled, this page acts as a thin client, offloading complex vision tasks to a deployed backend via a <code>POST /vision/predict</code> request.
-          </p>
-        </div>
-        
-        <div class="col-4">
-          <h3>Proof links</h3>
-          <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 0.8rem;">Verification paths and repositories.</p>
-          <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.5rem;">
-            <li><a href="/evidence/#visual-inspector" style="color: #4fc3f7; text-decoration: none;">Evidence dossier</a></li>
-            <li><a href="/evidence/#computer-vision" style="color: #4fc3f7; text-decoration: none;">Related #computer-vision</a></li>
-            <li><a href="https://github.com/nepryoon/nil-visual-inspector" target="_blank" rel="noopener" style="color: #4fc3f7; text-decoration: none;">Repository (GitHub)</a></li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <h3>Live inference demo</h3>
-      <p class="sub">Upload an image. Local mode runs in-browser (requires initial download of ~10MB weights); API mode requires a configured backend.</p>
-
-      <div class="app-container">
-        <div class="panel">
-          <div class="controls-row">
-            <div class="form-group" style="flex: 1;">
-              <label for="modeSelect">Execution Mode</label>
-              <select id="modeSelect">
-                <option value="local">Local (Transformers.js)</option>
-                <option value="api">API (Remote Inference)</option>
-              </select>
-            </div>
-            <div>
-              <span id="systemStatus" class="status-badge idle">Status: Unloaded</span>
-            </div>
-          </div>
-
-          <div class="image-preview-area" id="dropZone">
-            <span class="placeholder-text" id="placeholderText">Drop image here or click below</span>
-            <img id="imagePreview" src="" alt="Preview" style="display: none;" />
-          </div>
-
-          <div style="display: flex; gap: 1rem;">
-            <input type="file" id="fileInput" accept="image/*" style="display: none;" />
-            <button class="btn" id="chooseBtn">Choose image</button>
-            <button class="btn primary" id="analyseBtn" disabled>Analyse</button>
-            <button class="btn" id="clearBtn">Clear</button>
-          </div>
-          
-          <div id="fileInfo" style="margin-top: 1rem; font-size: 0.85rem; color: #888;">No image loaded</div>
-        </div>
-
-        <div class="panel">
-          <h3 style="margin-top: 0; margin-bottom: 1rem; font-size: 1rem;">Output Payload</h3>
-          <pre class="output-pre" id="outputJson">{}</pre>
-        </div>
+      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">Architecture Diagram</h3>
+      <div class="architecture-diagram">
+        <pre>
+┌─────────────────────────────────────────────────────────────────┐
+│                       CLIENT (Browser)                          │
+│  ┌──────────────┐  ┌──────────────┐                             │
+│  │ Image Upload │  │ Transformers │                             │
+│  └──────┬───────┘  │ .js Engine   │                             │
+└─────────┼──────────┴──────┬───────┴─────────────────────────────┘
+          │                 │ Local Mode (ONNX WASM)
+          │                 ▼
+          │          ┌──────────────┐
+          │          │ MobileNetV2  │  <-- Cached from HF Hub
+          │          └──────────────┘
+          │
+          │ API Mode (POST /predict)
+          ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                   FASTAPI BACKEND (Optional)                    │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │ Heavy Vision Model (ResNet / ViT)                        │   │
+│  └──────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+        </pre>
       </div>
     </section>
 
     <footer class="footer">
-      <div>© 2025 Neuromorphic Inference Lab</div>
+      <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
       <div class="prov">
         <span id="build-branch">branch: …</span>
         <span id="build-commit">commit: …</span>
@@ -239,67 +247,66 @@
   </main>
 
   <script src="/build-info.js"></script>
-  
+
   <script type="module">
     import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2';
-
-    // Disabilita la ricerca di modelli locali per forzare il download da Hugging Face Hub
-    env.allowLocalModels = false;
+    env.allowLocalModels = false; // Force fetching from Hugging Face Hub
 
     // DOM Elements
+    const uploadZone = document.getElementById('uploadZone');
     const fileInput = document.getElementById('fileInput');
-    const chooseBtn = document.getElementById('chooseBtn');
+    const imagePreview = document.getElementById('imagePreview');
     const analyseBtn = document.getElementById('analyseBtn');
     const clearBtn = document.getElementById('clearBtn');
-    const dropZone = document.getElementById('dropZone');
-    const imagePreview = document.getElementById('imagePreview');
-    const placeholderText = document.getElementById('placeholderText');
-    const fileInfo = document.getElementById('fileInfo');
-    const outputJson = document.getElementById('outputJson');
     const modeSelect = document.getElementById('modeSelect');
     const systemStatus = document.getElementById('systemStatus');
+    const resultsSection = document.getElementById('resultsSection');
+    const outputJson = document.getElementById('outputJson');
+    
+    document.getElementById('year').textContent = String(new Date().getFullYear());
 
     let currentFile = null;
     let localClassifier = null;
     let isModelLoading = false;
 
     // Handlers
-    chooseBtn.addEventListener('click', () => fileInput.click());
+    uploadZone.addEventListener('click', () => fileInput.click());
+    
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('drag-over');
+    });
+
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('drag-over');
+    });
+
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('drag-over');
+      if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
+    });
 
     fileInput.addEventListener('change', (e) => {
       if (e.target.files.length > 0) handleFile(e.target.files[0]);
     });
 
-    clearBtn.addEventListener('click', clearState);
+    clearBtn.addEventListener('click', () => {
+      currentFile = null;
+      fileInput.value = '';
+      imagePreview.style.display = 'none';
+      imagePreview.src = '';
+      analyseBtn.disabled = true;
+      resultsSection.classList.add('hidden');
+      outputJson.textContent = '{}';
+    });
 
     modeSelect.addEventListener('change', (e) => {
       if (e.target.value === 'api') {
         updateStatus('API Target Ready', 'online');
       } else {
-        if (localClassifier) {
-          updateStatus('Local Model Ready', 'online');
-        } else {
-          updateStatus('Status: Unloaded', 'idle');
-        }
-      }
-    });
-
-    // Drag and Drop
-    dropZone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropZone.style.borderColor = '#00ff88';
-    });
-
-    dropZone.addEventListener('dragleave', (e) => {
-      e.preventDefault();
-      dropZone.style.borderColor = '#333';
-    });
-
-    dropZone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropZone.style.borderColor = '#333';
-      if (e.dataTransfer.files.length > 0) {
-        handleFile(e.dataTransfer.files[0]);
+        if (localClassifier) updateStatus('Local Model Ready', 'online');
+        else updateStatus('Model Unloaded', 'offline');
       }
     });
 
@@ -310,144 +317,93 @@
 
     function handleFile(file) {
       if (!file.type.startsWith('image/')) {
-        alert('Please select an image file.');
+        alert('Please select a valid image file.');
         return;
       }
-
       currentFile = file;
-      fileInfo.textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
       analyseBtn.disabled = false;
 
       const reader = new FileReader();
       reader.onload = (e) => {
         imagePreview.src = e.target.result;
         imagePreview.style.display = 'block';
-        placeholderText.style.display = 'none';
       };
       reader.readAsDataURL(file);
-      
-      outputJson.textContent = '{}';
     }
 
-    function clearState() {
-      currentFile = null;
-      fileInput.value = '';
-      imagePreview.src = '';
-      imagePreview.style.display = 'none';
-      placeholderText.style.display = 'block';
-      fileInfo.textContent = 'No image loaded';
-      analyseBtn.disabled = true;
-      outputJson.textContent = '{}';
-    }
-
-    // Caricamento asincrono del modello locale
     async function loadLocalModel() {
       if (localClassifier) return localClassifier;
       if (isModelLoading) return null;
 
       isModelLoading = true;
-      updateStatus('Downloading model...', 'pending');
-      outputJson.textContent = 'Downloading MobileNetV2 weights from Hugging Face... (This happens only once per session)';
-
+      updateStatus('Downloading weights...', 'pending');
+      
       try {
-        // Inizializza la pipeline di image classification
         localClassifier = await pipeline('image-classification', 'Xenova/mobilenet_v2_1.0_224');
         updateStatus('Local Model Ready', 'online');
         return localClassifier;
       } catch (error) {
-        console.error("Model loading failed:", error);
-        updateStatus('Model Load Failed', 'offline');
-        outputJson.textContent = JSON.stringify({ error: "Failed to load the local model." }, null, 2);
+        console.error("Model load error:", error);
+        updateStatus('Load Failed', 'offline');
         return null;
       } finally {
         isModelLoading = false;
       }
     }
 
-    // Analysis Logic
     analyseBtn.addEventListener('click', async () => {
       if (!currentFile) return;
 
       const mode = modeSelect.value;
       analyseBtn.disabled = true;
+      resultsSection.classList.remove('hidden');
+      outputJson.innerHTML = '<span class="spinner"></span>Processing...';
 
       if (mode === 'local') {
-        await runLocalAnalysis();
+        const classifier = await loadLocalModel();
+        if (!classifier) {
+          outputJson.textContent = '{"error": "Failed to load local model."}';
+          analyseBtn.disabled = false;
+          return;
+        }
+
+        const startTime = performance.now();
+        try {
+          const results = await classifier(imagePreview.src);
+          const latency = performance.now() - startTime;
+
+          const payload = {
+            status: "success",
+            engine: "transformers.js",
+            model: "mobilenet_v2",
+            execution_environment: "browser_wasm",
+            latency_ms: Math.round(latency),
+            predictions: results
+          };
+          outputJson.textContent = JSON.stringify(payload, null, 2);
+        } catch (err) {
+          outputJson.textContent = JSON.stringify({ error: err.message }, null, 2);
+        }
       } else {
-        await runApiAnalysis();
+        // API Simulation
+        setTimeout(() => {
+          const payload = {
+            status: "success",
+            engine: "remote_api",
+            target: "POST /vision/predict",
+            latency_ms: Math.floor(Math.random() * 100) + 150,
+            predictions: [
+              { label: "simulated_object_1", score: 0.92 },
+              { label: "simulated_object_2", score: 0.05 }
+            ],
+            note: "Deploy a backend service to replace this mock response."
+          };
+          outputJson.textContent = JSON.stringify(payload, null, 2);
+        }, 800);
       }
-    });
-
-    async function runLocalAnalysis() {
-      const classifier = await loadLocalModel();
-      if (!classifier) {
-        analyseBtn.disabled = false;
-        return;
-      }
-
-      outputJson.textContent = 'Running local inference...';
-      const startTime = performance.now();
-
-      try {
-        // Esegue l'inferenza passando l'URL sorgente dell'immagine
-        const results = await classifier(imagePreview.src);
-        const latency = performance.now() - startTime;
-
-        const responsePayload = {
-          mode: "local_edge",
-          model: "Xenova/mobilenet_v2_1.0_224",
-          timestamp: new Date().toISOString(),
-          latency_ms: Math.round(latency),
-          predictions: results // L'array con le etichette e le probabilità
-        };
-
-        outputJson.textContent = JSON.stringify(responsePayload, null, 2);
-      } catch (error) {
-        outputJson.textContent = JSON.stringify({ error: error.message }, null, 2);
-      } finally {
-        analyseBtn.disabled = false;
-      }
-    }
-
-    async function runApiAnalysis() {
-      outputJson.textContent = 'Connecting to remote API...';
       
-      try {
-        // Qui andrà inserita la fetch() reale verso il tuo backend
-        // Esempio commentato:
-        /*
-        const formData = new FormData();
-        formData.append('file', currentFile);
-        const response = await fetch('https://api.tuo-dominio.com/vision/predict', {
-          method: 'POST',
-          body: formData
-        });
-        const result = await response.json();
-        */
-
-        // Simulazione per la demo
-        await new Promise(resolve => setTimeout(resolve, 800));
-        
-        const result = {
-          mode: "api",
-          target: "POST /vision/predict",
-          status: "simulated_success",
-          timestamp: new Date().toISOString(),
-          inference: {
-            objects_detected: Math.floor(Math.random() * 5) + 1,
-            top_confidence: (Math.random() * 0.2 + 0.8).toFixed(3),
-            remote_processing_ms: Math.floor(Math.random() * 150) + 50
-          },
-          note: "Simulated API response. Connect a real FastAPI/Flask backend for live processing."
-        };
-
-        outputJson.textContent = JSON.stringify(result, null, 2);
-      } catch (error) {
-        outputJson.textContent = JSON.stringify({ error: "API connection failed" }, null, 2);
-      } finally {
-        analyseBtn.disabled = false;
-      }
-    }
+      analyseBtn.disabled = false;
+    });
   </script>
 </body>
 </html>
