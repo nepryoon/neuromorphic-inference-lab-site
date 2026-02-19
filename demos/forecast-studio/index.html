@@ -103,9 +103,10 @@
             <label class="small" for="mode">Baseline method</label>
             <select id="mode" class="select">
               <option value="naive">Naïve (last value)</option>
-              <option value="ma" selected>Moving average (window=3)</option>
+              <option value="ma">Moving average (window=3)</option>
               <option value="linear">Linear trend</option>
               <option value="holt">Exponential smoothing (Holt)</option>
+              <option value="seasonal" selected>Seasonal decomposition</option>
             </select>
 
             <div style="height:14px"></div>
@@ -119,7 +120,7 @@
             <div class="panel">
               <div class="small">Output</div>
               <div id="out" style="margin-top:8px; line-height:1.6; color: rgba(234,240,255,.86);">
-                Horizon: 12 · Baseline: Naïve · MAE (demo split): —
+                Horizon: 12 · Baseline: Seasonal decomposition · MAE (demo split): —
               </div>
             </div>
           </div>
@@ -161,90 +162,120 @@
     const N = 42;
     const series = Array.from({length: N}, (_, i) => {
       const t = i;
-      const trend = 0.55 * t;
+      const trend  = 0.55 * t;
       const season = 6 * Math.sin((2 * Math.PI * t) / 12);
-      const noise = (Math.sin(t * 1.7) + Math.cos(t * 0.9)) * 0.9;
+      const noise  = (Math.sin(t * 1.7) + Math.cos(t * 0.9)) * 0.9;
       return Math.round((80 + trend + season + noise) * 10) / 10;
     });
 
-    const dump = document.getElementById("dataDump");
-    dump.textContent = JSON.stringify(series, null, 2);
+    document.getElementById("dataDump").textContent = JSON.stringify(series, null, 2);
 
     const svg = document.getElementById("chart");
 
-    function movingAverage(arr, w){
-      const out = [];
-      for(let i=0;i<arr.length;i++){
-        const a = Math.max(0, i - w + 1);
-        const slice = arr.slice(a, i+1);
-        const m = slice.reduce((s,x)=>s+x,0) / slice.length;
-        out.push(m);
-      }
-      return out;
-    }
-
-    function forecast(arr, horizon, mode){
+    function forecast(arr, horizon, mode) {
       const n = arr.length;
 
-      if(mode === "naive"){
+      if (mode === "naive") {
         // Naïve with drift: extends the overall trend from first to last point
-        const drift = (arr[n-1] - arr[0]) / (n - 1);
+        const drift = (arr[n - 1] - arr[0]) / (n - 1);
         return Array.from({length: horizon}, (_, i) =>
-          Math.round((arr[n-1] + drift * (i+1)) * 10) / 10
+          Math.round((arr[n - 1] + drift * (i + 1)) * 10) / 10
         );
       }
 
-      if(mode === "ma"){
-        // Moving average with trend estimated from the last window
+      if (mode === "ma") {
+        // Moving average with trend estimated from last window
         const w = 3;
         const slice = arr.slice(-w);
-        const avg = slice.reduce((s,x)=>s+x,0) / slice.length;
-        const trend = (arr[n-1] - arr[n-w]) / (w - 1);
+        const avg = slice.reduce((s, x) => s + x, 0) / slice.length;
+        const trend = (arr[n - 1] - arr[n - w]) / (w - 1);
         return Array.from({length: horizon}, (_, i) =>
-          Math.round((avg + trend * (i+1)) * 10) / 10
+          Math.round((avg + trend * (i + 1)) * 10) / 10
         );
       }
 
-      if(mode === "linear"){
+      if (mode === "linear") {
         // Ordinary least squares on the full series
-        const xs = Array.from({length: n}, (_, i) => i);
-        const mx = xs.reduce((s,x)=>s+x,0) / n;
-        const my = arr.reduce((s,x)=>s+x,0) / n;
-        const num = xs.reduce((s,x,i)=>s+(x-mx)*(arr[i]-my),0);
-        const den = xs.reduce((s,x)=>s+(x-mx)**2,0);
-        const slope = den ? num/den : 0;
+        const xs  = Array.from({length: n}, (_, i) => i);
+        const mx  = xs.reduce((s, x) => s + x, 0) / n;
+        const my  = arr.reduce((s, x) => s + x, 0) / n;
+        const num = xs.reduce((s, x, i) => s + (x - mx) * (arr[i] - my), 0);
+        const den = xs.reduce((s, x) => s + (x - mx) ** 2, 0);
+        const slope     = den ? num / den : 0;
         const intercept = my - slope * mx;
         return Array.from({length: horizon}, (_, i) =>
           Math.round((intercept + slope * (n + i)) * 10) / 10
         );
       }
 
-      if(mode === "holt"){
+      if (mode === "holt") {
         // Holt double exponential smoothing (level + trend)
         const alpha = 0.35, beta = 0.25;
         let l = arr[0];
         let b = arr[1] - arr[0];
-        for(let i=1; i<n; i++){
+        for (let i = 1; i < n; i++) {
           const lPrev = l;
           l = alpha * arr[i] + (1 - alpha) * (l + b);
-          b = beta * (l - lPrev) + (1 - beta) * b;
+          b = beta  * (l - lPrev) + (1 - beta) * b;
         }
         return Array.from({length: horizon}, (_, i) =>
-          Math.round((l + b * (i+1)) * 10) / 10
+          Math.round((l + b * (i + 1)) * 10) / 10
         );
       }
 
-      return Array.from({length: horizon}, ()=> arr[n-1]);
+      if (mode === "seasonal") {
+        const period = 12;
+        const half   = Math.floor(period / 2);
+
+        // Step 1: centered moving average to extract trend
+        const trendArr = new Array(n).fill(null);
+        for (let i = half; i < n - half; i++) {
+          const slice = arr.slice(i - half, i + half + 1);
+          trendArr[i] = slice.reduce((s, x) => s + x, 0) / slice.length;
+        }
+
+        // Step 2: seasonal indices — average detrended residual per cycle position
+        const buckets = Array.from({length: period}, () => []);
+        for (let i = 0; i < n; i++) {
+          if (trendArr[i] !== null) {
+            buckets[i % period].push(arr[i] - trendArr[i]);
+          }
+        }
+        const seasonal = buckets.map(b =>
+          b.length ? b.reduce((s, x) => s + x, 0) / b.length : 0
+        );
+
+        // Step 3: linear regression on valid trend values to extrapolate
+        const tValid = trendArr.filter(v => v !== null);
+        const tIdx   = trendArr.map((v, i) => v !== null ? i : null).filter(v => v !== null);
+        const tm  = tIdx.reduce((s, x) => s + x, 0) / tIdx.length;
+        const vm  = tValid.reduce((s, x) => s + x, 0) / tValid.length;
+        const num = tIdx.reduce((s, x, i) => s + (x - tm) * (tValid[i] - vm), 0);
+        const den = tIdx.reduce((s, x) => s + (x - tm) ** 2, 0);
+        const slope     = den ? num / den : 0;
+        const intercept = vm - slope * tm;
+
+        // Step 4: forecast = extrapolated trend + seasonal pattern
+        return Array.from({length: horizon}, (_, i) => {
+          const futureIdx = n + i;
+          const trendVal  = intercept + slope * futureIdx;
+          const seasVal   = seasonal[futureIdx % period];
+          return Math.round((trendVal + seasVal) * 10) / 10;
+        });
+      }
+
+      // fallback
+      return Array.from({length: horizon}, () => arr[n - 1]);
     }
 
-    function mae(yTrue, yPred){
+    function mae(yTrue, yPred) {
       const n = Math.min(yTrue.length, yPred.length);
       let s = 0;
-      for(let i=0;i<n;i++) s += Math.abs(yTrue[i] - yPred[i]);
-      return n ? (s / n) : 0;
+      for (let i = 0; i < n; i++) s += Math.abs(yTrue[i] - yPred[i]);
+      return n ? s / n : 0;
     }
 
-    function renderChart(obs, pred){
+    function renderChart(obs, pred) {
       const W = 700, H = 260;
       const padL = 40, padR = 16, padT = 16, padB = 28;
 
@@ -252,14 +283,13 @@
       const min = Math.min(...all) - 3;
       const max = Math.max(...all) + 3;
 
-      const xObs = (i) => padL + (i * (W - padL - padR)) / (obs.length + pred.length - 1);
-      const xPred = (i) => xObs(obs.length - 1 + i);
+      const totalPts = obs.length + (pred.length > 0 ? pred.length : 1);
+      const xObs  = i => padL + (i  * (W - padL - padR)) / (totalPts - 1);
+      const xPred = i => xObs(obs.length - 1 + i);
+      const y     = v => padT + (H - padT - padB) * (1 - (v - min) / (max - min));
+      const path  = pts => pts.map((p, i) => `${i === 0 ? "M" : "L"} ${p[0].toFixed(2)} ${p[1].toFixed(2)}`).join(" ");
 
-      const y = (v) => padT + (H - padT - padB) * (1 - (v - min) / (max - min));
-
-      const path = (pts) => pts.map((p, i) => `${i===0 ? "M" : "L"} ${p[0].toFixed(2)} ${p[1].toFixed(2)}`).join(" ");
-
-      const obsPts = obs.map((v, i) => [xObs(i), y(v)]);
+      const obsPts  = obs.map((v, i) => [xObs(i), y(v)]);
       const predPts = pred.map((v, i) => [xPred(i), y(v)]);
 
       const gridLines = 4;
@@ -269,68 +299,65 @@
       }).join("");
 
       const axis = `
-        <line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="rgba(255,255,255,.14)" />
-        <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${H-padB}" stroke="rgba(255,255,255,.14)" />
+        <line x1="${padL}" y1="${H - padB}" x2="${W - padR}" y2="${H - padB}" stroke="rgba(255,255,255,.14)" />
+        <line x1="${padL}" y1="${padT}"     x2="${padL}"     y2="${H - padB}" stroke="rgba(255,255,255,.14)" />
       `;
 
-      const obsPath = `<path d="${path(obsPts)}" fill="none" stroke="rgba(110,231,255,.90)" stroke-width="2.4" />`;
-      const predPath = pred.length ? `<path d="${path([[obsPts[obsPts.length-1][0], obsPts[obsPts.length-1][1]]].concat(predPts))}"
-        fill="none" stroke="rgba(167,139,250,.92)" stroke-width="2.4" stroke-dasharray="7 7" />` : "";
+      const obsPath  = `<path d="${path(obsPts)}" fill="none" stroke="rgba(110,231,255,.90)" stroke-width="2.4" />`;
+      const predPath = pred.length
+        ? `<path d="${path([[obsPts[obsPts.length - 1][0], obsPts[obsPts.length - 1][1]]].concat(predPts))}"
+             fill="none" stroke="rgba(167,139,250,.92)" stroke-width="2.4" stroke-dasharray="7 7" />`
+        : "";
 
       const legend = `
         <g>
-          <rect x="${padL}" y="${H-22}" width="12" height="3" fill="rgba(110,231,255,.90)"></rect>
-          <text x="${padL+18}" y="${H-18}" fill="rgba(234,240,255,.75)" font-size="12">observed</text>
-          <rect x="${padL+90}" y="${H-22}" width="12" height="3" fill="rgba(167,139,250,.92)"></rect>
-          <text x="${padL+108}" y="${H-18}" fill="rgba(234,240,255,.75)" font-size="12">forecast</text>
+          <rect x="${padL}"       y="${H - 22}" width="12" height="3" fill="rgba(110,231,255,.90)"></rect>
+          <text x="${padL + 18}"  y="${H - 18}" fill="rgba(234,240,255,.75)" font-size="12">observed</text>
+          <rect x="${padL + 90}"  y="${H - 22}" width="12" height="3" fill="rgba(167,139,250,.92)"></rect>
+          <text x="${padL + 108}" y="${H - 18}" fill="rgba(234,240,255,.75)" font-size="12">forecast</text>
         </g>
       `;
 
       svg.innerHTML = `
         <rect x="0" y="0" width="${W}" height="${H}" rx="14" ry="14" fill="rgba(255,255,255,.02)" />
-        ${grid}
-        ${axis}
-        ${obsPath}
-        ${predPath}
-        ${legend}
+        ${grid}${axis}${obsPath}${predPath}${legend}
       `;
     }
 
-    function run(){
+    function run() {
       const horizon = parseInt(document.getElementById("h").value, 10);
-      const mode = document.getElementById("mode").value;
+      const mode    = document.getElementById("mode").value;
 
-      const split = series.length - 8;
-      const train = series.slice(0, split);
-      const test = series.slice(split);
-
+      const split    = series.length - 8;
+      const train    = series.slice(0, split);
+      const test     = series.slice(split);
       const predTest = forecast(train, test.length, mode);
-      const demoMae = mae(test, predTest);
-
-      const pred = forecast(series, horizon, mode);
+      const demoMae  = mae(test, predTest);
+      const pred     = forecast(series, horizon, mode);
 
       renderChart(series, pred);
 
       const labels = {
-        naive:  "Naïve (drift)",
-        ma:     "Moving average (trend)",
-        linear: "Linear trend (OLS)",
-        holt:   "Exponential smoothing (Holt)"
+        naive:    "Naïve (drift)",
+        ma:       "Moving average (trend)",
+        linear:   "Linear trend (OLS)",
+        holt:     "Exponential smoothing (Holt)",
+        seasonal: "Seasonal decomposition"
       };
-      const label = labels[mode] || mode;
       document.getElementById("out").textContent =
-        `Horizon: ${horizon} · Baseline: ${label} · MAE (demo split): ${demoMae.toFixed(2)}`;
+        `Horizon: ${horizon} · Baseline: ${labels[mode] || mode} · MAE (demo split): ${demoMae.toFixed(2)}`;
     }
 
     document.getElementById("run").addEventListener("click", run);
     document.getElementById("reset").addEventListener("click", () => {
-      document.getElementById("h").value = "12";
-      document.getElementById("mode").value = "naive";
+      document.getElementById("h").value    = "12";
+      document.getElementById("mode").value = "seasonal";
       renderChart(series, []);
       document.getElementById("out").textContent =
-        "Horizon: 12 · Baseline: Naïve · MAE (demo split): —";
+        "Horizon: 12 · Baseline: Seasonal decomposition · MAE (demo split): —";
     });
 
+    // initial render
     renderChart(series, []);
   </script>
 
