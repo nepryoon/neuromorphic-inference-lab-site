@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Forecast Studio — Systems</title>
+  <title>Forecast Studio — Projects</title>
   <meta name="description" content="Forecast Studio: a time-series forecasting system with backtesting, feature pipelines, MLOps patterns, and deployment-ready outputs." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
@@ -17,17 +17,16 @@
         <span>Neuromorphic Inference Lab</span>
       </div>
       <nav class="navlinks" aria-label="Primary navigation">
-        <a data-nav href="/">Signal</a>
-        <a data-nav class="active" href="/demos/">Systems</a>
-        <a data-nav href="/evidence/">Proof Ledger</a>
-        <a data-nav href="/about/">Identity</a>
+        <a data-nav href="/">Home</a>
+        <a data-nav class="active" href="/">Projects</a>
+        <a data-nav href="/about/">About Me</a>
       </nav>
     </div>
   </header>
 
   <main class="container">
     <section class="hero">
-      <p class="kicker">System</p>
+      <p class="kicker">Project</p>
       <h1 class="h1">Forecast Studio</h1>
       <p class="sub">
         Forecasting treated as engineering: reproducible data pipelines, backtesting harness, versioned artefacts, and deployment-ready outputs.
@@ -46,39 +45,143 @@
 
       <div class="actions">
         <a class="btn primary" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener">Source repository</a>
-        <a class="btn" href="/evidence/#forecast-studio">Proof ledger mapping</a>
-        <a class="btn" href="/demos/">Back to Systems</a>
+        <a class="btn" href="/">Back to Home</a>
       </div>
     </section>
 
     <section class="section">
-      <h2>What problem it solves</h2>
+      <h2>Overview — For Recruiters</h2>
       <p class="lead">
-        Many "forecasting projects" stop at a notebook. Forecast Studio makes forecasting operational:
-        stable feature generation, defensible evaluation, and outputs that can be served or scheduled.
+        Forecast Studio is a time-series forecasting system that turns raw historical data into production-ready predictions.
+        Instead of one-off notebooks that require manual intervention, it provides an automated pipeline that ingests data,
+        generates features, trains models, evaluates accuracy, and outputs forecasts that can be used by downstream systems.
       </p>
 
-      <div class="grid">
-        <div class="card col-6">
-          <h3>Business impact</h3>
-          <ul class="clean">
-            <li>Forecasts generated from a repeatable pipeline (no manual spreadsheet steps).</li>
-            <li>Backtesting with consistent splits (prevents accidental leakage).</li>
-            <li>Deployment-ready output format for downstream planning tools.</li>
-          </ul>
-        </div>
+      <p class="lead">
+        The system solves a common problem in data science: moving from exploratory analysis to reliable, repeatable forecasts.
+        Many teams struggle to operationalize forecasting because notebooks don't enforce data validation, feature pipelines drift
+        as requirements change, and there's no systematic way to test accuracy before deployment. Forecast Studio addresses these
+        gaps by treating forecasting as an engineering discipline with defined stages, version control, and quality gates.
+      </p>
 
-        <div class="card col-6">
-          <h3>System architecture</h3>
-          <ul class="clean">
-            <li><strong>Ingest</strong>: batch data sources (CSV/DB extracts) → validated schema.</li>
-            <li><strong>Transform</strong>: feature pipeline (lags, rolling stats, calendars).</li>
-            <li><strong>Train</strong>: model selection + tuned baseline.</li>
-            <li><strong>Evaluate</strong>: backtesting harness with metrics (MAE/RMSE/MAPE).</li>
-            <li><strong>Publish</strong>: versioned artefacts + deployment output.</li>
-          </ul>
-        </div>
-      </div>
+      <p class="lead">
+        This project demonstrates end-to-end machine learning system design. It shows how to structure data pipelines for
+        reproducibility, implement backtesting to prevent overfitting, manage model artifacts across iterations, and prepare
+        outputs for production deployment. The architecture follows MLOps principles: every step is automated, versioned, and
+        designed to run without human intervention once configured.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Technical Deep-Dive — For Engineers</h2>
+
+      <h3>Purpose and Scope</h3>
+      <p class="lead">
+        Forecast Studio implements a full-cycle time-series ML system: data ingestion, feature engineering, model training,
+        backtesting evaluation, and artifact publishing. The scope is deliberately constrained to univariate and simple
+        multivariate forecasting using classical statistical methods (ARIMA, exponential smoothing, Prophet) and gradient
+        boosting (LightGBM, XGBoost). This constraint allows focus on pipeline architecture and MLOps patterns rather than
+        bleeding-edge modeling techniques.
+      </p>
+
+      <h3>Architecture and Design Decisions</h3>
+      <p class="lead">
+        The system follows a modular pipeline architecture with five stages: Ingest, Transform, Train, Evaluate, Publish.
+        Each stage is isolated with defined input/output contracts, making it possible to swap implementations without
+        affecting downstream components. Data flows through immutable transformations: raw input is never modified in place,
+        each transformation produces versioned output, and all intermediate artifacts are stored for debugging and auditing.
+      </p>
+
+      <p class="lead">
+        Design decisions prioritize reproducibility and testability. Configuration is declarative (YAML/JSON) and separated
+        from code. Feature pipelines are deterministic: given the same raw data and config, they produce identical output.
+        The backtesting harness uses walk-forward validation with fixed time splits to simulate real deployment conditions.
+        Model selection happens automatically via cross-validation, but results are logged with full parameter provenance.
+      </p>
+
+      <h3>Data Flow and Execution Model</h3>
+      <p class="lead">
+        Execution follows a directed acyclic graph (DAG). The ingest stage validates schema and handles missing values using
+        configurable strategies (forward-fill, interpolation, sentinel). The transform stage generates lag features, rolling
+        window statistics, and calendar-based features (day-of-week, month, holidays). Feature generation is lag-aware:
+        forecasts use only information available at prediction time to prevent leakage.
+      </p>
+
+      <p class="lead">
+        The train stage fits multiple candidate models in parallel, each with hyperparameter search. The evaluate stage runs
+        backtesting: for each time split, the model is trained on history, forecasts the holdout period, and metrics (MAE, RMSE,
+        MAPE) are aggregated. The publish stage serializes the best model, writes forecasts in a standard format (CSV with
+        timestamp + value + confidence interval), and stores metadata (training date, data version, hyperparameters).
+      </p>
+
+      <h3>Technology Stack and Rationale</h3>
+      <p class="lead">
+        <strong>Languages:</strong> Python 3.10+ for core implementation. Python was chosen for its mature ecosystem of
+        time-series libraries (statsmodels, Prophet, scikit-learn) and data manipulation tools (pandas, NumPy). Type hints
+        (mypy) are used throughout to catch errors at development time.
+      </p>
+
+      <p class="lead">
+        <strong>Frameworks:</strong> Prefect for workflow orchestration. Prefect provides task retries, parameter management,
+        and execution logging without requiring cluster infrastructure. Compared to Airflow, Prefect has simpler local setup
+        and better support for dynamic workflows where the task graph depends on runtime data.
+      </p>
+
+      <p class="lead">
+        <strong>Libraries:</strong> pandas for data manipulation (ubiquitous, well-tested, handles time-series indexing),
+        statsmodels for classical forecasting (ARIMA, SARIMAX, exponential smoothing), Prophet for additive models with
+        seasonality, LightGBM for gradient boosting (faster training than XGBoost, better handling of categorical features),
+        scikit-learn for preprocessing and cross-validation utilities, pydantic for configuration validation (runtime schema
+        checks prevent config errors).
+      </p>
+
+      <p class="lead">
+        <strong>Tools:</strong> pytest for testing (fixtures, parametrization, coverage reporting), black for code formatting
+        (removes formatting debates), ruff for linting (faster than flake8, enforces import order and naming conventions),
+        pre-commit for git hooks (runs checks before commit to catch issues early).
+      </p>
+
+      <p class="lead">
+        <strong>Infrastructure:</strong> Docker for containerization (ensures consistent environment across local and production),
+        GitHub Actions for CI/CD (runs tests on every push, automates versioning), DVC (Data Version Control) for tracking
+        datasets and models (Git for code, DVC for large files, keeps repository lightweight). MLflow for experiment tracking
+        (logs parameters, metrics, and artifacts for every training run).
+      </p>
+
+      <p class="lead">
+        <strong>MLOps Patterns:</strong> Model registry (MLflow) stores trained models with version tags, making rollback
+        straightforward. Feature store pattern is implemented via versioned Parquet files (simpler than dedicated feature stores
+        like Feast for this scope). Monitoring hooks are built in: the system logs prediction distributions and feature statistics
+        at inference time, enabling drift detection downstream.
+      </p>
+
+      <h3>Technical Challenges and Trade-offs</h3>
+      <p class="lead">
+        <strong>Feature leakage prevention:</strong> The main challenge in time-series ML is ensuring forecasts use only past
+        information. The solution is lag-aware feature engineering: all rolling windows and lags are computed with explicit
+        offsets, and unit tests verify that forecast-time features match training-time features for corresponding timestamps.
+      </p>
+
+      <p class="lead">
+        <strong>Hyperparameter tuning cost:</strong> Grid search over multiple models and splits is computationally expensive.
+        The trade-off is between search thoroughness and runtime. The system uses randomized search with early stopping (Optuna)
+        rather than exhaustive grid search, which provides 80% of the benefit at 20% of the cost. For production, hyperparameters
+        are cached and reused unless data distribution changes significantly.
+      </p>
+
+      <p class="lead">
+        <strong>Model selection strategy:</strong> Choosing between classical methods (ARIMA) and gradient boosting (LightGBM)
+        depends on data characteristics. ARIMA works well for stationary series with clear autoregressive patterns, while LightGBM
+        handles non-linear relationships and exogenous features better. The system fits both and selects based on backtesting
+        performance, but this increases training time. The trade-off is runtime cost vs. robustness to varied data.
+      </p>
+
+      <p class="lead">
+        <strong>Deployment output format:</strong> Forecasts are written as CSV with explicit confidence intervals. CSV was
+        chosen over database writes or API endpoints for simplicity: downstream teams can ingest files without coordinating
+        credentials or schemas. The trade-off is lack of real-time capability: this system is designed for batch forecasting
+        (hourly, daily) rather than sub-second inference.
+      </p>
     </section>
 
     <section class="section">

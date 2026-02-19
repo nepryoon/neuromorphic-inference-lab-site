@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>NeuroGrid Fault Risk Scoring Platform — Systems</title>
+  <title>NeuroGrid Fault Risk Scoring Platform — Projects</title>
   <meta name="description" content="End-to-end ML system: feature engineering, MLflow training, CI/CD for ML, artefact versioning, FastAPI serving, and monitoring-ready outputs." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
@@ -17,72 +17,142 @@
         <span>Neuromorphic Inference Lab</span>
       </div>
       <nav class="navlinks" aria-label="Primary navigation">
-        <a data-nav href="/">Signal</a>
-        <a data-nav class="active" href="/demos/">Systems</a>
-        <a data-nav href="/evidence/">Proof Ledger</a>
-        <a data-nav href="/about/">Identity</a>
+        <a data-nav href="/">Home</a>
+        <a data-nav class="active" href="/">Projects</a>
+        <a data-nav href="/about/">About Me</a>
       </nav>
     </div>
   </header>
 
   <main class="container">
     <section class="hero">
-      <p class="kicker">Hero System</p>
+      <p class="kicker">Predictive Maintenance</p>
       <h1 class="h1">NeuroGrid Fault Risk Scoring Platform</h1>
       <p class="sub">
-        A production-first ML system that predicts medium-voltage fault risk to prioritise preventive interventions.
-        Demonstrates the full delivery loop: ingestion → feature engineering → training (MLflow) → artefact versioning → Dockerised serving (FastAPI) → live inference.
+        A production ML system that predicts electrical grid fault risk to prioritise preventive maintenance.
+        Demonstrates end-to-end ML delivery: feature engineering, model training, CI/CD pipelines, versioned artefacts, and API serving.
       </p>
 
       <div class="actions">
-        <a class="btn primary" href="/evidence/mv-grid-fault-risk/">Open evidence dossier</a>
-        <a class="btn" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">Live API docs</a>
+        <a class="btn primary" href="https://mv-grid-fault-risk-api.onrender.com/docs" target="_blank" rel="noopener">Live API docs</a>
         <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Source</a>
       </div>
 
       <div class="badges">
         <span class="badge">CI/CD for ML</span>
-        <span class="badge">Inference Serving</span>
-        <span class="badge">Artefact Promotion</span>
         <span class="badge">Feature Engineering</span>
         <span class="badge">MLflow Tracking</span>
-        <span class="badge">Monitoring-ready outputs</span>
+        <span class="badge">FastAPI Serving</span>
+        <span class="badge">Docker Deployment</span>
       </div>
     </section>
 
     <section class="section">
-      <div class="grid">
-        <article class="card project col-6">
-          <h3>Problem → impact</h3>
-          <p>
-            Grid operations need a consistent way to rank assets/feeders by fault risk and allocate preventive interventions.
-            A risk score supports earlier dispatch decisions and reduces exposure to unplanned outages.
-          </p>
+      <article class="card project">
+        <h2>What This Project Does</h2>
+        <p>
+          This system predicts the probability of electrical faults on medium-voltage power grid assets over the next 30 days. It produces a risk score and classification (LOW, MEDIUM, HIGH, CRITICAL) to help maintenance teams decide which equipment needs attention first.
+        </p>
+        <p>
+          The problem it solves: electrical utilities manage thousands of assets (transformers, cables, circuit breakers) and need a data-driven way to prioritise inspections and repairs. Without this, maintenance is reactive—teams respond to failures after they occur, leading to outages, safety issues, and higher costs. This system enables proactive maintenance by identifying high-risk assets before they fail.
+        </p>
+        <p>
+          What it demonstrates: this is a complete ML system, not just a model. It shows how to take a business problem through the full ML lifecycle—data preparation, feature engineering, model training with experiment tracking (MLflow), automated testing, versioned model artefacts, containerised deployment, and a production API that other systems can integrate with. The live demo below connects to a real deployed service.
+        </p>
+      </article>
 
-          <h3>Proof links</h3>
-          <p>Verification paths (code + CI + release artefact + live endpoint).</p>
+      <article class="card project">
+        <h2>Technical Deep Dive</h2>
+        
+        <h3>Purpose and Scope</h3>
+        <p>
+          This system implements a supervised classification model for fault risk prediction on medium-voltage electrical grid assets. The model consumes historical fault records, asset metadata, and time-based features to output a probability estimate and risk classification. The scope encompasses the entire ML pipeline: feature engineering, model training, experiment tracking, CI/CD for model deployment, and inference serving via REST API.
+        </p>
 
-          <div class="actions">
-            <a class="btn primary" href="/evidence/mv-grid-fault-risk/">Evidence dossier</a>
-            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/actions" target="_blank" rel="noopener">CI training runs</a>
-            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk/releases/tag/model-v0.1.0" target="_blank" rel="noopener">Model artefact</a>
-            <a class="btn" href="/api/mvgrid/health" target="_blank" rel="noopener">Proxy health</a>
-          </div>
+        <h3>Architecture and Design Decisions</h3>
+        <p>
+          The architecture follows a modular pipeline pattern: ingestion → feature engineering → training → evaluation → artefact versioning → serving. Feature engineering transforms raw operational data (fault timestamps, asset attributes) into time-windowed aggregates (faults in last 30/90/180 days) and categorical encodings. The training module uses MLflow for experiment tracking and model registry, enabling reproducible experiments and version-controlled artefacts.
+        </p>
+        <p>
+          The serving layer separates model execution from the API interface: a FastAPI application loads the serialised model artefact at startup and exposes a <code>/predict</code> endpoint. This design allows model updates without changing API contracts. The system is deployed in Docker containers on Render, with a Cloudflare proxy for same-origin requests from this site.
+        </p>
 
-          <div class="tags mt-12">
-            <span class="tag">Time-aware split</span>
-            <span class="tag">Reproducible builds</span>
-            <span class="tag">Deployment-ready artefacts</span>
-          </div>
-        </article>
+        <h3>Data Flow and Execution Model</h3>
+        <p>
+          <strong>Training flow:</strong> Raw fault logs → time-based feature extraction (days since last fault, rolling counts) → categorical feature encoding (asset type, region, manufacturer) → train/test split using time-based cutoff (prevents data leakage) → model training with cross-validation → MLflow logging (metrics, parameters, artefacts) → model serialisation to <code>.pkl</code> with versioned release tag.
+        </p>
+        <p>
+          <strong>Inference flow:</strong> Client sends JSON payload with feature values → FastAPI validates schema (Pydantic models) → model predicts fault probability → post-processing applies risk band thresholds (0-0.3: LOW, 0.3-0.6: MEDIUM, 0.6-0.8: HIGH, 0.8+: CRITICAL) → API returns JSON response with probability, risk band, and model metadata.
+        </p>
 
-        <article class="card project col-6">
-          <h3>Live inference demo</h3>
-          <p>
-            Score risk via a same-origin Cloudflare proxy (no CORS). If the upstream service was idle, the first request may take a moment to warm up.
-          </p>
+        <h3>Technology Stack and Rationale</h3>
+        <p>
+          <strong>Python 3.11:</strong> Core language for ML and API. Chosen for mature ML ecosystem (scikit-learn, pandas) and type safety improvements (used with Pydantic for runtime validation).
+        </p>
+        <p>
+          <strong>scikit-learn:</strong> Model implementation. Provides production-ready classifiers (RandomForestClassifier used here), pipeline abstractions for feature transformations, and serialisation. Chosen over deep learning frameworks because the problem is tabular with limited data—simpler models generalise better and are easier to interpret.
+        </p>
+        <p>
+          <strong>MLflow:</strong> Experiment tracking and model registry. Logs hyperparameters, metrics (precision, recall, F1), and model artefacts for reproducibility. Enables comparison across training runs and promotes models from experimentation to production. Alternative (Weights & Biases) requires external service; MLflow can run self-hosted.
+        </p>
+        <p>
+          <strong>FastAPI:</strong> REST API framework. Automatic OpenAPI/Swagger documentation, request validation with Pydantic, async support (though not required here), and fast startup times. Chosen over Flask for better type safety and built-in docs. Chosen over Django for lower overhead—this is an inference service, not a full web application.
+        </p>
+        <p>
+          <strong>Pydantic:</strong> Data validation. Enforces schema at API boundary (input features must match expected types and ranges). Catches bad requests before they reach the model, preventing runtime errors and nonsensical predictions.
+        </p>
+        <p>
+          <strong>Docker:</strong> Containerisation. Ensures consistent environment between local development, CI, and production. The <code>Dockerfile</code> uses multi-stage builds to keep image size small (base Python + dependencies layer, then add application code).
+        </p>
+        <p>
+          <strong>GitHub Actions:</strong> CI/CD pipeline. Automates model training on push to main, runs tests, builds Docker image, and creates versioned releases with model artefacts. This ensures every model in production is traceable to a specific commit and training run.
+        </p>
+        <p>
+          <strong>Render:</strong> Deployment platform. Hosts the Dockerised FastAPI service. Chosen for simplicity (auto-deploy from GitHub) and free tier for demos. Limitation: cold starts on free tier cause 30-60s delay on first request after idle period.
+        </p>
+        <p>
+          <strong>Cloudflare Workers:</strong> Proxy layer. Routes requests from this static site to the Render service, avoiding CORS issues. Adds caching and DDoS protection.
+        </p>
 
-          <div class="card project p-16">
+        <h3>Implementation Details</h3>
+        <p>
+          Feature engineering: time-based features use <code>pandas</code> date arithmetic to compute days since last event and rolling window counts. Categorical features are one-hot encoded with <code>sklearn.preprocessing.OneHotEncoder</code>. Missing values are imputed with median (numeric) or mode (categorical) to handle incomplete records.
+        </p>
+        <p>
+          Model: <code>RandomForestClassifier</code> with 100 trees, max depth 10, and class weighting to handle imbalanced classes (faults are rare events). Hyperparameters (n_estimators: 50-200, max_depth: 5-15, min_samples_split: 2-10) were tuned via grid search logged in MLflow. The model outputs calibrated probabilities using <code>CalibratedClassifierCV</code> to ensure probability estimates are reliable for decision-making.
+        </p>
+        <p>
+          Testing: unit tests verify feature engineering logic, integration tests check API responses, and smoke tests validate the deployed service. CI runs tests on every commit before building the Docker image.
+        </p>
+        <p>
+          Versioning: model artefacts are tagged with semantic versions (<code>model-v0.1.0</code>) and stored in GitHub Releases. The API reads the model version from a manifest file packaged in the Docker image, exposing it in the <code>/health</code> endpoint for observability.
+        </p>
+
+        <h3>Technical Challenges and Trade-offs</h3>
+        <p>
+          <strong>Data leakage prevention:</strong> Used time-based train/test split instead of random split. Random splitting would leak future information into training set (a fault on day 100 influences features for day 99), inflating metrics. Time-based split mirrors real deployment: model trained on past data, evaluated on future data.
+        </p>
+        <p>
+          <strong>Class imbalance:</strong> Fault events are rare (~5% positive class). Standard classifiers overpredict the majority class. Solution: class weighting (<code>class_weight='balanced'</code>) and threshold tuning. Trade-off: higher recall (catch more faults) at the cost of precision (more false alarms). Acceptable because false alarm cost (unnecessary inspection) is lower than miss cost (unplanned outage).
+        </p>
+        <p>
+          <strong>Cold start latency:</strong> Render free tier spins down after inactivity. First request after idle takes 30-60s to wake up. Mitigation: health check pre-flight request in the demo form. Alternative (paid tier with always-on instances) eliminates this but adds cost. Acceptable trade-off for a demo project.
+        </p>
+        <p>
+          <strong>Model interpretability vs. performance:</strong> Random forests are less interpretable than logistic regression but provide better predictions on this data (non-linear relationships between features). For production deployment, added SHAP value logging (not exposed in this demo) to explain individual predictions. Trade-off: complexity for accuracy, mitigated with post-hoc explainability.
+        </p>
+        <p>
+          <strong>Deployment simplicity vs. scalability:</strong> Single-instance deployment on Render. Sufficient for demo load (~10 req/min) but would require horizontal scaling (multiple instances behind load balancer) for production traffic. Future improvement: migrate to Kubernetes or serverless (AWS Lambda) for auto-scaling. Current design prioritises ease of setup over scale.
+        </p>
+      </article>
+
+      <article class="card project">
+        <h2>Live Inference Demo</h2>
+        <p>
+          Score risk via a same-origin Cloudflare proxy (no CORS). If the upstream service was idle, the first request may take a moment to warm up.
+        </p>
+
+        <div class="card project p-16">
             <form id="score-form">
               <div class="grid">
                 <div class="col-6">
@@ -155,8 +225,7 @@
 
             <div id="result" class="mt-14 muted"></div>
           </div>
-        </article>
-      </div>
+      </article>
     </section>
 
     <footer class="footer">

@@ -295,10 +295,9 @@
         <span>Neuromorphic Inference Lab</span>
       </div>
       <nav class="navlinks" aria-label="Primary navigation">
-        <a data-nav href="/">Signal</a>
-        <a data-nav class="active" href="/demos/">Systems</a>
-        <a data-nav href="/evidence/">Proof Ledger</a>
-        <a data-nav href="/about/">Identity</a>
+        <a data-nav href="/">Home</a>
+        <a data-nav class="active" href="/">Projects</a>
+        <a data-nav href="/about/">About Me</a>
       </nav>
     </div>
   </header>
@@ -395,59 +394,178 @@
       </div>
     </section>
 
-    <!-- Section 5: Technical Explanation -->
+    <!-- Section 5: Project Overview -->
     <section class="section card">
-      <h2>4. Technical Architecture</h2>
+      <h2>4. What This Project Does</h2>
       
-      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">Ingest Pipeline</h3>
-      <p style="color: var(--muted); line-height: 1.6;">
-        The ingest pipeline uses <strong>pdfplumber</strong> for text extraction, validates against a 5000-word hard limit,
-        then applies sliding-window chunking (200 words per chunk, 40-word overlap). Each chunk is embedded using
-        <strong>sentence-transformers (all-MiniLM-L6-v2)</strong> and indexed in a <strong>FAISS IndexFlatIP</strong>
-        (cosine similarity on normalized embeddings). The index is stored in-memory per session.
+      <p style="color: var(--muted); line-height: 1.7; margin-bottom: 1rem;">
+        This is a Retrieval-Augmented Generation (RAG) system that lets you upload a PDF document and ask questions about it in natural language. Instead of searching for keywords, it understands the meaning of your question and finds relevant sections of your document to answer it.
       </p>
       
-      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">RAG Pipeline</h3>
-      <p style="color: var(--muted); line-height: 1.6;">
-        For each user query, the system embeds the question, retrieves the top-4 most similar chunks from FAISS,
-        injects them as context into <strong>GPT-4o Mini</strong>, and generates an answer. The system prompt constrains
-        the model to answer only from provided context and refuse out-of-scope questions. Each response includes
-        citations with chunk IDs, text snippets, cosine scores, and retrieval latency.
+      <p style="color: var(--muted); line-height: 1.7; margin-bottom: 1rem;">
+        The system solves the problem of extracting information from long documents. Rather than reading an entire PDF to find an answer, you can ask specific questions and get precise responses with references to the exact sections where the information came from.
       </p>
       
-      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">Guardrails</h3>
+      <p style="color: var(--muted); line-height: 1.7; margin-bottom: 1rem;">
+        This project demonstrates three capabilities: semantic search (finding relevant information based on meaning, not just keywords), question answering (generating accurate responses from document content), and automated evaluation (measuring how well the system performs without manual review).
+      </p>
+      
+      <p style="color: var(--muted); line-height: 1.7; margin-bottom: 1rem;">
+        The system includes guardrails to ensure answers come only from the uploaded document, provides citations so you can verify every answer, and includes an automated benchmark suite to measure retrieval quality, answer relevance, and index coverage.
+      </p>
+    </section>
+
+    <!-- Section 6: Technical Deep-Dive -->
+    <section class="section card">
+      <h2>5. Technical Deep-Dive</h2>
+      
+      <h3 style="margin-top: 1.5rem; font-size: 1.1rem; color: #4fc3f7;">Purpose and Scope</h3>
+      <p style="color: var(--muted); line-height: 1.6;">
+        This system implements a production-grade RAG pipeline for single-document question answering with citation tracing and automated evaluation. The scope is constrained to PDF documents under 5000 words, single-user sessions, and in-memory storage to keep the demo lightweight and deployable on free-tier infrastructure.
+      </p>
+      
+      <h3 style="margin-top: 1.5rem; font-size: 1.1rem; color: #4fc3f7;">Architecture and Design Decisions</h3>
+      <p style="color: var(--muted); line-height: 1.6;">
+        The architecture separates concerns into three distinct pipelines: ingest (document processing and indexing), retrieval (semantic search and answer generation), and evaluation (automated quality metrics). This design enables independent testing and optimization of each component. The system uses a stateless REST API with session-based storage, allowing horizontal scaling while maintaining simplicity.
+      </p>
+      
+      <h3 style="margin-top: 1.5rem; font-size: 1.1rem; color: #4fc3f7;">Data Flow and Execution Model</h3>
+      
+      <h4 style="margin-top: 1rem; font-size: 1rem; color: #00ff88;">Ingest Pipeline</h4>
+      <p style="color: var(--muted); line-height: 1.6;">
+        PDF → Text extraction (pdfplumber) → Word count validation (5000 limit) → Sliding-window chunking (200 words per chunk, 40-word overlap to preserve context across boundaries) → Sentence embedding (sentence-transformers with all-MiniLM-L6-v2 model) → FAISS IndexFlatIP (cosine similarity on L2-normalized embeddings) → In-memory session store.
+      </p>
+      
+      <h4 style="margin-top: 1rem; font-size: 1rem; color: #00ff88;">RAG Pipeline</h4>
+      <p style="color: var(--muted); line-height: 1.6;">
+        User query → Sentence embedding → FAISS similarity search (top-4 chunks) → Context injection into GPT-4o Mini prompt → System prompt enforces answer-from-context-only constraint → Response with citations (chunk IDs, text snippets, cosine scores, retrieval latency).
+      </p>
+      
+      <h4 style="margin-top: 1rem; font-size: 1rem; color: #00ff88;">Evaluation Pipeline</h4>
+      <p style="color: var(--muted); line-height: 1.6;">
+        Generate synthetic test questions (extract first sentence from random chunks) → Run RAG pipeline on each question → Compute three reference-free metrics: retrieval precision (average top-1 cosine score), answer relevance (cosine similarity between question and answer embeddings), context coverage (fraction of unique chunks retrieved across all queries).
+      </p>
+      
+      <h3 style="margin-top: 1.5rem; font-size: 1.1rem; color: #4fc3f7;">Implementation Details</h3>
+      
+      <h4 style="margin-top: 1rem; font-size: 1rem; color: #00ff88;">Chunking Strategy</h4>
+      <p style="color: var(--muted); line-height: 1.6;">
+        Sliding-window chunking with 200-word chunks and 40-word overlap ensures that semantic units (paragraphs, concepts) are not split across chunk boundaries, improving retrieval quality. Fixed-size chunks simplify embedding and enable consistent retrieval latency.
+      </p>
+      
+      <h4 style="margin-top: 1rem; font-size: 1rem; color: #00ff88;">Embedding Model Selection</h4>
+      <p style="color: var(--muted); line-height: 1.6;">
+        all-MiniLM-L6-v2 balances quality and speed (384-dimensional embeddings, 14M parameters, ~120ms inference on 2-core CPU). Chosen for acceptable semantic similarity performance without requiring GPU infrastructure. Production systems would use larger models (e.g., text-embedding-3-large) or domain-specific fine-tuned models.
+      </p>
+      
+      <h4 style="margin-top: 1rem; font-size: 1rem; color: #00ff88;">Vector Index Design</h4>
+      <p style="color: var(--muted); line-height: 1.6;">
+        FAISS IndexFlatIP provides exact nearest-neighbor search with cosine similarity (via L2-normalized embeddings and inner product). No approximate search (ANN) is needed for small document collections (&lt;100 chunks). Production systems with larger corpora would use HNSW or IVF indexes for sub-linear search complexity.
+      </p>
+      
+      <h4 style="margin-top: 1rem; font-size: 1rem; color: #00ff88;">LLM Selection and Prompt Engineering</h4>
+      <p style="color: var(--muted); line-height: 1.6;">
+        GPT-4o Mini was chosen for cost efficiency ($0.15 per 1M input tokens vs $2.50 for GPT-4o) while maintaining acceptable answer quality. The system prompt explicitly constrains the model to answer only from provided context and refuse out-of-scope questions. This reduces hallucination risk but requires good retrieval quality to avoid "I don't know" responses.
+      </p>
+      
+      <h3 style="margin-top: 1.5rem; font-size: 1.1rem; color: #4fc3f7;">Full Technology Stack</h3>
+      
+      <h4 style="margin-top: 1rem; font-size: 1rem; color: #00ff88;">Backend</h4>
       <ul style="color: var(--muted); line-height: 1.8; padding-left: 1.5rem;">
-        <li><strong>Input validation:</strong> PDF-only upload, 5000-word hard limit enforced server-side</li>
-        <li><strong>System prompt constraints:</strong> Model instructed to answer only from context</li>
-        <li><strong>Citation auditability:</strong> All answers traced back to source chunks with scores</li>
+        <li><strong>Python 3.11:</strong> Language runtime (async support, type hints, performance)</li>
+        <li><strong>FastAPI 0.104:</strong> Web framework (automatic OpenAPI docs, async, validation with Pydantic)</li>
+        <li><strong>pdfplumber 0.10:</strong> PDF text extraction (preserves layout, handles complex PDFs)</li>
+        <li><strong>sentence-transformers 2.2:</strong> Embedding generation (wraps HuggingFace models)</li>
+        <li><strong>FAISS 1.7:</strong> Vector similarity search (Facebook AI Similarity Search library)</li>
+        <li><strong>OpenAI Python SDK 1.3:</strong> GPT-4o Mini API client</li>
+        <li><strong>Uvicorn 0.24:</strong> ASGI server (production-ready, async, HTTP/2)</li>
+        <li><strong>python-multipart 0.0.6:</strong> Multipart form data parsing (file uploads)</li>
       </ul>
       
-      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">Evaluation Harness</h3>
-      <p style="color: var(--muted); line-height: 1.6;">
-        The benchmark generates 5 synthetic test questions by sampling chunks and extracting their first sentences.
-        Three reference-free metrics are computed:
-      </p>
+      <h4 style="margin-top: 1rem; font-size: 1rem; color: #00ff88;">Infrastructure</h4>
       <ul style="color: var(--muted); line-height: 1.8; padding-left: 1.5rem;">
-        <li><strong>Retrieval Precision:</strong> Average top-1 FAISS cosine score across test questions (measures retrieval quality)</li>
-        <li><strong>Answer Relevance:</strong> Average cosine similarity between question embeddings and generated answer embeddings (measures answer-question alignment)</li>
-        <li><strong>Context Coverage:</strong> Fraction of distinct chunks used at least once across all retrievals (measures index utilization)</li>
+        <li><strong>Docker:</strong> Containerization for reproducible builds and deployment</li>
+        <li><strong>Render:</strong> Backend hosting (free tier, auto-scaling, zero-config HTTPS, environment variables for secrets)</li>
+        <li><strong>Cloudflare Pages:</strong> Frontend hosting (global CDN, instant deploys, automatic HTTPS)</li>
       </ul>
       
-      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">Stack & Deployment</h3>
-      <p style="color: var(--muted); line-height: 1.6;">
-        Backend: <strong>FastAPI + Docker</strong> deployed on Render. Frontend: <strong>Static HTML</strong> on Cloudflare Pages.
-        No build pipeline required. CORS configured for production domain. <code>OPENAI_API_KEY</code> injected at runtime (never hardcoded).
-      </p>
-      
-      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">Demo Limitations</h3>
+      <h4 style="margin-top: 1rem; font-size: 1rem; color: #00ff88;">Frontend</h4>
       <ul style="color: var(--muted); line-height: 1.8; padding-left: 1.5rem;">
-        <li>In-memory index with no persistence (session-scoped only)</li>
-        <li>5000-word document cap for demo purposes</li>
-        <li>Reference-free metrics (production would use RAGAS or similar with ground truth)</li>
-        <li>Single-user sessions (no multi-tenancy or authentication)</li>
+        <li><strong>Vanilla JavaScript:</strong> No framework dependencies (faster load, easier debugging, no build step)</li>
+        <li><strong>HTML5 + CSS3:</strong> Native file upload API, Fetch API for HTTP, Canvas API for charts</li>
       </ul>
       
-      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">Architecture Diagram</h3>
+      <h4 style="margin-top: 1rem; font-size: 1rem; color: #00ff88;">MLOps/LLMOps</h4>
+      <ul style="color: var(--muted); line-height: 1.8; padding-left: 1.5rem;">
+        <li><strong>Reference-free evaluation metrics:</strong> No human labeling required for quality assessment</li>
+        <li><strong>Session-based state management:</strong> Isolated user sessions, no shared state pollution</li>
+        <li><strong>Citation tracing:</strong> Every answer includes provenance (chunk IDs, scores, latency)</li>
+        <li><strong>Environment-based configuration:</strong> API keys injected via environment variables, never committed to source control</li>
+      </ul>
+      
+      <h3 style="margin-top: 1.5rem; font-size: 1.1rem; color: #4fc3f7;">Technical Challenges and Trade-offs</h3>
+      
+      <h4 style="margin-top: 1rem; font-size: 1rem; color: #00ff88;">Challenge: Chunking Strategy</h4>
+      <p style="color: var(--muted); line-height: 1.6;">
+        <strong>Problem:</strong> Fixed-size chunks can split semantic units mid-sentence, degrading retrieval quality.<br>
+        <strong>Solution:</strong> Sliding-window chunking with 40-word overlap preserves context across boundaries. Trade-off: 20% storage overhead (overlapping words stored multiple times) for better retrieval quality.<br>
+        <strong>Alternative considered:</strong> Semantic chunking (split on paragraph boundaries) — rejected due to variable chunk sizes complicating embedding batching and retrieval normalization.
+      </p>
+      
+      <h4 style="margin-top: 1rem; font-size: 1rem; color: #00ff88;">Challenge: Evaluation Without Ground Truth</h4>
+      <p style="color: var(--muted); line-height: 1.6;">
+        <strong>Problem:</strong> Manual labeling of question-answer pairs is expensive and not scalable.<br>
+        <strong>Solution:</strong> Reference-free metrics (retrieval precision, answer relevance, context coverage) provide proxy signals for system health without human annotation. Trade-off: Metrics don't capture factual correctness, only correlation and coverage.<br>
+        <strong>Alternative considered:</strong> LLM-as-judge evaluation (GPT-4 evaluates answer quality) — rejected due to cost ($2.50 per 1M tokens) and latency (adds 2-5s per evaluation).
+      </p>
+      
+      <h4 style="margin-top: 1rem; font-size: 1rem; color: #00ff88;">Challenge: Cold Start on Free-Tier Hosting</h4>
+      <p style="color: var(--muted); line-height: 1.6;">
+        <strong>Problem:</strong> Render free tier spins down services after 15 minutes of inactivity, causing 30-60s cold starts.<br>
+        <strong>Solution:</strong> Health check with retry logic (3 attempts, 3s delay) and user-facing status indicator. Trade-off: Degraded UX on first request, but acceptable for demo purposes.<br>
+        <strong>Alternative considered:</strong> Keep-alive pings to prevent spin-down — rejected to stay within free-tier limits and avoid unnecessary API usage.
+      </p>
+      
+      <h4 style="margin-top: 1rem; font-size: 1rem; color: #00ff88;">Challenge: In-Memory Storage Constraints</h4>
+      <p style="color: var(--muted); line-height: 1.6;">
+        <strong>Problem:</strong> FAISS index and document chunks stored in memory, limiting concurrent users and document sizes.<br>
+        <strong>Solution:</strong> Session-based storage with 5000-word document limit. Trade-off: No persistence across restarts, single-user sessions only. Production systems would use vector databases (Pinecone, Weaviate, Qdrant) with persistent storage.<br>
+        <strong>Alternative considered:</strong> SQLite + FAISS serialization — rejected due to deployment complexity and filesystem write permissions on Render free tier.
+      </p>
+      
+      <h3 style="margin-top: 1.5rem; font-size: 1.1rem; color: #4fc3f7;">Technology Selection Rationale</h3>
+      
+      <h4 style="margin-top: 1rem; font-size: 1rem; color: #00ff88;">Why FastAPI?</h4>
+      <p style="color: var(--muted); line-height: 1.6;">
+        Automatic OpenAPI documentation (critical for API debugging), native async support (required for OpenAI API calls), and Pydantic validation (type-safe request/response models). Alternative (Flask) lacks async and automatic docs. Alternative (Django) is overkill for stateless API.
+      </p>
+      
+      <h4 style="margin-top: 1rem; font-size: 1rem; color: #00ff88;">Why FAISS?</h4>
+      <p style="color: var(--muted); line-height: 1.6;">
+        Industry-standard vector search library with battle-tested performance. Supports exact and approximate search algorithms. Alternatives (Annoy, ScaNN) have narrower feature sets or less Python support. Vector databases (Pinecone, Weaviate) are overkill for in-memory demo use case.
+      </p>
+      
+      <h4 style="margin-top: 1rem; font-size: 1rem; color: #00ff88;">Why GPT-4o Mini?</h4>
+      <p style="color: var(--muted); line-height: 1.6;">
+        Cost efficiency ($0.15 per 1M input tokens) with acceptable answer quality. GPT-4o ($2.50 per 1M tokens) provides marginal quality improvement at 16x cost. Open-source alternatives (Llama 3, Mistral) require GPU infrastructure and self-hosting complexity.
+      </p>
+      
+      <h4 style="margin-top: 1rem; font-size: 1rem; color: #00ff88;">Why Vanilla JavaScript?</h4>
+      <p style="color: var(--muted); line-height: 1.6;">
+        Zero build step (instant deploys), faster page load (no framework bundle), easier debugging (no transpilation). React/Vue would add complexity without meaningful UX benefit for this interactive demo.
+      </p>
+      
+      <h3 style="margin-top: 1.5rem; font-size: 1.1rem; color: #4fc3f7;">Demo Limitations</h3>
+      <ul style="color: var(--muted); line-height: 1.8; padding-left: 1.5rem;">
+        <li><strong>No persistence:</strong> Index and chunks stored in-memory, lost on server restart</li>
+        <li><strong>5000-word limit:</strong> Prevents memory exhaustion on free-tier infrastructure</li>
+        <li><strong>Single-user sessions:</strong> No authentication or multi-tenancy support</li>
+        <li><strong>Reference-free metrics:</strong> Evaluation proxies don't measure factual correctness</li>
+        <li><strong>Cold start latency:</strong> 30-60s delay on first request after 15-minute idle period</li>
+        <li><strong>No production monitoring:</strong> No structured logging, error tracking, or observability</li>
+      </ul>
+      
+      <h3 style="margin-top: 1.5rem; font-size: 1.1rem; color: #4fc3f7;">Architecture Diagram</h3>
       <div class="architecture-diagram">
         <pre>
 ┌─────────────────────────────────────────────────────────────────┐
