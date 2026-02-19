@@ -58,8 +58,8 @@
         <article class="card col-6">
           <h3>How I work</h3>
           <p>
-            I treat ML as a product system, not a notebook. I ship with reproducibility, measurement, and operational clarity:
-            data validation, versioned artefacts, and deployment discipline. I’m deliberate about trade-offs — latency, cost, robustness,
+            I treat ML as a product system, not a notebook. I build with reproducibility (Docker containers, versioned datasets, fixed random seeds), measurement (precision, recall, latency, drift metrics), and operational clarity:
+            data validation, model registry, and deployment discipline. I’m deliberate about trade-offs — latency, cost, robustness,
             and auditability — and I prefer evidence over claims.
           </p>
 
@@ -74,8 +74,8 @@
         <article class="card col-6">
           <h3>What I build end-to-end</h3>
           <p>
-            Ingestion → data modelling → feature engineering → training + evaluation → artefact registry →
-            containerisation → serving APIs → monitoring and retraining triggers. For GenAI use cases: retrieval, chunking,
+            Ingestion → validation → feature engineering → training + evaluation → model registry →
+            containerisation → serving APIs → monitoring (latency, drift, data quality) and retraining triggers. For GenAI use cases: retrieval, chunking,
             reranking, guardrails, and evaluation harnesses.
           </p>
 
@@ -100,8 +100,8 @@
             <div class="card col-6" style="box-shadow:none;">
               <h3 style="margin-top:0;">AI & Modelling</h3>
               <p class="muted" style="margin:0;">
-                Supervised learning, feature engineering, uncertainty-aware thinking, model evaluation, calibration, and robust baselines.
-                When using LLMs: retrieval-augmented generation, prompt + tool orchestration, and evaluation-driven iteration.
+                Supervised learning, feature engineering, model evaluation with calibration curves and performance across class distributions, and baseline validation.
+                When using LLMs: retrieval-augmented generation with citation enforcement, prompt + tool orchestration, and evaluation-driven iteration.
               </p>
               <div class="badges" style="margin-top:12px;">
                 <span class="badge">Feature Engineering</span>
@@ -114,8 +114,8 @@
             <div class="card col-6" style="box-shadow:none;">
               <h3 style="margin-top:0;">MLOps & Engineering</h3>
               <p class="muted" style="margin:0;">
-                CI/CD for ML, container-first delivery, reproducible training, deployment automation, and monitoring-ready outputs.
-                I design for reliability: versioning, provenance, and fast rollback paths.
+                CI/CD for ML, container-first delivery, reproducible training runs with experiment tracking, deployment automation with health checks, and monitoring infrastructure (Prometheus/Grafana).
+                I design for reliability: model versioning, lineage tracking, and fast rollback paths.
               </p>
               <div class="badges" style="margin-top:12px;">
                 <span class="badge">CI/CD for ML</span>
@@ -137,8 +137,8 @@
           <h3>Technical summary</h3>
           <p class="muted" style="margin:0;">
             Full Stack Machine Learning Engineer / Data Scientist building scalable ML pipelines and deployment systems.
-            Keywords: CI/CD for ML, Dockerisation, model serving, inference scaling, monitoring, automated retraining, RAG/LLMOps,
-            evaluation harness, data governance, and production trade-offs.
+            Technical focus: CI/CD for ML, containerization with Docker, model serving via FastAPI, inference scaling, monitoring with Prometheus/Grafana, automated retraining pipelines, RAG/LLMOps with evaluation harnesses,
+            data governance, and production trade-off analysis.
           </p>
         </article>
       </div>
