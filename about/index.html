@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Identity — Neuromorphic Inference Lab</title>
-  <meta name="description" content="Identity: full-stack machine learning engineering from statistical modelling to production deployment, monitoring, and LLMOps." />
+  <title>About Me — Neuromorphic Inference Lab</title>
+  <meta name="description" content="Machine learning engineer specialising in end-to-end ML systems, from data pipelines to production deployment and monitoring." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
 </head>
@@ -18,127 +18,68 @@
       </a>
 
       <nav class="navlinks" aria-label="Primary navigation">
-        <a data-nav href="/">Signal</a>
-        <a data-nav href="/demos/">Systems</a>
-        <a data-nav href="/evidence/">Proof Ledger</a>
-        <a data-nav href="/about/" data-active="true">Identity</a>
+        <a data-nav href="/">Home</a>
+        <a data-nav href="/about/" data-active="true">About Me</a>
       </nav>
     </div>
   </header>
 
   <main class="container">
     <section class="hero">
-      <p class="kicker">Identity</p>
-      <h1 class="h1">Full Stack Machine Learning Engineer & Data Scientist.</h1>
+      <p class="kicker">About Me</p>
+      <h1 class="h1">Machine Learning Engineer</h1>
       <p class="sub">
-        I design and ship <strong>end-to-end ML systems</strong> under real constraints — from data pipelines and statistical modelling to
-        <strong>CI/CD for ML</strong>, <strong>inference serving</strong>, and <strong>monitoring-ready deployment</strong>.
-        Where the use case demands it, I build <strong>RAG/LLMOps workflows</strong> with retrieval tracing and evaluation harnesses.
+        I build machine learning systems that work in production. My focus is on the complete pipeline:
+        data engineering, model development, deployment infrastructure, and monitoring.
       </p>
 
-      <div class="badges" aria-label="Core keywords">
-        <span class="badge">Scalable ML Pipelines</span>
-        <span class="badge">Statistical Modelling</span>
-        <span class="badge">CI/CD for ML</span>
-        <span class="badge">Model Serving</span>
-        <span class="badge">Inference Scaling</span>
-        <span class="badge">Monitoring</span>
-        <span class="badge">RAG / LLMOps</span>
-      </div>
-
       <div class="actions">
-        <a class="btn primary" href="/demos/">Explore systems</a>
-        <a class="btn" href="/evidence/">View proof ledger</a>
+        <a class="btn primary" href="/">View projects</a>
         <a class="btn" href="https://github.com/nepryoon" target="_blank" rel="noopener">GitHub</a>
       </div>
     </section>
 
     <section class="section">
       <div class="grid">
-        <article class="card col-6">
-          <h3>How I work</h3>
-          <p>
-            I treat ML as a product system, not a notebook. I build with reproducibility (Docker containers, versioned datasets, fixed random seeds), measurement (precision, recall, latency, drift metrics), and operational clarity:
-            data validation, model registry, and deployment discipline. I’m deliberate about trade-offs — latency, cost, robustness,
-            and auditability — and I prefer evidence over claims.
-          </p>
-
-          <div class="badges" aria-label="Working principles">
-            <span class="badge">Reproducibility</span>
-            <span class="badge">Evaluation</span>
-            <span class="badge">Observability</span>
-            <span class="badge">Production Readiness</span>
-          </div>
-        </article>
-
-        <article class="card col-6">
-          <h3>What I build end-to-end</h3>
-          <p>
-            Ingestion → validation → feature engineering → training + evaluation → model registry →
-            containerisation → serving APIs → monitoring (latency, drift, data quality) and retraining triggers. For GenAI use cases: retrieval, chunking,
-            reranking, guardrails, and evaluation harnesses.
-          </p>
-
-          <div class="badges" aria-label="Lifecycle capabilities">
-            <span class="badge">Feature Engineering</span>
-            <span class="badge">Model Registry</span>
-            <span class="badge">Dockerisation</span>
-            <span class="badge">FastAPI</span>
-          </div>
-        </article>
-
         <article class="card col-12">
-          <h3>Technical focus areas</h3>
-          <p class="muted" style="margin:0;">
-            This site highlights systems that connect modelling quality with engineering quality. The goal is to demonstrate a single identity:
-            a full-stack ML engineer who can both build models and deploy them reliably.
+          <h3>Background</h3>
+          <p>
+            I work on machine learning systems that need to run reliably in production environments. 
+            My projects cover the full ML lifecycle: ingesting and validating data, engineering features, 
+            training and evaluating models, packaging artefacts, deploying inference endpoints, and 
+            implementing monitoring.
           </p>
-
-          <hr class="hr" />
-
-          <div class="grid">
-            <div class="card col-6" style="box-shadow:none;">
-              <h3 style="margin-top:0;">AI & Modelling</h3>
-              <p class="muted" style="margin:0;">
-                Supervised learning, feature engineering, model evaluation with calibration curves and performance across class distributions, and baseline validation.
-                When using LLMs: retrieval-augmented generation with citation enforcement, prompt + tool orchestration, and evaluation-driven iteration.
-              </p>
-              <div class="badges" style="margin-top:12px;">
-                <span class="badge">Feature Engineering</span>
-                <span class="badge">Evaluation</span>
-                <span class="badge">RAG</span>
-                <span class="badge">Guardrails</span>
-              </div>
-            </div>
-
-            <div class="card col-6" style="box-shadow:none;">
-              <h3 style="margin-top:0;">MLOps & Engineering</h3>
-              <p class="muted" style="margin:0;">
-                CI/CD for ML, container-first delivery, reproducible training runs with experiment tracking, deployment automation with health checks, and monitoring infrastructure (Prometheus/Grafana).
-                I design for reliability: model versioning, lineage tracking, and fast rollback paths.
-              </p>
-              <div class="badges" style="margin-top:12px;">
-                <span class="badge">CI/CD for ML</span>
-                <span class="badge">Docker</span>
-                <span class="badge">Model Serving</span>
-                <span class="badge">Monitoring</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="actions">
-            <a class="btn primary" href="/demos/mv-grid-fault-risk/">Open NeuroGrid system</a>
-            <a class="btn" href="/demos/rag-copilot/">Open RAG Copilot</a>
-            <a class="btn" href="/evidence/rag-copilot/">Read RAG evidence memo</a>
-          </div>
+          <p>
+            For language model applications, I implement retrieval-augmented generation patterns with 
+            source citations, guardrails, and evaluation frameworks. The focus is on building systems 
+            that can be tested, debugged, and maintained.
+          </p>
         </article>
 
-        <article class="card col-12">
-          <h3>Technical summary</h3>
-          <p class="muted" style="margin:0;">
-            Full Stack Machine Learning Engineer / Data Scientist building scalable ML pipelines and deployment systems.
-            Technical focus: CI/CD for ML, containerization with Docker, model serving via FastAPI, inference scaling, monitoring with Prometheus/Grafana, automated retraining pipelines, RAG/LLMOps with evaluation harnesses,
-            data governance, and production trade-off analysis.
+        <article class="card col-6">
+          <h3>Technical Approach</h3>
+          <p>
+            I prioritise reproducibility through containerisation, versioned datasets, and fixed random seeds. 
+            Models are evaluated using relevant metrics (precision, recall, MAE, MAPE) and compared against 
+            baselines. Deployment includes health checks, logging, and drift monitoring.
+          </p>
+          <p>
+            The projects on this site demonstrate working systems rather than proof-of-concept notebooks. 
+            Each includes documentation of architecture decisions, technology choices, and trade-offs.
+          </p>
+        </article>
+
+        <article class="card col-6">
+          <h3>Technical Stack</h3>
+          <p>
+            Python for ML pipelines and model development. FastAPI for inference serving. 
+            Docker for containerisation. MLflow for experiment tracking. Prometheus and Grafana 
+            for monitoring. GitHub Actions for CI/CD.
+          </p>
+          <p>
+            For LLM applications: retrieval with vector databases, prompt orchestration, 
+            and evaluation harnesses. When appropriate, I use established libraries 
+            rather than building custom solutions.
           </p>
         </article>
       </div>
