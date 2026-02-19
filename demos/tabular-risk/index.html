@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tabular Risk — Systems</title>
+  <title>Tabular Risk — Projects</title>
   <meta name="description" content="Tabular Risk: enter a small feature set, score locally with a transparent baseline, and optionally call a deployed API endpoint." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
@@ -200,22 +200,20 @@
         <span>Neuromorphic Inference Lab</span>
       </div>
       <nav class="navlinks" aria-label="Primary navigation">
-        <a data-nav href="/">Signal</a>
-        <a data-nav class="active" href="/demos/">Systems</a>
-        <a data-nav href="/evidence/">Proof Ledger</a>
-        <a data-nav href="/about/">Identity</a>
+        <a data-nav href="/">Home</a>
+        <a data-nav class="active" href="/demos/">Projects</a>
+        <a data-nav href="/about/">About Me</a>
       </nav>
     </div>
   </header>
 
   <main class="container">
     <section class="hero">
-      <p class="kicker">System</p>
+      <p class="kicker">Project</p>
       <h1 class="h1">Tabular Risk</h1>
       <p class="sub">
-        Interactive tabular risk scoring with a transparent client-side baseline model.
-        Enter a feature set, score locally with interpretable logistic weights,
-        or connect to a deployed API endpoint.
+        Client-side risk scoring system demonstrating transparent machine learning
+        with interpretable logistic regression and optional API integration.
       </p>
 
       <div class="badges">
@@ -227,22 +225,129 @@
       <div style="height:14px"></div>
 
       <div class="actions" style="flex-wrap:wrap; gap:10px; align-items:center;">
-        <a class="btn primary" href="/evidence/#tabular-risk">Evidence anchor</a>
         <a class="btn" href="https://github.com/nepryoon/nil-tabular-risk" target="_blank" rel="noopener">Source</a>
-        <a class="btn" href="/demos/">Back to Systems</a>
-
-        <span class="toggle" role="group" aria-label="Mode selector">
-          <button id="modeLocal" class="active" type="button">Local</button>
-          <button id="modeApi" type="button">API</button>
-        </span>
-
-        <span class="status-badge warn" id="bMode">mode: local</span>
-        <span class="status-badge" id="bStatus">status: idle</span>
-        <span class="status-badge" id="bResult">risk: —</span>
+        <a class="btn" href="/demos/">Back to Projects</a>
       </div>
     </section>
 
+    <!-- Layer 1: Plain-language explanation -->
     <section class="section">
+      <div class="card">
+        <h2>What This Does</h2>
+        <p>
+          This is a risk scoring tool that runs entirely in your browser. You enter basic financial data 
+          (age, income, debt ratio, late payments), and it calculates a risk score from 0-100%. 
+          The calculation happens on your device—no data is sent anywhere unless you explicitly choose to test 
+          the optional API mode.
+        </p>
+        
+        <p>
+          It solves the problem of opaque risk assessment by using a simple, transparent mathematical model 
+          where you can see exactly how each input affects the final score. This is the opposite of a black-box 
+          machine learning system where the decision logic is hidden.
+        </p>
+
+        <p>
+          This project demonstrates three key capabilities: building interpretable machine learning models 
+          that humans can audit, implementing complex calculations efficiently in client-side JavaScript, 
+          and designing flexible systems that work both standalone and as API integrations.
+        </p>
+      </div>
+    </section>
+
+    <!-- Layer 2: Technical deep-dive -->
+    <section class="section">
+      <div class="card">
+        <h2>Technical Overview</h2>
+        
+        <h3>Purpose and Scope</h3>
+        <p>
+          This system implements a client-side risk scoring engine for tabular financial data. 
+          The primary goal is demonstrating interpretable machine learning through a transparent baseline model, 
+          contrasted with an optional API integration path for more sophisticated models. 
+          The scope is deliberately limited to a four-feature input space to maintain clarity and auditability.
+        </p>
+
+        <h3>Architecture and Design Decisions</h3>
+        <p>
+          The architecture is a single-page application with zero dependencies. Local scoring uses a 
+          logistic regression model with hand-tuned weights (not trained on data), chosen specifically for 
+          interpretability. Each feature contribution to the final risk score is exposed in the output, 
+          allowing complete transparency into the decision process. The API mode provides a comparison point, 
+          demonstrating how the same interface can work with either a simple baseline or a deployed model endpoint.
+        </p>
+
+        <h3>Data Flow and Execution Model</h3>
+        <p>
+          In local mode: User inputs are read from form fields, validated, normalized to [0,1] ranges, 
+          multiplied by fixed weights, summed with a bias term, passed through a sigmoid activation function, 
+          and rendered as both a visual progress bar and structured JSON output. The entire pipeline executes 
+          synchronously in under 1ms. In API mode: Inputs are serialized to JSON, sent via HTTP POST to a 
+          configurable endpoint, and the response is parsed and displayed with the same rendering logic.
+        </p>
+
+        <h3>Implementation Details</h3>
+        <p>
+          The logistic model uses these weights: age (+0.35), income (-1.10), debt ratio (+1.55), 
+          late payments (+1.25), with a bias of -0.35. Inputs are normalized: age divided by 100, 
+          income by 150,000, debt ratio used directly, late payments divided by 12. The sigmoid function 
+          converts the linear combination into a probability. Risk thresholds: below 33% is low (green), 
+          33-66% is medium (yellow), above 66% is high (red). The UI synchronizes number inputs with range 
+          sliders bidirectionally using event listeners.
+        </p>
+
+        <h3>Technology Stack</h3>
+        <p>
+          <strong>Languages:</strong> Vanilla JavaScript (ES6+) for logic and DOM manipulation, HTML5 for structure, 
+          CSS3 for styling with CSS Grid and custom properties. 
+          <strong>Why:</strong> Zero build step, no dependencies, maximum portability, minimal load time, 
+          complete browser compatibility without transpilation.
+        </p>
+        <p>
+          <strong>Model:</strong> Logistic regression with explicit weight specification. 
+          <strong>Why:</strong> Fully interpretable, no training data required, deterministic behavior, 
+          easy to audit, suitable for demonstration and baseline comparison.
+        </p>
+        <p>
+          <strong>API Integration:</strong> Fetch API with AbortController for timeout handling, JSON serialization. 
+          <strong>Why:</strong> Native browser support, modern async/await patterns, no external HTTP library needed, 
+          allows graceful degradation when API is unavailable.
+        </p>
+        <p>
+          <strong>UI Components:</strong> Custom-built form controls, synchronized number/range inputs, 
+          preset buttons, real-time status indicators. 
+          <strong>Why:</strong> Full control over behavior and appearance, no framework overhead, 
+          teaches fundamental DOM manipulation patterns.
+        </p>
+
+        <h3>Technical Challenges and Trade-offs</h3>
+        <p>
+          <strong>Challenge:</strong> Maintaining interpretability while providing meaningful risk scores. 
+          <strong>Trade-off:</strong> Used hand-tuned weights instead of training on real data, sacrificing 
+          predictive accuracy for complete transparency and auditability.
+        </p>
+        <p>
+          <strong>Challenge:</strong> Supporting both local and API modes with a unified interface. 
+          <strong>Trade-off:</strong> Duplicated some display logic but gained the ability to demonstrate 
+          both lightweight and full-stack deployment scenarios without breaking changes.
+        </p>
+        <p>
+          <strong>Challenge:</strong> Client-side JavaScript has no true type safety. 
+          <strong>Trade-off:</strong> Implemented explicit validation and bounds checking at input time, 
+          accepting runtime overhead to prevent invalid states from propagating through calculations.
+        </p>
+        <p>
+          <strong>Challenge:</strong> API calls may fail or timeout. 
+          <strong>Trade-off:</strong> Used AbortController with a 12-second timeout and structured error handling, 
+          prioritizing user feedback over silent failures, at the cost of added code complexity.
+        </p>
+      </div>
+    </section>
+
+    <!-- Interactive Demo -->
+
+    <section class="section">
+      <h2>Interactive Demo</h2>
       <div class="demo-grid">
 
         <!-- Left: inputs + output -->
@@ -285,10 +390,19 @@
             </div>
           </div>
 
-          <div class="actions" style="margin-top:14px;">
+          <div class="actions" style="margin-top:14px; flex-wrap:wrap; gap:10px; align-items:center;">
             <button class="btn primary" id="btnRun" type="button">Score</button>
             <button class="btn" id="btnReset" type="button">Reset</button>
             <button class="btn" id="btnCopy" type="button">Copy JSON</button>
+
+            <span class="toggle" role="group" aria-label="Mode selector">
+              <button id="modeLocal" class="active" type="button">Local</button>
+              <button id="modeApi" type="button">API</button>
+            </span>
+
+            <span class="status-badge warn" id="bMode">mode: local</span>
+            <span class="status-badge" id="bStatus">status: idle</span>
+            <span class="status-badge" id="bResult">risk: —</span>
           </div>
 
           <div class="risk-bar" aria-label="Risk score bar"><div id="barFill"></div></div>
@@ -303,16 +417,10 @@
           <pre class="output-pre" id="out">{}</pre>
         </div>
 
-        <!-- Right: links + API shape + notes -->
+        <!-- Right: API shape + notes -->
         <div class="card">
           <h3 style="margin:0 0 12px; font-size:15px;">Links</h3>
 
-          <a class="side-link" href="/evidence/#tabular-risk">
-            <span>Evidence anchor</span><span class="kbd">#tabular-risk</span>
-          </a>
-          <a class="side-link" href="/evidence/#sql">
-            <span>Related</span><span class="kbd">#sql</span>
-          </a>
           <a class="side-link" href="https://github.com/nepryoon/nil-tabular-risk" target="_blank" rel="noopener">
             <span>Repository</span><span class="kbd">GitHub</span>
           </a>
