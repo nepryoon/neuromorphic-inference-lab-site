@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Centrico LiveLab — End-to-End MLOps — Systems</title>
+  <title>Centrico LiveLab — End-to-End MLOps — Projects</title>
   <meta name="description" content="Centrico LiveLab: a complete MLOps pipeline demonstrating data engineering, training, inference serving, monitoring with Prometheus + Grafana, and CI quality gates." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
@@ -17,22 +17,20 @@
         <span>Neuromorphic Inference Lab</span>
       </div>
       <nav class="navlinks" aria-label="Primary navigation">
-        <a data-nav href="/">Signal</a>
-        <a data-nav class="active" href="/demos/">Systems</a>
-        <a data-nav href="/evidence/">Proof Ledger</a>
-        <a data-nav href="/about/">Identity</a>
+        <a data-nav href="/">Home</a>
+        <a data-nav class="active" href="/demos/">Projects</a>
+        <a data-nav href="/about/">About Me</a>
       </nav>
     </div>
   </header>
 
   <main class="container">
     <section class="hero">
-      <p class="kicker">System</p>
+      <p class="kicker">Project</p>
       <h1 class="h1">Centrico LiveLab — End-to-End MLOps</h1>
       <p class="sub">
-        A production-grade MLOps reference implementation covering the complete lifecycle: data ingestion and preparation,
-        feature engineering, model training with versioning, inference API serving, observability (Prometheus + Grafana),
-        and CI/CD quality gates. Designed to demonstrate full-stack ML engineering discipline.
+        A complete machine learning operations pipeline that takes a model from initial data collection through training, 
+        deployment, and ongoing monitoring in production.
       </p>
 
       <div class="badges">
@@ -47,123 +45,222 @@
 
       <div class="actions">
         <a class="btn primary" href="https://github.com/nepryoon/centrico-livelab-mlops" target="_blank" rel="noopener">Source repository</a>
-        <a class="btn" href="/evidence/centrico-livelab/">Evidence memo</a>
-        <a class="btn" href="/evidence/#centrico-livelab">Proof anchor</a>
-        <a class="btn" href="/demos/">Back to Systems</a>
+        <a class="btn" href="/demos/">Back to Projects</a>
       </div>
     </section>
 
     <section class="section">
-      <h2>What problem it solves</h2>
+      <h2>Overview — For Recruiters and Non-Technical Stakeholders</h2>
       <p class="lead">
-        Most ML projects stop at "model in a notebook." Centrico LiveLab demonstrates production operationalization:
-        repeatable data pipelines, training orchestration, versioned artefacts, live serving, monitoring infrastructure,
-        and automated quality checks in CI.
+        This project demonstrates how to take machine learning models from development into production systems that can run reliably at scale.
       </p>
 
-      <div class="grid">
-        <div class="card col-6">
-          <h3>Business impact</h3>
-          <ul class="clean">
-            <li>End-to-end visibility: from raw data ingestion to inference results.</li>
-            <li>Reliable deployment pipeline with quality gates (prevents broken models from reaching production).</li>
-            <li>Monitoring and alerting infrastructure for operational confidence.</li>
-            <li>Reproducible training runs with versioned artefacts and lineage tracking.</li>
-          </ul>
-        </div>
+      <h3 style="margin-top: 24px;">What it does</h3>
+      <p>
+        Centrico LiveLab is an end-to-end machine learning operations (MLOps) pipeline. It handles everything from ingesting raw data, 
+        training predictive models, deploying those models as APIs that can serve predictions, and continuously monitoring system health and model performance.
+      </p>
 
-        <div class="card col-6">
-          <h3>System architecture</h3>
-          <ul class="clean">
-            <li><strong>Data layer</strong>: ingestion pipelines with validation and schema enforcement.</li>
-            <li><strong>Training layer</strong>: orchestrated training with experiment tracking and model registry.</li>
-            <li><strong>Serving layer</strong>: FastAPI inference endpoint with health checks and metrics.</li>
-            <li><strong>Observability</strong>: Prometheus metrics collection + Grafana dashboards.</li>
-            <li><strong>CI/CD</strong>: automated tests, model evaluation gates, and deployment workflows.</li>
-          </ul>
-        </div>
-      </div>
+      <h3 style="margin-top: 24px;">What problem it solves</h3>
+      <p>
+        Most machine learning projects create models that work in isolated notebooks but never make it to production. Moving from a prototype 
+        to a reliable production system requires solving problems around data consistency, model versioning, deployment automation, performance 
+        monitoring, and quality control. This project addresses all of these concerns in a single integrated system.
+      </p>
+
+      <h3 style="margin-top: 24px;">What it demonstrates</h3>
+      <p>
+        This system shows proficiency in building production-grade machine learning infrastructure. It demonstrates the ability to design and 
+        implement complete data pipelines, orchestrate model training workflows, containerize and deploy services, set up monitoring systems, 
+        and automate quality checks. These are the core skills needed to operate machine learning systems in real-world production environments.
+      </p>
+
+      <p style="margin-top: 16px;">
+        The complete system runs locally using Docker, making it verifiable without cloud infrastructure. All components are instrumented for 
+        observability, tested automatically, and documented for maintainability.
+      </p>
     </section>
 
     <section class="section">
-      <h2>System components</h2>
+      <h2>Technical Deep-Dive — For Engineers</h2>
       <p class="lead">
-        The system is structured as modular components, each with clear responsibilities and interfaces.
-        This separation enables independent development, testing, and deployment of each layer.
+        Detailed architecture, implementation decisions, and technology choices for each layer of the system.
+      </p>
+
+      <h3 style="margin-top: 24px;">Purpose and Scope</h3>
+      <p>
+        This project implements a production-grade MLOps reference architecture demonstrating the complete machine learning lifecycle. 
+        The scope covers data ingestion through deployment and monitoring, with emphasis on reproducibility, observability, and automated quality control. 
+        The system is designed for local execution using Docker Compose, eliminating cloud dependencies while maintaining production-equivalent patterns.
+      </p>
+
+      <h3 style="margin-top: 24px;">Architecture Overview</h3>
+      <p>
+        The architecture follows a layered approach with clear separation of concerns. Each layer communicates through well-defined interfaces,
+        enabling independent development and testing. The data layer handles ingestion and feature engineering. The training layer orchestrates 
+        model development with experiment tracking. The serving layer exposes trained models via REST API. The observability layer collects metrics 
+        and provides visualization. CI/CD pipelines enforce quality gates across all layers.
+      </p>
+
+      <h3 style="margin-top: 24px;">Data Flow and Execution Model</h3>
+      <p>
+        Data flows unidirectionally from sources through transformation pipelines into feature stores. Training processes read from feature stores
+        to ensure consistency between training and inference. Trained models are serialized and versioned in a model registry. The inference service 
+        loads models from the registry and serves predictions via REST endpoints. Metrics flow from the API through Prometheus to Grafana dashboards.
+        This design ensures reproducibility and enables rollback to any previous model version.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Implementation Details and Technology Stack</h2>
+      <p class="lead">
+        Component-by-component breakdown with technology choices and rationale.
       </p>
 
       <div class="grid">
         <article class="card col-12">
           <h3>1. Data Engineering Pipeline</h3>
           <p>
-            Ingestion from multiple sources (CSV, databases, APIs) with validation, cleaning, and transformation logic.
-            Schema enforcement ensures data quality at ingestion time. Feature stores enable consistent feature generation
-            across training and inference.
+            <strong>Implementation:</strong> Python-based ETL pipelines with Pandas for data manipulation and Pydantic for schema validation. 
+            Data is ingested from multiple sources (CSV files, databases, REST APIs) and transformed into feature vectors. Schema enforcement 
+            occurs at ingestion boundaries to catch data quality issues early.
+          </p>
+          <p style="margin-top: 8px;">
+            <strong>Technology choices:</strong> Pandas was chosen for its mature ecosystem and broad support for data formats. Pydantic provides 
+            runtime type checking and automatic validation, catching schema violations before they propagate through the pipeline. Feature stores 
+            are implemented using Parquet files for efficient columnar storage and fast read performance during training and inference.
+          </p>
+          <p style="margin-top: 8px;">
+            <strong>Trade-offs:</strong> File-based feature stores sacrifice horizontal scalability for simplicity and zero-cost local operation. 
+            For production systems handling high throughput, this would be replaced with Feast or a similar dedicated feature store.
           </p>
           <div class="tags mt-12">
-            <span class="tag">Schema Validation</span>
-            <span class="tag">Data Quality Checks</span>
-            <span class="tag">Feature Store</span>
-            <span class="tag">Pipeline Orchestration</span>
+            <span class="tag">Python</span>
+            <span class="tag">Pandas</span>
+            <span class="tag">Pydantic</span>
+            <span class="tag">Parquet</span>
           </div>
         </article>
 
         <article class="card col-12">
-          <h3>2. Training & Model Management</h3>
+          <h3>2. Training Pipeline and Model Management</h3>
           <p>
-            Reproducible training pipeline with experiment tracking (MLflow), hyperparameter tuning, and model registry.
-            Each training run produces versioned artefacts (model binaries, metrics, metadata) that are stored and
-            tracked for lineage and rollback capabilities.
+            <strong>Implementation:</strong> Scikit-learn for model training with MLflow for experiment tracking and model registry. Each training 
+            run logs hyperparameters, metrics, and model artifacts. Models are versioned and tagged (dev, staging, production) to control promotion 
+            through environments.
+          </p>
+          <p style="margin-top: 8px;">
+            <strong>Technology choices:</strong> MLflow provides a complete experiment tracking solution with minimal configuration overhead. 
+            It integrates with scikit-learn's model serialization and provides a REST API for model retrieval. Scikit-learn was chosen for its 
+            simplicity and extensive documentation, though the architecture supports PyTorch or TensorFlow models through MLflow's model flavor abstraction.
+          </p>
+          <p style="margin-top: 8px;">
+            <strong>Trade-offs:</strong> MLflow's file-based backend limits concurrent write performance but enables simple local deployment. 
+            Database-backed tracking would be necessary for teams with high training volumes.
           </p>
           <div class="tags mt-12">
-            <span class="tag">MLflow Tracking</span>
+            <span class="tag">Python</span>
+            <span class="tag">Scikit-learn</span>
+            <span class="tag">MLflow</span>
             <span class="tag">Model Registry</span>
-            <span class="tag">Versioned Artefacts</span>
-            <span class="tag">Hyperparameter Tuning</span>
           </div>
         </article>
 
         <article class="card col-12">
-          <h3>3. Inference API & Serving</h3>
+          <h3>3. Inference API and Serving</h3>
           <p>
-            FastAPI-based inference service with standardized request/response schemas, health endpoints, and readiness probes.
-            Containerized for consistent deployment across environments. Supports batch and real-time inference patterns.
+            <strong>Implementation:</strong> FastAPI serves predictions via REST endpoints with automatic OpenAPI documentation. The API loads 
+            models from MLflow's model registry at startup and caches them in memory. Request/response schemas are validated using Pydantic models. 
+            Health and readiness probes enable Kubernetes-style orchestration.
+          </p>
+          <p style="margin-top: 8px;">
+            <strong>Technology choices:</strong> FastAPI provides automatic request validation, serialization, and interactive API documentation. 
+            Its async support enables high-throughput serving. Docker containerization ensures consistent deployment across environments. 
+            Gunicorn with Uvicorn workers provides production-grade process management and graceful shutdown handling.
+          </p>
+          <p style="margin-top: 8px;">
+            <strong>Trade-offs:</strong> In-memory model caching requires sufficient RAM for large models. For production systems with memory 
+            constraints, models could be loaded on-demand or served through dedicated model servers like TensorFlow Serving or Triton.
           </p>
           <div class="tags mt-12">
+            <span class="tag">Python</span>
             <span class="tag">FastAPI</span>
+            <span class="tag">Pydantic</span>
             <span class="tag">Docker</span>
-            <span class="tag">Health Checks</span>
-            <span class="tag">Batch & Real-time</span>
+            <span class="tag">Gunicorn</span>
+            <span class="tag">Uvicorn</span>
           </div>
         </article>
 
         <article class="card col-12">
-          <h3>4. Monitoring & Observability</h3>
+          <h3>4. Observability and Monitoring</h3>
           <p>
-            Prometheus scrapes metrics from the inference API (request counts, latencies, error rates, model predictions distribution).
-            Grafana dashboards visualize system health, model performance drift indicators, and infrastructure metrics.
-            Alerting rules trigger notifications for anomalies.
+            <strong>Implementation:</strong> Prometheus client library instruments the FastAPI application with custom metrics (request count, 
+            latency histograms, error rates, prediction distributions). Prometheus scrapes these metrics at configured intervals. Grafana reads 
+            from Prometheus and renders dashboards showing system health, API performance, and model behavior over time.
+          </p>
+          <p style="margin-top: 8px;">
+            <strong>Technology choices:</strong> Prometheus was chosen for its pull-based architecture, which simplifies network configuration and 
+            service discovery. Its time-series database handles high cardinality metrics efficiently. Grafana provides rich visualization capabilities 
+            and alerting integration. Both tools are industry standards with extensive community support.
+          </p>
+          <p style="margin-top: 8px;">
+            <strong>Trade-offs:</strong> Prometheus's local storage limits retention periods. For long-term metric storage, integration with 
+            remote storage systems like Thanos or Cortex would be required.
           </p>
           <div class="tags mt-12">
             <span class="tag">Prometheus</span>
             <span class="tag">Grafana</span>
-            <span class="tag">Alerting</span>
-            <span class="tag">Drift Detection</span>
+            <span class="tag">Prometheus Client</span>
+            <span class="tag">Docker Compose</span>
           </div>
         </article>
 
         <article class="card col-12">
-          <h3>5. CI/CD & Quality Gates</h3>
+          <h3>5. CI/CD and Quality Gates</h3>
           <p>
-            Automated CI pipeline validates code quality (linting, type checking), runs unit and integration tests,
-            evaluates model performance on hold-out data, and enforces quality gates before promotion to production.
-            Deployment workflows support blue-green and canary deployment strategies.
+            <strong>Implementation:</strong> GitHub Actions workflows run on each commit, executing linters (flake8, black), type checkers (mypy), 
+            unit tests (pytest), and model evaluation on hold-out datasets. Quality gates fail the build if code quality metrics or model performance 
+            fall below thresholds. Successful builds can trigger automated deployments.
+          </p>
+          <p style="margin-top: 8px;">
+            <strong>Technology choices:</strong> GitHub Actions provides tight integration with the repository and free compute for public repos. 
+            Pytest offers parametrized testing and extensive plugin ecosystem. Black and flake8 enforce consistent code style. Mypy catches type 
+            errors at CI time rather than runtime.
+          </p>
+          <p style="margin-top: 8px;">
+            <strong>Trade-offs:</strong> GitHub Actions has limited compute resources for free tiers. Resource-intensive training jobs would require 
+            self-hosted runners or integration with cloud-based training platforms.
           </p>
           <div class="tags mt-12">
             <span class="tag">GitHub Actions</span>
-            <span class="tag">Quality Gates</span>
-            <span class="tag">Automated Testing</span>
-            <span class="tag">Deployment Strategies</span>
+            <span class="tag">Pytest</span>
+            <span class="tag">Flake8</span>
+            <span class="tag">Black</span>
+            <span class="tag">Mypy</span>
+          </div>
+        </article>
+
+        <article class="card col-12">
+          <h3>6. Infrastructure and Orchestration</h3>
+          <p>
+            <strong>Implementation:</strong> Docker Compose orchestrates all services (API, MLflow, Prometheus, Grafana) with defined networking 
+            and volume mounts. Services communicate via Docker's internal DNS. Configuration is externalized through environment files.
+          </p>
+          <p style="margin-top: 8px;">
+            <strong>Technology choices:</strong> Docker Compose provides declarative multi-container orchestration suitable for development and 
+            small-scale deployments. It requires no external dependencies beyond Docker itself. For production, this configuration could be 
+            translated to Kubernetes manifests or Helm charts.
+          </p>
+          <p style="margin-top: 8px;">
+            <strong>Trade-offs:</strong> Docker Compose lacks advanced orchestration features (auto-scaling, rolling updates, service mesh). 
+            It is appropriate for development environments but would be replaced with Kubernetes for production deployments requiring high availability 
+            and horizontal scaling.
+          </p>
+          <div class="tags mt-12">
+            <span class="tag">Docker</span>
+            <span class="tag">Docker Compose</span>
+            <span class="tag">Linux</span>
           </div>
         </article>
       </div>
@@ -221,7 +318,60 @@ Cross-Cutting: CI/CD pipeline with quality gates at each stage
     </section>
 
     <section class="section">
-      <h2>Local setup & verification</h2>
+      <h2>Technical Challenges and Solutions</h2>
+      <p class="lead">
+        Key engineering problems encountered and solutions implemented.
+      </p>
+
+      <div class="grid">
+        <div class="card col-6">
+          <h3>Data Consistency</h3>
+          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
+            <strong>Challenge:</strong> Ensuring training and inference use identical feature transformations.
+          </p>
+          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
+            <strong>Solution:</strong> Centralized feature engineering logic with Pydantic schemas enforced at pipeline boundaries. 
+            Feature generation code is versioned alongside models to maintain consistency.
+          </p>
+        </div>
+
+        <div class="card col-6">
+          <h3>Model Versioning</h3>
+          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
+            <strong>Challenge:</strong> Tracking which model version is deployed and enabling rollbacks.
+          </p>
+          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
+            <strong>Solution:</strong> MLflow model registry with explicit stage transitions (dev → staging → production). 
+            Each model artifact includes training metadata and lineage information.
+          </p>
+        </div>
+
+        <div class="card col-6">
+          <h3>Observability</h3>
+          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
+            <strong>Challenge:</strong> Detecting model performance degradation in production.
+          </p>
+          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
+            <strong>Solution:</strong> Comprehensive instrumentation capturing request patterns, latency distributions, and prediction statistics. 
+            Grafana dashboards provide real-time visibility into model behavior.
+          </p>
+        </div>
+
+        <div class="card col-6">
+          <h3>Quality Control</h3>
+          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
+            <strong>Challenge:</strong> Preventing poorly-performing models from reaching production.
+          </p>
+          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
+            <strong>Solution:</strong> Automated CI gates evaluating model performance on hold-out data. Builds fail if accuracy, precision, 
+            or recall fall below defined thresholds.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Local Setup and Verification</h2>
       <p class="lead">
         The system can be run entirely locally using Docker Compose, enabling developers to test
         and verify the complete stack without cloud dependencies.
@@ -253,104 +403,6 @@ Cross-Cutting: CI/CD pipeline with quality gates at each stage
             <li>✓ Grafana dashboards display system metrics</li>
             <li>✓ CI pipeline passes all quality gates</li>
           </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>Key capabilities demonstrated</h2>
-      <p class="lead">
-        This system serves as a reference implementation for MLOps patterns and production ML engineering practices.
-      </p>
-
-      <div class="grid">
-        <div class="card col-4">
-          <h3>Data Engineering</h3>
-          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
-            Schema validation, data quality checks, feature engineering pipelines, and feature store patterns
-            for consistent feature generation.
-          </p>
-        </div>
-
-        <div class="card col-4">
-          <h3>MLOps Practices</h3>
-          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
-            Experiment tracking, model registry, versioned artefacts, reproducible training,
-            and automated model evaluation.
-          </p>
-        </div>
-
-        <div class="card col-4">
-          <h3>Production Serving</h3>
-          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
-            Containerized inference API with health checks, metrics instrumentation, and support for
-            multiple deployment patterns.
-          </p>
-        </div>
-
-        <div class="card col-4">
-          <h3>Observability</h3>
-          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
-            Comprehensive monitoring with Prometheus and Grafana, including model performance metrics,
-            system health, and drift detection.
-          </p>
-        </div>
-
-        <div class="card col-4">
-          <h3>Quality Assurance</h3>
-          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
-            CI/CD pipelines with automated testing, code quality checks, model evaluation gates,
-            and deployment automation.
-          </p>
-        </div>
-
-        <div class="card col-4">
-          <h3>Documentation</h3>
-          <p style="margin-top: 8px; font-size: 14px; line-height: 1.6;">
-            Comprehensive documentation including architecture diagrams, setup instructions, API documentation,
-            and operational runbooks.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>Evidence & verification</h2>
-      <p class="lead">
-        Complete traceability from requirements to implementation to deployment, with multiple verification paths.
-      </p>
-
-      <div class="card">
-        <div class="grid">
-          <div class="col-6">
-            <h3 style="font-size: 16px; margin-bottom: 12px;">Verification paths</h3>
-            <ul class="clean">
-              <li><strong>Source code:</strong> Complete implementation in GitHub repository</li>
-              <li><strong>CI/CD:</strong> GitHub Actions workflows with visible run history</li>
-              <li><strong>Documentation:</strong> README, architecture docs, API specs</li>
-              <li><strong>Evidence memo:</strong> Detailed capability mapping and proof structure</li>
-            </ul>
-          </div>
-
-          <div class="col-6">
-            <h3 style="font-size: 16px; margin-bottom: 12px;">Skills demonstrated</h3>
-            <ul class="clean">
-              <li>Python (data processing, ML, API development)</li>
-              <li>Docker & containerization</li>
-              <li>CI/CD automation (GitHub Actions)</li>
-              <li>Monitoring & observability (Prometheus, Grafana)</li>
-              <li>API design (FastAPI, OpenAPI)</li>
-              <li>MLOps tooling (MLflow, model registry)</li>
-            </ul>
-          </div>
-        </div>
-
-        <div style="height: 16px;"></div>
-
-        <div class="actions">
-          <a class="btn primary" href="https://github.com/nepryoon/centrico-livelab-mlops" target="_blank" rel="noopener">View source repository</a>
-          <a class="btn" href="/evidence/centrico-livelab/">Read evidence memo</a>
-          <a class="btn" href="/evidence/#centrico-livelab">Evidence anchor</a>
         </div>
       </div>
     </section>
