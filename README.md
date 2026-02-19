@@ -142,6 +142,10 @@ Typical setup:
 
 After pushing to `main`, Cloudflare Pages deploys automatically.
 
+**📖 Developer Guides:**
+- **[DEVELOPER_WORKFLOW.md](DEVELOPER_WORKFLOW.md)** - Step-by-step guide for deploying HTML changes
+- **[DEPLOYMENT_ANALYSIS.md](DEPLOYMENT_ANALYSIS.md)** - Technical analysis of build, deployment, and caching
+
 ---
 
 ## Adding a new system (standard workflow)
