@@ -3,131 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Visual Inspector — Edge Inference Demo — Neuromorphic Inference Lab</title>
-  <meta name="description" content="Visual Inspector: Image analysis tool with local property inspection and optional API integration." />
+  <title>Systems — Neuromorphic Inference Lab</title>
+  <meta name="description" content="ML systems demonstrating full-stack delivery: data pipelines, model training, inference serving, and monitoring." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
-
-  <style>
-    /* Upload Zone (Matched with RAG Copilot) */
-    .upload-zone {
-      border: 2px dashed #333;
-      border-radius: 8px;
-      padding: 2rem;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color .2s;
-      margin: 1rem 0;
-      background: #0a0a0a;
-    }
-    .upload-zone:hover {
-      border-color: #00ff88;
-    }
-    .upload-zone.drag-over {
-      border-color: #4fc3f7;
-      background: rgba(79, 195, 247, 0.05);
-    }
-    
-    /* Image Preview */
-    .image-preview {
-      max-width: 100%;
-      max-height: 300px;
-      border-radius: 6px;
-      margin-top: 1rem;
-      display: none;
-      border: 1px solid #333;
-    }
-
-    /* Output Terminal */
-    .terminal-output {
-      background: #0a0a0a;
-      border: 1px solid #222;
-      padding: 1rem;
-      border-radius: 6px;
-      font-family: monospace;
-      font-size: 0.85rem;
-      color: #4fc3f7;
-      min-height: 150px;
-      white-space: pre-wrap;
-      overflow-x: auto;
-      margin-top: 1rem;
-    }
-
-    /* Status Badge */
-    .status-badge {
-      display: inline-block;
-      padding: .4rem .8rem;
-      border-radius: 999px;
-      font-size: .75rem;
-      font-weight: 600;
-      margin-left: .5rem;
-    }
-    .status-badge.online {
-      background: rgba(52, 211, 153, 0.15);
-      border: 1px solid rgba(52, 211, 153, 0.40);
-      color: #00ff88;
-    }
-    .status-badge.offline {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.40);
-      color: #ff4444;
-    }
-    .status-badge.pending {
-      background: rgba(255, 152, 0, 0.15);
-      border: 1px solid rgba(255, 152, 0, 0.40);
-      color: #ff9800;
-    }
-
-    /* Form Controls */
-    .controls-row {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      margin-top: 1rem;
-    }
-    select {
-      background: #111;
-      border: 1px solid #333;
-      color: #eee;
-      padding: 0.6rem;
-      border-radius: 6px;
-      font-family: inherit;
-      outline: none;
-    }
-    select:focus {
-      border-color: #00ff88;
-    }
-
-    /* Spinner */
-    .spinner {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid #333;
-      border-top-color: #00ff88;
-      border-radius: 50%;
-      animation: spin .7s linear infinite;
-      margin-right: .5rem;
-      vertical-align: middle;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .hidden { display: none; }
-    
-    /* Architecture Diagram */
-    .architecture-diagram pre {
-      background: #0a0a0a;
-      border: 1px solid #222;
-      border-radius: 6px;
-      padding: 1.2rem;
-      overflow-x: auto;
-      font-size: .78rem;
-      color: #4fc3f7;
-      line-height: 1.5;
-    }
-  </style>
 </head>
 
 <body>
@@ -148,96 +27,171 @@
 
   <main class="container">
     <section class="hero">
-      <p class="kicker">Vision Edge Demo</p>
-      <h1 class="h1">Visual Inspector — Client-Side Computer Vision</h1>
+      <p class="kicker">Systems</p>
+      <h1 class="h1">Full-stack ML systems</h1>
       <p class="sub">
-        Upload an image to perform zero-latency, privacy-preserving object classification directly in your browser. 
-        Powered by a lightweight MobileNetV2 model running via Transformers.js.
+        Six systems demonstrating end-to-end ML delivery:
+        data ingestion → feature engineering → training → artefact versioning → serving → monitoring.
       </p>
+
       <div class="badges">
-        <span class="badge">Computer Vision</span>
-        <span class="badge">Edge AI</span>
-        <span class="badge">Transformers.js</span>
-        <span class="badge">Zero-Latency</span>
-        <span id="systemStatus" class="status-badge offline">Model Unloaded</span>
+        <span class="badge">MLOps</span>
+        <span class="badge">Model Serving</span>
+        <span class="badge">CI/CD for ML</span>
+        <span class="badge">Monitoring</span>
+        <span class="badge">RAG / LLMOps</span>
       </div>
     </section>
 
-    <section class="section card">
-      <h2>1. Upload Image & Configure</h2>
-      <p class="sub">Select an image for analysis. Local mode downloads model weights (~10MB) once per session.</p>
-      
-      <div id="uploadZone" class="upload-zone">
-        <div style="font-size: 2rem; margin-bottom: .5rem;">🖼️</div>
-        <div style="font-weight: 600; margin-bottom: .3rem;">Drop image here or click to browse</div>
-        <div style="font-size: .85rem; color: #888;">Supports JPG, PNG, WebP</div>
-        <input type="file" id="fileInput" accept="image/*" style="display: none;" />
-      </div>
-
-      <img id="imagePreview" class="image-preview" src="" alt="Selected Image" />
-      
-      <div class="controls-row">
-        <select id="modeSelect">
-          <option value="local">Mode: Local Inference (Browser)</option>
-          <option value="api">Mode: Remote API (Server)</option>
-        </select>
-        <button id="analyseBtn" class="btn primary" disabled>▶ Run Analysis</button>
-        <button id="clearBtn" class="btn">Clear</button>
-      </div>
-    </section>
-
-    <section id="resultsSection" class="section card hidden">
-      <h2>2. Analysis Results</h2>
-      <p class="sub">JSON payload returned by the inference engine.</p>
-      
-      <pre id="outputJson" class="terminal-output">{}</pre>
-    </section>
-
-    <section class="section card">
-      <h2>3. Technical Architecture</h2>
-      
-      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">Edge Pipeline</h3>
-      <p style="color: var(--muted); line-height: 1.6;">
-        In local mode, the system utilises <strong>Transformers.js</strong> to run <code>Xenova/mobilenet_v2_1.0_224</code>, a quantized vision model. 
-        The weights are fetched from the Hugging Face Hub directly to the client's browser cache. Image tensors are processed via ONNX Runtime WebAssembly, 
-        guaranteeing zero data exfiltration.
+    <section class="section">
+      <h2>Production ML Systems</h2>
+      <p class="lead">
+        Each system demonstrates measurable aspects of the ML lifecycle: training reproducibility via CI, inference serving with FastAPI, and monitoring infrastructure with Prometheus/Grafana.
       </p>
 
-      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">API Fallback</h3>
-      <p style="color: var(--muted); line-height: 1.6;">
-        When API mode is selected, the application acts as a thin client, serialising the image and posting it to a standard REST endpoint. 
-        This dual architecture demonstrates flexibility between privacy-first edge compute and heavy-duty server compute.
-      </p>
+      <div class="grid">
 
-      <h3 style="margin-top: 1.5rem; font-size: 1.1rem;">Architecture Diagram</h3>
-      <div class="architecture-diagram">
-        <pre>
-┌─────────────────────────────────────────────────────────────────┐
-│                       CLIENT (Browser)                          │
-│  ┌──────────────┐  ┌──────────────┐                             │
-│  │ Image Upload │  │ Transformers │                             │
-│  └──────┬───────┘  │ .js Engine   │                             │
-└─────────┼──────────┴──────┬───────┴─────────────────────────────┘
-          │                 │ Local Mode (ONNX WASM)
-          │                 ▼
-          │          ┌──────────────┐
-          │          │ MobileNetV2  │  <-- Cached from HF Hub
-          │          └──────────────┘
-          │
-          │ API Mode (POST /predict)
-          ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                   FASTAPI BACKEND (Optional)                    │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │ Heavy Vision Model (ResNet / ViT)                        │   │
-│  └──────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────┘
-        </pre>
+        <article class="card col-6" data-mode="api">
+          <h3>NeuroGrid Fault Risk Scoring Platform <span class="badge live">live</span></h3>
+          <p>
+            Medium-voltage fault risk inference with CI-minded training flow, artefact versioning, and live API serving.
+          </p>
+
+          <div class="tags">
+            <span class="tag">End-to-End ML</span>
+            <span class="tag">Model Serving</span>
+            <span class="tag">CI Training</span>
+            <span class="tag">Versioned Artefacts</span>
+          </div>
+
+          <div class="actions">
+            <a class="btn primary" href="/demos/mv-grid-fault-risk/">Open system</a>
+            <a class="btn" href="/evidence/mv-grid-fault-risk/">Evidence memo</a>
+            <a class="btn" href="/evidence/#mv-grid-fault-risk">Proof anchor</a>
+          </div>
+        </article>
+
+        <article class="card col-6" data-mode="api">
+          <h3>Forecast Studio <span class="badge live">live</span></h3>
+          <p>
+            Forecasting as a system: feature pipelines, backtesting harness, and deployment-ready outputs for planning workflows.
+          </p>
+
+          <div class="tags">
+            <span class="tag">Time-Series</span>
+            <span class="tag">Backtesting</span>
+            <span class="tag">MLOps</span>
+            <span class="tag">Monitoring-ready Outputs</span>
+          </div>
+
+          <div class="actions">
+            <a class="btn primary" href="/demos/forecast-studio/">Open system</a>
+            <a class="btn" href="/evidence/forecast-studio/">Evidence memo</a>
+            <a class="btn" href="/evidence/#forecast-studio">Proof anchor</a>
+          </div>
+        </article>
+
+        <article class="card col-6" data-mode="api">
+          <h3>RAG Knowledge Copilot <span class="badge live">live</span></h3>
+          <p>
+            Retrieval tracing with source citations, guardrails enforcement, and automated evaluation harness for LLMOps workflows.
+          </p>
+
+          <div class="tags">
+            <span class="tag">RAG</span>
+            <span class="tag">LLMOps</span>
+            <span class="tag">Evaluation Harness</span>
+            <span class="tag">Guardrails</span>
+          </div>
+
+          <div class="actions">
+            <a class="btn primary" href="/demos/rag-copilot/">Open system</a>
+            <a class="btn" href="/evidence/rag-copilot/">Evidence memo</a>
+            <a class="btn" href="/evidence/#rag-copilot">Proof anchor</a>
+          </div>
+        </article>
+
+        <article class="card col-6" data-mode="api">
+          <h3>Centrico LiveLab — End-to-End MLOps <span class="badge live">live</span></h3>
+          <p>
+            Complete MLOps pipeline: data ingestion → training → inference API → monitoring → CI quality gates.
+          </p>
+
+          <div class="tags">
+            <span class="tag">Data Engineering</span>
+            <span class="tag">MLOps Pipeline</span>
+            <span class="tag">FastAPI</span>
+            <span class="tag">Prometheus + Grafana</span>
+            <span class="tag">CI Quality Gates</span>
+          </div>
+
+          <div class="actions">
+            <a class="btn primary" href="/demos/centrico-livelab/">Open system</a>
+            <a class="btn" href="/evidence/centrico-livelab/">Evidence memo</a>
+            <a class="btn" href="/evidence/#centrico-livelab">Proof anchor</a>
+          </div>
+        </article>
+
+        <article class="card col-6" data-mode="api">
+          <h3>Tabular Risk <span class="badge live">live</span></h3>
+          <p>
+            Interactive tabular risk scoring with client-side baseline model and optional API integration for deployed endpoints.
+          </p>
+
+          <div class="tags">
+            <span class="tag">Client-Side ML</span>
+            <span class="tag">Risk Scoring</span>
+            <span class="tag">Transparent Baseline</span>
+          </div>
+
+          <div class="actions">
+            <a class="btn primary" href="/demos/tabular-risk/">Open system</a>
+            <a class="btn" href="/evidence/#tabular-risk">Proof anchor</a>
+          </div>
+        </article>
+
+        <article class="card col-6" data-mode="client">
+          <h3>Visual Inspector <span class="badge live">live</span></h3>
+          <p>
+            Image analysis tool with local property inspection and optional API integration for deployed vision models.
+          </p>
+
+          <div class="tags">
+            <span class="tag">Computer Vision</span>
+            <span class="tag">Client-Side Analysis</span>
+            <span class="tag">Image Processing</span>
+          </div>
+
+          <div class="actions">
+            <a class="btn primary" href="/demos/visual-inspector/">Open system</a>
+            <a class="btn" href="/evidence/#visual-inspector">Proof anchor</a>
+          </div>
+        </article>
+
+        <article class="card col-6" data-mode="api">
+          <h3>Open Banking Transaction Enrichment <span class="badge live">live</span></h3>
+          <p>
+            AI-powered transaction categorization using NLP to extract merchant names, categories, and anomaly signals from raw Open Banking data.
+          </p>
+
+          <div class="tags">
+            <span class="tag">NLP Categorization</span>
+            <span class="tag">Merchant Extraction</span>
+            <span class="tag">Multi-Language</span>
+            <span class="tag">Anomaly Detection</span>
+          </div>
+
+          <div class="actions">
+            <a class="btn primary" href="/demos/open-banking-enrichment/">Open system</a>
+            <a class="btn" href="/evidence/#open-banking-enrichment">Proof anchor</a>
+          </div>
+        </article>
+
       </div>
     </section>
 
     <footer class="footer">
-      <div>© <span id="year"></span> Neuromorphic Inference Lab</div>
+      <div>© 2025 Neuromorphic Inference Lab</div>
       <div class="prov">
         <span id="build-branch">branch: …</span>
         <span id="build-commit">commit: …</span>
@@ -247,163 +201,5 @@
   </main>
 
   <script src="/build-info.js"></script>
-
-  <script type="module">
-    import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2';
-    env.allowLocalModels = false; // Force fetching from Hugging Face Hub
-
-    // DOM Elements
-    const uploadZone = document.getElementById('uploadZone');
-    const fileInput = document.getElementById('fileInput');
-    const imagePreview = document.getElementById('imagePreview');
-    const analyseBtn = document.getElementById('analyseBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const modeSelect = document.getElementById('modeSelect');
-    const systemStatus = document.getElementById('systemStatus');
-    const resultsSection = document.getElementById('resultsSection');
-    const outputJson = document.getElementById('outputJson');
-    
-    document.getElementById('year').textContent = String(new Date().getFullYear());
-
-    let currentFile = null;
-    let localClassifier = null;
-    let isModelLoading = false;
-
-    // Handlers
-    uploadZone.addEventListener('click', () => fileInput.click());
-    
-    uploadZone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      uploadZone.classList.add('drag-over');
-    });
-
-    uploadZone.addEventListener('dragleave', () => {
-      uploadZone.classList.remove('drag-over');
-    });
-
-    uploadZone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      uploadZone.classList.remove('drag-over');
-      if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
-    });
-
-    fileInput.addEventListener('change', (e) => {
-      if (e.target.files.length > 0) handleFile(e.target.files[0]);
-    });
-
-    clearBtn.addEventListener('click', () => {
-      currentFile = null;
-      fileInput.value = '';
-      imagePreview.style.display = 'none';
-      imagePreview.src = '';
-      analyseBtn.disabled = true;
-      resultsSection.classList.add('hidden');
-      outputJson.textContent = '{}';
-    });
-
-    modeSelect.addEventListener('change', (e) => {
-      if (e.target.value === 'api') {
-        updateStatus('API Target Ready', 'online');
-      } else {
-        if (localClassifier) updateStatus('Local Model Ready', 'online');
-        else updateStatus('Model Unloaded', 'offline');
-      }
-    });
-
-    function updateStatus(text, state) {
-      systemStatus.textContent = text;
-      systemStatus.className = `status-badge ${state}`;
-    }
-
-    function handleFile(file) {
-      if (!file.type.startsWith('image/')) {
-        alert('Please select a valid image file.');
-        return;
-      }
-      currentFile = file;
-      analyseBtn.disabled = false;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        imagePreview.src = e.target.result;
-        imagePreview.style.display = 'block';
-      };
-      reader.readAsDataURL(file);
-    }
-
-    async function loadLocalModel() {
-      if (localClassifier) return localClassifier;
-      if (isModelLoading) return null;
-
-      isModelLoading = true;
-      updateStatus('Downloading weights...', 'pending');
-      
-      try {
-        localClassifier = await pipeline('image-classification', 'Xenova/mobilenet_v2_1.0_224');
-        updateStatus('Local Model Ready', 'online');
-        return localClassifier;
-      } catch (error) {
-        console.error("Model load error:", error);
-        updateStatus('Load Failed', 'offline');
-        return null;
-      } finally {
-        isModelLoading = false;
-      }
-    }
-
-    analyseBtn.addEventListener('click', async () => {
-      if (!currentFile) return;
-
-      const mode = modeSelect.value;
-      analyseBtn.disabled = true;
-      resultsSection.classList.remove('hidden');
-      outputJson.innerHTML = '<span class="spinner"></span>Processing...';
-
-      if (mode === 'local') {
-        const classifier = await loadLocalModel();
-        if (!classifier) {
-          outputJson.textContent = '{"error": "Failed to load local model."}';
-          analyseBtn.disabled = false;
-          return;
-        }
-
-        const startTime = performance.now();
-        try {
-          const results = await classifier(imagePreview.src);
-          const latency = performance.now() - startTime;
-
-          const payload = {
-            status: "success",
-            engine: "transformers.js",
-            model: "mobilenet_v2",
-            execution_environment: "browser_wasm",
-            latency_ms: Math.round(latency),
-            predictions: results
-          };
-          outputJson.textContent = JSON.stringify(payload, null, 2);
-        } catch (err) {
-          outputJson.textContent = JSON.stringify({ error: err.message }, null, 2);
-        }
-      } else {
-        // API Simulation
-        setTimeout(() => {
-          const payload = {
-            status: "success",
-            engine: "remote_api",
-            target: "POST /vision/predict",
-            latency_ms: Math.floor(Math.random() * 100) + 150,
-            predictions: [
-              { label: "simulated_object_1", score: 0.92 },
-              { label: "simulated_object_2", score: 0.05 }
-            ],
-            note: "Deploy a backend service to replace this mock response."
-          };
-          outputJson.textContent = JSON.stringify(payload, null, 2);
-        }, 800);
-      }
-      
-      analyseBtn.disabled = false;
-    });
-  </script>
 </body>
 </html>
