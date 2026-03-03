@@ -1,29 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-GB">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GLiNER Financial NER — Systems</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GLiNER Financial NER — Neuromorphic Inference Lab</title>
+  <meta name="description" content="Zero-shot named entity recognition for banking documents. Detects PII, financial identifiers, and compliance-relevant entities using a DeBERTa encoder quantised to INT8 for CPU serving." />
+  <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <style>
-    .ner-textarea {
-      width: 100%;
-      min-height: 120px;
-      background: var(--bg-card, #0d1117);
-      color: var(--text-primary, #e6edf3);
-      border: 1px solid var(--border, #30363d);
-      border-radius: 6px;
-      padding: 12px;
-      font-size: 0.95rem;
-      font-family: inherit;
-      resize: vertical;
-      box-sizing: border-box;
-    }
-    .ner-textarea:focus {
-      outline: none;
-      border-color: var(--accent, #58a6ff);
-    }
     .threshold-row {
       display: flex;
       align-items: center;
@@ -34,18 +18,19 @@
     .threshold-val {
       min-width: 36px;
       text-align: right;
-      color: var(--accent, #58a6ff);
+      color: var(--a1, #6EE7FF);
       font-weight: 600;
     }
     .ner-result-box {
-      background: var(--bg-card, #0d1117);
-      border: 1px solid var(--border, #30363d);
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.12);
       border-radius: 6px;
       padding: 16px;
       line-height: 1.9;
       font-size: 0.95rem;
       min-height: 60px;
       word-break: break-word;
+      margin-top: 16px;
     }
     .ner-tag {
       display: inline-block;
@@ -65,7 +50,7 @@
     .ner-meta {
       margin-top: 10px;
       font-size: 0.82rem;
-      color: var(--text-secondary, #8b949e);
+      color: var(--muted, rgba(234,240,255,.72));
     }
     .ner-entity-list {
       margin-top: 14px;
@@ -77,8 +62,8 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      background: var(--bg-card, #0d1117);
-      border: 1px solid var(--border, #30363d);
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.12);
       border-radius: 20px;
       padding: 4px 12px;
       font-size: 0.83rem;
@@ -103,107 +88,111 @@
       font-size: 0.78rem;
       padding: 4px 10px;
       border-radius: 4px;
-      border: 1px solid var(--border, #30363d);
+      border: 1px solid rgba(255,255,255,.12);
       background: transparent;
-      color: var(--text-secondary, #8b949e);
+      color: var(--muted, rgba(234,240,255,.72));
       cursor: pointer;
     }
     .sample-btn:hover {
-      border-color: var(--accent, #58a6ff);
-      color: var(--accent, #58a6ff);
+      border-color: var(--a1, #6EE7FF);
+      color: var(--a1, #6EE7FF);
     }
   </style>
 </head>
+
 <body>
-  <header>
-    <a href="/" class="logo-link">
-      <img src="/logo.svg" alt="Neuromorphic Inference Lab" class="logo" />
-      <span>Neuromorphic Inference Lab</span>
-    </a>
-    <nav>
-      <a href="/">Signal</a>
-      <a href="/demos/">Systems</a>
-      <a href="/evidence/">Proof Ledger</a>
-      <a href="/about/">Identity</a>
-    </nav>
+  <header class="nav">
+    <div class="inner">
+      <div class="brand">
+        <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+        <span>Neuromorphic Inference Lab</span>
+      </div>
+      <nav class="navlinks" aria-label="Primary navigation">
+        <a data-nav href="/">Home</a>
+        <a data-nav href="/about/">About Me</a>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <div class="hero-label">NLP · Financial Intelligence</div>
-
-    <h1>GLiNER Financial NER</h1>
-    <p class="hero-sub">
-      Zero-shot named entity recognition for banking documents. Detects PII, financial identifiers,
-      and compliance-relevant entities using a DeBERTa encoder fine-tuned on financial corpora
-      and quantised to INT8 for CPU serving.
-    </p>
-
-    <div class="tag-row">
-      <span class="tag">GLiNER</span>
-      <span class="tag">ONNX INT8</span>
-      <span class="tag">FastAPI</span>
-      <span class="tag">Docker</span>
-      <span class="tag">Zero-shot NER</span>
-      <span class="tag">PII Detection</span>
-      <span class="tag">GDPR / AI Act</span>
-    </div>
-
-    <section class="section">
-      <h2>Problem → impact</h2>
-      <p>
-        Financial institutions process millions of unstructured documents daily — contracts, SWIFT messages,
-        KYC forms, transaction memos. Extracting structured entities (IBANs, names, tax IDs, amounts)
-        manually is slow and error-prone. This system provides a production-grade NER microservice
-        with a 24-label taxonomy covering PII and financial identifiers, deployable on commodity CPU hardware.
-      </p>
-    </section>
-
-    <section class="section">
-      <h2>Proof links</h2>
-      <div class="proof-links">
-        <a href="https://github.com/nepryoon/gliner-financial-ner" class="proof-link" target="_blank" rel="noopener">Source</a>
-        <a href="/api/gliner/health" class="proof-link" target="_blank" rel="noopener">Proxy health</a>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>Live inference demo</h2>
-      <p>
-        Entity extraction via a same-origin Cloudflare proxy. The backend runs GLiNER with an
-        ORT INT8-quantised encoder on CPU. Confidence threshold is configurable below.
+  <main class="container">
+    <section class="hero">
+      <p class="kicker">NLP · Financial Intelligence</p>
+      <h1 class="h1">GLiNER Financial NER</h1>
+      <p class="sub">
+        Zero-shot named entity recognition for banking documents. Detects PII, financial identifiers,
+        and compliance-relevant entities using a DeBERTa encoder fine-tuned on financial corpora
+        and quantised to INT8 for CPU serving.
       </p>
 
-      <div class="sample-buttons">
-        <button class="sample-btn" data-sample="iban">IBAN transfer</button>
-        <button class="sample-btn" data-sample="kyc">KYC document</button>
-        <button class="sample-btn" data-sample="invoice">Invoice</button>
-        <button class="sample-btn" data-sample="fraud">Fraud alert</button>
+      <div class="actions">
+        <a class="btn primary" href="https://github.com/nepryoon/gliner-financial-ner" target="_blank" rel="noopener">Source</a>
+        <a class="btn" href="/api/gliner/health" target="_blank" rel="noopener">Proxy health</a>
       </div>
 
-      <textarea class="ner-textarea" id="nerInput" placeholder="Paste a banking document, SWIFT message, KYC form, or any financial text…">John Doe, holder of IBAN GB29 NWBK 6016 1331 9268 19, requests a transfer of 15,000 GBP to Barclays. Tax ID: 123-45-6789. Email: john.doe@bank.co.uk.</textarea>
-
-      <div class="threshold-row">
-        <label for="threshold" style="font-size:0.88rem;white-space:nowrap;">Confidence threshold</label>
-        <input type="range" id="threshold" min="0.1" max="0.9" step="0.05" value="0.4" />
-        <span class="threshold-val" id="thresholdVal">0.40</span>
+      <div class="badges">
+        <span class="badge">GLiNER</span>
+        <span class="badge">ONNX INT8</span>
+        <span class="badge">FastAPI</span>
+        <span class="badge">Docker</span>
+        <span class="badge">Zero-shot NER</span>
+        <span class="badge">PII Detection</span>
+        <span class="badge">GDPR / AI Act</span>
       </div>
-
-      <button class="cta-btn" id="runBtn">Extract entities</button>
-
-      <div id="nerError" class="ner-error" style="display:none;"></div>
-
-      <div id="nerResultBox" class="ner-result-box" style="display:none;margin-top:16px;"></div>
-      <div id="nerEntityList" class="ner-entity-list" style="display:none;"></div>
-      <div id="nerMeta" class="ner-meta" style="display:none;"></div>
     </section>
+
+    <section class="section">
+      <article class="card project">
+        <h2>Problem → Impact</h2>
+        <p>
+          Financial institutions process millions of unstructured documents daily — contracts, SWIFT messages,
+          KYC forms, transaction memos. Extracting structured entities (IBANs, names, tax IDs, amounts)
+          manually is slow and error-prone. This system provides a production-grade NER microservice
+          with a 24-label taxonomy covering PII and financial identifiers, deployable on commodity CPU hardware.
+        </p>
+      </article>
+
+      <article class="card project">
+        <h2>Live Inference Demo</h2>
+        <p>
+          Entity extraction via a same-origin Cloudflare proxy. The backend runs GLiNER with an
+          ORT INT8-quantised encoder on CPU. Confidence threshold is configurable below.
+        </p>
+
+        <div class="sample-buttons">
+          <button class="sample-btn" data-sample="iban">IBAN transfer</button>
+          <button class="sample-btn" data-sample="kyc">KYC document</button>
+          <button class="sample-btn" data-sample="invoice">Invoice</button>
+          <button class="sample-btn" data-sample="fraud">Fraud alert</button>
+        </div>
+
+        <textarea class="input" id="nerInput" placeholder="Paste a banking document, SWIFT message, KYC form, or any financial text…">John Doe, holder of IBAN GB29 NWBK 6016 1331 9268 19, requests a transfer of 15,000 GBP to Barclays. Tax ID: 123-45-6789. Email: john.doe@bank.co.uk.</textarea>
+
+        <div class="threshold-row">
+          <label for="threshold" style="font-size:0.88rem;white-space:nowrap;">Confidence threshold</label>
+          <input type="range" id="threshold" min="0.1" max="0.9" step="0.05" value="0.4" />
+          <span class="threshold-val" id="thresholdVal">0.40</span>
+        </div>
+
+        <button class="btn primary" type="button" id="runBtn">Extract entities</button>
+
+        <div id="nerError" class="ner-error" style="display:none;"></div>
+
+        <div id="nerResultBox" class="ner-result-box" style="display:none;"></div>
+        <div id="nerEntityList" class="ner-entity-list" style="display:none;"></div>
+        <div id="nerMeta" class="ner-meta" style="display:none;"></div>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <div>© 2025 Neuromorphic Inference Lab</div>
+      <div class="prov">
+        <span id="build-branch">branch: …</span>
+        <span id="build-commit">commit: …</span>
+        <span id="build-time">built: …</span>
+      </div>
+    </footer>
   </main>
 
-  <footer>
-    <span>© 2025 Neuromorphic Inference Lab</span>
-    <span id="build-info">branch: … commit: … built: …</span>
-  </footer>
-
-  <script src="/build-info.js"></script>
   <script>
     // --- Colour palette for entity labels ---
     const LABEL_COLOURS = {
@@ -348,7 +337,7 @@
               <span class="chip-dot" style="background:${c.text}"></span>
               <strong style="color:${c.text}">${e.label}</strong>
               <span>${e.text}</span>
-              <span style="color:var(--text-secondary,#8b949e)">${e.score.toFixed(3)}</span>
+              <span style="color:var(--muted,rgba(234,240,255,.72))">${e.score.toFixed(3)}</span>
             `;
             entityList.appendChild(chip);
           });
@@ -368,5 +357,7 @@
       }
     });
   </script>
+
+  <script src="/build-info.js"></script>
 </body>
 </html>
