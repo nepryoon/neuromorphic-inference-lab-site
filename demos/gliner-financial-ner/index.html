@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GLiNER Financial NER — Systems</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <style>
+    .ner-textarea {
+      width: 100%;
+      min-height: 120px;
+      background: var(--bg-card, #0d1117);
+      color: var(--text-primary, #e6edf3);
+      border: 1px solid var(--border, #30363d);
+      border-radius: 6px;
+      padding: 12px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+    .ner-textarea:focus {
+      outline: none;
+      border-color: var(--accent, #58a6ff);
+    }
+    .threshold-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 12px 0;
+    }
+    .threshold-row input[type=range] { flex: 1; }
+    .threshold-val {
+      min-width: 36px;
+      text-align: right;
+      color: var(--accent, #58a6ff);
+      font-weight: 600;
+    }
+    .ner-result-box {
+      background: var(--bg-card, #0d1117);
+      border: 1px solid var(--border, #30363d);
+      border-radius: 6px;
+      padding: 16px;
+      line-height: 1.9;
+      font-size: 0.95rem;
+      min-height: 60px;
+      word-break: break-word;
+    }
+    .ner-tag {
+      display: inline-block;
+      border-radius: 4px;
+      padding: 1px 6px;
+      margin: 0 1px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .ner-label-badge {
+      font-size: 0.68rem;
+      vertical-align: super;
+      opacity: 0.85;
+      margin-left: 2px;
+    }
+    .ner-meta {
+      margin-top: 10px;
+      font-size: 0.82rem;
+      color: var(--text-secondary, #8b949e);
+    }
+    .ner-entity-list {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .ner-entity-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-card, #0d1117);
+      border: 1px solid var(--border, #30363d);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.83rem;
+    }
+    .ner-entity-chip .chip-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .ner-error {
+      color: #f85149;
+      font-size: 0.88rem;
+      margin-top: 8px;
+    }
+    .sample-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .sample-btn {
+      font-size: 0.78rem;
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid var(--border, #30363d);
+      background: transparent;
+      color: var(--text-secondary, #8b949e);
+      cursor: pointer;
+    }
+    .sample-btn:hover {
+      border-color: var(--accent, #58a6ff);
+      color: var(--accent, #58a6ff);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/" class="logo-link">
+      <img src="/logo.svg" alt="Neuromorphic Inference Lab" class="logo" />
+      <span>Neuromorphic Inference Lab</span>
+    </a>
+    <nav>
+      <a href="/">Signal</a>
+      <a href="/demos/">Systems</a>
+      <a href="/evidence/">Proof Ledger</a>
+      <a href="/about/">Identity</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="hero-label">NLP · Financial Intelligence</div>
+
+    <h1>GLiNER Financial NER</h1>
+    <p class="hero-sub">
+      Zero-shot named entity recognition for banking documents. Detects PII, financial identifiers,
+      and compliance-relevant entities using a DeBERTa encoder fine-tuned on financial corpora
+      and quantised to INT8 for CPU serving.
+    </p>
+
+    <div class="tag-row">
+      <span class="tag">GLiNER</span>
+      <span class="tag">ONNX INT8</span>
+      <span class="tag">FastAPI</span>
+      <span class="tag">Docker</span>
+      <span class="tag">Zero-shot NER</span>
+      <span class="tag">PII Detection</span>
+      <span class="tag">GDPR / AI Act</span>
+    </div>
+
+    <section class="section">
+      <h2>Problem → impact</h2>
+      <p>
+        Financial institutions process millions of unstructured documents daily — contracts, SWIFT messages,
+        KYC forms, transaction memos. Extracting structured entities (IBANs, names, tax IDs, amounts)
+        manually is slow and error-prone. This system provides a production-grade NER microservice
+        with a 24-label taxonomy covering PII and financial identifiers, deployable on commodity CPU hardware.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Proof links</h2>
+      <div class="proof-links">
+        <a href="https://github.com/nepryoon/gliner-financial-ner" class="proof-link" target="_blank" rel="noopener">Source</a>
+        <a href="/api/gliner/health" class="proof-link" target="_blank" rel="noopener">Proxy health</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Live inference demo</h2>
+      <p>
+        Entity extraction via a same-origin Cloudflare proxy. The backend runs GLiNER with an
+        ORT INT8-quantised encoder on CPU. Confidence threshold is configurable below.
+      </p>
+
+      <div class="sample-buttons">
+        <button class="sample-btn" data-sample="iban">IBAN transfer</button>
+        <button class="sample-btn" data-sample="kyc">KYC document</button>
+        <button class="sample-btn" data-sample="invoice">Invoice</button>
+        <button class="sample-btn" data-sample="fraud">Fraud alert</button>
+      </div>
+
+      <textarea class="ner-textarea" id="nerInput" placeholder="Paste a banking document, SWIFT message, KYC form, or any financial text…">John Doe, holder of IBAN GB29 NWBK 6016 1331 9268 19, requests a transfer of 15,000 GBP to Barclays. Tax ID: 123-45-6789. Email: john.doe@bank.co.uk.</textarea>
+
+      <div class="threshold-row">
+        <label for="threshold" style="font-size:0.88rem;white-space:nowrap;">Confidence threshold</label>
+        <input type="range" id="threshold" min="0.1" max="0.9" step="0.05" value="0.4" />
+        <span class="threshold-val" id="thresholdVal">0.40</span>
+      </div>
+
+      <button class="cta-btn" id="runBtn">Extract entities</button>
+
+      <div id="nerError" class="ner-error" style="display:none;"></div>
+
+      <div id="nerResultBox" class="ner-result-box" style="display:none;margin-top:16px;"></div>
+      <div id="nerEntityList" class="ner-entity-list" style="display:none;"></div>
+      <div id="nerMeta" class="ner-meta" style="display:none;"></div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© 2025 Neuromorphic Inference Lab</span>
+    <span id="build-info">branch: … commit: … built: …</span>
+  </footer>
+
+  <script src="/build-info.js"></script>
+  <script>
+    // --- Colour palette for entity labels ---
+    const LABEL_COLOURS = {
+      PERSON_NAME:     { bg: "#1f4e79", text: "#a8d4ff" },
+      EMAIL_ADDRESS:   { bg: "#1a3a2a", text: "#7ee8a2" },
+      PHONE_NUMBER:    { bg: "#2a1f4e", text: "#c4a8ff" },
+      PHYSICAL_ADDRESS:{ bg: "#3a2a1a", text: "#ffcc88" },
+      BANK_ACCOUNT:    { bg: "#1a2a3a", text: "#88ccff" },
+      PAYMENT_CARD:    { bg: "#3a1a2a", text: "#ffaacb" },
+      SWIFT_CODE:      { bg: "#1a3a3a", text: "#88ffee" },
+      MONETARY_AMOUNT: { bg: "#2a3a1a", text: "#bbff88" },
+      TAX_ID:          { bg: "#3a2a1a", text: "#ffcc88" },
+      VAT_NUMBER:      { bg: "#3a1a1a", text: "#ffaa88" },
+      NATIONAL_ID:     { bg: "#1a1a3a", text: "#aaaaff" },
+      ORGANISATION:    { bg: "#1a2a1a", text: "#88ff88" },
+      DATE_OF_BIRTH:   { bg: "#2a1a2a", text: "#ffaaff" },
+      DATE:            { bg: "#1e2a1e", text: "#aaffaa" },
+      CURRENCY:        { bg: "#2a2a1a", text: "#ffffaa" },
+      BANK_SORT_CODE:  { bg: "#1a2a2a", text: "#aaffff" },
+      IP_ADDRESS:      { bg: "#2a1a1a", text: "#ffaaaa" },
+      URL:             { bg: "#1a1a2a", text: "#aaaaff" },
+      CREDENTIAL:      { bg: "#3a1a1a", text: "#ff8888" },
+      POSTAL_CODE:     { bg: "#1a2a1a", text: "#88ffcc" },
+      LOCATION:        { bg: "#1e2a2a", text: "#88ddff" },
+      USERNAME:        { bg: "#2a1e1a", text: "#ffcc88" },
+    };
+
+    function colourFor(label) {
+      return LABEL_COLOURS[label] || { bg: "#2a2a2a", text: "#cccccc" };
+    }
+
+    // --- Sample texts ---
+    const SAMPLES = {
+      iban: "John Doe, holder of IBAN GB29 NWBK 6016 1331 9268 19, requests a transfer of 15,000 GBP to Barclays. Tax ID: 123-45-6789. Email: john.doe@bank.co.uk.",
+      kyc:  "Applicant: Maria Rossi, DOB 22/03/1985, passport IT-XYZ123456, NI AB123456C. Address: 10 Baker Street, London W1U 3BW. Phone: +44 20 7946 0123.",
+      invoice: "Invoice #INV-2024-0042 from Acme Corp Ltd, VAT GB123456789, dated 15 Jan 2024. Amount due: EUR 8,450.00. Bank: HSBC, sort code 40-00-00, account 12345678.",
+      fraud: "Suspicious transaction detected: card 4111 1111 1111 1111, CVV 123, exp 12/26. Originating IP: 185.220.101.45. Merchant URL: http://phishing-bank.ru. Alert ref: FRD-2024-00182.",
+    };
+
+    document.querySelectorAll(".sample-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.getElementById("nerInput").value = SAMPLES[btn.dataset.sample];
+      });
+    });
+
+    // --- Threshold display ---
+    const slider = document.getElementById("threshold");
+    const thresholdVal = document.getElementById("thresholdVal");
+    slider.addEventListener("input", () => {
+      thresholdVal.textContent = parseFloat(slider.value).toFixed(2);
+    });
+
+    // --- Render highlighted text ---
+    function renderHighlighted(text, entities) {
+      if (!entities.length) return document.createTextNode(text);
+
+      // Sort by start, deduplicate overlapping spans (keep higher score)
+      const sorted = [...entities].sort((a, b) => a.start - b.start);
+      const merged = [];
+      for (const e of sorted) {
+        if (merged.length && e.start < merged[merged.length - 1].end) continue;
+        merged.push(e);
+      }
+
+      const frag = document.createDocumentFragment();
+      let cursor = 0;
+      for (const e of merged) {
+        if (e.start > cursor) {
+          frag.appendChild(document.createTextNode(text.slice(cursor, e.start)));
+        }
+        const c = colourFor(e.label);
+        const span = document.createElement("span");
+        span.className = "ner-tag";
+        span.style.background = c.bg;
+        span.style.color = c.text;
+        span.title = `${e.label} (${e.score.toFixed(3)})`;
+        span.textContent = text.slice(e.start, e.end);
+        const badge = document.createElement("span");
+        badge.className = "ner-label-badge";
+        badge.textContent = e.label;
+        badge.style.color = c.text;
+        span.appendChild(badge);
+        frag.appendChild(span);
+        cursor = e.end;
+      }
+      if (cursor < text.length) {
+        frag.appendChild(document.createTextNode(text.slice(cursor)));
+      }
+      return frag;
+    }
+
+    // --- Inference ---
+    document.getElementById("runBtn").addEventListener("click", async () => {
+      const text = document.getElementById("nerInput").value.trim();
+      if (!text) return;
+
+      const btn = document.getElementById("runBtn");
+      const errorBox = document.getElementById("nerError");
+      const resultBox = document.getElementById("nerResultBox");
+      const entityList = document.getElementById("nerEntityList");
+      const metaBox = document.getElementById("nerMeta");
+
+      btn.textContent = "Extracting…";
+      btn.disabled = true;
+      errorBox.style.display = "none";
+      resultBox.style.display = "none";
+      entityList.style.display = "none";
+      metaBox.style.display = "none";
+
+      try {
+        const resp = await fetch("/api/gliner/predict", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            texts: [text],
+            threshold: parseFloat(slider.value),
+          }),
+        });
+
+        if (!resp.ok) {
+          const err = await resp.json().catch(() => ({ detail: resp.statusText }));
+          throw new Error(err.detail || resp.statusText);
+        }
+
+        const data = await resp.json();
+        const result = data.results?.[0];
+        const entities = result?.entities || [];
+
+        // Highlighted text
+        resultBox.innerHTML = "";
+        resultBox.appendChild(renderHighlighted(text, entities));
+        resultBox.style.display = "block";
+
+        // Entity chips
+        entityList.innerHTML = "";
+        if (entities.length) {
+          entities.forEach(e => {
+            const c = colourFor(e.label);
+            const chip = document.createElement("div");
+            chip.className = "ner-entity-chip";
+            chip.innerHTML = `
+              <span class="chip-dot" style="background:${c.text}"></span>
+              <strong style="color:${c.text}">${e.label}</strong>
+              <span>${e.text}</span>
+              <span style="color:var(--text-secondary,#8b949e)">${e.score.toFixed(3)}</span>
+            `;
+            entityList.appendChild(chip);
+          });
+          entityList.style.display = "flex";
+        }
+
+        // Meta
+        metaBox.textContent = `${entities.length} entit${entities.length === 1 ? "y" : "ies"} detected · latency ${data.latency_ms?.toFixed(0) ?? "—"} ms · model ${data.model_version ?? "—"}`;
+        metaBox.style.display = "block";
+
+      } catch (err) {
+        errorBox.textContent = "Error: " + err.message;
+        errorBox.style.display = "block";
+      } finally {
+        btn.textContent = "Extract entities";
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
