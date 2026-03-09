@@ -366,19 +366,19 @@
     const meanPm25 = 35;
     const theta = 0.25;
     const noise = (Math.random() - 0.5) * 4;
-    const spike = (tickCount % 8 === 0 && pm25 < 40) ? (Math.random() * 6 + 3) : 0;
+    const spike = (tickCount % 12 === 0 && pm25 < 38) ? (Math.random() * 3 + 1.5) : 0;
     pm25 = pm25 + theta * (meanPm25 - pm25) + noise + spike;
     pm25 = Math.max(15, Math.min(65, pm25));
 
     // Trend: simple difference, NOT accumulated EWMA
     const rawTrend = pm25 - prevPm25;
     gT = 0.45 * rawTrend + 0.55 * gT;
-    // Hard clamp gT so it cannot accumulate beyond ±2
-    gT = Math.max(-2, Math.min(2, gT));
+    // Hard clamp gT so it cannot accumulate beyond ±3
+    gT = Math.max(-3, Math.min(3, gT));
     prevPm25 = pm25;
 
     // W_ext
-    const wExt = 1 / (1 + Math.exp(3 * gT));
+    const wExt = 1 / (1 + Math.exp(1.5 * gT));
 
     /* 4. Budget: regenerate +0.01, usage deducted on API call */
     state.budget = clamp(state.budget + 0.01, 0, 1);
