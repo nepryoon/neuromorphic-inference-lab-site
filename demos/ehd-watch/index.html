@@ -243,16 +243,16 @@
   const state = {
     running: false,
     intervalId: null,
-    tickCount: 0,
-    pm25: 35,
-    gt: 0,          // EWMA trend
     budget: 0.90,
     freshness: 0.95,
-    wExt: 0.70,
     history: [],    // last N thought lines
   };
 
-  const ALPHA    = 0.3;    // EWMA smoothing factor for PM2.5 trend g_t
+  let pm25 = 35;
+  let gT = 0;
+  let prevPm25 = 35;
+  let tickCount = 0;
+
   const TICK_MS  = 8000;  // Deliberation interval (ms)
 
   // Hope-term B_t simulation parameters (see paper §4.3 — hope score range)
@@ -360,19 +360,25 @@
 
   /* ── Tick logic ── */
   async function tick() {
-    state.tickCount++;
+    tickCount++;
 
-    /* 1. Simulate PM2.5 — Ornstein-Uhlenbeck mean-reverting process */
-    const ouNoise = rand(-2.5, 2.5);
-    const spike = (state.tickCount % 6 === 0 && state.pm25 < 50) ? rand(6, 10) : 0;
-    state.pm25  = clamp(state.pm25 + 0.15 * (35 - state.pm25) + ouNoise + spike, 15, 65);
+    // Mean-reverting PM2.5
+    const meanPm25 = 35;
+    const theta = 0.25;
+    const noise = (Math.random() - 0.5) * 4;
+    const spike = (tickCount % 6 === 0) ? (Math.random() * 8 + 4) : 0;
+    pm25 = pm25 + theta * (meanPm25 - pm25) + noise + spike;
+    pm25 = Math.max(15, Math.min(65, pm25));
 
-    /* 2. EWMA trend g_t */
-    const rawTrend = (state.pm25 - 35) / 35;   // normalised deviation from baseline 35 µg/m³
-    state.gt = ALPHA * rawTrend + (1 - ALPHA) * state.gt;
+    // Trend: simple difference, NOT accumulated EWMA
+    const rawTrend = pm25 - prevPm25;
+    gT = 0.25 * rawTrend + 0.75 * gT;
+    // Hard clamp gT so it cannot accumulate beyond ±3
+    gT = Math.max(-3, Math.min(3, gT));
+    prevPm25 = pm25;
 
-    /* 3. W_ext = 1 / (1 + exp(3 * g_t)) — falls as trend worsens */
-    state.wExt = clamp(1 / (1 + Math.exp(3 * state.gt)), 0, 1);
+    // W_ext
+    const wExt = 1 / (1 + Math.exp(3 * gT));
 
     /* 4. Budget: regenerate +0.01, usage deducted on API call */
     state.budget = clamp(state.budget + 0.01, 0, 1);
@@ -381,16 +387,16 @@
     state.freshness = clamp(state.freshness - 0.005, 0, 1);
 
     /* 6. Trigger */
-    const trigger = state.wExt < 0.50;
+    const trigger = wExt < 0.50;
 
     /* Update UI early so user sees welfare before API call resolves */
-    updateWelfareUI(state.wExt, state.budget, state.freshness, trigger);
+    updateWelfareUI(wExt, state.budget, state.freshness, trigger);
 
     /* Trigger highlighted line */
     if (trigger) {
-      appendLine(`⚑ Trigger active — W_ext=${state.wExt.toFixed(3)}, g_t=${state.gt.toFixed(4)}`, "ts-trigger");
+      appendLine(`⚑ Trigger active — W_ext=${wExt.toFixed(3)}, g_t=${gT.toFixed(4)}`, "ts-trigger");
     } else {
-      appendLine(`tick ${state.tickCount} — PM2.5=${state.pm25.toFixed(1)} µg/m³, g_t=${state.gt.toFixed(4)}, W_ext=${state.wExt.toFixed(3)}`);
+      appendLine(`tick ${tickCount} — PM2.5=${pm25.toFixed(1)} µg/m³, g_t=${gT.toFixed(4)}, W_ext=${wExt.toFixed(3)}`);
     }
 
     /* 7. POST to /api/ehd-watch */
@@ -398,14 +404,14 @@
     let thought = null;
     try {
       state.budget = clamp(state.budget - 0.02, 0, 1);
-      updateWelfareUI(state.wExt, state.budget, state.freshness, trigger);
+      updateWelfareUI(wExt, state.budget, state.freshness, trigger);
 
       const res = await fetch("/api/ehd-watch", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          welfare_state: { w_ext: state.wExt, budget: state.budget, freshness: state.freshness },
-          trend: state.gt,
+          welfare_state: { w_ext: wExt, budget: state.budget, freshness: state.freshness },
+          trend: gT,
           trigger,
           history: last3,
         }),
@@ -441,10 +447,10 @@
       const predDelta   = PRED_DELTA_BASE + rand(-PRED_DELTA_RANGE / 2, PRED_DELTA_RANGE / 2);
       const noise       = rand(-OBS_NOISE_RANGE / 2, OBS_NOISE_RANGE / 2);
       const obsDelta    = predDelta + noise;
-      const wChange     = (state.wExt - 0.50);
+      const wChange     = (wExt - 0.50);
 
       let action, reason;
-      if (state.wExt < 0.35) {
+      if (wExt < 0.35) {
         action = "post_alert";
         reason = "W_ext < 0.35 (severe deficit)";
       } else {
@@ -455,7 +461,7 @@
       // Freshness resets on fetch_data
       if (action === "fetch_data") {
         state.freshness = 0.95;
-        updateWelfareUI(state.wExt, state.budget, state.freshness, trigger);
+        updateWelfareUI(wExt, state.budget, state.freshness, trigger);
       }
 
       const actionLine = `→ Action selected: ${action} (B_t=${bt.toFixed(3)})`;
