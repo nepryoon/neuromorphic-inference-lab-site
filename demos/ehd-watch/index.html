@@ -362,10 +362,10 @@
   async function tick() {
     state.tickCount++;
 
-    /* 1. Simulate PM2.5 */
-    const spike = (state.tickCount % 5 === 0) ? rand(5, 8) : 0;
-    const walk  = rand(-3, 3);
-    state.pm25  = clamp(state.pm25 + walk + spike, 0, 500);
+    /* 1. Simulate PM2.5 — Ornstein-Uhlenbeck mean-reverting process */
+    const ouNoise = rand(-2.5, 2.5);
+    const spike = (state.tickCount % 6 === 0 && state.pm25 < 50) ? rand(6, 10) : 0;
+    state.pm25  = clamp(state.pm25 + 0.15 * (35 - state.pm25) + ouNoise + spike, 15, 65);
 
     /* 2. EWMA trend g_t */
     const rawTrend = (state.pm25 - 35) / 35;   // normalised deviation from baseline 35 µg/m³
