@@ -138,8 +138,10 @@
       — the expected improvement to the welfare vector from a candidate action.
     </p>
     <p>
-      The PM2.5 trend g<sub>t</sub> is tracked via an exponentially-weighted moving average (α = 0.3)
-      and mapped to W<sub>ext</sub> through a logistic function, ensuring smooth welfare dynamics.
+      W<sub>ext</sub> is computed from the PM2.5 level relative to the healthy baseline of 35 µg/m³
+      via a logistic function, ensuring direct mean reversion: when air quality improves, welfare
+      rises automatically. The trend estimate g<sub>t</sub> (EWMA of tick-to-tick delta) is used
+      only for the agent's verbal reasoning, not for welfare computation.
       Endocentric components (budget and freshness) enforce resource constraints so the agent cannot
       act without cost.
     </p>
@@ -245,7 +247,7 @@
     intervalId: null,
     budget: 0.90,
     freshness: 0.95,
-    history: [],    // last N thought lines
+    history: [],
   };
 
   let pm25 = 35;
@@ -253,19 +255,16 @@
   let prevPm25 = 35;
   let tickCount = 0;
 
-  const TICK_MS  = 8000;  // Deliberation interval (ms)
+  const TICK_MS = 8000;
 
-  // Hope-term B_t simulation parameters (see paper §4.3 — hope score range)
-  const BT_BASE      =  0.55;  // minimum plausible hope score
-  const BT_RANGE     =  0.15;  // stochastic spread above base
-  // Predicted welfare-delta parameters for fetch_data action
-  const PRED_DELTA_BASE  = -0.05; // expected reduction in W_ext deviation
-  const PRED_DELTA_RANGE =  0.04; // ± stochastic spread
-  const OBS_NOISE_RANGE  =  0.02; // observation noise on realised delta
+  const BT_BASE          =  0.55;
+  const BT_RANGE         =  0.15;
+  const PRED_DELTA_BASE  = -0.05;
+  const PRED_DELTA_RANGE =  0.04;
+  const OBS_NOISE_RANGE  =  0.02;
 
   /* ── Helpers ── */
   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
-  function sigmoid(x) { return 1 / (1 + Math.exp(-x)); }
   function rand(lo, hi) { return lo + Math.random() * (hi - lo); }
   function escapeHtml(s) {
     return String(s)
@@ -282,19 +281,19 @@
   }
 
   /* ── DOM refs ── */
-  const $stream     = document.getElementById("thoughtStream");
-  const $wExtVal    = document.getElementById("wExtVal");
-  const $wExtBar    = document.getElementById("wExtBar");
-  const $budgetVal  = document.getElementById("budgetVal");
-  const $budgetBar  = document.getElementById("budgetBar");
-  const $freshVal   = document.getElementById("freshnessVal");
-  const $freshBar   = document.getElementById("freshnessBar");
-  const $vAggVal    = document.getElementById("vAggVal");
-  const $trigger    = document.getElementById("triggerBadge");
-  const $actionLog  = document.getElementById("actionLog");
+  const $stream      = document.getElementById("thoughtStream");
+  const $wExtVal     = document.getElementById("wExtVal");
+  const $wExtBar     = document.getElementById("wExtBar");
+  const $budgetVal   = document.getElementById("budgetVal");
+  const $budgetBar   = document.getElementById("budgetBar");
+  const $freshVal    = document.getElementById("freshnessVal");
+  const $freshBar    = document.getElementById("freshnessBar");
+  const $vAggVal     = document.getElementById("vAggVal");
+  const $trigger     = document.getElementById("triggerBadge");
+  const $actionLog   = document.getElementById("actionLog");
   const $actionEmpty = document.getElementById("actionEmpty");
-  const $btn        = document.getElementById("startStop");
-  const $pill       = document.getElementById("statusPill");
+  const $btn         = document.getElementById("startStop");
+  const $pill        = document.getElementById("statusPill");
 
   /* ── Thought stream ── */
   function appendLine(text, cls) {
@@ -304,23 +303,20 @@
     div.innerHTML = `<span class="ts-stamp">[${escapeHtml(stamp)}]</span>${escapeHtml(text)}`;
     $stream.appendChild(div);
     $stream.scrollTop = $stream.scrollHeight;
-    // Store in history buffer (last 20 lines)
     state.history.push(`[${stamp}] ${text}`);
     if (state.history.length > 20) state.history.shift();
   }
 
-  /* ── Welfare UI update ── */
+  /* ── Welfare UI ── */
   function updateWelfareUI(wExt, budget, freshness, triggerActive) {
     const fmt = v => v.toFixed(3);
-    $wExtVal.textContent  = fmt(wExt);
+    $wExtVal.textContent   = fmt(wExt);
     $budgetVal.textContent = fmt(budget);
-    $freshVal.textContent = fmt(freshness);
-    $wExtBar.style.width   = (wExt * 100).toFixed(1) + "%";
-    $budgetBar.style.width  = (budget * 100).toFixed(1) + "%";
+    $freshVal.textContent  = fmt(freshness);
+    $wExtBar.style.width   = (wExt    * 100).toFixed(1) + "%";
+    $budgetBar.style.width = (budget  * 100).toFixed(1) + "%";
     $freshBar.style.width  = (freshness * 100).toFixed(1) + "%";
 
-    // V_aggregate: unweighted mean of the three welfare components
-    // (W_ext + budget + freshness) / 3 — equal weighting per §3.1 of the EHD spec
     const vAgg = (wExt + budget + freshness) / 3;
     $vAggVal.textContent = fmt(vAgg);
 
@@ -339,9 +335,7 @@
     const card = document.createElement("div");
     card.className = "action-card";
     const stamp = nowHHMMSS();
-
     const fmt2 = v => (v >= 0 ? "+" : "") + v.toFixed(4);
-
     card.innerHTML = `
       <div class="action-card-head">
         <span class="action-name">${escapeHtml(action)}</span>
@@ -353,53 +347,51 @@
       <div class="action-row"><span>Observed Δ</span><span>${fmt2(obsDelta)}</span></div>
       <div class="action-row"><span>Welfare Δ</span><span>${fmt2(welfareChange)}</span></div>
     `;
-    // Prepend newest card and scroll to top so latest is always visible
     $actionLog.insertBefore(card, $actionLog.firstChild);
     $actionLog.scrollTop = 0;
   }
 
-  /* ── Tick logic ── */
+  /* ── Tick ── */
   async function tick() {
     tickCount++;
 
-    // Mean-reverting PM2.5
+    // ── PM2.5: Ornstein-Uhlenbeck mean reversion toward 35 µg/m³ ──
     const meanPm25 = 35;
-    const theta = 0.25;
-    const noise = (Math.random() - 0.5) * 4;
-    const spike = (tickCount % 12 === 0 && pm25 < 38) ? (Math.random() * 3 + 1.5) : 0;
+    const theta    = 0.25;
+    const noise    = (Math.random() - 0.5) * 4;
+    const spike    = (tickCount % 12 === 0 && pm25 < 38) ? (Math.random() * 3 + 1.5) : 0;
     pm25 = pm25 + theta * (meanPm25 - pm25) + noise + spike;
-    pm25 = Math.max(15, Math.min(65, pm25));
+    pm25 = clamp(pm25, 15, 65);
 
-    // Trend: simple difference, NOT accumulated EWMA
+    // ── gT: smoothed velocity — used for verbal reasoning only, NOT for welfare ──
     const rawTrend = pm25 - prevPm25;
     gT = 0.45 * rawTrend + 0.55 * gT;
-    // Hard clamp gT so it cannot accumulate beyond ±3
-    gT = Math.max(-3, Math.min(3, gT));
+    gT = clamp(gT, -3, 3);
     prevPm25 = pm25;
 
-    // W_ext
-    const wExt = 1 / (1 + Math.exp(1.5 * gT));
+    // ── W_ext: based on PM2.5 LEVEL vs healthy baseline (35 µg/m³) ──
+    // W_ext = 0.50 at pm25 = 35 (neutral)
+    // W_ext → 1.00 as pm25 → 15 (clean air = high welfare)
+    // W_ext → 0.01 as pm25 → 65 (polluted air = low welfare)
+    // Mean reversion in pm25 directly produces mean reversion in W_ext.
+    const wExt = 1 / (1 + Math.exp(0.15 * (pm25 - 35)));
 
-    /* 4. Budget: regenerate +0.01, usage deducted on API call */
-    state.budget = clamp(state.budget + 0.01, 0, 1);
+    // ── Endocentric variables ──
+    state.budget    = clamp(state.budget + 0.01, 0, 1);   // passive regen
+    state.freshness = clamp(state.freshness - 0.005, 0, 1); // passive decay
 
-    /* 5. Freshness: decay -0.005 per tick */
-    state.freshness = clamp(state.freshness - 0.005, 0, 1);
-
-    /* 6. Trigger */
+    // ── Trigger ──
     const trigger = wExt < 0.50;
 
-    /* Update UI early so user sees welfare before API call resolves */
     updateWelfareUI(wExt, state.budget, state.freshness, trigger);
 
-    /* Trigger highlighted line */
     if (trigger) {
-      appendLine(`⚑ Trigger active — W_ext=${wExt.toFixed(3)}, g_t=${gT.toFixed(4)}`, "ts-trigger");
+      appendLine(`⚑ Trigger active — W_ext=${wExt.toFixed(3)}, PM2.5=${pm25.toFixed(1)} µg/m³, g_t=${gT.toFixed(4)}`, "ts-trigger");
     } else {
       appendLine(`tick ${tickCount} — PM2.5=${pm25.toFixed(1)} µg/m³, g_t=${gT.toFixed(4)}, W_ext=${wExt.toFixed(3)}`);
     }
 
-    /* 7. POST to /api/ehd-watch */
+    // ── API call ──
     const last3 = state.history.slice(-3).join("\n");
     let thought = null;
     try {
@@ -422,11 +414,10 @@
         thought = typeof data.thought === "string" ? data.thought : null;
       }
     } catch (err) {
-      // Network or parse error — log for debugging but continue without thought text
       console.error("[EHD-Watch] API call failed:", err);
     }
 
-    /* 8. Stream thought lines into Panel 1 */
+    // ── Stream thought lines ──
     if (thought) {
       const lines = thought
         .split(/\n|(?<=\.)\s+/)
@@ -441,13 +432,12 @@
       }
     }
 
-    /* 9. Action card if trigger fired or budget conservation needed */
+    // ── Action card ──
     if (trigger) {
-      const bt          = BT_BASE + rand(0, BT_RANGE);
-      const predDelta   = PRED_DELTA_BASE + rand(-PRED_DELTA_RANGE / 2, PRED_DELTA_RANGE / 2);
-      const noise       = rand(-OBS_NOISE_RANGE / 2, OBS_NOISE_RANGE / 2);
-      const obsDelta    = predDelta + noise;
-      const wChange     = (wExt - 0.50);
+      const bt        = BT_BASE + rand(0, BT_RANGE);
+      const predDelta = PRED_DELTA_BASE + rand(-PRED_DELTA_RANGE / 2, PRED_DELTA_RANGE / 2);
+      const obsDelta  = predDelta + rand(-OBS_NOISE_RANGE / 2, OBS_NOISE_RANGE / 2);
+      const wChange   = wExt - 0.50;
 
       let action, reason;
       if (wExt < 0.35) {
@@ -458,19 +448,17 @@
         reason = "W_ext < 0.50 (moderate deficit)";
       }
 
-      // Freshness resets on fetch_data
       if (action === "fetch_data") {
         state.freshness = 0.95;
         updateWelfareUI(wExt, state.budget, state.freshness, trigger);
       }
 
-      const actionLine = `→ Action selected: ${action} (B_t=${bt.toFixed(3)})`;
-      appendLine(actionLine, "ts-action");
+      appendLine(`→ Action selected: ${action} (B_t=${bt.toFixed(3)})`, "ts-action");
       addActionCard(action, reason, bt, predDelta, obsDelta, wChange);
+
     } else if (state.budget < 0.40) {
-      const bt        = BT_BASE + rand(0, BT_RANGE);
-      const actionLine = `→ Action selected: wait (B_t=${bt.toFixed(3)})`;
-      appendLine(actionLine, "ts-action");
+      const bt = BT_BASE + rand(0, BT_RANGE);
+      appendLine(`→ Action selected: wait (B_t=${bt.toFixed(3)})`, "ts-action");
       addActionCard("wait", "budget < 0.40 (conservation)", bt, 0, 0, 0);
     }
   }
@@ -482,7 +470,7 @@
     $btn.textContent = "Stop";
     $pill.textContent = "Running";
     $pill.classList.add("running");
-    tick();   // immediate first tick
+    tick();
     state.intervalId = setInterval(tick, TICK_MS);
   }
 
