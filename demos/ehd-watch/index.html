@@ -251,8 +251,16 @@
     history: [],    // last N thought lines
   };
 
-  const ALPHA = 0.3;
-  const TICK_MS = 8000;
+  const ALPHA    = 0.3;    // EWMA smoothing factor for PM2.5 trend g_t
+  const TICK_MS  = 8000;  // Deliberation interval (ms)
+
+  // Hope-term B_t simulation parameters (see paper §4.3 — hope score range)
+  const BT_BASE      =  0.55;  // minimum plausible hope score
+  const BT_RANGE     =  0.15;  // stochastic spread above base
+  // Predicted welfare-delta parameters for fetch_data action
+  const PRED_DELTA_BASE  = -0.05; // expected reduction in W_ext deviation
+  const PRED_DELTA_RANGE =  0.04; // ± stochastic spread
+  const OBS_NOISE_RANGE  =  0.02; // observation noise on realised delta
 
   /* ── Helpers ── */
   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
@@ -283,7 +291,7 @@
   const $vAggVal    = document.getElementById("vAggVal");
   const $trigger    = document.getElementById("triggerBadge");
   const $actionLog  = document.getElementById("actionLog");
-  const $actionMpty = document.getElementById("actionEmpty");
+  const $actionEmpty = document.getElementById("actionEmpty");
   const $btn        = document.getElementById("startStop");
   const $pill       = document.getElementById("statusPill");
 
@@ -310,7 +318,8 @@
     $budgetBar.style.width  = (budget * 100).toFixed(1) + "%";
     $freshBar.style.width  = (freshness * 100).toFixed(1) + "%";
 
-    // V_aggregate: simple mean of three components
+    // V_aggregate: unweighted mean of the three welfare components
+    // (W_ext + budget + freshness) / 3 — equal weighting per §3.1 of the EHD spec
     const vAgg = (wExt + budget + freshness) / 3;
     $vAggVal.textContent = fmt(vAgg);
 
@@ -325,7 +334,7 @@
 
   /* ── Action card ── */
   function addActionCard(action, reason, bt, predDelta, obsDelta, welfareChange) {
-    if ($actionMpty) $actionMpty.style.display = "none";
+    if ($actionEmpty) $actionEmpty.style.display = "none";
     const card = document.createElement("div");
     card.className = "action-card";
     const stamp = nowHHMMSS();
@@ -404,8 +413,9 @@
         const data = await res.json();
         thought = typeof data.thought === "string" ? data.thought : null;
       }
-    } catch {
-      // Network error — continue without thought
+    } catch (err) {
+      // Network or parse error — log for debugging but continue without thought text
+      console.error("[EHD-Watch] API call failed:", err);
     }
 
     /* 8. Stream thought lines into Panel 1 */
@@ -425,9 +435,9 @@
 
     /* 9. Action card if trigger fired */
     if (trigger) {
-      const bt          = 0.55 + rand(0, 0.15);
-      const predDelta   = -0.05 + rand(-0.02, 0.02);
-      const noise       = rand(-0.01, 0.01);
+      const bt          = BT_BASE + rand(0, BT_RANGE);
+      const predDelta   = PRED_DELTA_BASE + rand(-PRED_DELTA_RANGE / 2, PRED_DELTA_RANGE / 2);
+      const noise       = rand(-OBS_NOISE_RANGE / 2, OBS_NOISE_RANGE / 2);
       const obsDelta    = predDelta + noise;
       const wChange     = (state.wExt - 0.50);
 
