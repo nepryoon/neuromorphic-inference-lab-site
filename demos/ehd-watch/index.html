@@ -23,7 +23,7 @@
     @media (max-width: 860px) { .panels { flex-direction: column; } }
 
     /* ── Panel base ── */
-    .panel { border-radius: 14px; border: 1px solid var(--border); background: rgba(255,255,255,.04); padding: 16px; display: flex; flex-direction: column; min-height: 380px; overflow: hidden; }
+    .panel { border-radius: 14px; border: 1px solid var(--border); background: rgba(255,255,255,.04); padding: 16px; display: flex; flex-direction: column; height: 520px; overflow: hidden; }
     .panel-title { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
 
     /* ── Panel widths ── */
@@ -352,8 +352,9 @@
       <div class="action-row"><span>Observed Δ</span><span>${fmt2(obsDelta)}</span></div>
       <div class="action-row"><span>Welfare Δ</span><span>${fmt2(welfareChange)}</span></div>
     `;
-    // Prepend newest card
+    // Prepend newest card and scroll to top so latest is always visible
     $actionLog.insertBefore(card, $actionLog.firstChild);
+    $actionLog.scrollTop = 0;
   }
 
   /* ── Tick logic ── */
