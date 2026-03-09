@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EHD-Watch — Exocentric Homeostatic Deliberation | Neuromorphic Inference Lab</title>
+  <meta name="description" content="Live demo of EHD-Watch: an exocentric homeostatic agent that monitors PM2.5 air quality, maintains a welfare vector, and deliberates over remedial actions in real time." />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/style.css" />
+
+  <style>
+    /* ── EHD-Watch page styles ── */
+    .hero { margin-top: 22px; padding: 22px; border-radius: var(--radius); border: 1px solid var(--border); background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.03)); box-shadow: var(--shadow); position: relative; overflow: hidden; }
+    .hero::before { content: ""; position: absolute; inset: -2px; background: radial-gradient(420px 260px at 10% 20%, rgba(110,231,255,.18), transparent 55%), radial-gradient(420px 260px at 90% 40%, rgba(167,139,250,.16), transparent 60%); pointer-events: none; filter: blur(1px); }
+    .hero > * { position: relative; }
+    h1 { margin: 0 0 8px; font-size: clamp(26px, 4vw, 40px); line-height: 1.12; }
+    .subtitle { margin: 0 0 16px; color: var(--muted); max-width: 80ch; line-height: 1.6; }
+    .rowWrap { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 4px; }
+
+    /* ── Demo container ── */
+    .demo-wrap { margin-top: 22px; }
+    .panels { display: flex; gap: 14px; align-items: stretch; }
+    @media (max-width: 860px) { .panels { flex-direction: column; } }
+
+    /* ── Panel base ── */
+    .panel { border-radius: 14px; border: 1px solid var(--border); background: rgba(255,255,255,.04); padding: 16px; display: flex; flex-direction: column; min-height: 380px; overflow: hidden; }
+    .panel-title { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+
+    /* ── Panel widths ── */
+    .panel-thought  { flex: 0 0 45%; }
+    .panel-welfare  { flex: 0 0 25%; }
+    .panel-actions  { flex: 0 0 30%; }
+    @media (max-width: 860px) { .panel-thought, .panel-welfare, .panel-actions { flex: none; width: 100%; } }
+
+    /* ── Thought stream ── */
+    #thoughtStream { flex: 1; overflow-y: auto; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12.5px; line-height: 1.55; color: var(--txt); background: rgba(0,0,0,.2); border-radius: 8px; padding: 10px 12px; scroll-behavior: smooth; }
+    .ts-line { padding: 1px 0; }
+    .ts-trigger { color: #fbbf24; background: rgba(251,191,36,.10); border-radius: 4px; padding: 0 4px; }
+    .ts-action  { color: #34d399; background: rgba(52,211,153,.10); border-radius: 4px; padding: 0 4px; }
+    .ts-stamp   { color: rgba(234,240,255,.40); margin-right: 6px; user-select: none; }
+
+    /* ── Welfare bars ── */
+    .wbar-wrap { display: flex; flex-direction: column; gap: 14px; flex: 1; }
+    .wbar-item { display: flex; flex-direction: column; gap: 4px; }
+    .wbar-header { display: flex; justify-content: space-between; align-items: baseline; }
+    .wbar-label { font-size: 12px; color: var(--muted); }
+    .wbar-val { font-size: 13px; font-weight: 700; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; color: var(--txt); }
+    .wbar-track { height: 8px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; }
+    .wbar-fill { height: 100%; border-radius: 999px; transition: width .6s ease, background-color .4s ease; }
+
+    .wbar-purple .wbar-fill { background: var(--a2); }
+    .wbar-blue .wbar-fill   { background: var(--a1); }
+
+    .w-divider { height: 1px; background: rgba(255,255,255,.08); margin: 10px 0; }
+    .w-agg { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .w-agg-label { font-size: 12px; color: var(--muted); }
+    .w-agg-val { font-size: 18px; font-weight: 700; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; color: var(--txt); transition: color .4s; }
+
+    .trigger-badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; transition: background .3s, color .3s; }
+    .trigger-badge.no  { background: rgba(52,211,153,.15); color: #34d399; border: 1px solid rgba(52,211,153,.30); }
+    .trigger-badge.yes { background: rgba(239,68,68,.15); color: #f87171; border: 1px solid rgba(239,68,68,.30); }
+
+    /* ── Action log ── */
+    #actionLog { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+    .action-empty { color: var(--muted); font-size: 13px; text-align: center; margin: auto; }
+    .action-card { border-radius: 10px; border: 1px solid rgba(52,211,153,.25); background: rgba(52,211,153,.06); padding: 10px 12px; font-size: 12px; }
+    .action-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .action-name { font-weight: 700; color: #34d399; }
+    .action-time { color: var(--muted); font-size: 11px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .action-row { display: flex; justify-content: space-between; color: var(--muted); line-height: 1.6; }
+    .action-row span:last-child { color: var(--txt); font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+    /* ── Control ── */
+    .demo-controls { margin-top: 18px; display: flex; justify-content: center; gap: 12px; align-items: center; }
+    #startStop { min-width: 140px; }
+    .status-pill { font-size: 12px; padding: 3px 10px; border-radius: 999px; background: rgba(255,255,255,.07); color: var(--muted); border: 1px solid var(--border); }
+    .status-pill.running { background: rgba(52,211,153,.12); color: #34d399; border-color: rgba(52,211,153,.30); }
+
+    /* ── Footer note ── */
+    .demo-footer-note { margin-top: 16px; text-align: center; color: rgba(234,240,255,.45); font-size: 12px; }
+
+    /* ── Description card ── */
+    .desc-card { margin-top: 22px; }
+    .desc-card p { margin: 0 0 8px; line-height: 1.7; color: var(--muted); }
+    .desc-card p:last-child { margin-bottom: 0; }
+
+    /* ── Paused overlay ── */
+    .paused-note { color: rgba(234,240,255,.45); font-size: 12px; letter-spacing: .05em; }
+  </style>
+</head>
+
+<body>
+<header class="nav">
+  <div class="inner">
+    <a class="brand" href="/" aria-label="Neuromorphic Inference Lab home">
+      <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+      <span>Neuromorphic Inference Lab</span>
+    </a>
+    <nav class="navlinks" aria-label="Primary navigation">
+      <a data-nav href="/">Home</a>
+      <a data-nav href="/" data-active="true">Projects</a>
+      <a data-nav href="/about/">About Me</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <p class="kicker">Autonomous Agents · Welfare Theory</p>
+    <h1>EHD-Watch — Exocentric Homeostatic Deliberation</h1>
+    <p class="subtitle">
+      A live agent that monitors Milan PM2.5 air quality and deliberates over remedial actions using
+      <em>exocentric homeostasis</em>: its primary welfare component W<sub>ext</sub> reflects the
+      state of the world, not the agent itself.
+    </p>
+    <div class="rowWrap">
+      <span class="badge">Welfare Vector</span>
+      <span class="badge">Homeostatic Deliberation</span>
+      <span class="badge">Groq / Llama 3.1</span>
+      <span class="badge">Vanilla JS</span>
+    </div>
+  </section>
+
+  <!-- Description -->
+  <article class="card project desc-card">
+    <p>
+      EHD-Watch is a research prototype of an <strong>exocentric homeostatic deliberation</strong> agent.
+      Unlike standard self-interested agents, its primary welfare component W<sub>ext</sub> is
+      world-directed: it measures how far the environment deviates from a healthy reference state
+      (here, PM2.5 air quality in Milan).
+    </p>
+    <p>
+      The agent maintains a three-component <strong>welfare vector</strong>
+      (W<sub>ext</sub>, budget, freshness) and computes a scalar V<sub>aggregate</sub>.
+      When W<sub>ext</sub> drops below 0.50 a <strong>trigger</strong> fires, activating deliberation:
+      the agent calls the Groq-hosted Llama 3.1 8B model to reason about which action
+      (fetch_data, post_alert, or wait) maximises the <strong>hope term</strong> B<sub>t</sub>
+      — the expected improvement to the welfare vector from a candidate action.
+    </p>
+    <p>
+      The PM2.5 trend g<sub>t</sub> is tracked via an exponentially-weighted moving average (α = 0.3)
+      and mapped to W<sub>ext</sub> through a logistic function, ensuring smooth welfare dynamics.
+      Endocentric components (budget and freshness) enforce resource constraints so the agent cannot
+      act without cost.
+    </p>
+    <p>
+      This demo simulates air-quality data client-side and streams the agent's inner monologue from
+      Llama 3.1 8B via Groq in real time. Tick interval: 8 seconds.
+    </p>
+  </article>
+
+  <!-- Live demo -->
+  <section class="demo-wrap card project" style="padding:18px;">
+    <div class="panels">
+
+      <!-- Panel 1: Thought Stream -->
+      <div class="panel panel-thought">
+        <p class="panel-title">Thought Stream</p>
+        <div id="thoughtStream" role="log" aria-live="polite" aria-label="Agent thought stream">
+          <div class="ts-line"><span class="ts-stamp">──────────</span>Waiting for first tick…</div>
+        </div>
+      </div>
+
+      <!-- Panel 2: Welfare State -->
+      <div class="panel panel-welfare">
+        <p class="panel-title">Welfare State</p>
+        <div class="wbar-wrap">
+          <div class="wbar-item wbar-purple">
+            <div class="wbar-header">
+              <span class="wbar-label">W<sub>ext</sub> — Primary / World-directed</span>
+              <span class="wbar-val" id="wExtVal">0.70</span>
+            </div>
+            <div class="wbar-track"><div class="wbar-fill" id="wExtBar" style="width:70%"></div></div>
+          </div>
+
+          <div class="wbar-item wbar-blue">
+            <div class="wbar-header">
+              <span class="wbar-label">Budget API — Endocentric</span>
+              <span class="wbar-val" id="budgetVal">0.90</span>
+            </div>
+            <div class="wbar-track"><div class="wbar-fill" id="budgetBar" style="width:90%"></div></div>
+          </div>
+
+          <div class="wbar-item wbar-blue">
+            <div class="wbar-header">
+              <span class="wbar-label">Data Freshness — Endocentric</span>
+              <span class="wbar-val" id="freshnessVal">0.95</span>
+            </div>
+            <div class="wbar-track"><div class="wbar-fill" id="freshnessBar" style="width:95%"></div></div>
+          </div>
+        </div>
+
+        <div class="w-divider"></div>
+
+        <div class="w-agg">
+          <span class="w-agg-label">V<sub>aggregate</sub></span>
+          <span class="w-agg-val" id="vAggVal">0.852</span>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="wbar-label">Trigger</span>
+          <span class="trigger-badge no" id="triggerBadge">NO</span>
+        </div>
+      </div>
+
+      <!-- Panel 3: Action Log -->
+      <div class="panel panel-actions">
+        <p class="panel-title">Action Log</p>
+        <div id="actionLog">
+          <p class="action-empty" id="actionEmpty">No actions executed yet</p>
+        </div>
+      </div>
+
+    </div><!-- /.panels -->
+
+    <!-- Controls -->
+    <div class="demo-controls">
+      <button id="startStop" class="btn primary" type="button">Start</button>
+      <span class="status-pill" id="statusPill">Idle</span>
+    </div>
+
+    <p class="demo-footer-note">
+      Thought stream generated by Llama 3.1 8B via Groq. Welfare dynamics are simulated client-side.
+    </p>
+  </section>
+
+  <footer class="footer">
+    <div>© 2025 Neuromorphic Inference Lab</div>
+    <div class="prov">
+      <span id="build-branch">branch: …</span>
+      <span id="build-commit">commit: …</span>
+      <span id="build-time">built: …</span>
+    </div>
+  </footer>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ── State ── */
+  const state = {
+    running: false,
+    intervalId: null,
+    tickCount: 0,
+    pm25: 35,
+    gt: 0,          // EWMA trend
+    budget: 0.90,
+    freshness: 0.95,
+    wExt: 0.70,
+    history: [],    // last N thought lines
+  };
+
+  const ALPHA = 0.3;
+  const TICK_MS = 8000;
+
+  /* ── Helpers ── */
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+  function sigmoid(x) { return 1 / (1 + Math.exp(-x)); }
+  function rand(lo, hi) { return lo + Math.random() * (hi - lo); }
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+  function nowHHMMSS() {
+    const d = new Date();
+    return [d.getHours(), d.getMinutes(), d.getSeconds()]
+      .map(n => String(n).padStart(2, "0"))
+      .join(":");
+  }
+
+  /* ── DOM refs ── */
+  const $stream     = document.getElementById("thoughtStream");
+  const $wExtVal    = document.getElementById("wExtVal");
+  const $wExtBar    = document.getElementById("wExtBar");
+  const $budgetVal  = document.getElementById("budgetVal");
+  const $budgetBar  = document.getElementById("budgetBar");
+  const $freshVal   = document.getElementById("freshnessVal");
+  const $freshBar   = document.getElementById("freshnessBar");
+  const $vAggVal    = document.getElementById("vAggVal");
+  const $trigger    = document.getElementById("triggerBadge");
+  const $actionLog  = document.getElementById("actionLog");
+  const $actionMpty = document.getElementById("actionEmpty");
+  const $btn        = document.getElementById("startStop");
+  const $pill       = document.getElementById("statusPill");
+
+  /* ── Thought stream ── */
+  function appendLine(text, cls) {
+    const stamp = nowHHMMSS();
+    const div = document.createElement("div");
+    div.className = "ts-line" + (cls ? " " + cls : "");
+    div.innerHTML = `<span class="ts-stamp">[${escapeHtml(stamp)}]</span>${escapeHtml(text)}`;
+    $stream.appendChild(div);
+    $stream.scrollTop = $stream.scrollHeight;
+    // Store in history buffer (last 20 lines)
+    state.history.push(`[${stamp}] ${text}`);
+    if (state.history.length > 20) state.history.shift();
+  }
+
+  /* ── Welfare UI update ── */
+  function updateWelfareUI(wExt, budget, freshness, triggerActive) {
+    const fmt = v => v.toFixed(3);
+    $wExtVal.textContent  = fmt(wExt);
+    $budgetVal.textContent = fmt(budget);
+    $freshVal.textContent = fmt(freshness);
+    $wExtBar.style.width   = (wExt * 100).toFixed(1) + "%";
+    $budgetBar.style.width  = (budget * 100).toFixed(1) + "%";
+    $freshBar.style.width  = (freshness * 100).toFixed(1) + "%";
+
+    // V_aggregate: simple mean of three components
+    const vAgg = (wExt + budget + freshness) / 3;
+    $vAggVal.textContent = fmt(vAgg);
+
+    if (triggerActive) {
+      $trigger.textContent = "YES";
+      $trigger.className = "trigger-badge yes";
+    } else {
+      $trigger.textContent = "NO";
+      $trigger.className = "trigger-badge no";
+    }
+  }
+
+  /* ── Action card ── */
+  function addActionCard(action, reason, bt, predDelta, obsDelta, welfareChange) {
+    if ($actionMpty) $actionMpty.style.display = "none";
+    const card = document.createElement("div");
+    card.className = "action-card";
+    const stamp = nowHHMMSS();
+
+    const fmt2 = v => (v >= 0 ? "+" : "") + v.toFixed(4);
+
+    card.innerHTML = `
+      <div class="action-card-head">
+        <span class="action-name">${escapeHtml(action)}</span>
+        <span class="action-time">${escapeHtml(stamp)}</span>
+      </div>
+      <div class="action-row"><span>Reason</span><span>${escapeHtml(reason)}</span></div>
+      <div class="action-row"><span>B<sub>t</sub> (hope)</span><span>${bt.toFixed(4)}</span></div>
+      <div class="action-row"><span>Predicted Δ</span><span>${fmt2(predDelta)}</span></div>
+      <div class="action-row"><span>Observed Δ</span><span>${fmt2(obsDelta)}</span></div>
+      <div class="action-row"><span>Welfare Δ</span><span>${fmt2(welfareChange)}</span></div>
+    `;
+    // Prepend newest card
+    $actionLog.insertBefore(card, $actionLog.firstChild);
+  }
+
+  /* ── Tick logic ── */
+  async function tick() {
+    state.tickCount++;
+
+    /* 1. Simulate PM2.5 */
+    const spike = (state.tickCount % 5 === 0) ? rand(5, 8) : 0;
+    const walk  = rand(-3, 3);
+    state.pm25  = clamp(state.pm25 + walk + spike, 0, 500);
+
+    /* 2. EWMA trend g_t */
+    const rawTrend = (state.pm25 - 35) / 35;   // normalised deviation from baseline 35 µg/m³
+    state.gt = ALPHA * rawTrend + (1 - ALPHA) * state.gt;
+
+    /* 3. W_ext = 1 / (1 + exp(3 * g_t)) — falls as trend worsens */
+    state.wExt = clamp(1 / (1 + Math.exp(3 * state.gt)), 0, 1);
+
+    /* 4. Budget: regenerate +0.01, usage deducted on API call */
+    state.budget = clamp(state.budget + 0.01, 0, 1);
+
+    /* 5. Freshness: decay -0.005 per tick */
+    state.freshness = clamp(state.freshness - 0.005, 0, 1);
+
+    /* 6. Trigger */
+    const trigger = state.wExt < 0.50;
+
+    /* Update UI early so user sees welfare before API call resolves */
+    updateWelfareUI(state.wExt, state.budget, state.freshness, trigger);
+
+    /* Trigger highlighted line */
+    if (trigger) {
+      appendLine(`⚑ Trigger active — W_ext=${state.wExt.toFixed(3)}, g_t=${state.gt.toFixed(4)}`, "ts-trigger");
+    } else {
+      appendLine(`tick ${state.tickCount} — PM2.5=${state.pm25.toFixed(1)} µg/m³, g_t=${state.gt.toFixed(4)}, W_ext=${state.wExt.toFixed(3)}`);
+    }
+
+    /* 7. POST to /api/ehd-watch */
+    const last3 = state.history.slice(-3).join("\n");
+    let thought = null;
+    try {
+      state.budget = clamp(state.budget - 0.02, 0, 1);
+      updateWelfareUI(state.wExt, state.budget, state.freshness, trigger);
+
+      const res = await fetch("/api/ehd-watch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          welfare_state: { w_ext: state.wExt, budget: state.budget, freshness: state.freshness },
+          trend: state.gt,
+          trigger,
+          history: last3,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        thought = typeof data.thought === "string" ? data.thought : null;
+      }
+    } catch {
+      // Network error — continue without thought
+    }
+
+    /* 8. Stream thought lines into Panel 1 */
+    if (thought) {
+      const lines = thought
+        .split(/\n|(?<=\.)\s+/)
+        .map(l => l.trim())
+        .filter(l => l.length > 0);
+
+      for (let i = 0; i < lines.length; i++) {
+        const isTriggerLine = trigger && i === 0;
+        const isActionLine  = trigger && i === lines.length - 1;
+        const cls = isTriggerLine ? "ts-trigger" : isActionLine ? "ts-action" : "";
+        appendLine(lines[i], cls);
+      }
+    }
+
+    /* 9. Action card if trigger fired */
+    if (trigger) {
+      const bt          = 0.55 + rand(0, 0.15);
+      const predDelta   = -0.05 + rand(-0.02, 0.02);
+      const noise       = rand(-0.01, 0.01);
+      const obsDelta    = predDelta + noise;
+      const wChange     = (state.wExt - 0.50);
+
+      // Freshness resets on fetch_data
+      state.freshness = 0.95;
+      updateWelfareUI(state.wExt, state.budget, state.freshness, trigger);
+
+      const actionLine = `→ Action: fetch_data (B_t=${bt.toFixed(3)})`;
+      appendLine(actionLine, "ts-action");
+      addActionCard("fetch_data", "W_ext < 0.50", bt, predDelta, obsDelta, wChange);
+    }
+  }
+
+  /* ── Start / Stop ── */
+  function startDemo() {
+    if (state.running) return;
+    state.running = true;
+    $btn.textContent = "Stop";
+    $pill.textContent = "Running";
+    $pill.classList.add("running");
+    tick();   // immediate first tick
+    state.intervalId = setInterval(tick, TICK_MS);
+  }
+
+  function stopDemo() {
+    if (!state.running) return;
+    state.running = false;
+    clearInterval(state.intervalId);
+    state.intervalId = null;
+    $btn.textContent = "Start";
+    $pill.textContent = "Paused";
+    $pill.classList.remove("running");
+    appendLine("── Demo paused ──");
+  }
+
+  $btn.addEventListener("click", () => {
+    if (state.running) stopDemo(); else startDemo();
+  });
+})();
+</script>
+
+<script src="/build-info.js"></script>
+</body>
+</html>
