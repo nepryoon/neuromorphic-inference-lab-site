@@ -193,161 +193,218 @@
       return _pyodidePromise;
     }
 
-    var PREAMBLE = [
-      "import numpy as np",
-      "import matplotlib",
-      "matplotlib.use('Agg')",
-      "import matplotlib.pyplot as plt",
-      "import io, base64",
-      "np.random.seed(42)",
-      "plt.rcParams.update({",
-      "    'font.family': 'serif',",
-      "    'font.size': 11,",
-      "    'axes.spines.top': False,",
-      "    'axes.spines.right': False,",
-      "})",
-      "NAVY  = '#1B3A6B'",
-      "PLUM  = '#7B2D8B'",
-      "GREEN = '#2E7D32'",
-      "GOLD  = '#DAA520'",
-      "RED   = '#B71C1C'",
-      "GRAY  = '#757575'",
-      "",
-      "def _fig_to_b64(fig):",
-      "    buf = io.BytesIO()",
-      "    fig.savefig(buf, format='png', dpi=150, bbox_inches='tight')",
-      "    buf.seek(0)",
-      "    data = base64.b64encode(buf.read()).decode('utf-8')",
-      "    plt.close(fig)",
-      "    return data"
-    ].join("\n");
+    var FIG1_CODE = `import io, base64
+import numpy as np
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
+from matplotlib.lines import Line2D
 
-    var FIG1_CODE = PREAMBLE + "\n" + [
-      "mu_star   = 0.35",
-      "mu_0      = 0.60",
-      "sigma_obs = 0.05",
-      "K = 200",
-      "N = 50",
-      "trajectories = np.zeros((N, K + 1))",
-      "for n in range(N):",
-      "    mu = mu_0",
-      "    trajectories[n, 0] = mu",
-      "    for k in range(1, K + 1):",
-      "        kappa = 0.5 / (k ** 0.75)",
-      "        obs   = np.random.normal(mu_star, sigma_obs)",
-      "        mu    = mu + kappa * (obs - mu)",
-      "        trajectories[n, k] = mu",
-      "ks      = np.arange(K + 1)",
-      "mean_tr = trajectories.mean(axis=0)",
-      "p10     = np.percentile(trajectories, 10, axis=0)",
-      "p90     = np.percentile(trajectories, 90, axis=0)",
-      "fig, ax = plt.subplots(figsize=(7, 4.2))",
-      "for n in range(N):",
-      "    ax.plot(ks, trajectories[n], color=NAVY, alpha=0.12, lw=0.7)",
-      "ax.fill_between(ks, p10, p90, color=NAVY, alpha=0.18, label='10th-90th percentile')",
-      "ax.plot(ks, mean_tr, color=NAVY, lw=2.0, label='Mean trajectory')",
-      "ax.axhline(mu_star, color=GREEN, lw=1.6, ls='--', label='True interventional mean mu*(a)=0.35')",
-      "ax.axhline(mu_0, color=RED, lw=1.2, ls='--', alpha=0.6, label='Initial estimate mu_0(a)=0.60')",
-      "ax.set_xlabel('Visit count k')",
-      "ax.set_ylabel('Mean estimate')",
-      "ax.set_title('Convergence of recalibration rule (Proposition 4)')",
-      "ax.legend(fontsize=9, frameon=False, loc='upper right')",
-      "fig.tight_layout()",
-      "_fig_to_b64(fig)"
-    ].join("\n");
+np.random.seed(42)
+NAVY  = "#1B3A6B"
+GREEN = "#2E7D32"
+RED   = "#B71C1C"
 
-    var FIG2_CODE = PREAMBLE + "\n" + [
-      "mu_star    = 0.50",
-      "sigma_star = 0.03",
-      "sigma2_a   = 0.02",
-      "mu_a = mu_b = 0.45",
-      "sigma2_b_vals = np.linspace(0.02, 0.15, 100)",
-      "delta_sigma2  = sigma2_b_vals - sigma2_a",
-      "def kl_gaussian(mu_q, sigma2_q, mu_p, sigma2_p):",
-      "    return 0.5 * (",
-      "        (mu_q - mu_p)**2 / sigma2_p",
-      "        + sigma2_q / sigma2_p",
-      "        - 1",
-      "        - np.log(sigma2_q / sigma2_p)",
-      "    )",
-      "kl_a = kl_gaussian(mu_a, sigma2_a, mu_star, sigma_star**2)",
-      "kl_b = kl_gaussian(mu_b, sigma2_b_vals, mu_star, sigma_star**2)",
-      "delta_kl  = kl_a - kl_b",
-      "delta_ehd = np.zeros_like(delta_sigma2)",
-      "fig, ax = plt.subplots(figsize=(7, 4.2))",
-      "ax.axhline(0, color=GRAY, lw=0.8, ls=':')",
-      "ax.fill_between(delta_sigma2, delta_ehd, delta_kl, color=PLUM, alpha=0.08)",
-      "ax.plot(delta_sigma2, delta_ehd, color=NAVY, lw=2.2, label='EHD pragmatic term (always 0)')",
-      "ax.plot(delta_sigma2, delta_kl, color=PLUM, lw=2.2, label='EFE KL term')",
-      "ax.annotate('EHD indifferent', xy=(0.06, 0.002), fontsize=9, color=NAVY)",
-      "ax.annotate('EFE penalises higher variance', xy=(0.05, float(delta_kl[50]) + 0.002), fontsize=9, color=PLUM)",
-      "ax.set_xlabel('Variance gap: sigma^2(b) - sigma^2(a)')",
-      "ax.set_ylabel('Score difference (a) - (b)')",
-      "ax.set_title('Ranking divergence: EHD vs single-step EFE\\n(Proposition 5, mechanism ii)')",
-      "ax.legend(fontsize=9, frameon=False, loc='lower left')",
-      "fig.tight_layout()",
-      "_fig_to_b64(fig)"
-    ].join("\n");
+mu_star, mu_0, sigma_obs = 0.35, 0.60, 0.05
+K, N = 200, 50
+trajectories = np.zeros((N, K + 1))
+for n in range(N):
+    mu = mu_0
+    trajectories[n, 0] = mu
+    for k in range(1, K + 1):
+        kappa = 0.5 / (k ** 0.75)
+        obs = np.random.normal(mu_star, sigma_obs)
+        mu = mu + kappa * (obs - mu)
+        trajectories[n, k] = mu
 
-    var FIG3_CODE = PREAMBLE + "\n" + [
-      "t = np.arange(0, 25, dtype=float)",
-      "noise    = np.random.normal(0, 0.01, len(t))",
-      "g_raw    = 0.08 * np.sin(2 * np.pi * t / 24) + 0.04 + noise",
-      "g_smooth = np.zeros_like(g_raw)",
-      "g_smooth[0] = g_raw[0]",
-      "for i in range(1, len(t)):",
-      "    g_smooth[i] = 0.3 * g_raw[i] + 0.7 * g_smooth[i - 1]",
-      "W_ext     = 1 / (1 + np.exp(3 * g_smooth))",
-      "theta_ext = 0.45",
-      "B = np.zeros_like(t)",
-      "for i, ti in enumerate(t):",
-      "    if ti < 3:",
-      "        B[i] = W_ext[i]",
-      "    elif ti == 3:",
-      "        B[i] = 0.62",
-      "    elif ti < 16:",
-      "        B[i] = 0.62 * np.exp(-0.08 * (ti - 3))",
-      "    else:",
-      "        B[i] = W_ext[i] + 0.03",
-      "x2 = 0.80 * np.exp(-0.02 * t)",
-      "x2[6:] += 0.12 * np.exp(-0.02 * (t[6:] - 6))",
-      "x2 = np.clip(x2, 0, 1)",
-      "x3 = 0.72 * np.exp(-0.01 * t)",
-      "p1 = 0.42",
-      "x1 = 0.70 * W_ext + 0.20 * B + 0.10 * p1",
-      "V  = 0.55 * x1 + 0.25 * x2 + 0.20 * x3",
-      "fig, axes = plt.subplots(3, 1, figsize=(7, 7.5), sharex=True,",
-      "                         gridspec_kw={'height_ratios': [2.5, 1, 1]})",
-      "fig.suptitle('EHD welfare trajectory - 24-month simulation (Section 7)', fontsize=11)",
-      "ax = axes[0]",
-      "ax.plot(t, W_ext, color=PLUM, lw=2, label='W_ext(t)')",
-      "ax.plot(t, B, color=GOLD, lw=1.8, ls='--', label='B_t(a*)')",
-      "ax.axhline(theta_ext, color=GRAY, lw=1, ls=':', label='theta_ext=0.45')",
-      "ax.fill_between(t, 0, 1, where=(W_ext < theta_ext), color=RED, alpha=0.10, label='Trigger active')",
-      "ax.annotate('', xy=(3, 0.25), xytext=(3, 0.18),",
-      "            arrowprops=dict(arrowstyle='->', color=GREEN, lw=1.6))",
-      "ax.text(3.2, 0.17, 'Action selected', fontsize=8, color=GREEN)",
-      "ax.set_ylabel('Welfare signal')",
-      "ax.set_ylim(0.1, 0.85)",
-      "ax.legend(fontsize=8, frameon=False, loc='upper right', ncol=2)",
-      "ax = axes[1]",
-      "ax.plot(t, x2, color=NAVY, lw=1.8, label='Budget x2')",
-      "ax.plot(t, x3, color=GREEN, lw=1.8, ls='--', label='Knowledge x3')",
-      "ax.plot(6, x2[6], marker='^', color=NAVY, ms=7, label='Replenishment')",
-      "ax.set_ylabel('Endocentric')",
-      "ax.legend(fontsize=8, frameon=False, loc='upper right')",
-      "ax = axes[2]",
-      "ax.plot(t, V, color='black', lw=2, label='V(x_t)')",
-      "ax.axhline(0.50, color=GRAY, lw=1, ls=':', label='theta=0.50')",
-      "ax.set_ylabel('V(x_t)')",
-      "ax.set_xlabel('Time t (months)')",
-      "ax.legend(fontsize=8, frameon=False, loc='upper right')",
-      "for ax in axes:",
-      "    ax.spines['top'].set_visible(False)",
-      "    ax.spines['right'].set_visible(False)",
-      "fig.tight_layout()",
-      "_fig_to_b64(fig)"
-    ].join("\n");
+ks      = np.arange(K + 1)
+mean_tr = trajectories.mean(axis=0)
+p10     = np.percentile(trajectories, 10, axis=0)
+p90     = np.percentile(trajectories, 90, axis=0)
+
+fig, ax = plt.subplots(figsize=(7, 4))
+for n in range(N):
+    ax.plot(ks, trajectories[n], color=NAVY, alpha=0.12, lw=0.7)
+ax.fill_between(ks, p10, p90, color=NAVY, alpha=0.18)
+ax.plot(ks, mean_tr, color=NAVY, lw=2.2)
+ax.axhline(mu_star, color=GREEN, lw=1.6, ls="--")
+ax.axhline(mu_0,    color=RED,   lw=1.2, ls="--", alpha=0.6)
+
+legend_elements = [
+    Line2D([0], [0], color=NAVY, lw=2.2, label="Mean trajectory"),
+    Patch(facecolor=NAVY, alpha=0.3, label="10th-90th percentile"),
+    Line2D([0], [0], color=GREEN, lw=1.6, ls="--",
+           label="True mean mu*(a)=0.35"),
+    Line2D([0], [0], color=RED, lw=1.2, ls="--", alpha=0.6,
+           label="Initial estimate mu_0=0.60"),
+]
+ax.legend(handles=legend_elements, fontsize=9,
+          frameon=False, loc="upper right")
+ax.set_xlabel("Visit count k")
+ax.set_ylabel("Mean estimate")
+ax.set_title("Convergence of recalibration rule (Proposition 4)")
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+fig.tight_layout()
+
+buf = io.BytesIO()
+fig.savefig(buf, format='png', dpi=150, bbox_inches='tight')
+plt.close(fig)
+buf.seek(0)
+result = base64.b64encode(buf.getvalue()).decode('utf-8')
+result`;
+
+    var FIG2_CODE = `import io, base64
+import numpy as np
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
+np.random.seed(42)
+NAVY = "#1B3A6B"
+PLUM = "#7B2D8B"
+GRAY = "#757575"
+
+mu_star     = 0.50
+sigma2_star = 0.03 ** 2
+sigma2_a    = 0.001
+mu_a = mu_b = 0.45
+sigma2_b_vals = np.linspace(0.001, 0.008, 100)
+delta_sigma2  = sigma2_b_vals - sigma2_a
+
+def kl_gauss(mu_q, s2_q, mu_p, s2_p):
+    return 0.5 * (
+        (mu_q - mu_p) ** 2 / s2_p
+        + s2_q / s2_p
+        - 1.0
+        - np.log(s2_q / s2_p)
+    )
+
+kl_a      = kl_gauss(mu_a, sigma2_a,      mu_star, sigma2_star)
+kl_b      = kl_gauss(mu_b, sigma2_b_vals, mu_star, sigma2_star)
+delta_kl  = kl_a - kl_b
+delta_ehd = np.zeros_like(delta_sigma2)
+
+fig, ax = plt.subplots(figsize=(7, 4))
+ax.axhline(0, color=GRAY, lw=0.8, ls=":")
+ax.fill_between(delta_sigma2, delta_ehd, delta_kl,
+                color=PLUM, alpha=0.08)
+ax.plot(delta_sigma2, delta_ehd, color=NAVY, lw=2.2,
+        label="EHD pragmatic term (always 0)")
+ax.plot(delta_sigma2, delta_kl,  color=PLUM, lw=2.2,
+        label="EFE KL term")
+ax.text(0.0005,  0.004,
+        "EHD: indifferent to variance",
+        fontsize=9, color=NAVY, va='bottom')
+ax.text(0.0005, delta_kl[2] - 0.008,
+        "EFE: penalises higher variance",
+        fontsize=9, color=PLUM, va='top')
+ax.legend(fontsize=9, frameon=True, loc="lower left",
+          framealpha=0.9, edgecolor="#e0e0e0")
+ax.set_xlabel("Variance gap sigma2(b) - sigma2(a)")
+ax.set_ylabel("Score difference (a) - (b)")
+ax.set_title("Ranking divergence: EHD vs single-step EFE\\n(Proposition 5, mechanism ii)")
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+fig.tight_layout()
+
+buf = io.BytesIO()
+fig.savefig(buf, format='png', dpi=150, bbox_inches='tight')
+plt.close(fig)
+buf.seek(0)
+result = base64.b64encode(buf.getvalue()).decode('utf-8')
+result`;
+
+    var FIG3_CODE = `import io, base64
+import numpy as np
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
+np.random.seed(42)
+NAVY  = "#1B3A6B"
+PLUM  = "#7B2D8B"
+GREEN = "#2E7D32"
+GOLD  = "#DAA520"
+RED   = "#B71C1C"
+GRAY  = "#757575"
+
+t = np.arange(0, 25, dtype=float)
+noise    = np.random.normal(0, 0.01, len(t))
+g_raw    = 0.08 * np.sin(2 * np.pi * t / 24) + 0.04 + noise
+g_smooth = np.zeros_like(g_raw)
+g_smooth[0] = g_raw[0]
+for i in range(1, len(t)):
+    g_smooth[i] = 0.3 * g_raw[i] + 0.7 * g_smooth[i-1]
+W_ext     = 1 / (1 + np.exp(3 * g_smooth))
+theta_ext = 0.45
+
+B = np.zeros_like(t)
+for i, ti in enumerate(t):
+    if ti < 3:
+        B[i] = W_ext[i]
+    elif ti == 3:
+        B[i] = 0.62
+    else:
+        B[i] = W_ext[i] + 0.15 * np.exp(-0.15 * (ti - 3))
+
+x2 = 0.80 * np.exp(-0.02 * t)
+x2[6:] += 0.12 * np.exp(-0.02 * (t[6:] - 6))
+x2 = np.clip(x2, 0, 1)
+x3 = 0.72 * np.exp(-0.01 * t)
+x1 = 0.70 * W_ext + 0.20 * B + 0.10 * 0.42
+V  = 0.55 * x1 + 0.25 * x2 + 0.20 * x3
+
+fig, axes = plt.subplots(3, 1, figsize=(7, 8), sharex=True,
+                         gridspec_kw={"height_ratios": [2.5,1,1]})
+fig.suptitle("EHD welfare trajectory - 24-month simulation (Section 7)",
+             fontsize=11)
+
+ax = axes[0]
+ax.plot(t, W_ext, color=PLUM, lw=2, label="W_ext(t)")
+ax.plot(t, B, color=GOLD, lw=1.8, ls="--", label="B_t(a*)")
+ax.axhline(theta_ext, color=GRAY, lw=1, ls=":",
+           label="theta_ext=0.45")
+ax.fill_between(t, 0, 1, where=(W_ext < theta_ext),
+                color=RED, alpha=0.10, label="Trigger active")
+ax.annotate("Action\\nselected",
+            xy=(3, W_ext[3]),
+            xytext=(5.5, 0.18),
+            fontsize=8, color=GREEN,
+            arrowprops=dict(arrowstyle="->", color=GREEN, lw=1.4,
+                            connectionstyle="arc3,rad=0.25"))
+ax.set_ylabel("Welfare signal")
+ax.set_ylim(0.10, 0.90)
+ax.legend(fontsize=8, frameon=True, loc="upper right",
+          framealpha=0.92, edgecolor="#e0e0e0", ncol=2)
+
+ax = axes[1]
+ax.plot(t, x2, color=NAVY,  lw=1.8, label="Budget x2")
+ax.plot(t, x3, color=GREEN, lw=1.8, ls="--", label="Knowledge x3")
+ax.plot(6, x2[6], marker="^", color=NAVY, ms=7,
+        label="Replenishment", zorder=5)
+ax.set_ylabel("Endocentric")
+ax.legend(fontsize=8, frameon=False, loc="upper right")
+
+ax = axes[2]
+ax.plot(t, V, color="black", lw=2, label="V(x_t)")
+ax.axhline(0.50, color=GRAY, lw=1, ls=":", label="theta=0.50")
+ax.set_ylabel("V(x_t)")
+ax.set_xlabel("Time t (months)")
+ax.legend(fontsize=8, frameon=False, loc="upper right")
+
+for ax in axes:
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+
+fig.tight_layout()
+buf = io.BytesIO()
+fig.savefig(buf, format='png', dpi=150, bbox_inches='tight')
+plt.close(fig)
+buf.seek(0)
+result = base64.b64encode(buf.getvalue()).decode('utf-8')
+result`;
 
     var CODES = { 1: FIG1_CODE, 2: FIG2_CODE, 3: FIG3_CODE };
 
