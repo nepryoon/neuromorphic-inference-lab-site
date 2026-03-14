@@ -294,10 +294,10 @@ ax.plot(delta_sigma2, delta_ehd, color=NAVY, lw=2.2,
         label="EHD pragmatic term (always 0)")
 ax.plot(delta_sigma2, delta_kl,  color=PLUM, lw=2.2,
         label="EFE KL term")
-ax.text(0.0005,  0.004,
+ax.text(0.0005, 0.04,
         "EHD: indifferent to variance",
         fontsize=9, color=NAVY, va='bottom')
-ax.text(0.0005, delta_kl[2] - 0.008,
+ax.text(0.0005, delta_kl[5] - 0.12,
         "EFE: penalises higher variance",
         fontsize=9, color=PLUM, va='top')
 ax.legend(fontsize=9, frameon=True, loc="lower left",
