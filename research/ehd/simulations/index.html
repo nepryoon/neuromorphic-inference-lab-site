@@ -240,7 +240,8 @@ legend_elements = [
            label="Initial estimate mu_0=0.60"),
 ]
 ax.legend(handles=legend_elements, fontsize=9,
-          frameon=False, loc="upper right")
+          frameon=False, loc="upper right",
+          bbox_to_anchor=(1.0, 0.93))
 ax.set_xlabel("Visit count k")
 ax.set_ylabel("Mean estimate")
 ax.set_title("Convergence of recalibration rule (Proposition 4)")
@@ -297,9 +298,10 @@ ax.plot(delta_sigma2, delta_kl,  color=PLUM, lw=2.2,
 ax.text(0.0005, 0.04,
         "EHD: indifferent to variance",
         fontsize=9, color=NAVY, va='bottom')
-ax.text(0.0005, delta_kl[5] - 0.12,
+ax.text(0.0038, delta_kl[55] - 0.08,
         "EFE: penalises higher variance",
-        fontsize=9, color=PLUM, va='top')
+        fontsize=9, color=PLUM, va='top',
+        ha='center')
 ax.legend(fontsize=9, frameon=True, loc="lower left",
           framealpha=0.9, edgecolor="#e0e0e0")
 ax.set_xlabel("Variance gap sigma2(b) - sigma2(a)")
