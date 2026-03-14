@@ -73,7 +73,7 @@
       <div class="tags" style="margin-top:16px;">
         <span class="tag">arXiv 2026</span>
         <span class="tag">Under submission</span>
-        <span class="tag">Simulation code available</span>
+        <span class="tag">LLM Agents · World-Directed Welfare · Active Inference · Governance Transparency · Delayed Feedback</span>
       </div>
     </section>
 
@@ -85,32 +85,38 @@
 
         <article class="card col-6">
           <p class="claim-label">Proposition 1 — State Boundedness</p>
-          <p class="claim-text">The composite welfare vector stays in [0,1]<sup>n</sup> for all t ≥ 0 under convex-combination dynamics and projected endocentric updates.</p>
+          <p class="claim-text">The welfare state vector stays in [0,1]<sup>n</sup> for all t ≥ 0 under convex-combination dynamics and projected endocentric updates.</p>
           <p class="claim-scope">Holds unconditionally; does not prevent boundary saturation under heavy-tailed increments.</p>
         </article>
 
         <article class="card col-6">
           <p class="claim-label">Proposition 2 — Monotone Passive Degradation</p>
-          <p class="claim-text">Aggregate welfare V(x<sub>t</sub>) is non-increasing on idle intervals where no action is taken and no surveillance update arrives.</p>
-          <p class="claim-scope">Holds only during genuine between-episode idle phases; an out-of-band W<sub>ext</sub> update can increase V.</p>
+          <p class="claim-text">Aggregate welfare V(x<sub>t</sub>) is non-increasing on intervals where no action is taken, no exogenous replenishment occurs, and W<sub>ext</sub> is not updated.</p>
+          <p class="claim-scope">Holds only during genuine between-episode idle phases; an out-of-band surveillance update can increase V.</p>
         </article>
 
         <article class="card col-6">
           <p class="claim-label">Design Principle 1 — Governance-Transparent Attribution</p>
           <p class="claim-text">Each utility component's contribution to any action ranking can be computed and reported independently, without access to internal operational variables.</p>
-          <p class="claim-scope">Algebraic separability, not statistical independence; λ coefficients must be fixed by governance.</p>
+          <p class="claim-scope">Algebraic separability, not statistical independence; λ coefficients must be fixed by governance, not learned.</p>
         </article>
 
         <article class="card col-6">
           <p class="claim-label">Proposition 4 — Robbins–Monro Consistency</p>
-          <p class="claim-text">The mean recalibration rule converges in mean square to the true interventional mean μ*(a) under i.i.d. zero-mean noise and standard step-size conditions.</p>
-          <p class="claim-scope">Restricted to fixed action, i.i.d. noise, infinite visitation; does not cover non-stationary socio-technical environments.</p>
+          <p class="claim-text">The mean recalibration rule converges in mean square to the true interventional mean μ*(a) under i.i.d. zero-mean noise and standard Robbins–Monro step-size conditions.</p>
+          <p class="claim-scope">Fixed action, i.i.d. noise, infinite visitation only. Does not cover non-stationary or policy-dependent environments.</p>
         </article>
 
         <article class="card col-6">
-          <p class="claim-label">Proposition 5 — Restricted EFE Non-Equivalence</p>
-          <p class="claim-text">EHD and single-step EFE can yield different action rankings under two explicit mechanisms: mean-vs-distribution scoring (Gaussian–Gaussian case) and governance penalty.</p>
-          <p class="claim-scope">Restricted existence results under auxiliary assumptions; not a general policy-divergence theorem.</p>
+          <p class="claim-label">Proposition 5 — Fallback Feasibility</p>
+          <p class="claim-text">If a designated recovery procedure satisfies all feasibility constraints at every step, the control loop is total: the agent always either selects a positive-utility action or executes the recovery procedure.</p>
+          <p class="claim-scope">Depends on the recovery procedure remaining authorised and safety-compliant at all times by design.</p>
+        </article>
+
+        <article class="card col-6">
+          <p class="claim-label">Proposition 6 — Restricted EFE Ranking Divergence</p>
+          <p class="claim-text">EHD and single-step EFE yield different action rankings under two cases: (i) Gaussian comparator with equal means but differing variances; (ii) governance-penalty mismatch with matched non-governance terms.</p>
+          <p class="claim-scope">Restricted comparator result under explicit auxiliary assumptions. Not a general policy-divergence theorem. Does not apply to multi-step EFE.</p>
         </article>
 
       </div>
@@ -128,8 +134,8 @@
         </article>
 
         <article class="card col-6">
-          <p class="claim-label">fig_ranking_divergence — Proposition 5 (ii)</p>
-          <p class="claim-text">Actions with equal predicted means but differing variances receive identical EHD pragmatic scores and different EFE KL scores. Divergence grows with variance gap.</p>
+          <p class="claim-label">fig_ranking_divergence — Proposition 6, Case (i)</p>
+          <p class="claim-text">Actions with equal predicted means but differing variances receive identical EHD pragmatic scores but different EFE KL scores. Restricted divergence result under Gaussian–Gaussian auxiliary assumptions.</p>
         </article>
 
         <article class="card col-6">
@@ -150,7 +156,7 @@
     <section class="section">
       <h2>Abstract</h2>
       <div class="abstract-block">
-        <p>Large language model (LLM) agents can perform multi-step reasoning, use external tools, retain memory, and adjust their plans over extended sequences of interaction. However, one important issue remains insufficiently specified: the basis on which such agents evaluate whether a situation is improving or worsening over time. This paper introduces exocentric homeostatic deliberation (EHD): a framework in which the agent's primary welfare is linked to an externally monitored, auditable world-state rather than to internal comfort variables. The hope term is defined over an interventional distribution under explicit structural-causal modelling assumptions. Pragmatic and epistemic value enter the scoring rule as independently calibrated additive terms. Governance is handled through hard feasibility constraints and a soft penalty term, both inspectable without access to internal operational variables.</p>
+        <p>LLM agents maintain state, invoke tools, and operate across extended sessions, yet the evaluative basis on which a persistent agent should judge external improvement or deterioration has not been formally characterised. We introduce exocentric homeostatic deliberation (EHD), a control framework in which the primary welfare signal is defined over an externally monitored and auditable world-state rather than internal comfort variables alone. The framework comprises four elements: a transparent external welfare signal; an intervention-based hope term on action-conditioned future states; an additive utility decomposition with pragmatic, epistemic, operational, cost, risk, and governance components; and a recalibration rule for action efficacy. The paper establishes six propositions: state boundedness; monotone passive degradation; governance-transparent marginal attribution; mean-square consistency of the mean-update rule under Robbins–Monro conditions; fallback feasibility under a designated recovery procedure; and restricted action-ranking divergence relative to a single-step EFE comparator. The paper provides no empirical evaluation and makes no claim of equivalence with active inference.</p>
       </div>
     </section>
 
