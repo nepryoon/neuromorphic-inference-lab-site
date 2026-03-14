@@ -1,16 +1,13 @@
-<!-- /research/ehd/simulations/index.html -->
 <!doctype html>
 <html lang="en-GB">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>EHD — Interactive Simulations | Neuromorphic Inference Lab</title>
-  <meta name="description" content="Run the EHD paper's figures directly in your browser using Pyodide. No installation required." />
+  <meta name="description" content="Run EHD paper figures directly in your browser using Pyodide + matplotlib. No installation required." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
-
   <style>
-    /* ── breadcrumb ── */
     .breadcrumb {
       font-size: 13px;
       color: var(--muted);
@@ -18,482 +15,390 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      flex-wrap: wrap;
     }
-    .breadcrumb a { text-decoration: underline; text-underline-offset: 2px; }
+    .breadcrumb a {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
     .breadcrumb .sep { opacity: .5; }
 
-    /* ── info banner ── */
     .info-banner {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 12px 16px;
-      border-radius: 12px;
       background: rgba(110,231,255,.07);
-      border: 1px solid rgba(110,231,255,.20);
-      color: var(--muted);
+      border: 1px solid rgba(110,231,255,.25);
+      border-radius: 10px;
+      padding: 12px 16px;
       font-size: 14px;
-      line-height: 1.55;
-      margin-bottom: 32px;
-    }
-    .info-banner .icon { flex-shrink: 0; opacity: .80; font-style: normal; }
-
-    /* ── figure panels ── */
-    .fig-panels {
-      display: flex;
-      flex-direction: column;
-      gap: 28px;
+      color: rgba(234,240,255,.80);
+      margin-bottom: 28px;
     }
 
-    .fig-panel {
+    .sim-panel {
       border-radius: var(--radius);
       border: 1px solid rgba(255,255,255,.10);
       background: linear-gradient(180deg, var(--card), rgba(255,255,255,.03));
       box-shadow: var(--shadow);
-      padding: 24px;
+      padding: 22px 24px;
+      margin-bottom: 22px;
     }
-
-    .fig-panel h2 {
-      font-size: 16px;
+    .sim-panel h2 {
       margin: 0 0 6px;
+      font-size: 16px;
       line-height: 1.3;
+      font-weight: 700;
     }
-
-    .fig-desc {
+    .sim-panel p {
+      margin: 0 0 16px;
       color: var(--muted);
       font-size: 14px;
       line-height: 1.65;
-      margin: 0 0 18px;
     }
-
-    .fig-controls {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-
-    .fig-status {
-      font-size: 13px;
+    .sim-status {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
       color: var(--muted);
+      margin-left: 12px;
+      vertical-align: middle;
     }
-    .fig-status[data-state="loading"] { color: var(--a1); }
-    .fig-status[data-state="running"]  { color: var(--a2); }
-    .fig-status[data-state="done"]     { color: var(--a3); }
-    .fig-status[data-state="error"]    { color: #F87171; }
-
-    .fig-result {
-      min-height: 0;
+    .sim-result {
+      margin-top: 18px;
     }
-    .fig-result img {
+    .sim-result img {
+      max-width: 100%;
       border-radius: 10px;
-      width: 100%;
-      max-width: 680px;
-      border: 1px solid rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      display: block;
     }
-
-    .btn-dl {
+    .sim-download {
       display: none;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      padding: 7px 14px;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.06);
-      color: var(--txt);
-      text-decoration: none;
-      cursor: pointer;
-      transition: background .15s;
+      margin-top: 12px;
     }
-    .btn-dl:hover { background: rgba(255,255,255,.12); }
-    .btn-dl.visible { display: inline-flex; }
   </style>
 </head>
 
 <body>
-<header class="nav">
-  <div class="inner">
-    <a class="brand" href="/" aria-label="Neuromorphic Inference Lab home">
-      <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
-      <span>Neuromorphic Inference Lab</span>
-    </a>
-    <nav class="navlinks" aria-label="Primary navigation">
+  <header class="nav">
+    <div class="inner">
+      <a class="brand" href="/" aria-label="Neuromorphic Inference Lab home">
+        <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+        <span>Neuromorphic Inference Lab</span>
+      </a>
+      <nav class="navlinks" aria-label="Primary navigation">
+        <a data-nav href="/">Home</a>
+        <a data-nav href="/about/">About Me</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
       <a href="/">Home</a>
-      <a href="/about/">About Me</a>
+      <span class="sep" aria-hidden="true">→</span>
+      <a href="/research/">Research</a>
+      <span class="sep" aria-hidden="true">→</span>
+      <a href="/research/ehd/">EHD Paper</a>
+      <span class="sep" aria-hidden="true">→</span>
+      <span aria-current="page">Simulations</span>
     </nav>
-  </div>
-</header>
 
-<main class="container">
+    <!-- Header -->
+    <section class="hero">
+      <h1 class="h1" style="margin-top:0;">EHD — Interactive Simulations</h1>
+      <p class="sub">
+        Run the paper's figures directly in your browser.
+        No installation required. Powered by Pyodide + matplotlib.
+      </p>
+    </section>
 
-  <!-- Breadcrumb -->
-  <nav class="breadcrumb" aria-label="Breadcrumb">
-    <a href="/">Home</a>
-    <span class="sep" aria-hidden="true">→</span>
-    <a href="/research/">Research</a>
-    <span class="sep" aria-hidden="true">→</span>
-    <a href="/research/ehd/">EHD Paper</a>
-    <span class="sep" aria-hidden="true">→</span>
-    <span aria-current="page">Simulations</span>
-  </nav>
-
-  <!-- Hero -->
-  <section class="hero">
-    <h1>EHD — Interactive Simulations</h1>
-    <p class="sub">
-      Run the paper's figures directly in your browser.
-      No installation required. Powered by Pyodide + matplotlib.
-    </p>
-  </section>
-
-  <!-- Info banner -->
-  <div class="info-banner" role="note">
-    <i class="icon" aria-hidden="true">ℹ</i>
-    <span>
-      First load downloads ~8 MB of the Python runtime.
+    <!-- Info banner -->
+    <div class="info-banner" role="note" aria-label="Performance note">
+      First load downloads ~8&nbsp;MB of the Python runtime.
       Subsequent runs are instant.
-    </span>
-  </div>
-
-  <!-- Figure panels -->
-  <div class="fig-panels">
+    </div>
 
     <!-- Panel 1 -->
-    <article class="fig-panel" aria-labelledby="fig1-title">
-      <h2 id="fig1-title">Figure 1 — Proposition 4: Recalibration Convergence</h2>
-      <p class="fig-desc">
-        50 independent Robbins–Monro trajectories
-        converging to the true interventional mean μ*(a) = 0.35.
-      </p>
-      <div class="fig-controls">
-        <button class="btn primary" id="btn-fig1" onclick="runFigure(1)">Run</button>
-        <span class="fig-status" id="status-fig1" role="status" aria-live="polite">Idle</span>
-      </div>
-      <div class="fig-result" id="result-fig1"></div>
-      <a class="btn-dl" id="dl-fig1" download="fig1-convergence.png"
-         aria-label="Download Figure 1 as PNG">⬇ Download PNG</a>
-    </article>
+    <div class="sim-panel">
+      <h2>Figure&nbsp;1 — Proposition&nbsp;4: Recalibration Convergence</h2>
+      <p>50 independent Robbins–Monro trajectories converging to the true interventional mean μ*(a)&nbsp;=&nbsp;0.35.</p>
+      <button class="btn primary" id="btn-fig1">Run</button>
+      <span class="sim-status" id="status-fig1" role="status" aria-live="polite">idle</span>
+      <div class="sim-result" id="result-fig1"></div>
+      <a class="btn sim-download" id="dl-fig1" download="fig_convergence.png" aria-label="Download Figure 1 as PNG">Download PNG</a>
+    </div>
 
     <!-- Panel 2 -->
-    <article class="fig-panel" aria-labelledby="fig2-title">
-      <h2 id="fig2-title">Figure 2 — Proposition 5(ii): EHD vs EFE Ranking</h2>
-      <p class="fig-desc">
-        Actions with equal predicted means but
-        differing variances: EHD is indifferent, EFE is not.
-      </p>
-      <div class="fig-controls">
-        <button class="btn primary" id="btn-fig2" onclick="runFigure(2)">Run</button>
-        <span class="fig-status" id="status-fig2" role="status" aria-live="polite">Idle</span>
-      </div>
-      <div class="fig-result" id="result-fig2"></div>
-      <a class="btn-dl" id="dl-fig2" download="fig2-ranking-divergence.png"
-         aria-label="Download Figure 2 as PNG">⬇ Download PNG</a>
-    </article>
+    <div class="sim-panel">
+      <h2>Figure&nbsp;2 — Proposition&nbsp;5(ii): EHD vs EFE Ranking</h2>
+      <p>Actions with equal predicted means but differing variances: EHD is indifferent, EFE is not.</p>
+      <button class="btn primary" id="btn-fig2">Run</button>
+      <span class="sim-status" id="status-fig2" role="status" aria-live="polite">idle</span>
+      <div class="sim-result" id="result-fig2"></div>
+      <a class="btn sim-download" id="dl-fig2" download="fig_ranking_divergence.png" aria-label="Download Figure 2 as PNG">Download PNG</a>
+    </div>
 
     <!-- Panel 3 -->
-    <article class="fig-panel" aria-labelledby="fig3-title">
-      <h2 id="fig3-title">Figure 3 — Section 7: 24-Month Welfare Trajectory</h2>
-      <p class="fig-desc">
-        EHD agent on AMR monitoring task. Exocentric
-        trigger fires at W<sub>ext</sub> &lt; θ<sub>ext</sub> despite satisfactory
-        internal state.
-      </p>
-      <div class="fig-controls">
-        <button class="btn primary" id="btn-fig3" onclick="runFigure(3)">Run</button>
-        <span class="fig-status" id="status-fig3" role="status" aria-live="polite">Idle</span>
-      </div>
-      <div class="fig-result" id="result-fig3"></div>
-      <a class="btn-dl" id="dl-fig3" download="fig3-welfare-trajectory.png"
-         aria-label="Download Figure 3 as PNG">⬇ Download PNG</a>
-    </article>
-
-  </div>
-
-  <footer class="footer">
-    <div>© 2026 Neuromorphic Inference Lab</div>
-    <div class="prov">
-      <span id="build-branch">branch: …</span>
-      <span id="build-commit">commit: …</span>
-      <span id="build-time">built: …</span>
+    <div class="sim-panel">
+      <h2>Figure&nbsp;3 — Section&nbsp;7: 24-Month Welfare Trajectory</h2>
+      <p>EHD agent on AMR monitoring task. Exocentric trigger fires at W<sub>ext</sub>&nbsp;&lt;&nbsp;θ<sub>ext</sub> despite satisfactory internal state.</p>
+      <button class="btn primary" id="btn-fig3">Run</button>
+      <span class="sim-status" id="status-fig3" role="status" aria-live="polite">idle</span>
+      <div class="sim-result" id="result-fig3"></div>
+      <a class="btn sim-download" id="dl-fig3" download="fig_welfare_trajectory.png" aria-label="Download Figure 3 as PNG">Download PNG</a>
     </div>
-  </footer>
 
-</main>
+    <footer class="footer">
+      <div>© 2026 Neuromorphic Inference Lab</div>
+      <div class="prov">
+        <span id="build-branch">branch: …</span>
+        <span id="build-commit">commit: …</span>
+        <span id="build-time">built: …</span>
+      </div>
+    </footer>
 
-<!-- Pyodide runtime -->
-<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+  </main>
 
-<script>
-  /* ── Pyodide shared state ── */
-  let _pyodidePromise = null;
-  let _pyodide = null;
+  <script>
+    "use strict";
 
-  async function getPyodide() {
-    if (_pyodidePromise) return _pyodidePromise;
-    _pyodidePromise = (async () => {
-      _pyodide = await loadPyodide();
-      await _pyodide.loadPackage(['numpy', 'matplotlib']);
-      return _pyodide;
-    })();
-    return _pyodidePromise;
-  }
+    var PYODIDE_INDEX = "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/";
+    var _pyodide = null;
+    var _pyodidePromise = null;
 
-  /* ── Python code for each figure ── */
-  const FIG_CODE = {
-    1: `
-import io, base64
-import numpy as np
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-
-np.random.seed(42)
-NAVY  = "#1B3A6B"
-GREEN = "#2E7D32"
-RED   = "#B71C1C"
-
-mu_star   = 0.35
-mu_0      = 0.60
-sigma_obs = 0.05
-K         = 200
-N         = 50
-
-trajectories = np.zeros((N, K + 1))
-for n in range(N):
-    mu = mu_0
-    trajectories[n, 0] = mu
-    for k in range(1, K + 1):
-        kappa = 0.5 / (k ** 0.75)
-        obs   = np.random.normal(mu_star, sigma_obs)
-        mu    = mu + kappa * (obs - mu)
-        trajectories[n, k] = mu
-
-ks      = np.arange(K + 1)
-mean_tr = trajectories.mean(axis=0)
-p10     = np.percentile(trajectories, 10, axis=0)
-p90     = np.percentile(trajectories, 90, axis=0)
-
-fig, ax = plt.subplots(figsize=(6.5, 4))
-for n in range(N):
-    ax.plot(ks, trajectories[n], color=NAVY, alpha=0.12, lw=0.7)
-ax.fill_between(ks, p10, p90, color=NAVY, alpha=0.18,
-                label="10th\\u201390th percentile")
-ax.plot(ks, mean_tr, color=NAVY, lw=2.0, label="Mean trajectory")
-ax.axhline(mu_star, color=GREEN, lw=1.6, ls="--",
-           label="True interventional mean \\u03bc*(a)=0.35")
-ax.axhline(mu_0, color=RED, lw=1.2, ls="--", alpha=0.6,
-           label="Initial estimate 0.60")
-ax.set_xlabel("Visit count k")
-ax.set_ylabel("Mean estimate")
-ax.set_title("Convergence of recalibration rule (Proposition 4)")
-ax.legend(fontsize=9, frameon=False, loc="upper right")
-ax.spines["top"].set_visible(False)
-ax.spines["right"].set_visible(False)
-fig.tight_layout()
-
-buf = io.BytesIO()
-fig.savefig(buf, format="png", dpi=150)
-plt.close(fig)
-buf.seek(0)
-base64.b64encode(buf.read()).decode()
-`,
-    2: `
-import io, base64
-import numpy as np
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-
-NAVY = "#1B3A6B"
-PLUM = "#7B2D8B"
-GRAY = "#757575"
-
-mu_star    = 0.50
-sigma_star = 0.03
-sigma2_a   = 0.02
-mu_a = mu_b = 0.45
-
-sigma2_b_vals = np.linspace(0.02, 0.15, 100)
-delta_sigma2  = sigma2_b_vals - sigma2_a
-
-def kl_gaussian(mu_q, sigma2_q, mu_p, sigma2_p):
-    return 0.5 * (
-        (mu_q - mu_p) ** 2 / sigma2_p
-        + sigma2_q / sigma2_p
-        - 1
-        - np.log(sigma2_q / sigma2_p)
-    )
-
-kl_a = kl_gaussian(mu_a, sigma2_a, mu_star, sigma_star ** 2)
-kl_b = kl_gaussian(mu_b, sigma2_b_vals, mu_star, sigma_star ** 2)
-
-delta_kl  = kl_a - kl_b
-delta_ehd = np.zeros_like(delta_sigma2)
-
-fig, ax = plt.subplots(figsize=(6.5, 4))
-ax.axhline(0, color=GRAY, lw=0.8, ls=":")
-ax.fill_between(delta_sigma2, delta_ehd, delta_kl, color=PLUM, alpha=0.08)
-ax.plot(delta_sigma2, delta_ehd, color=NAVY, lw=2.2,
-        label="EHD pragmatic term (indifferent)")
-ax.plot(delta_sigma2, delta_kl, color=PLUM, lw=2.2,
-        label="EFE KL term")
-ax.annotate("EHD indifferent",
-            xy=(0.06, 0.002), fontsize=9, color=NAVY)
-ax.annotate("EFE penalises higher variance",
-            xy=(0.05, delta_kl[50] + 0.002), fontsize=9, color=PLUM)
-ax.set_xlabel("Variance gap \u03c3\u00b2(b) \u2212 \u03c3\u00b2(a)")
-ax.set_ylabel("Score difference (a)\u2212(b)")
-ax.set_title("Ranking divergence: EHD vs single-step EFE (Proposition 5, ii)")
-ax.legend(fontsize=9, frameon=False, loc="lower left")
-ax.spines["top"].set_visible(False)
-ax.spines["right"].set_visible(False)
-fig.tight_layout()
-
-buf = io.BytesIO()
-fig.savefig(buf, format="png", dpi=150)
-plt.close(fig)
-buf.seek(0)
-base64.b64encode(buf.read()).decode()
-`,
-    3: `
-import io, base64
-import numpy as np
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-
-np.random.seed(42)
-NAVY = "#1B3A6B"
-PLUM = "#7B2D8B"
-GREEN = "#2E7D32"
-GOLD  = "#DAA520"
-RED   = "#B71C1C"
-GRAY  = "#757575"
-
-t = np.arange(0, 25, dtype=float)
-noise    = np.random.normal(0, 0.01, len(t))
-g_raw    = 0.08 * np.sin(2 * np.pi * t / 24) + 0.04 + noise
-g_smooth = np.zeros_like(g_raw)
-g_smooth[0] = g_raw[0]
-for i in range(1, len(t)):
-    g_smooth[i] = 0.3 * g_raw[i] + 0.7 * g_smooth[i - 1]
-
-W_ext     = 1 / (1 + np.exp(3 * g_smooth))
-theta_ext = 0.45
-
-B = np.zeros_like(t)
-for i, ti in enumerate(t):
-    if ti < 3:
-        B[i] = W_ext[i]
-    elif ti == 3:
-        B[i] = 0.62
-    elif ti < 16:
-        B[i] = 0.62 * np.exp(-0.08 * (ti - 3))
-    else:
-        B[i] = W_ext[i] + 0.03
-
-x2 = 0.80 * np.exp(-0.02 * t)
-x2[6:] += 0.12 * np.exp(-0.02 * (t[6:] - 6))
-x2 = np.clip(x2, 0, 1)
-x3 = 0.72 * np.exp(-0.01 * t)
-
-p1 = 0.42
-x1 = 0.70 * W_ext + 0.20 * B + 0.10 * p1
-V  = 0.55 * x1 + 0.25 * x2 + 0.20 * x3
-
-fig, axes = plt.subplots(
-    3, 1, figsize=(6.5, 7),
-    sharex=True,
-    gridspec_kw={"height_ratios": [2.5, 1, 1]}
-)
-fig.suptitle("EHD welfare trajectory - 24-month simulation (Section 7)", fontsize=11)
-
-ax = axes[0]
-ax.plot(t, W_ext, color=PLUM, lw=2, label="W_ext(t)")
-ax.plot(t, B, color=GOLD, lw=1.8, ls="--", label="B_t(a*)")
-ax.axhline(theta_ext, color=GRAY, lw=1, ls=":", label="theta_ext=0.45")
-ax.fill_between(t, 0, 1, where=(W_ext < theta_ext),
-                color=RED, alpha=0.10, label="Trigger active")
-ax.annotate("", xy=(3, 0.25), xytext=(3, 0.18),
-            arrowprops=dict(arrowstyle="->", color=GREEN, lw=1.6))
-ax.text(3.2, 0.17, "Action selected", fontsize=8, color=GREEN)
-ax.set_ylabel("Welfare signal")
-ax.set_ylim(0.1, 0.85)
-ax.legend(fontsize=8, frameon=False, loc="upper right", ncol=2)
-
-ax = axes[1]
-ax.plot(t, x2, color=NAVY, lw=1.8, label="Budget x2")
-ax.plot(t, x3, color=GREEN, lw=1.8, ls="--", label="Knowledge x3")
-ax.plot(6, x2[6], marker="^", color=NAVY, ms=7, label="Replenishment")
-ax.set_ylabel("Endocentric")
-ax.legend(fontsize=8, frameon=False, loc="upper right")
-
-ax = axes[2]
-ax.plot(t, V, color="black", lw=2, label="V(x_t)")
-ax.axhline(0.50, color=GRAY, lw=1, ls=":", label="theta=0.50")
-ax.set_ylabel("V(x_t)")
-ax.set_xlabel("Time t (months)")
-ax.legend(fontsize=8, frameon=False, loc="upper right")
-
-for ax in axes:
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-
-fig.tight_layout()
-
-buf = io.BytesIO()
-fig.savefig(buf, format="png", dpi=150)
-plt.close(fig)
-buf.seek(0)
-base64.b64encode(buf.read()).decode()
-`
-  };
-
-  /* ── Status helper ── */
-  function setStatus(n, state, text) {
-    const el = document.getElementById('status-fig' + n);
-    el.textContent = text;
-    el.dataset.state = state;
-  }
-
-  /* ── Run a figure ── */
-  async function runFigure(n) {
-    const btn    = document.getElementById('btn-fig' + n);
-    const result = document.getElementById('result-fig' + n);
-    const dlBtn  = document.getElementById('dl-fig' + n);
-
-    btn.disabled = true;
-
-    try {
-      setStatus(n, 'loading', 'Loading Python runtime…');
-      const py = await getPyodide();
-
-      setStatus(n, 'running', 'Running…');
-      const b64 = await py.runPythonAsync(FIG_CODE[n]);
-
-      const dataUri = 'data:image/png;base64,' + b64;
-
-      result.innerHTML = '';
-      const img = document.createElement('img');
-      img.src = dataUri;
-      img.alt = 'Figure ' + n + ' — simulation output';
-      result.appendChild(img);
-
-      dlBtn.href = dataUri;
-      dlBtn.classList.add('visible');
-
-      setStatus(n, 'done', 'Done ✓');
-    } catch (err) {
-      setStatus(n, 'error', 'Error running Figure ' + n + ' — see browser console for details');
-      console.error('EHD simulation error (fig ' + n + '):', err);
-    } finally {
-      btn.disabled = false;
+    function ensurePyodide() {
+      if (_pyodide) return Promise.resolve(_pyodide);
+      if (_pyodidePromise) return _pyodidePromise;
+      _pyodidePromise = new Promise(function (resolve, reject) {
+        var s = document.createElement("script");
+        s.src = PYODIDE_INDEX + "pyodide.js";
+        s.onload = function () {
+          loadPyodide({ indexURL: PYODIDE_INDEX })
+            .then(function (py) {
+              return py.loadPackage(["numpy", "matplotlib"]).then(function () {
+                _pyodide = py;
+                resolve(py);
+              });
+            })
+            .catch(reject);
+        };
+        s.onerror = function () {
+          reject(new Error("Failed to load Pyodide script from CDN."));
+        };
+        document.head.appendChild(s);
+      });
+      return _pyodidePromise;
     }
-  }
-</script>
 
-<script src="/build-info.js" defer></script>
+    var PREAMBLE = [
+      "import numpy as np",
+      "import matplotlib",
+      "matplotlib.use('Agg')",
+      "import matplotlib.pyplot as plt",
+      "import io, base64",
+      "np.random.seed(42)",
+      "plt.rcParams.update({",
+      "    'font.family': 'serif',",
+      "    'font.size': 11,",
+      "    'axes.spines.top': False,",
+      "    'axes.spines.right': False,",
+      "})",
+      "NAVY  = '#1B3A6B'",
+      "PLUM  = '#7B2D8B'",
+      "GREEN = '#2E7D32'",
+      "GOLD  = '#DAA520'",
+      "RED   = '#B71C1C'",
+      "GRAY  = '#757575'",
+      "",
+      "def _fig_to_b64(fig):",
+      "    buf = io.BytesIO()",
+      "    fig.savefig(buf, format='png', dpi=150, bbox_inches='tight')",
+      "    buf.seek(0)",
+      "    data = base64.b64encode(buf.read()).decode('utf-8')",
+      "    plt.close(fig)",
+      "    return data"
+    ].join("\n");
+
+    var FIG1_CODE = PREAMBLE + "\n" + [
+      "mu_star   = 0.35",
+      "mu_0      = 0.60",
+      "sigma_obs = 0.05",
+      "K = 200",
+      "N = 50",
+      "trajectories = np.zeros((N, K + 1))",
+      "for n in range(N):",
+      "    mu = mu_0",
+      "    trajectories[n, 0] = mu",
+      "    for k in range(1, K + 1):",
+      "        kappa = 0.5 / (k ** 0.75)",
+      "        obs   = np.random.normal(mu_star, sigma_obs)",
+      "        mu    = mu + kappa * (obs - mu)",
+      "        trajectories[n, k] = mu",
+      "ks      = np.arange(K + 1)",
+      "mean_tr = trajectories.mean(axis=0)",
+      "p10     = np.percentile(trajectories, 10, axis=0)",
+      "p90     = np.percentile(trajectories, 90, axis=0)",
+      "fig, ax = plt.subplots(figsize=(7, 4.2))",
+      "for n in range(N):",
+      "    ax.plot(ks, trajectories[n], color=NAVY, alpha=0.12, lw=0.7)",
+      "ax.fill_between(ks, p10, p90, color=NAVY, alpha=0.18, label='10th-90th percentile')",
+      "ax.plot(ks, mean_tr, color=NAVY, lw=2.0, label='Mean trajectory')",
+      "ax.axhline(mu_star, color=GREEN, lw=1.6, ls='--', label='True interventional mean mu*(a)=0.35')",
+      "ax.axhline(mu_0, color=RED, lw=1.2, ls='--', alpha=0.6, label='Initial estimate mu_0(a)=0.60')",
+      "ax.set_xlabel('Visit count k')",
+      "ax.set_ylabel('Mean estimate')",
+      "ax.set_title('Convergence of recalibration rule (Proposition 4)')",
+      "ax.legend(fontsize=9, frameon=False, loc='upper right')",
+      "fig.tight_layout()",
+      "_fig_to_b64(fig)"
+    ].join("\n");
+
+    var FIG2_CODE = PREAMBLE + "\n" + [
+      "mu_star    = 0.50",
+      "sigma_star = 0.03",
+      "sigma2_a   = 0.02",
+      "mu_a = mu_b = 0.45",
+      "sigma2_b_vals = np.linspace(0.02, 0.15, 100)",
+      "delta_sigma2  = sigma2_b_vals - sigma2_a",
+      "def kl_gaussian(mu_q, sigma2_q, mu_p, sigma2_p):",
+      "    return 0.5 * (",
+      "        (mu_q - mu_p)**2 / sigma2_p",
+      "        + sigma2_q / sigma2_p",
+      "        - 1",
+      "        - np.log(sigma2_q / sigma2_p)",
+      "    )",
+      "kl_a = kl_gaussian(mu_a, sigma2_a, mu_star, sigma_star**2)",
+      "kl_b = kl_gaussian(mu_b, sigma2_b_vals, mu_star, sigma_star**2)",
+      "delta_kl  = kl_a - kl_b",
+      "delta_ehd = np.zeros_like(delta_sigma2)",
+      "fig, ax = plt.subplots(figsize=(7, 4.2))",
+      "ax.axhline(0, color=GRAY, lw=0.8, ls=':')",
+      "ax.fill_between(delta_sigma2, delta_ehd, delta_kl, color=PLUM, alpha=0.08)",
+      "ax.plot(delta_sigma2, delta_ehd, color=NAVY, lw=2.2, label='EHD pragmatic term (always 0)')",
+      "ax.plot(delta_sigma2, delta_kl, color=PLUM, lw=2.2, label='EFE KL term')",
+      "ax.annotate('EHD indifferent', xy=(0.06, 0.002), fontsize=9, color=NAVY)",
+      "ax.annotate('EFE penalises higher variance', xy=(0.05, float(delta_kl[50]) + 0.002), fontsize=9, color=PLUM)",
+      "ax.set_xlabel('Variance gap: sigma^2(b) - sigma^2(a)')",
+      "ax.set_ylabel('Score difference (a) - (b)')",
+      "ax.set_title('Ranking divergence: EHD vs single-step EFE\\n(Proposition 5, mechanism ii)')",
+      "ax.legend(fontsize=9, frameon=False, loc='lower left')",
+      "fig.tight_layout()",
+      "_fig_to_b64(fig)"
+    ].join("\n");
+
+    var FIG3_CODE = PREAMBLE + "\n" + [
+      "t = np.arange(0, 25, dtype=float)",
+      "noise    = np.random.normal(0, 0.01, len(t))",
+      "g_raw    = 0.08 * np.sin(2 * np.pi * t / 24) + 0.04 + noise",
+      "g_smooth = np.zeros_like(g_raw)",
+      "g_smooth[0] = g_raw[0]",
+      "for i in range(1, len(t)):",
+      "    g_smooth[i] = 0.3 * g_raw[i] + 0.7 * g_smooth[i - 1]",
+      "W_ext     = 1 / (1 + np.exp(3 * g_smooth))",
+      "theta_ext = 0.45",
+      "B = np.zeros_like(t)",
+      "for i, ti in enumerate(t):",
+      "    if ti < 3:",
+      "        B[i] = W_ext[i]",
+      "    elif ti == 3:",
+      "        B[i] = 0.62",
+      "    elif ti < 16:",
+      "        B[i] = 0.62 * np.exp(-0.08 * (ti - 3))",
+      "    else:",
+      "        B[i] = W_ext[i] + 0.03",
+      "x2 = 0.80 * np.exp(-0.02 * t)",
+      "x2[6:] += 0.12 * np.exp(-0.02 * (t[6:] - 6))",
+      "x2 = np.clip(x2, 0, 1)",
+      "x3 = 0.72 * np.exp(-0.01 * t)",
+      "p1 = 0.42",
+      "x1 = 0.70 * W_ext + 0.20 * B + 0.10 * p1",
+      "V  = 0.55 * x1 + 0.25 * x2 + 0.20 * x3",
+      "fig, axes = plt.subplots(3, 1, figsize=(7, 7.5), sharex=True,",
+      "                         gridspec_kw={'height_ratios': [2.5, 1, 1]})",
+      "fig.suptitle('EHD welfare trajectory - 24-month simulation (Section 7)', fontsize=11)",
+      "ax = axes[0]",
+      "ax.plot(t, W_ext, color=PLUM, lw=2, label='W_ext(t)')",
+      "ax.plot(t, B, color=GOLD, lw=1.8, ls='--', label='B_t(a*)')",
+      "ax.axhline(theta_ext, color=GRAY, lw=1, ls=':', label='theta_ext=0.45')",
+      "ax.fill_between(t, 0, 1, where=(W_ext < theta_ext), color=RED, alpha=0.10, label='Trigger active')",
+      "ax.annotate('', xy=(3, 0.25), xytext=(3, 0.18),",
+      "            arrowprops=dict(arrowstyle='->', color=GREEN, lw=1.6))",
+      "ax.text(3.2, 0.17, 'Action selected', fontsize=8, color=GREEN)",
+      "ax.set_ylabel('Welfare signal')",
+      "ax.set_ylim(0.1, 0.85)",
+      "ax.legend(fontsize=8, frameon=False, loc='upper right', ncol=2)",
+      "ax = axes[1]",
+      "ax.plot(t, x2, color=NAVY, lw=1.8, label='Budget x2')",
+      "ax.plot(t, x3, color=GREEN, lw=1.8, ls='--', label='Knowledge x3')",
+      "ax.plot(6, x2[6], marker='^', color=NAVY, ms=7, label='Replenishment')",
+      "ax.set_ylabel('Endocentric')",
+      "ax.legend(fontsize=8, frameon=False, loc='upper right')",
+      "ax = axes[2]",
+      "ax.plot(t, V, color='black', lw=2, label='V(x_t)')",
+      "ax.axhline(0.50, color=GRAY, lw=1, ls=':', label='theta=0.50')",
+      "ax.set_ylabel('V(x_t)')",
+      "ax.set_xlabel('Time t (months)')",
+      "ax.legend(fontsize=8, frameon=False, loc='upper right')",
+      "for ax in axes:",
+      "    ax.spines['top'].set_visible(False)",
+      "    ax.spines['right'].set_visible(False)",
+      "fig.tight_layout()",
+      "_fig_to_b64(fig)"
+    ].join("\n");
+
+    var CODES = { 1: FIG1_CODE, 2: FIG2_CODE, 3: FIG3_CODE };
+
+    function setStatus(n, msg) {
+      document.getElementById("status-fig" + n).textContent = msg;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function runFig(n) {
+      var btn    = document.getElementById("btn-fig" + n);
+      var result = document.getElementById("result-fig" + n);
+      var dl     = document.getElementById("dl-fig" + n);
+
+      btn.disabled = true;
+      setStatus(n, "loading…");
+
+      ensurePyodide()
+        .then(function (py) {
+          setStatus(n, "running…");
+          return py.runPythonAsync(CODES[n]);
+        })
+        .then(function (b64) {
+          var img = document.createElement("img");
+          img.src = "data:image/png;base64," + b64;
+          img.alt = "Figure " + n;
+          result.innerHTML = "";
+          result.appendChild(img);
+          dl.href = img.src;
+          dl.style.display = "inline-flex";
+          setStatus(n, "done");
+          btn.disabled = false;
+        })
+        .catch(function (err) {
+          result.innerHTML = "<p style='color:#f87171;font-size:14px;margin:12px 0 0;'>"
+            + "Error: " + escapeHtml(err.message) + "</p>";
+          setStatus(n, "error");
+          btn.disabled = false;
+        });
+    }
+
+    document.getElementById("btn-fig1").addEventListener("click", function () { runFig(1); });
+    document.getElementById("btn-fig2").addEventListener("click", function () { runFig(2); });
+    document.getElementById("btn-fig3").addEventListener("click", function () { runFig(3); });
+  </script>
+
+  <script src="/build-info.js"></script>
 </body>
 </html>
