@@ -3,21 +3,41 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Proof Ledger — Neuromorphic Inference Lab</title>
-  <meta name="description" content="Proof Ledger: verifiable evidence for full-stack ML engineering — pipelines, deployment, monitoring, and LLMOps/RAG." />
+  <title>EHD Paper — Research Evidence Memo — Neuromorphic Inference Lab</title>
+  <meta name="description" content="Research evidence memo for Exocentric Homeostatic Deliberation (EHD): formal propositions, reproducible simulations, and full abstract." />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
   <style>
-    .kbd{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    .claim-label {
       font-size: 12px;
-      padding: 2px 7px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.20);
-      color: rgba(234,240,255,.88);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: rgba(234,240,255,.60);
+      margin-bottom: 6px;
     }
-    .small{ font-size: 12px; color: rgba(234,240,255,.70); line-height: 1.6; }
+    .claim-text {
+      margin: 6px 0 4px;
+      line-height: 1.55;
+    }
+    .claim-scope {
+      font-size: 12px;
+      color: rgba(234,240,255,.60);
+      line-height: 1.5;
+      margin: 0;
+    }
+    .abstract-block {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 12px;
+      line-height: 1.75;
+      color: rgba(234,240,255,.85);
+    }
+    .btn-disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
   </style>
 </head>
 
@@ -29,241 +49,107 @@
         <span>Neuromorphic Inference Lab</span>
       </div>
       <nav class="navlinks" aria-label="Primary navigation">
-        <a data-nav href="/">Signal</a>
-        <a data-nav href="/demos/">Systems</a>
-        <a data-nav class="active" href="/evidence/">Proof Ledger</a>
-        <a data-nav href="/about/">Identity</a>
+        <a data-nav href="/">Home</a>
+        <a data-nav href="/about/">About Me</a>
       </nav>
     </div>
   </header>
 
   <main class="container">
+
+    <!-- Header block -->
     <section class="hero">
-      <p class="kicker">Proof Ledger</p>
-      <h1 class="h1">Evidence that is fast to verify.</h1>
-      <p class="sub">
-        Each system has an evidence memo (what it proves, how to verify, risks &amp; mitigations) and a stable proof anchor for direct linking.
-      </p>
-
-      <div class="badges">
-        <span class="badge">Scalable ML Pipelines</span>
-        <span class="badge">CI/CD for ML</span>
-        <span class="badge">Model Serving</span>
-        <span class="badge">Monitoring</span>
-        <span class="badge">RAG / LLMOps</span>
-      </div>
-
-      <div style="height:12px"></div>
-
-      <!-- Breadcrumb -->
       <div class="tags" aria-label="Breadcrumb">
-        <a class="tag" href="/">Signal</a>
+        <a class="tag" href="/">Home</a>
         <span class="tag">→</span>
-        <a class="tag" href="/demos/">Systems</a>
+        <span class="tag">Research</span>
         <span class="tag">→</span>
-        <span class="tag">Proof Ledger</span>
+        <span class="tag">EHD Paper</span>
       </div>
 
+      <h1 class="h1" style="margin-top:20px;">Can LLM Agents Care About the World?</h1>
+      <p class="sub">Exocentric Homeostatic Deliberation — Research Evidence Memo</p>
 
+      <div class="tags" style="margin-top:16px;">
+        <span class="tag">arXiv 2026</span>
+        <span class="tag">Under submission</span>
+        <span class="tag">Simulation code available</span>
+      </div>
     </section>
 
+    <!-- Section 1: What this paper proves -->
     <section class="section">
-      <h2>Evidence index</h2>
-      <p class="lead">Each system includes: live deployment + evidence memo + stable proof anchor.</p>
+      <h2>What this paper proves</h2>
 
       <div class="grid">
 
-        <article id="mv-grid-fault-risk" class="card col-12 anchor">
-          <h3>NeuroGrid Fault Risk Scoring Platform</h3>
-          <p>Medium-voltage fault risk inference: features → training → artefacts → serving (full-stack delivery).</p>
-          <div class="tags">
-            <span class="tag">Tabular ML</span>
-            <span class="tag">Feature Engineering</span>
-            <span class="tag">CI/CD for ML</span>
-            <span class="tag">Model Serving</span>
-            <span class="tag">Versioned Artefacts</span>
-          </div>
-          <div class="actions">
-            <a class="btn primary" href="/demos/mv-grid-fault-risk/">Open system</a>
-            <a class="btn" href="/evidence/mv-grid-fault-risk/">Evidence memo</a>
-            <a class="btn" href="/evidence/#mv-grid-fault-risk">Proof anchor</a>
-            <a class="btn" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener">Source</a>
-          </div>
-          <p class="small" style="margin-top:10px;">Anchor: <span class="kbd">/evidence/#mv-grid-fault-risk</span></p>
+        <article class="card col-6">
+          <p class="claim-label">Proposition 1 — State Boundedness</p>
+          <p class="claim-text">The composite welfare vector stays in [0,1]<sup>n</sup> for all t ≥ 0 under convex-combination dynamics and projected endocentric updates.</p>
+          <p class="claim-scope">Holds unconditionally; does not prevent boundary saturation under heavy-tailed increments.</p>
         </article>
 
-        <article id="forecast-studio" class="card col-12 anchor">
-          <h3>Forecast Studio (Time-Series Production Pipeline)</h3>
-          <p>Forecasting engineered for operations: repeatable transforms, backtesting, and deployment-ready outputs.</p>
-          <div class="tags">
-            <span class="tag">Time-Series</span>
-            <span class="tag">Backtesting</span>
-            <span class="tag">MAE / MAPE</span>
-            <span class="tag">MLOps</span>
-            <span class="tag">Retraining Triggers</span>
-          </div>
-          <div class="actions">
-            <a class="btn primary" href="/demos/forecast-studio/">Open system</a>
-            <a class="btn" href="/evidence/forecast-studio/">Evidence memo</a>
-            <a class="btn" href="/evidence/#forecast-studio">Proof anchor</a>
-            <a class="btn" href="https://github.com/nepryoon/nil-forecast-studio" target="_blank" rel="noopener">Source</a>
-          </div>
-          <p class="small" style="margin-top:10px;">Anchor: <span class="kbd">/evidence/#forecast-studio</span></p>
+        <article class="card col-6">
+          <p class="claim-label">Proposition 2 — Monotone Passive Degradation</p>
+          <p class="claim-text">Aggregate welfare V(x<sub>t</sub>) is non-increasing on idle intervals where no action is taken and no surveillance update arrives.</p>
+          <p class="claim-scope">Holds only during genuine between-episode idle phases; an out-of-band W<sub>ext</sub> update can increase V.</p>
         </article>
 
-        <article id="rag-copilot" class="card col-12 anchor">
-          <h3>RAG Knowledge Copilot (LLMOps Reliability)</h3>
-          <p>Retrieval tracing with source citations + guardrails enforcement + automated evaluation harness for production LLMOps workflows.</p>
-          <div class="tags">
-            <span class="tag">RAG</span>
-            <span class="tag">LLMOps</span>
-            <span class="tag">Retrieval Tracing</span>
-            <span class="tag">Guardrails</span>
-            <span class="tag">Evaluation Harness</span>
-          </div>
-          <div class="actions">
-            <a class="btn primary" href="/demos/rag-copilot/">Open system</a>
-            <a class="btn" href="/evidence/rag-copilot/">Evidence memo</a>
-            <a class="btn" href="/evidence/#rag-copilot">Proof anchor</a>
-            <a class="btn" href="https://github.com/nepryoon/nil-rag-copilot" target="_blank" rel="noopener">Source</a>
-            <a class="btn" href="https://github.com/nepryoon/neuromorphic-inference-lab-site/tree/main/demos/rag-copilot" target="_blank" rel="noopener">Demo source (client-only)</a>
-          </div>
-          <p class="small" style="margin-top:10px;">Anchor: <span class="kbd">/evidence/#rag-copilot</span></p>
+        <article class="card col-6">
+          <p class="claim-label">Design Principle 1 — Governance-Transparent Attribution</p>
+          <p class="claim-text">Each utility component's contribution to any action ranking can be computed and reported independently, without access to internal operational variables.</p>
+          <p class="claim-scope">Algebraic separability, not statistical independence; λ coefficients must be fixed by governance.</p>
         </article>
 
-        <article id="centrico-livelab" class="card col-12 anchor">
-          <h3>Centrico LiveLab — End-to-End MLOps</h3>
-          <p>Complete MLOps pipeline: data engineering → training → inference API → monitoring with operational discipline.</p>
-          <div class="tags">
-            <span class="tag">Data Engineering</span>
-            <span class="tag">MLOps Pipeline</span>
-            <span class="tag">FastAPI</span>
-            <span class="tag">Prometheus + Grafana</span>
-            <span class="tag">CI Quality Gates</span>
-          </div>
-          <div class="actions">
-            <a class="btn primary" href="/demos/centrico-livelab/">Open system</a>
-            <a class="btn" href="/evidence/centrico-livelab/">Evidence memo</a>
-            <a class="btn" href="/evidence/#centrico-livelab">Proof anchor</a>
-            <a class="btn" href="https://github.com/nepryoon/centrico-livelab-mlops" target="_blank" rel="noopener">Source</a>
-          </div>
-          <p class="small" style="margin-top:10px;">Anchor: <span class="kbd">/evidence/#centrico-livelab</span></p>
+        <article class="card col-6">
+          <p class="claim-label">Proposition 4 — Robbins–Monro Consistency</p>
+          <p class="claim-text">The mean recalibration rule converges in mean square to the true interventional mean μ*(a) under i.i.d. zero-mean noise and standard step-size conditions.</p>
+          <p class="claim-scope">Restricted to fixed action, i.i.d. noise, infinite visitation; does not cover non-stationary socio-technical environments.</p>
         </article>
 
-        <article id="tabular-risk" class="card col-12 anchor">
-          <h3>Tabular Risk Scoring</h3>
-          <p>Client-side scoring with transparent baseline. Demonstrates tabular ML, explainability patterns, and drift awareness design.</p>
-          <div class="tags">
-            <span class="tag">Tabular ML</span>
-            <span class="tag">Explainability</span>
-            <span class="tag">Drift Awareness</span>
-            <span class="tag">Client-Side</span>
-          </div>
-          <div class="actions">
-            <a class="btn primary" href="/demos/tabular-risk/">Open demo</a>
-            <a class="btn" href="https://github.com/nepryoon/nil-tabular-risk" target="_blank" rel="noopener">Source</a>
-          </div>
-          <p class="small" style="margin-top:10px;">Anchor: <span class="kbd">/evidence/#tabular-risk</span></p>
+        <article class="card col-6">
+          <p class="claim-label">Proposition 5 — Restricted EFE Non-Equivalence</p>
+          <p class="claim-text">EHD and single-step EFE can yield different action rankings under two explicit mechanisms: mean-vs-distribution scoring (Gaussian–Gaussian case) and governance penalty.</p>
+          <p class="claim-scope">Restricted existence results under auxiliary assumptions; not a general policy-divergence theorem.</p>
         </article>
 
-        <article id="visual-inspector" class="card col-12 anchor">
-          <h3>Visual Inspector</h3>
-          <p>Image upload and inspection workflow. Demonstrates computer vision integration patterns and client-side processing.</p>
-          <div class="tags">
-            <span class="tag">Computer Vision</span>
-            <span class="tag">Image Processing</span>
-            <span class="tag">Client-Side</span>
-          </div>
-          <div class="actions">
-            <a class="btn primary" href="/demos/visual-inspector/">Open demo</a>
-            <a class="btn" href="https://github.com/nepryoon/nil-visual-inspector" target="_blank" rel="noopener">Source</a>
-          </div>
-          <p class="small" style="margin-top:10px;">Anchor: <span class="kbd">/evidence/#visual-inspector</span></p>
+      </div>
+    </section>
+
+    <!-- Section 2: Reproducible simulations -->
+    <section class="section">
+      <h2>Reproducible simulations</h2>
+
+      <div class="grid">
+
+        <article class="card col-6">
+          <p class="claim-label">fig_convergence — Proposition 4</p>
+          <p class="claim-text">50 independent Robbins–Monro trajectories converging to μ*(a) = 0.35 from initial estimate 0.60. Learning rate κ<sub>k</sub> = 0.5 / k<sup>0.75</sup>.</p>
         </article>
 
-        <article id="edgepulse" class="card col-12 anchor">
-          <h3>EdgePulse — Operational AI Loop</h3>
-          <p>Real-time operational pipeline: data ingestion → storage → scoring → alerting → dashboard. TypeScript implementation.</p>
-          <div class="tags">
-            <span class="tag">TypeScript</span>
-            <span class="tag">Real-time</span>
-            <span class="tag">Alerting</span>
-            <span class="tag">Dashboard</span>
-            <span class="tag">Operational AI</span>
-          </div>
-          <div class="actions">
-            <a class="btn primary" href="/demos/edgepulse/">Open system</a>
-            <a class="btn" href="/evidence/#edgepulse">Proof anchor</a>
-            <a class="btn" href="https://github.com/nepryoon/edgepulse" target="_blank" rel="noopener">Source</a>
-          </div>
-          <p class="small" style="margin-top:10px;">Anchor: <span class="kbd">/evidence/#edgepulse</span></p>
+        <article class="card col-6">
+          <p class="claim-label">fig_ranking_divergence — Proposition 5 (ii)</p>
+          <p class="claim-text">Actions with equal predicted means but differing variances receive identical EHD pragmatic scores and different EFE KL scores. Divergence grows with variance gap.</p>
         </article>
 
-        <article id="ehd-watch" class="card col-12 anchor">
-          <h3>EHD-Watch — Exocentric Homeostatic Agent</h3>
-          <p>Persistent Agent Architecture / LLMOps: live demo backed by a Cloudflare Pages Function proxy to Groq. Client-side welfare vector simulation (W<sub>ext</sub>, budget, freshness) drives a BDI-style deliberation loop with trigger conditions and action selection.</p>
-          <div class="tags">
-            <span class="tag">Exocentric Homeostasis</span>
-            <span class="tag">BDI Deliberation</span>
-            <span class="tag">Active Inference</span>
-            <span class="tag">Groq / Llama 3.1</span>
-            <span class="tag">Cloudflare Functions</span>
-          </div>
-          <div class="actions">
-            <a class="btn primary" href="/demos/ehd-watch/">Open demo</a>
-            <a class="btn" href="/evidence/#ehd-watch">Proof anchor</a>
-          </div>
-          <p class="small" style="margin-top:10px;">Anchor: <span class="kbd">/evidence/#ehd-watch</span></p>
+        <article class="card col-6">
+          <p class="claim-label">fig_welfare_trajectory — Section 7</p>
+          <p class="claim-text">24-month AMR monitoring simulation. Exocentric trigger fires at W<sub>ext</sub> &lt; θ<sub>ext</sub> = 0.45 despite satisfactory endocentric state.</p>
         </article>
 
-        <article id="causal-inference-do-calculus" class="card col-12 anchor">
-          <h3>Causal Inference / do-calculus</h3>
-          <p>EHD paper — interventional hope term defined over P<sub>θ</sub>(o|do(a)) with explicit SCM and backdoor identification.</p>
-          <div class="tags">
-            <span class="tag">Causal Inference</span>
-            <span class="tag">do-calculus</span>
-            <span class="tag">SCM</span>
-            <span class="tag">Backdoor Identification</span>
-          </div>
-          <div class="actions">
-            <a class="btn primary" href="/research/ehd/">View paper</a>
-            <a class="btn" href="/evidence/#causal-inference-do-calculus">Proof anchor</a>
-          </div>
-          <p class="small" style="margin-top:10px;">Anchor: <span class="kbd">/evidence/#causal-inference-do-calculus</span></p>
-        </article>
+      </div>
 
-        <article id="formal-ml-stochastic-approximation" class="card col-12 anchor">
-          <h3>Formal ML / stochastic approximation</h3>
-          <p>EHD paper — Robbins-Monro convergence proof (Proposition 4), state boundedness, monotone passive degradation.</p>
-          <div class="tags">
-            <span class="tag">Formal ML</span>
-            <span class="tag">Stochastic Approximation</span>
-            <span class="tag">Robbins-Monro</span>
-            <span class="tag">Convergence Proof</span>
-          </div>
-          <div class="actions">
-            <a class="btn primary" href="/research/ehd/">View paper</a>
-            <a class="btn" href="/evidence/#formal-ml-stochastic-approximation">Proof anchor</a>
-          </div>
-          <p class="small" style="margin-top:10px;">Anchor: <span class="kbd">/evidence/#formal-ml-stochastic-approximation</span></p>
-        </article>
+      <div class="actions" style="margin-top:24px;">
+        <a class="btn primary" href="https://github.com/nepryoon/ehd-simulations" target="_blank" rel="noopener">Simulation repository →</a>
+        <a class="btn btn-disabled" href="#" title="Available upon arXiv submission" aria-disabled="true" tabindex="-1">arXiv preprint →</a>
+      </div>
+    </section>
 
-        <article id="ai-safety-governance-design" class="card col-12 anchor">
-          <h3>AI Safety / governance design</h3>
-          <p>EHD paper — governance-transparent attribution Design Principle, hard feasibility constraints, soft penalty term.</p>
-          <div class="tags">
-            <span class="tag">AI Safety</span>
-            <span class="tag">Governance Design</span>
-            <span class="tag">Feasibility Constraints</span>
-            <span class="tag">Attribution</span>
-          </div>
-          <div class="actions">
-            <a class="btn primary" href="/research/ehd/">View paper</a>
-            <a class="btn" href="/evidence/#ai-safety-governance-design">Proof anchor</a>
-          </div>
-          <p class="small" style="margin-top:10px;">Anchor: <span class="kbd">/evidence/#ai-safety-governance-design</span></p>
-        </article>
-
+    <!-- Section 3: Abstract -->
+    <section class="section">
+      <h2>Abstract</h2>
+      <div class="abstract-block">
+        <p>Large language model (LLM) agents can perform multi-step reasoning, use external tools, retain memory, and adjust their plans over extended sequences of interaction. However, one important issue remains insufficiently specified: the basis on which such agents evaluate whether a situation is improving or worsening over time. This paper introduces exocentric homeostatic deliberation (EHD): a framework in which the agent's primary welfare is linked to an externally monitored, auditable world-state rather than to internal comfort variables. The hope term is defined over an interventional distribution under explicit structural-causal modelling assumptions. Pragmatic and epistemic value enter the scoring rule as independently calibrated additive terms. Governance is handled through hard feasibility constraints and a soft penalty term, both inspectable without access to internal operational variables.</p>
       </div>
     </section>
 
