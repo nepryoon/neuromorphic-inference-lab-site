@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AnomalyForge — Real-Time Industrial Anomaly Detection</title>
+  <meta name="description" content="End-to-end ML-powered anomaly detection platform for industrial IoT data streams. PyTorch TFT, FastAPI, PostgreSQL, Redis, Kubernetes, Terraform, AWS, MLflow, Prometheus, Grafana, GitHub Actions." />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    /* ── Diagram wrapper ─────────────────────────────────────── */
+    .diagram-wrap {
+      width: 100%;
+      overflow-x: auto;
+      margin: 24px 0;
+    }
+    .diagram-wrap svg {
+      width: 100%;
+      max-width: 1000px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* ── Tooltip ─────────────────────────────────────────────── */
+    #af-tooltip {
+      position: fixed;
+      z-index: 9999;
+      pointer-events: none;
+      max-width: 280px;
+      background: rgba(11,18,32,.96);
+      border: 1px solid rgba(110,231,255,.45);
+      border-radius: 10px;
+      padding: 10px 13px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #EAF0FF;
+      box-shadow: 0 8px 30px rgba(0,0,0,.55);
+      display: none;
+    }
+    #af-tooltip strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #6EE7FF;
+      font-size: 13px;
+    }
+
+    /* ── Component description cards ────────────────────────── */
+    .comp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .comp-card {
+      background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      padding: 18px 20px;
+      transition: border-color .2s ease, box-shadow .2s ease;
+      scroll-margin-top: 80px;
+    }
+    .comp-card:target,
+    .comp-card.highlight {
+      border-color: rgba(110,231,255,.55);
+      box-shadow: 0 0 0 3px rgba(110,231,255,.12);
+    }
+    .comp-card h3 {
+      margin: 0 0 8px;
+      font-size: 15px;
+      color: #6EE7FF;
+    }
+    .comp-card p {
+      margin: 0 0 10px;
+      font-size: 13.5px;
+      color: rgba(234,240,255,.82);
+      line-height: 1.6;
+    }
+    .comp-card .tech-line {
+      font-size: 12px;
+      color: rgba(234,240,255,.55);
+    }
+    .comp-card .tech-line strong {
+      color: rgba(234,240,255,.75);
+    }
+
+    /* SVG component hover state managed via JS */
+    .af-comp { cursor: pointer; }
+    .af-comp rect { transition: filter .15s ease; }
+    .af-comp:hover rect { filter: brightness(1.3); }
+  </style>
+</head>
+
+<body>
+  <header class="nav">
+    <div class="inner">
+      <div class="brand">
+        <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
+        <span>Neuromorphic Inference Lab</span>
+      </div>
+      <nav class="navlinks" aria-label="Primary navigation">
+        <a data-nav href="/">Home</a>
+        <a data-nav href="/demos/">Systems</a>
+        <a data-nav href="/evidence/">Proof Ledger</a>
+        <a data-nav href="/about/">Identity</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ═══════════════════════════════════════ HERO ═══════════════════════════════════════ -->
+    <section class="hero">
+      <p class="kicker">Key Project</p>
+      <h1 class="h1">AnomalyForge — Real-Time Industrial Anomaly Detection</h1>
+      <p class="sub">
+        End-to-end ML-powered anomaly detection platform for industrial IoT data streams.
+        Designed as a production-ready system with clear separation between ML training,
+        model serving, backend API, and observability layers.
+      </p>
+
+      <div class="badges">
+        <span class="badge">PyTorch</span>
+        <span class="badge">FastAPI</span>
+        <span class="badge">PostgreSQL</span>
+        <span class="badge">Redis</span>
+        <span class="badge">Docker</span>
+        <span class="badge">Kubernetes</span>
+        <span class="badge">Terraform</span>
+        <span class="badge">AWS</span>
+        <span class="badge">MLflow</span>
+        <span class="badge">Prometheus</span>
+        <span class="badge">Grafana</span>
+        <span class="badge">GitHub Actions</span>
+      </div>
+
+      <div class="actions">
+        <a class="btn" href="https://github.com/nepryoon/anomalyforge" target="_blank" rel="noopener">Source</a>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ DIAGRAM ════════════════════════════════════ -->
+    <section class="section">
+      <h2>System Architecture</h2>
+      <p class="sub" style="margin-bottom:8px;">
+        Four-layer architecture — hover a component for details, click to jump to its description.
+      </p>
+
+      <div class="diagram-wrap">
+        <!-- SVG viewBox="0 0 1000 820" -->
+        <svg viewBox="0 0 1000 820" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AnomalyForge architecture diagram">
+          <defs>
+            <!-- Arrowhead marker -->
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#6EE7FF" opacity=".9" />
+            </marker>
+            <!-- Layer background colours -->
+            <!-- Layer 1: dark blue tint -->
+            <!-- Layer 2: dark teal tint -->
+            <!-- Layer 3: dark purple tint -->
+            <!-- Layer 4: dark amber tint -->
+          </defs>
+
+          <!-- ── LAYER 1 background ── -->
+          <rect x="0" y="0" width="1000" height="198" rx="0" fill="rgba(14,30,60,0.72)" />
+          <text x="14" y="20" font-size="11" font-weight="700" fill="rgba(110,231,255,.55)" letter-spacing=".12em" text-anchor="start">LAYER 1 — DATA &amp; TRAINING PIPELINE</text>
+
+          <!-- ── LAYER 2 background ── -->
+          <rect x="0" y="200" width="1000" height="188" rx="0" fill="rgba(10,40,38,0.72)" />
+          <text x="14" y="220" font-size="11" font-weight="700" fill="rgba(52,211,153,.55)" letter-spacing=".12em" text-anchor="start">LAYER 2 — BACKEND API (Serving)</text>
+
+          <!-- ── LAYER 3 background ── -->
+          <rect x="0" y="390" width="1000" height="218" rx="0" fill="rgba(30,15,55,0.72)" />
+          <text x="14" y="410" font-size="11" font-weight="700" fill="rgba(167,139,250,.55)" letter-spacing=".12em" text-anchor="start">LAYER 3 — INFRASTRUCTURE &amp; CI/CD</text>
+
+          <!-- ── LAYER 4 background ── -->
+          <rect x="0" y="610" width="1000" height="210" rx="0" fill="rgba(40,24,8,0.72)" />
+          <text x="14" y="630" font-size="11" font-weight="700" fill="rgba(251,191,36,.55)" letter-spacing=".12em" text-anchor="start">LAYER 4 — OBSERVABILITY &amp; RETRAINING</text>
+
+          <!-- ════════════════════════════════════════════════════
+               LAYER 1 COMPONENTS
+               ════════════════════════════════════════════════════ -->
+
+          <!-- Synthetic SCADA Data Generator -->
+          <g class="af-comp" data-comp="comp-data-generator"
+             data-tip-title="Synthetic SCADA Data Generator"
+             data-tip-body="Generates realistic multi-sensor time-series data. Produces configurable anomaly patterns and acts as a pluggable data source.">
+            <rect x="30" y="38" width="162" height="50" rx="8" fill="rgba(110,231,255,.08)" stroke="#6EE7FF" stroke-width="1" />
+            <text x="111" y="58" text-anchor="middle" font-size="11" fill="#EAF0FF" font-weight="600">Synthetic SCADA</text>
+            <text x="111" y="74" text-anchor="middle" font-size="10" fill="rgba(234,240,255,.65)">Data Generator</text>
+          </g>
+
+          <!-- Arrow: DataGen → Feature Eng -->
+          <line x1="192" y1="63" x2="248" y2="63" stroke="#6EE7FF" stroke-width="1.5" marker-end="url(#arr)" opacity=".8" />
+
+          <!-- Feature Engineering -->
+          <g class="af-comp" data-comp="comp-feature-eng"
+             data-tip-title="Feature Engineering"
+             data-tip-body="Transforms raw sensor streams into ML-ready features: temporal aggregations, cross-sensor correlations, and cyclical encodings with automated data-quality validation.">
+            <rect x="250" y="38" width="152" height="50" rx="8" fill="rgba(110,231,255,.08)" stroke="#6EE7FF" stroke-width="1" />
+            <text x="326" y="58" text-anchor="middle" font-size="11" fill="#EAF0FF" font-weight="600">Feature</text>
+            <text x="326" y="74" text-anchor="middle" font-size="10" fill="rgba(234,240,255,.65)">Engineering</text>
+          </g>
+
+          <!-- Arrow: Feature Eng → TFT Training -->
+          <line x1="402" y1="63" x2="456" y2="63" stroke="#6EE7FF" stroke-width="1.5" marker-end="url(#arr)" opacity=".8" />
+
+          <!-- PyTorch TFT Training -->
+          <g class="af-comp" data-comp="comp-tft-training"
+             data-tip-title="PyTorch TFT Training"
+             data-tip-body="Trains a Temporal Fusion Transformer for multi-horizon anomaly detection. Uses attention-based variable selection for built-in interpretability.">
+            <rect x="458" y="38" width="152" height="50" rx="8" fill="rgba(110,231,255,.08)" stroke="#6EE7FF" stroke-width="1" />
+            <text x="534" y="58" text-anchor="middle" font-size="11" fill="#EAF0FF" font-weight="600">PyTorch TFT</text>
+            <text x="534" y="74" text-anchor="middle" font-size="10" fill="rgba(234,240,255,.65)">Training</text>
+          </g>
+
+          <!-- Arrow: TFT Training → MLflow Registry -->
+          <line x1="610" y1="63" x2="664" y2="63" stroke="#6EE7FF" stroke-width="1.5" marker-end="url(#arr)" opacity=".8" />
+
+          <!-- MLflow Registry -->
+          <g class="af-comp" data-comp="comp-mlflow"
+             data-tip-title="MLflow Model Registry"
+             data-tip-body="Tracks all training experiments and manages model lifecycle stages (Staging → Production → Archived). Single source of truth for deployed model versions.">
+            <rect x="666" y="38" width="140" height="50" rx="8" fill="rgba(110,231,255,.08)" stroke="#6EE7FF" stroke-width="1" />
+            <text x="736" y="58" text-anchor="middle" font-size="11" fill="#EAF0FF" font-weight="600">MLflow</text>
+            <text x="736" y="74" text-anchor="middle" font-size="10" fill="rgba(234,240,255,.65)">Registry</text>
+          </g>
+
+          <!-- Arrow: TFT Training ↓ to Optuna (vertical) -->
+          <line x1="534" y1="88" x2="534" y2="118" stroke="#6EE7FF" stroke-width="1.5" opacity=".7" />
+
+          <!-- Optuna Tuning -->
+          <g class="af-comp" data-comp="comp-optuna"
+             data-tip-title="Optuna Hyperparameter Tuning"
+             data-tip-body="Automates hyperparameter search using Bayesian optimisation with early pruning. Ensures reproducible, auditable search runs.">
+            <rect x="458" y="120" width="152" height="50" rx="8" fill="rgba(110,231,255,.08)" stroke="#6EE7FF" stroke-width="1" />
+            <text x="534" y="140" text-anchor="middle" font-size="11" fill="#EAF0FF" font-weight="600">Optuna</text>
+            <text x="534" y="156" text-anchor="middle" font-size="10" fill="rgba(234,240,255,.65)">Hyperparameter Tuning</text>
+          </g>
+
+          <!-- Arrow: DataGen ↓ to DVC -->
+          <line x1="111" y1="88" x2="111" y2="128" stroke="#6EE7FF" stroke-width="1.5" opacity=".7" />
+          <line x1="111" y1="128" x2="248" y2="128" stroke="#6EE7FF" stroke-width="1.5" marker-end="url(#arr)" opacity=".7" />
+
+          <!-- DVC Artefact Versioning -->
+          <g class="af-comp" data-comp="comp-dvc"
+             data-tip-title="DVC Artefact Versioning"
+             data-tip-body="Versions datasets, feature sets, and model binaries alongside Git commits for full reproducibility. Stores large artefacts in S3 with lightweight Git pointers.">
+            <rect x="250" y="108" width="152" height="50" rx="8" fill="rgba(110,231,255,.08)" stroke="#6EE7FF" stroke-width="1" />
+            <text x="326" y="128" text-anchor="middle" font-size="11" fill="#EAF0FF" font-weight="600">DVC Artefact</text>
+            <text x="326" y="144" text-anchor="middle" font-size="10" fill="rgba(234,240,255,.65)">Versioning</text>
+          </g>
+
+          <!-- ════════════════════════════════════════════════════
+               LAYER 2 COMPONENTS
+               ════════════════════════════════════════════════════ -->
+
+          <!-- Nginx LB -->
+          <g class="af-comp" data-comp="comp-nginx"
+             data-tip-title="Nginx Load Balancer"
+             data-tip-body="Distributes inference requests across FastAPI instances using round-robin with health-check awareness. Handles TLS termination and rate limiting.">
+            <rect x="30" y="236" width="130" height="50" rx="8" fill="rgba(52,211,153,.08)" stroke="#34D399" stroke-width="1" />
+            <text x="95" y="256" text-anchor="middle" font-size="11" fill="#EAF0FF" font-weight="600">Nginx</text>
+            <text x="95" y="272" text-anchor="middle" font-size="10" fill="rgba(234,240,255,.65)">Load Balancer</text>
+          </g>
+
+          <!-- Arrow: Nginx → FastAPI 1 -->
+          <line x1="160" y1="252" x2="218" y2="245" stroke="#34D399" stroke-width="1.5" marker-end="url(#arr)" opacity=".8" />
+          <!-- Arrow: Nginx → FastAPI 2 -->
+          <line x1="160" y1="260" x2="218" y2="285" stroke="#34D399" stroke-width="1.5" marker-end="url(#arr)" opacity=".8" />
+
+          <!-- FastAPI Instance 1 -->
+          <g class="af-comp" data-comp="comp-fastapi"
+             data-tip-title="FastAPI Inference Service"
+             data-tip-body="Async Python API serving real-time anomaly predictions with sub-50ms p99 latency. Exposes /predict, WebSocket /alerts, and GET /health endpoints.">
+            <rect x="220" y="224" width="160" height="50" rx="8" fill="rgba(52,211,153,.08)" stroke="#34D399" stroke-width="1" />
+            <text x="300" y="244" text-anchor="middle" font-size="11" fill="#EAF0FF" font-weight="600">FastAPI</text>
+            <text x="300" y="260" text-anchor="middle" font-size="10" fill="rgba(234,240,255,.65)">Instance 1</text>
+          </g>
+
+          <!-- FastAPI Instance 2 -->
+          <g class="af-comp" data-comp="comp-fastapi"
+             data-tip-title="FastAPI Inference Service"
+             data-tip-body="Async Python API serving real-time anomaly predictions with sub-50ms p99 latency. Exposes /predict, WebSocket /alerts, and GET /health endpoints.">
+            <rect x="220" y="282" width="160" height="50" rx="8" fill="rgba(52,211,153,.08)" stroke="#34D399" stroke-width="1" />
+            <text x="300" y="302" text-anchor="middle" font-size="11" fill="#EAF0FF" font-weight="600">FastAPI</text>
+            <text x="300" y="318" text-anchor="middle" font-size="10" fill="rgba(234,240,255,.65)">Instance 2</text>
+          </g>
+
+          <!-- Arrow: FastAPI 1 → Redis -->
+          <line x1="380" y1="249" x2="440" y2="249" stroke="#34D399" stroke-width="1.5" marker-end="url(#arr)" opacity=".8" />
+
+          <!-- Arrow: FastAPI 2 → PostgreSQL -->
+          <line x1="380" y1="307" x2="440" y2="307" stroke="#34D399" stroke-width="1.5" marker-end="url(#arr)" opacity=".8" />
+
+          <!-- Redis Cache -->
+          <g class="af-comp" data-comp="comp-redis"
+             data-tip-title="Redis Feature Cache"
+             data-tip-body="Caches pre-computed feature vectors and recent predictions to avoid redundant computation. Reduces p99 latency by eliminating database round-trips on hot-path requests.">
+            <rect x="442" y="224" width="140" height="50" rx="8" fill="rgba(52,211,153,.08)" stroke="#34D399" stroke-width="1" />
+            <text x="512" y="244" text-anchor="middle" font-size="11" fill="#EAF0FF" font-weight="600">Redis</text>
+            <text x="512" y="260" text-anchor="middle" font-size="10" fill="rgba(234,240,255,.65)">Feature Cache</text>
+          </g>
+
+          <!-- PostgreSQL -->
+          <g class="af-comp" data-comp="comp-postgres"
+             data-tip-title="PostgreSQL Metadata Store"
+             data-tip-body="Persists inference audit logs, prediction history, alert records, and model-version metadata for retrospective analysis and compliance reporting.">
+            <rect x="442" y="282" width="140" height="50" rx="8" fill="rgba(52,211,153,.08)" stroke="#34D399" stroke-width="1" />
+            <text x="512" y="302" text-anchor="middle" font-size="11" fill="#EAF0FF" font-weight="600">PostgreSQL</text>
+            <text x="512" y="318" text-anchor="middle" font-size="10" fill="rgba(234,240,255,.65)">Metadata Store</text>
+          </g>
+
+          <!-- Endpoint labels -->
+          <text x="640" y="238" font-size="10" fill="rgba(52,211,153,.8)" font-family="monospace">POST /predict  (&lt;50ms p99)</text>
+          <text x="640" y="256" font-size="10" fill="rgba(52,211,153,.8)" font-family="monospace">WS   /alerts   (real-time)</text>
+          <text x="640" y="274" font-size="10" fill="rgba(52,211,153,.8)" font-family="monospace">GET  /health   (liveness)</text>
+
+          <!-- ════════════════════════════════════════════════════
+               LAYER 3 COMPONENTS
+               ════════════════════════════════════════════════════ -->
+
+          <!-- Docker / K8s -->
+          <g class="af-comp" data-comp="comp-docker-k8s"
+             data-tip-title="Docker / Kubernetes"
+             data-tip-body="Containerises every service with multi-stage Docker builds. Kubernetes manifests define deployments, HPAs, and liveness/readiness probes for production orchestration.">
+            <rect x="30" y="426" width="160" height="50" rx="8" fill="rgba(167,139,250,.08)" stroke="#A78BFA" stroke-width="1" />
+            <text x="110" y="446" text-anchor="middle" font-size="11" fill="#EAF0FF" font-weight="600">Docker / K8s</text>
+            <text x="110" y="462" text-anchor="middle" font-size="10" fill="rgba(234,240,255,.65)">Container Orchestration</text>
+          </g>
+
+          <!-- Arrow: Docker/K8s → Terraform -->
+          <line x1="190" y1="451" x2="248" y2="451" stroke="#A78BFA" stroke-width="1.5" marker-end="url(#arr)" opacity=".8" />
+
+          <!-- Terraform IaC -->
+          <g class="af-comp" data-comp="comp-terraform"
+             data-tip-title="Terraform IaC"
+             data-tip-body="Provisions all AWS infrastructure (ECS, ECR, RDS, ElastiCache, ALB, VPC) as declarative, version-controlled modules for reproducible environment creation.">
+            <rect x="250" y="426" width="150" height="50" rx="8" fill="rgba(167,139,250,.08)" stroke="#A78BFA" stroke-width="1" />
+            <text x="325" y="446" text-anchor="middle" font-size="11" fill="#EAF0FF" font-weight="600">Terraform IaC</text>
+            <text x="325" y="462" text-anchor="middle" font-size="10" fill="rgba(234,240,255,.65)">Infrastructure as Code</text>
+          </g>
+
+          <!-- Arrow: Terraform → AWS -->
+          <line x1="400" y1="451" x2="456" y2="451" stroke="#A78BFA" stroke-width="1.5" marker-end="url(#arr)" opacity=".8" />
+
+          <!-- AWS -->
+          <g class="af-comp" data-comp="comp-terraform"
+             data-tip-title="AWS (ECS, ECR, RDS, ElastiCache)"
+             data-tip-body="Cloud runtime for all services. ECS runs containers, ECR stores images, RDS hosts PostgreSQL, ElastiCache hosts Redis. All provisioned via Terraform.">
+            <rect x="458" y="426" width="190" height="50" rx="8" fill="rgba(167,139,250,.08)" stroke="#A78BFA" stroke-width="1" />
+            <text x="553" y="446" text-anchor="middle" font-size="11" fill="#EAF0FF" font-weight="600">AWS</text>
+            <text x="553" y="462" text-anchor="middle" font-size="10" fill="rgba(234,240,255,.65)">ECS · ECR · RDS · ElastiCache</text>
+          </g>
+
+          <!-- Arrow: Terraform ↓ to GH Actions -->
+          <line x1="325" y1="476" x2="325" y2="506" stroke="#A78BFA" stroke-width="1.5" opacity=".7" />
+
+          <!-- GitHub Actions CI/CD -->
+          <g class="af-comp" data-comp="comp-cicd"
+             data-tip-title="GitHub Actions CI/CD"
+             data-tip-body="Full delivery pipeline: lint/tests → model validation gate → Docker build &amp; scan → blue-green deploy to staging → production promotion with automated rollback.">
+            <rect x="250" y="508" width="380" height="86" rx="8" fill="rgba(167,139,250,.08)" stroke="#A78BFA" stroke-width="1" />
+            <text x="440" y="528" text-anchor="middle" font-size="11" fill="#EAF0FF" font-weight="600">GitHub Actions CI/CD</text>
+            <text x="270" y="548" font-size="10" fill="rgba(234,240,255,.65)">├─ lint + test</text>
+            <text x="270" y="564" font-size="10" fill="rgba(234,240,255,.65)">├─ model validation gate</text>
+            <text x="270" y="580" font-size="10" fill="rgba(234,240,255,.65)">├─ container build + scan</text>
+            <text x="455" y="548" font-size="10" fill="rgba(234,240,255,.65)">└─ blue-green deploy</text>
+          </g>
+
+          <!-- ════════════════════════════════════════════════════
+               LAYER 4 COMPONENTS
+               ════════════════════════════════════════════════════ -->
+
+          <!-- Prometheus -->
+          <g class="af-comp" data-comp="comp-prometheus"
+             data-tip-title="Prometheus Metrics"
+             data-tip-body="Scrapes inference latency (p50/p95/p99), request throughput, error rates, and custom model-drift metrics from FastAPI's /metrics endpoint.">
+            <rect x="30" y="648" width="150" height="50" rx="8" fill="rgba(251,191,36,.08)" stroke="#FBBF24" stroke-width="1" />
+            <text x="105" y="668" text-anchor="middle" font-size="11" fill="#EAF0FF" font-weight="600">Prometheus</text>
+            <text x="105" y="684" text-anchor="middle" font-size="10" fill="rgba(234,240,255,.65)">Metrics Scraper</text>
+          </g>
+
+          <!-- Arrow: Prometheus → Grafana -->
+          <line x1="180" y1="673" x2="238" y2="673" stroke="#FBBF24" stroke-width="1.5" marker-end="url(#arr)" opacity=".8" />
+
+          <!-- Grafana -->
+          <g class="af-comp" data-comp="comp-grafana"
+             data-tip-title="Grafana Dashboards"
+             data-tip-body="Visualises inference performance (latency, throughput), model quality (drift scores), and infrastructure utilisation across three pre-built dashboard panels.">
+            <rect x="240" y="636" width="200" height="74" rx="8" fill="rgba(251,191,36,.08)" stroke="#FBBF24" stroke-width="1" />
+            <text x="340" y="658" text-anchor="middle" font-size="11" fill="#EAF0FF" font-weight="600">Grafana Dashboards</text>
+            <text x="258" y="676" font-size="10" fill="rgba(234,240,255,.65)">├─ Inference latency</text>
+            <text x="258" y="692" font-size="10" fill="rgba(234,240,255,.65)">├─ Throughput</text>
+            <text x="258" y="708" font-size="10" fill="rgba(234,240,255,.65)">└─ Model drift</text>
+          </g>
+
+          <!-- Arrow: Prometheus ↓ → Alert Manager -->
+          <line x1="105" y1="698" x2="105" y2="730" stroke="#FBBF24" stroke-width="1.5" opacity=".7" />
+          <line x1="105" y1="730" x2="458" y2="730" stroke="#FBBF24" stroke-width="1.5" opacity=".7" />
+
+          <!-- Alert Manager -->
+          <g class="af-comp" data-comp="comp-prometheus"
+             data-tip-title="Alert Manager"
+             data-tip-body="Routes firing alerts from Prometheus to the retraining DAG when drift thresholds are exceeded. Supports notification channels for operations teams.">
+            <rect x="460" y="648" width="150" height="50" rx="8" fill="rgba(251,191,36,.08)" stroke="#FBBF24" stroke-width="1" />
+            <text x="535" y="668" text-anchor="middle" font-size="11" fill="#EAF0FF" font-weight="600">Alert Manager</text>
+            <text x="535" y="684" text-anchor="middle" font-size="10" fill="rgba(234,240,255,.65)">Threshold Routing</text>
+          </g>
+
+          <!-- Arrow: Alert Manager → Airflow -->
+          <line x1="610" y1="673" x2="668" y2="673" stroke="#FBBF24" stroke-width="1.5" marker-end="url(#arr)" opacity=".8" />
+
+          <!-- Airflow DAG -->
+          <g class="af-comp" data-comp="comp-airflow"
+             data-tip-title="Airflow Retraining DAG"
+             data-tip-body="Orchestrates the full retraining cycle: data extraction → feature engineering → training → validation → registry promotion → deployment, with a human-in-the-loop approval gate.">
+            <rect x="670" y="636" width="200" height="74" rx="8" fill="rgba(251,191,36,.08)" stroke="#FBBF24" stroke-width="1" />
+            <text x="770" y="658" text-anchor="middle" font-size="11" fill="#EAF0FF" font-weight="600">Airflow DAG</text>
+            <text x="688" y="676" font-size="10" fill="rgba(234,240,255,.65)">Auto-retrain on drift</text>
+            <text x="688" y="692" font-size="10" fill="rgba(234,240,255,.65)">Human-in-loop gate</text>
+            <text x="688" y="708" font-size="10" fill="rgba(234,240,255,.65)">→ Registry promotion</text>
+          </g>
+
+          <!-- Arrow from alert line to Alert Manager (connector) -->
+          <line x1="458" y1="730" x2="458" y2="698" stroke="#FBBF24" stroke-width="1.5" marker-end="url(#arr)" opacity=".7" />
+
+        </svg>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ COMPONENT DESCRIPTIONS ═══════════════════════ -->
+    <section class="section">
+      <h2>Component Reference</h2>
+      <p class="sub" style="margin-bottom:16px;">Click any component in the diagram above to jump directly to its description.</p>
+
+      <div class="comp-grid">
+
+        <div class="comp-card" id="comp-data-generator">
+          <h3>Synthetic SCADA Data Generator</h3>
+          <p>Generates realistic multi-sensor time-series data modelled on medium-voltage substation telemetry (voltage, current, transformer temperature, active/reactive power). Produces configurable anomaly patterns: gradual degradation, sudden spikes, sensor stuck-at-zero, and missing-data bursts. Designed as a pluggable data source with an adapter interface for real SCADA feeds.</p>
+          <p class="tech-line"><strong>Tech:</strong> Python, NumPy, Pandas</p>
+        </div>
+
+        <div class="comp-card" id="comp-feature-eng">
+          <h3>Feature Engineering</h3>
+          <p>Transforms raw sensor streams into ML-ready features: temporal aggregations (rolling means, standard deviations), cross-sensor correlation features, time-of-day/day-of-week cyclical encodings, and lag features. Implements automated data-quality validation with acceptance criteria gating before downstream consumption.</p>
+          <p class="tech-line"><strong>Tech:</strong> Pandas, scikit-learn pipelines</p>
+        </div>
+
+        <div class="comp-card" id="comp-tft-training">
+          <h3>PyTorch TFT Training</h3>
+          <p>Trains a Temporal Fusion Transformer (TFT) for multi-horizon anomaly detection on multivariate time-series. Uses attention-based variable selection to identify which sensors drive each prediction, providing built-in interpretability for operations teams.</p>
+          <p class="tech-line"><strong>Tech:</strong> PyTorch, PyTorch Forecasting</p>
+        </div>
+
+        <div class="comp-card" id="comp-optuna">
+          <h3>Optuna Hyperparameter Tuning</h3>
+          <p>Automates hyperparameter search (learning rate, hidden size, attention heads, dropout) using Bayesian optimisation with early pruning. Reduces manual tuning effort and ensures reproducible, auditable search runs.</p>
+          <p class="tech-line"><strong>Tech:</strong> Optuna, MLflow integration</p>
+        </div>
+
+        <div class="comp-card" id="comp-mlflow">
+          <h3>MLflow Model Registry</h3>
+          <p>Tracks all training experiments (parameters, metrics, artefacts) and manages model lifecycle stages (Staging → Production → Archived). Serves as the single source of truth for which model version is deployed where.</p>
+          <p class="tech-line"><strong>Tech:</strong> MLflow Tracking, MLflow Registry</p>
+        </div>
+
+        <div class="comp-card" id="comp-dvc">
+          <h3>DVC Artefact Versioning</h3>
+          <p>Versions training datasets, feature sets, and model binaries alongside Git commits, ensuring full reproducibility of any historical training run. Stores large artefacts in remote storage (S3) while keeping lightweight pointers in Git.</p>
+          <p class="tech-line"><strong>Tech:</strong> DVC, AWS S3</p>
+        </div>
+
+        <div class="comp-card" id="comp-nginx">
+          <h3>Nginx Load Balancer</h3>
+          <p>Distributes incoming inference requests across multiple FastAPI instances using round-robin with health-check awareness. Handles TLS termination and rate limiting at the edge.</p>
+          <p class="tech-line"><strong>Tech:</strong> Nginx, TLS</p>
+        </div>
+
+        <div class="comp-card" id="comp-fastapi">
+          <h3>FastAPI Inference Service</h3>
+          <p>Async Python API serving real-time anomaly predictions with sub-50ms p99 latency. Exposes three core endpoints: POST /predict for batch/single inference, WebSocket /alerts for real-time anomaly streaming, and GET /health for orchestrator probes. Implements request validation with Pydantic models.</p>
+          <p class="tech-line"><strong>Tech:</strong> FastAPI, Uvicorn, Pydantic</p>
+        </div>
+
+        <div class="comp-card" id="comp-redis">
+          <h3>Redis Feature Cache</h3>
+          <p>Caches pre-computed feature vectors and recent predictions to avoid redundant computation on repeated or overlapping time windows. Reduces p99 latency by eliminating database round-trips for hot-path requests.</p>
+          <p class="tech-line"><strong>Tech:</strong> Redis, aioredis</p>
+        </div>
+
+        <div class="comp-card" id="comp-postgres">
+          <h3>PostgreSQL Metadata Store</h3>
+          <p>Persists inference audit logs, prediction history, alert records, and model-version metadata. Provides the query layer for retrospective analysis and compliance reporting.</p>
+          <p class="tech-line"><strong>Tech:</strong> PostgreSQL, asyncpg, SQLAlchemy</p>
+        </div>
+
+        <div class="comp-card" id="comp-docker-k8s">
+          <h3>Docker / Kubernetes</h3>
+          <p>Containerises every service (API, cache, database, monitoring) with multi-stage Docker builds. Kubernetes manifests define deployments, services, horizontal pod autoscalers, and readiness/liveness probes for production orchestration.</p>
+          <p class="tech-line"><strong>Tech:</strong> Docker, Docker Compose, Kubernetes</p>
+        </div>
+
+        <div class="comp-card" id="comp-terraform">
+          <h3>Terraform IaC</h3>
+          <p>Provisions all AWS infrastructure (ECS clusters, ECR repositories, RDS instances, ElastiCache, ALB, VPC networking) as declarative, version-controlled modules. Enables reproducible environment creation and teardown.</p>
+          <p class="tech-line"><strong>Tech:</strong> Terraform, AWS Provider</p>
+        </div>
+
+        <div class="comp-card" id="comp-cicd">
+          <h3>GitHub Actions CI/CD</h3>
+          <p>Orchestrates the full delivery pipeline: lint and unit tests → model validation gate (AUC threshold check) → Docker image build and security scan → blue-green deployment to staging → promotion to production with automated rollback on health-check failure.</p>
+          <p class="tech-line"><strong>Tech:</strong> GitHub Actions, Trivy, pytest</p>
+        </div>
+
+        <div class="comp-card" id="comp-prometheus">
+          <h3>Prometheus Metrics</h3>
+          <p>Scrapes inference latency (p50/p95/p99), request throughput, error rates, and custom model-drift metrics from FastAPI's /metrics endpoint. Stores time-series data for alerting and dashboarding.</p>
+          <p class="tech-line"><strong>Tech:</strong> Prometheus, prometheus-fastapi-instrumentator</p>
+        </div>
+
+        <div class="comp-card" id="comp-grafana">
+          <h3>Grafana Dashboards</h3>
+          <p>Visualises operational health across three dashboard panels: inference performance (latency histograms, throughput), model quality (drift scores, prediction distribution shifts), and infrastructure utilisation (CPU, memory, pod count). Pre-built JSON dashboard definitions are version-controlled in the repository.</p>
+          <p class="tech-line"><strong>Tech:</strong> Grafana, JSON dashboard provisioning</p>
+        </div>
+
+        <div class="comp-card" id="comp-airflow">
+          <h3>Airflow Retraining DAG</h3>
+          <p>Triggers automated model retraining when drift alerts exceed defined thresholds. Orchestrates the full retraining cycle: fresh data extraction → feature engineering → training → validation → registry promotion → deployment. Includes human-in-the-loop approval gate for production promotion.</p>
+          <p class="tech-line"><strong>Tech:</strong> Apache Airflow, DAG definitions</p>
+        </div>
+
+      </div><!-- /.comp-grid -->
+    </section>
+
+    <footer class="footer">
+      <div>© 2025 Neuromorphic Inference Lab</div>
+      <div class="prov">
+        <span id="build-branch">branch: …</span>
+        <span id="build-commit">commit: …</span>
+        <span id="build-time">built: …</span>
+      </div>
+    </footer>
+
+  </main><!-- /.container -->
+
+  <!-- ── Tooltip element ─────────────────────────────────────── -->
+  <div id="af-tooltip" role="tooltip" aria-live="polite"></div>
+
+  <script>
+  (function () {
+    var tooltip = document.getElementById('af-tooltip');
+
+    // Component data map: comp-id → { title, body }
+    var compData = {
+      'comp-data-generator': {
+        title: 'Synthetic SCADA Data Generator',
+        body:  'Generates realistic multi-sensor time-series data modelled on substation telemetry. Produces configurable anomaly patterns as a pluggable data source.'
+      },
+      'comp-feature-eng': {
+        title: 'Feature Engineering',
+        body:  'Transforms raw sensor streams into ML-ready features: temporal aggregations, cross-sensor correlations, cyclical encodings, and lag features with data-quality validation.'
+      },
+      'comp-tft-training': {
+        title: 'PyTorch TFT Training',
+        body:  'Trains a Temporal Fusion Transformer for multi-horizon anomaly detection on multivariate time-series with attention-based variable selection.'
+      },
+      'comp-optuna': {
+        title: 'Optuna Hyperparameter Tuning',
+        body:  'Automates hyperparameter search via Bayesian optimisation with early pruning for reproducible, auditable runs.'
+      },
+      'comp-mlflow': {
+        title: 'MLflow Model Registry',
+        body:  'Tracks all training experiments and manages model lifecycle stages. Single source of truth for deployed model versions.'
+      },
+      'comp-dvc': {
+        title: 'DVC Artefact Versioning',
+        body:  'Versions datasets, feature sets, and model binaries alongside Git commits. Stores large artefacts in S3 with lightweight Git pointers.'
+      },
+      'comp-nginx': {
+        title: 'Nginx Load Balancer',
+        body:  'Distributes inference requests across FastAPI instances with health-check awareness, TLS termination, and rate limiting.'
+      },
+      'comp-fastapi': {
+        title: 'FastAPI Inference Service',
+        body:  'Async API with sub-50ms p99 latency. Exposes POST /predict, WebSocket /alerts, and GET /health with Pydantic validation.'
+      },
+      'comp-redis': {
+        title: 'Redis Feature Cache',
+        body:  'Caches feature vectors and recent predictions to avoid redundant computation and eliminate database round-trips on hot-path requests.'
+      },
+      'comp-postgres': {
+        title: 'PostgreSQL Metadata Store',
+        body:  'Persists inference audit logs, prediction history, alert records, and model-version metadata for retrospective analysis.'
+      },
+      'comp-docker-k8s': {
+        title: 'Docker / Kubernetes',
+        body:  'Multi-stage Docker builds for every service. Kubernetes manifests include HPAs and liveness/readiness probes for production orchestration.'
+      },
+      'comp-terraform': {
+        title: 'Terraform IaC',
+        body:  'Provisions all AWS infrastructure (ECS, ECR, RDS, ElastiCache, VPC) as declarative, version-controlled modules.'
+      },
+      'comp-cicd': {
+        title: 'GitHub Actions CI/CD',
+        body:  'Full pipeline: lint/tests → model validation gate → Docker build & scan → blue-green deploy → production rollback on failure.'
+      },
+      'comp-prometheus': {
+        title: 'Prometheus Metrics',
+        body:  'Scrapes inference latency, throughput, error rates, and model-drift metrics. Feeds Grafana dashboards and Alert Manager.'
+      },
+      'comp-grafana': {
+        title: 'Grafana Dashboards',
+        body:  'Three dashboard panels: inference performance, model quality (drift scores), and infrastructure utilisation. JSON definitions version-controlled.'
+      },
+      'comp-airflow': {
+        title: 'Airflow Retraining DAG',
+        body:  'Orchestrates full retraining on drift alerts: data → features → training → validation → registry → deploy, with a human-approval gate.'
+      }
+    };
+
+    function showTooltip(compId, x, y) {
+      var info = compData[compId];
+      if (!info) return;
+      tooltip.innerHTML = '<strong>' + escHtml(info.title) + '</strong>' + escHtml(info.body);
+      tooltip.style.display = 'block';
+      positionTooltip(x, y);
+    }
+
+    function positionTooltip(x, y) {
+      var tw = tooltip.offsetWidth || 280;
+      var th = tooltip.offsetHeight || 80;
+      var vw = window.innerWidth;
+      var vh = window.innerHeight;
+      var left = x + 14;
+      var top  = y + 14;
+      if (left + tw > vw - 8) left = x - tw - 14;
+      if (top  + th > vh - 8) top  = y - th - 14;
+      tooltip.style.left = left + 'px';
+      tooltip.style.top  = top  + 'px';
+    }
+
+    function hideTooltip() {
+      tooltip.style.display = 'none';
+    }
+
+    function escHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // Attach events to all .af-comp elements
+    var comps = document.querySelectorAll('.af-comp');
+    for (var i = 0; i < comps.length; i++) {
+      (function (el) {
+        var compId = el.getAttribute('data-comp');
+
+        el.addEventListener('mouseenter', function (e) {
+          showTooltip(compId, e.clientX, e.clientY);
+          // Brighten border
+          var rect = el.querySelector('rect');
+          if (rect) rect.style.strokeOpacity = '1';
+          if (rect) rect.style.stroke = '#ffffff';
+        });
+
+        el.addEventListener('mousemove', function (e) {
+          positionTooltip(e.clientX, e.clientY);
+        });
+
+        el.addEventListener('mouseleave', function () {
+          hideTooltip();
+          var rect = el.querySelector('rect');
+          if (rect) rect.style.stroke = '';
+          if (rect) rect.style.strokeOpacity = '';
+        });
+
+        el.addEventListener('click', function () {
+          var target = document.getElementById(compId);
+          if (!target) return;
+          // Remove highlight from all cards
+          var cards = document.querySelectorAll('.comp-card');
+          for (var j = 0; j < cards.length; j++) {
+            cards[j].classList.remove('highlight');
+          }
+          target.classList.add('highlight');
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Remove highlight after 2s
+          setTimeout(function () { target.classList.remove('highlight'); }, 2000);
+        });
+      })(comps[i]);
+    }
+  })();
+  </script>
+
+  <script src="/build-info.js"></script>
+</body>
+</html>
