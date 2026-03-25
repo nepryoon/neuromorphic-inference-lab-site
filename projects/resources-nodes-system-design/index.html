@@ -151,18 +151,18 @@
             <text x="77" y="145" text-anchor="middle" fill="#8899bb" font-size="11">HTTP Request</text>
 
             <!-- Arrow Client → API -->
-            <line x1="142" y1="130" x2="238" y2="130" stroke="rgba(234,240,255,0.35)" stroke-width="1.8" marker-end="url(#s1-arr)"/>
-            <!-- Label above the arrow, centered -->
-            <text x="190" y="118" text-anchor="middle" fill="#8899bb" font-size="10">Create / Update / Delete</text>
+            <line x1="142" y1="130" x2="258" y2="130" stroke="rgba(234,240,255,0.35)" stroke-width="1.8" marker-end="url(#s1-arr)"/>
+            <!-- Label well above the arrow -->
+            <text x="200" y="88" text-anchor="middle" fill="#8899bb" font-size="10">Create / Update / Delete</text>
 
             <!-- API Service -->
-            <rect x="240" y="100" width="170" height="60" rx="10" fill="#110d2c" stroke="#A78BFA" stroke-opacity="0.55" stroke-width="1.5"/>
-            <text x="325" y="127" text-anchor="middle" fill="#EAF0FF" font-size="14" font-weight="600">API Service</text>
-            <text x="325" y="145" text-anchor="middle" fill="#8899bb" font-size="11">Validate + Create Task</text>
+            <rect x="260" y="100" width="170" height="60" rx="10" fill="#110d2c" stroke="#A78BFA" stroke-opacity="0.55" stroke-width="1.5"/>
+            <text x="345" y="127" text-anchor="middle" fill="#EAF0FF" font-size="14" font-weight="600">API Service</text>
+            <text x="345" y="145" text-anchor="middle" fill="#8899bb" font-size="11">Validate + Create Task</text>
 
             <!-- Arrow API → Resources DB -->
-            <line x1="410" y1="130" x2="488" y2="130" stroke="rgba(234,240,255,0.35)" stroke-width="1.8" marker-end="url(#s1-arr)"/>
-            <text x="449" y="122" text-anchor="middle" fill="#8899bb" font-size="10">mutation</text>
+            <line x1="430" y1="130" x2="488" y2="130" stroke="rgba(234,240,255,0.35)" stroke-width="1.8" marker-end="url(#s1-arr)"/>
+            <text x="460" y="122" text-anchor="middle" fill="#8899bb" font-size="10">mutation</text>
 
             <!-- Resources DB -->
             <rect x="490" y="100" width="160" height="60" rx="10" fill="#0c1e14" stroke="#34D399" stroke-opacity="0.55" stroke-width="1.5"/>
@@ -179,16 +179,16 @@
             <text x="570" y="245" text-anchor="middle" fill="#8899bb" font-size="11">Resource → Nodes</text>
 
             <!-- Arrow Mapping → Node Tree -->
-            <line x1="490" y1="230" x2="420" y2="230" stroke="#6EE7FF" stroke-opacity="0.75" stroke-width="1.8" marker-end="url(#s1-arr-c)"/>
-            <text x="455" y="222" text-anchor="middle" fill="#6EE7FF" font-size="10">update tree</text>
+            <line x1="490" y1="230" x2="440" y2="230" stroke="#6EE7FF" stroke-opacity="0.75" stroke-width="1.8" marker-end="url(#s1-arr-c)"/>
+            <text x="465" y="222" text-anchor="middle" fill="#6EE7FF" font-size="10">update tree</text>
 
             <!-- Node Tree -->
-            <rect x="240" y="200" width="170" height="60" rx="10" fill="#0a1930" stroke="#6EE7FF" stroke-opacity="0.55" stroke-width="1.5"/>
-            <text x="325" y="227" text-anchor="middle" fill="#EAF0FF" font-size="14" font-weight="600">Node Tree</text>
-            <text x="325" y="245" text-anchor="middle" fill="#8899bb" font-size="11">ltree (PostgreSQL)</text>
+            <rect x="260" y="200" width="170" height="60" rx="10" fill="#0a1930" stroke="#6EE7FF" stroke-opacity="0.55" stroke-width="1.5"/>
+            <text x="345" y="227" text-anchor="middle" fill="#EAF0FF" font-size="14" font-weight="600">Node Tree</text>
+            <text x="345" y="245" text-anchor="middle" fill="#8899bb" font-size="11">ltree (PostgreSQL)</text>
 
             <!-- 202 arrow going back to client -->
-            <line x1="240" y1="230" x2="142" y2="165" stroke="rgba(234,240,255,0.25)" stroke-width="1.4" stroke-dasharray="5,4" marker-end="url(#s1-arr)"/>
+            <line x1="260" y1="230" x2="142" y2="165" stroke="rgba(234,240,255,0.25)" stroke-width="1.4" stroke-dasharray="5,4" marker-end="url(#s1-arr)"/>
             <text x="175" y="210" text-anchor="middle" fill="rgba(234,240,255,0.45)" font-size="10" transform="rotate(-30,175,210)">202 Accepted</text>
 
             <!-- Mini tree: Node Tree detail -->
@@ -226,57 +226,61 @@
           le foglie, poi i nodi intermedi, infine la radice.
         </p>
         <div class="diagram-wrap">
-          <svg viewBox="0 0 620 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Albero di Nodes con propagazione bottom-up di aggregated_status">
+          <svg viewBox="0 0 620 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Albero di Nodes con propagazione bottom-up di aggregated_status">
             <defs>
               <marker id="s2-arr-up" markerWidth="8" markerHeight="6" refX="1" refY="3" orient="auto">
                 <polygon points="8 0,0 3,8 6" fill="#34D399"/>
               </marker>
             </defs>
 
-            <!-- Legend -->
-            <rect x="380" y="8" width="230" height="56" rx="8" fill="rgba(0,0,0,0.25)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-            <circle cx="396" cy="24" r="6" fill="#0a1930" stroke="#A78BFA" stroke-width="1.2"/>
-            <text x="408" y="28" fill="#EAF0FF" font-size="10">Nodo</text>
-            <text x="408" y="42" fill="#8899bb" font-size="10">st = status · agg = aggregated_status</text>
-            <line x1="386" y1="54" x2="404" y2="54" stroke="#34D399" stroke-width="1.6" marker-end="url(#s2-arr-up)"/>
-            <text x="412" y="58" fill="#34D399" font-size="10">propagazione bottom-up</text>
+            <!-- Legend (top-right, compact) -->
+            <rect x="400" y="8" width="210" height="48" rx="8" fill="rgba(0,0,0,0.25)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <text x="414" y="26" fill="#8899bb" font-size="10">st = status · agg = aggregated_status</text>
+            <line x1="410" y1="44" x2="428" y2="44" stroke="#34D399" stroke-width="1.6" marker-end="url(#s2-arr-up)"/>
+            <text x="436" y="47" fill="#34D399" font-size="10">propagazione bottom-up</text>
 
-            <!-- Root: status=1, agg=max(1,max(3,1))=3 -->
-            <rect x="210" y="80" width="180" height="62" rx="10" fill="#0a1930" stroke="#A78BFA" stroke-opacity="0.7" stroke-width="1.8"/>
-            <text x="300" y="102" text-anchor="middle" fill="#EAF0FF" font-size="14" font-weight="600">Root</text>
-            <text x="300" y="120" text-anchor="middle" fill="#8899bb" font-size="11">st=1  agg=<tspan fill="#F59E0B" font-weight="700">3</tspan></text>
-            <text x="300" y="136" text-anchor="middle" fill="#8899bb" font-size="10">max(1, max(3, 1)) = 3</text>
+            <!-- Root: y=60..128 -->
+            <rect x="200" y="60" width="180" height="68" rx="10" fill="#0a1930" stroke="#A78BFA" stroke-opacity="0.7" stroke-width="1.8"/>
+            <text x="290" y="84" text-anchor="middle" fill="#EAF0FF" font-size="14" font-weight="600">Root</text>
+            <text x="290" y="104" text-anchor="middle" fill="#8899bb" font-size="11">st=1  agg=<tspan fill="#F59E0B" font-weight="700">3</tspan></text>
+            <text x="290" y="120" text-anchor="middle" fill="#8899bb" font-size="10">max(1, max(3, 1)) = 3</text>
 
-            <!-- Child A: status=2, agg=max(2,3)=3 -->
-            <rect x="50" y="200" width="180" height="62" rx="10" fill="#0a1930" stroke="#A78BFA" stroke-opacity="0.6" stroke-width="1.5"/>
-            <text x="140" y="222" text-anchor="middle" fill="#EAF0FF" font-size="14" font-weight="600">Nodo A</text>
-            <text x="140" y="240" text-anchor="middle" fill="#8899bb" font-size="11">st=2  agg=<tspan fill="#F59E0B" font-weight="700">3</tspan></text>
-            <text x="140" y="256" text-anchor="middle" fill="#8899bb" font-size="10">max(2, 3) = 3</text>
+            <!-- agg bubble -->
+            <rect x="385" y="64" width="80" height="22" rx="6" fill="rgba(245,158,11,0.15)" stroke="rgba(245,158,11,0.4)" stroke-width="1"/>
+            <text x="425" y="79" text-anchor="middle" fill="#F59E0B" font-size="11" font-weight="700">agg = 3 ↑</text>
 
-            <!-- Child B: status=1, agg=1 (leaf) -->
-            <rect x="380" y="200" width="180" height="62" rx="10" fill="#0a1930" stroke="#A78BFA" stroke-opacity="0.6" stroke-width="1.5"/>
-            <text x="470" y="222" text-anchor="middle" fill="#EAF0FF" font-size="14" font-weight="600">Nodo B</text>
-            <text x="470" y="240" text-anchor="middle" fill="#8899bb" font-size="11">st=1  agg=<tspan fill="#34D399" font-weight="700">1</tspan></text>
-            <text x="470" y="256" text-anchor="middle" fill="#8899bb" font-size="10">foglia → agg = st</text>
+            <!-- Child A: y=220..288 -->
+            <rect x="40" y="220" width="180" height="68" rx="10" fill="#0a1930" stroke="#A78BFA" stroke-opacity="0.6" stroke-width="1.5"/>
+            <text x="130" y="244" text-anchor="middle" fill="#EAF0FF" font-size="14" font-weight="600">Nodo A</text>
+            <text x="130" y="264" text-anchor="middle" fill="#8899bb" font-size="11">st=2  agg=<tspan fill="#F59E0B" font-weight="700">3</tspan></text>
+            <text x="130" y="280" text-anchor="middle" fill="#8899bb" font-size="10">max(2, 3) = 3</text>
 
-            <!-- Grandchild A1: status=3, agg=3 (leaf) -->
-            <rect x="50" y="320" width="180" height="52" rx="10" fill="#0a1930" stroke="#34D399" stroke-opacity="0.6" stroke-width="1.5"/>
-            <text x="140" y="342" text-anchor="middle" fill="#EAF0FF" font-size="14" font-weight="600">Nodo A1</text>
-            <text x="140" y="360" text-anchor="middle" fill="#8899bb" font-size="11">st=<tspan fill="#F87171" font-weight="700">3</tspan>  agg=<tspan fill="#F87171" font-weight="700">3</tspan> (foglia)</text>
+            <!-- Child B: y=220..288 -->
+            <rect x="380" y="220" width="180" height="68" rx="10" fill="#0a1930" stroke="#A78BFA" stroke-opacity="0.6" stroke-width="1.5"/>
+            <text x="470" y="244" text-anchor="middle" fill="#EAF0FF" font-size="14" font-weight="600">Nodo B</text>
+            <text x="470" y="264" text-anchor="middle" fill="#8899bb" font-size="11">st=1  agg=<tspan fill="#34D399" font-weight="700">1</tspan></text>
+            <text x="470" y="280" text-anchor="middle" fill="#8899bb" font-size="10">foglia → agg = st</text>
 
-            <!-- Tree edges (grey dashed, top-down) -->
-            <line x1="250" y1="142" x2="185" y2="200" stroke="rgba(255,255,255,0.2)" stroke-width="1.4" stroke-dasharray="4,3"/>
-            <line x1="350" y1="142" x2="425" y2="200" stroke="rgba(255,255,255,0.2)" stroke-width="1.4" stroke-dasharray="4,3"/>
-            <line x1="140" y1="262" x2="140" y2="320" stroke="rgba(255,255,255,0.2)" stroke-width="1.4" stroke-dasharray="4,3"/>
+            <!-- Grandchild A1: y=380..432 -->
+            <rect x="40" y="380" width="180" height="52" rx="10" fill="#0a1930" stroke="#34D399" stroke-opacity="0.6" stroke-width="1.5"/>
+            <text x="130" y="402" text-anchor="middle" fill="#EAF0FF" font-size="14" font-weight="600">Nodo A1</text>
+            <text x="130" y="420" text-anchor="middle" fill="#8899bb" font-size="11">st=<tspan fill="#F87171" font-weight="700">3</tspan>  agg=<tspan fill="#F87171" font-weight="700">3</tspan> (foglia)</text>
 
-            <!-- Bottom-up propagation arrows (green, upward) -->
-            <line x1="140" y1="314" x2="140" y2="268" stroke="#34D399" stroke-width="2.2" marker-end="url(#s2-arr-up)"/>
-            <line x1="160" y1="198" x2="255" y2="148" stroke="#34D399" stroke-width="2.2" marker-end="url(#s2-arr-up)"/>
-            <line x1="450" y1="198" x2="355" y2="148" stroke="#34D399" stroke-width="2.2" marker-end="url(#s2-arr-up)"/>
+            <!-- Tree edges (grey dashed) — drawn BEHIND arrows -->
+            <line x1="240" y1="128" x2="170" y2="220" stroke="rgba(255,255,255,0.15)" stroke-width="1.2" stroke-dasharray="4,3"/>
+            <line x1="340" y1="128" x2="430" y2="220" stroke="rgba(255,255,255,0.15)" stroke-width="1.2" stroke-dasharray="4,3"/>
+            <line x1="130" y1="288" x2="130" y2="380" stroke="rgba(255,255,255,0.15)" stroke-width="1.2" stroke-dasharray="4,3"/>
 
-            <!-- agg_status bubble on Root -->
-            <rect x="395" y="78" width="80" height="22" rx="6" fill="rgba(245,158,11,0.15)" stroke="rgba(245,158,11,0.4)" stroke-width="1"/>
-            <text x="435" y="93" text-anchor="middle" fill="#F59E0B" font-size="11" font-weight="700">agg = 3 ↑</text>
+            <!-- Bottom-up propagation arrows (green, separate from box edges) -->
+            <!-- A1 → A: start 10px above A1 top, end 10px below A bottom -->
+            <line x1="108" y1="370" x2="108" y2="298" stroke="#34D399" stroke-width="2.2" marker-end="url(#s2-arr-up)"/>
+            <text x="88" y="338" text-anchor="end" fill="#34D399" font-size="10">agg=3</text>
+
+            <!-- A → Root: offset to the left side -->
+            <line x1="100" y1="212" x2="235" y2="136" stroke="#34D399" stroke-width="2.2" marker-end="url(#s2-arr-up)"/>
+
+            <!-- B → Root: offset to the right side -->
+            <line x1="500" y1="212" x2="365" y2="136" stroke="#34D399" stroke-width="2.2" marker-end="url(#s2-arr-up)"/>
           </svg>
         </div>
         <p class="diagram-caption">Diagramma 2 — Le frecce verdi mostrano la propagazione bottom-up: ogni nodo eredita il valore massimo dai suoi discendenti.</p>
@@ -506,14 +510,16 @@
 
         <h3>Diagramma 5 — Schema dati (ER semplificato)</h3>
         <div class="diagram-wrap">
-          <svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Schema ER semplificato">
+          <svg viewBox="0 0 780 590" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Schema ER semplificato">
             <defs>
               <marker id="s5-arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
                 <polygon points="0 0,8 3,0 6" fill="rgba(234,240,255,0.40)"/>
               </marker>
             </defs>
 
-            <!-- resources table -->
+            <!-- ─── ROW 1: resources + nodes ─── -->
+
+            <!-- resources table (top-left) -->
             <rect x="20" y="30" width="180" height="140" rx="10" fill="#0a1930" stroke="#6EE7FF" stroke-opacity="0.55" stroke-width="1.5"/>
             <rect x="20" y="30" width="180" height="32" rx="10" fill="rgba(110,231,255,0.12)"/>
             <rect x="20" y="52" width="180" height="10" rx="0" fill="rgba(110,231,255,0.12)"/>
@@ -524,80 +530,82 @@
             <text x="34" y="136" fill="#8899bb" font-size="11">   created_at</text>
             <text x="34" y="154" fill="#8899bb" font-size="11">   updated_at</text>
 
-            <!-- nodes table -->
-            <rect x="260" y="30" width="200" height="190" rx="10" fill="#0a1930" stroke="#A78BFA" stroke-opacity="0.55" stroke-width="1.5"/>
-            <rect x="260" y="30" width="200" height="32" rx="10" fill="rgba(167,139,250,0.12)"/>
-            <rect x="260" y="52" width="200" height="10" rx="0" fill="rgba(167,139,250,0.12)"/>
-            <text x="360" y="53" text-anchor="middle" fill="#A78BFA" font-size="12" font-weight="700">nodes</text>
-            <text x="274" y="82" fill="#EAF0FF" font-size="11">🔑 id (UUID)</text>
-            <text x="274" y="100" fill="#8899bb" font-size="11">   class</text>
-            <text x="274" y="118" fill="#8899bb" font-size="11">   path (ltree) 🌳</text>
-            <text x="274" y="136" fill="#8899bb" font-size="11">   parent_id (FK → self)</text>
-            <text x="274" y="154" fill="#8899bb" font-size="11">   properties (JSONB)</text>
-            <text x="274" y="172" fill="#8899bb" font-size="11">   aggregated_status</text>
-            <text x="274" y="190" fill="#8899bb" font-size="11">   business_key</text>
-            <text x="274" y="208" fill="#8899bb" font-size="11">   created_at</text>
+            <!-- nodes table (top-right) -->
+            <rect x="340" y="30" width="220" height="190" rx="10" fill="#0a1930" stroke="#A78BFA" stroke-opacity="0.55" stroke-width="1.5"/>
+            <rect x="340" y="30" width="220" height="32" rx="10" fill="rgba(167,139,250,0.12)"/>
+            <rect x="340" y="52" width="220" height="10" rx="0" fill="rgba(167,139,250,0.12)"/>
+            <text x="450" y="53" text-anchor="middle" fill="#A78BFA" font-size="12" font-weight="700">nodes</text>
+            <text x="354" y="82" fill="#EAF0FF" font-size="11">🔑 id (UUID)</text>
+            <text x="354" y="100" fill="#8899bb" font-size="11">   class</text>
+            <text x="354" y="118" fill="#8899bb" font-size="11">   path (ltree) 🌳</text>
+            <text x="354" y="136" fill="#8899bb" font-size="11">   parent_id (FK → self)</text>
+            <text x="354" y="154" fill="#8899bb" font-size="11">   properties (JSONB)</text>
+            <text x="354" y="172" fill="#8899bb" font-size="11">   aggregated_status</text>
+            <text x="354" y="190" fill="#8899bb" font-size="11">   business_key</text>
+            <text x="354" y="208" fill="#8899bb" font-size="11">   created_at</text>
 
             <!-- ltree badge -->
-            <rect x="300" y="113" width="88" height="16" rx="4" fill="rgba(110,231,255,0.12)" stroke="rgba(110,231,255,0.3)" stroke-width="0.8"/>
-            <text x="344" y="125" text-anchor="middle" fill="#6EE7FF" font-size="8" font-weight="700">ltree + GiST idx</text>
+            <rect x="386" y="113" width="88" height="16" rx="4" fill="rgba(110,231,255,0.12)" stroke="rgba(110,231,255,0.3)" stroke-width="0.8"/>
+            <text x="430" y="125" text-anchor="middle" fill="#6EE7FF" font-size="8" font-weight="700">ltree + GiST idx</text>
 
-            <!-- resource_nodes (join) - moved far right -->
-            <rect x="540" y="30" width="180" height="110" rx="10" fill="#0a1930" stroke="#34D399" stroke-opacity="0.55" stroke-width="1.5"/>
-            <rect x="540" y="30" width="180" height="32" rx="10" fill="rgba(52,211,153,0.10)"/>
-            <rect x="540" y="52" width="180" height="10" rx="0" fill="rgba(52,211,153,0.10)"/>
-            <text x="630" y="53" text-anchor="middle" fill="#34D399" font-size="12" font-weight="700">resource_nodes</text>
-            <text x="554" y="82" fill="#EAF0FF" font-size="11">🔑 resource_id (FK)</text>
-            <text x="554" y="100" fill="#EAF0FF" font-size="11">🔑 node_id (FK)</text>
-            <text x="554" y="118" fill="#8899bb" font-size="11">   created_at</text>
+            <!-- nodes self-ref arrow (parent_id) — loops above nodes table -->
+            <path d="M560 55 Q590 40 590 25 Q590 10 560 30" fill="none" stroke="rgba(167,139,250,0.4)" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#s5-arr)"/>
+            <text x="598" y="22" fill="rgba(167,139,250,0.55)" font-size="9">parent_id</text>
 
-            <!-- nodes self-ref arrow (parent_id) -->
-            <path d="M460 70 Q510 50 510 35 Q510 15 460 30" fill="none" stroke="rgba(167,139,250,0.4)" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#s5-arr)"/>
-            <text x="518" y="36" fill="rgba(167,139,250,0.55)" font-size="9">parent_id</text>
+            <!-- ─── ROW 2: resource_nodes (join table, centered between the two) ─── -->
 
-            <!-- FK: resource_nodes.resource_id → resources -->
-            <line x1="540" y1="78" x2="200" y2="78" stroke="rgba(234,240,255,0.25)" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#s5-arr)"/>
-            <text x="370" y="72" text-anchor="middle" fill="rgba(234,240,255,0.35)" font-size="9">FK resource_id</text>
+            <rect x="160" y="250" width="200" height="110" rx="10" fill="#0a1930" stroke="#34D399" stroke-opacity="0.55" stroke-width="1.5"/>
+            <rect x="160" y="250" width="200" height="32" rx="10" fill="rgba(52,211,153,0.10)"/>
+            <rect x="160" y="272" width="200" height="10" rx="0" fill="rgba(52,211,153,0.10)"/>
+            <text x="260" y="273" text-anchor="middle" fill="#34D399" font-size="12" font-weight="700">resource_nodes</text>
+            <text x="174" y="302" fill="#EAF0FF" font-size="11">🔑 resource_id (FK)</text>
+            <text x="174" y="320" fill="#EAF0FF" font-size="11">🔑 node_id (FK)</text>
+            <text x="174" y="338" fill="#8899bb" font-size="11">   created_at</text>
 
-            <!-- FK: resource_nodes.node_id → nodes -->
-            <line x1="540" y1="96" x2="460" y2="96" stroke="rgba(234,240,255,0.25)" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#s5-arr)"/>
-            <text x="500" y="90" text-anchor="middle" fill="rgba(234,240,255,0.35)" font-size="9">FK node_id</text>
+            <!-- FK: resource_nodes.resource_id → resources (arrow goes up-left) -->
+            <line x1="200" y1="250" x2="140" y2="170" stroke="rgba(234,240,255,0.3)" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#s5-arr)"/>
+            <text x="152" y="214" fill="rgba(234,240,255,0.4)" font-size="9">FK resource_id</text>
+
+            <!-- FK: resource_nodes.node_id → nodes (arrow goes up-right) -->
+            <line x1="320" y1="250" x2="410" y2="220" stroke="rgba(234,240,255,0.3)" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#s5-arr)"/>
+            <text x="380" y="228" fill="rgba(234,240,255,0.4)" font-size="9">FK node_id</text>
+
+            <!-- ─── ROW 3: tasks, outbox_events, scope_generations ─── -->
 
             <!-- tasks table -->
-            <rect x="20" y="280" width="180" height="190" rx="10" fill="#0a1930" stroke="#F59E0B" stroke-opacity="0.55" stroke-width="1.5"/>
-            <rect x="20" y="280" width="180" height="32" rx="10" fill="rgba(245,158,11,0.10)"/>
-            <rect x="20" y="302" width="180" height="10" rx="0" fill="rgba(245,158,11,0.10)"/>
-            <text x="110" y="303" text-anchor="middle" fill="#F59E0B" font-size="12" font-weight="700">tasks</text>
-            <text x="34" y="332" fill="#EAF0FF" font-size="11">🔑 id (UUID)</text>
-            <text x="34" y="350" fill="#8899bb" font-size="11">   idempotency_key</text>
-            <text x="34" y="368" fill="#8899bb" font-size="11">   payload_hash</text>
-            <text x="34" y="386" fill="#8899bb" font-size="11">   status</text>
-            <text x="34" y="404" fill="#8899bb" font-size="11">   lease_owner</text>
-            <text x="34" y="422" fill="#8899bb" font-size="11">   lease_expires_at</text>
-            <text x="34" y="440" fill="#8899bb" font-size="11">   heartbeat_at</text>
-            <text x="34" y="458" fill="#8899bb" font-size="11">   attempt_count</text>
+            <rect x="20" y="400" width="180" height="180" rx="10" fill="#0a1930" stroke="#F59E0B" stroke-opacity="0.55" stroke-width="1.5"/>
+            <rect x="20" y="400" width="180" height="32" rx="10" fill="rgba(245,158,11,0.10)"/>
+            <rect x="20" y="422" width="180" height="10" rx="0" fill="rgba(245,158,11,0.10)"/>
+            <text x="110" y="423" text-anchor="middle" fill="#F59E0B" font-size="12" font-weight="700">tasks</text>
+            <text x="34" y="452" fill="#EAF0FF" font-size="11">🔑 id (UUID)</text>
+            <text x="34" y="470" fill="#8899bb" font-size="11">   idempotency_key</text>
+            <text x="34" y="488" fill="#8899bb" font-size="11">   payload_hash</text>
+            <text x="34" y="506" fill="#8899bb" font-size="11">   status</text>
+            <text x="34" y="524" fill="#8899bb" font-size="11">   lease_owner</text>
+            <text x="34" y="542" fill="#8899bb" font-size="11">   lease_expires_at</text>
+            <text x="34" y="560" fill="#8899bb" font-size="11">   heartbeat_at</text>
 
             <!-- outbox_events table -->
-            <rect x="260" y="280" width="200" height="170" rx="10" fill="#0a1930" stroke="#6EE7FF" stroke-opacity="0.45" stroke-width="1.5"/>
-            <rect x="260" y="280" width="200" height="32" rx="10" fill="rgba(110,231,255,0.08)"/>
-            <rect x="260" y="302" width="200" height="10" rx="0" fill="rgba(110,231,255,0.08)"/>
-            <text x="360" y="303" text-anchor="middle" fill="#6EE7FF" font-size="12" font-weight="700">outbox_events</text>
-            <text x="274" y="332" fill="#EAF0FF" font-size="11">🔑 id (UUID)</text>
-            <text x="274" y="350" fill="#8899bb" font-size="11">   aggregate_type</text>
-            <text x="274" y="368" fill="#8899bb" font-size="11">   aggregate_id</text>
-            <text x="274" y="386" fill="#8899bb" font-size="11">   event_type</text>
-            <text x="274" y="404" fill="#8899bb" font-size="11">   payload (JSONB)</text>
-            <text x="274" y="422" fill="#8899bb" font-size="11">   published_at</text>
+            <rect x="260" y="400" width="200" height="170" rx="10" fill="#0a1930" stroke="#6EE7FF" stroke-opacity="0.45" stroke-width="1.5"/>
+            <rect x="260" y="400" width="200" height="32" rx="10" fill="rgba(110,231,255,0.08)"/>
+            <rect x="260" y="422" width="200" height="10" rx="0" fill="rgba(110,231,255,0.08)"/>
+            <text x="360" y="423" text-anchor="middle" fill="#6EE7FF" font-size="12" font-weight="700">outbox_events</text>
+            <text x="274" y="452" fill="#EAF0FF" font-size="11">🔑 id (UUID)</text>
+            <text x="274" y="470" fill="#8899bb" font-size="11">   aggregate_type</text>
+            <text x="274" y="488" fill="#8899bb" font-size="11">   aggregate_id</text>
+            <text x="274" y="506" fill="#8899bb" font-size="11">   event_type</text>
+            <text x="274" y="524" fill="#8899bb" font-size="11">   payload (JSONB)</text>
+            <text x="274" y="542" fill="#8899bb" font-size="11">   published_at</text>
 
             <!-- scope_generations table -->
-            <rect x="540" y="280" width="200" height="140" rx="10" fill="#0a1930" stroke="#F87171" stroke-opacity="0.45" stroke-width="1.5"/>
-            <rect x="540" y="280" width="200" height="32" rx="10" fill="rgba(248,113,113,0.08)"/>
-            <rect x="540" y="302" width="200" height="10" rx="0" fill="rgba(248,113,113,0.08)"/>
-            <text x="640" y="303" text-anchor="middle" fill="#F87171" font-size="12" font-weight="700">scope_generations</text>
-            <text x="554" y="332" fill="#EAF0FF" font-size="11">🔑 scope_id</text>
-            <text x="554" y="350" fill="#8899bb" font-size="11">   generation (bigint)</text>
-            <text x="554" y="368" fill="#8899bb" font-size="11">   updated_at</text>
-            <text x="554" y="386" fill="#8899bb" font-size="11">   scope_type</text>
+            <rect x="520" y="400" width="200" height="140" rx="10" fill="#0a1930" stroke="#F87171" stroke-opacity="0.45" stroke-width="1.5"/>
+            <rect x="520" y="400" width="200" height="32" rx="10" fill="rgba(248,113,113,0.08)"/>
+            <rect x="520" y="422" width="200" height="10" rx="0" fill="rgba(248,113,113,0.08)"/>
+            <text x="620" y="423" text-anchor="middle" fill="#F87171" font-size="12" font-weight="700">scope_generations</text>
+            <text x="534" y="452" fill="#EAF0FF" font-size="11">🔑 scope_id</text>
+            <text x="534" y="470" fill="#8899bb" font-size="11">   generation (bigint)</text>
+            <text x="534" y="488" fill="#8899bb" font-size="11">   updated_at</text>
+            <text x="534" y="506" fill="#8899bb" font-size="11">   scope_type</text>
           </svg>
         </div>
         <p class="diagram-caption">Diagramma 5 — Schema ER semplificato: le frecce tratteggiate rappresentano le foreign key principali.</p>
@@ -825,74 +833,62 @@
           dai nodi foglia verso la radice.
         </p>
         <div class="diagram-wrap">
-          <svg viewBox="0 0 620 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ricalcolo bottom-up di aggregated_status">
+          <svg viewBox="0 0 640 490" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ricalcolo bottom-up di aggregated_status">
             <defs>
-              <marker id="s8-arr-up" markerWidth="8" markerHeight="6" refX="1" refY="3" orient="auto">
-                <polygon points="8 0,0 3,8 6" fill="#6EE7FF"/>
+              <marker id="s8-arr-dn" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                <polygon points="0 0,8 3,0 6" fill="#6EE7FF"/>
               </marker>
             </defs>
 
             <!-- Legend -->
             <rect x="12" y="10" width="240" height="50" rx="8" fill="rgba(0,0,0,0.25)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-            <line x1="24" y1="44" x2="44" y2="44" stroke="#6EE7FF" stroke-width="2" marker-end="url(#s8-arr-up)"/>
             <text x="54" y="28" fill="#6EE7FF" font-size="11" font-weight="600">Direzione ricalcolo</text>
-            <text x="54" y="46" fill="#8899bb" font-size="10">foglia → intermedio → radice</text>
+            <text x="54" y="46" fill="#8899bb" font-size="10">foglia → intermedio → radice (top → bottom)</text>
 
             <!-- Step labels on right side -->
-            <rect x="470" y="82" width="136" height="22" rx="5" fill="rgba(52,211,153,0.1)" stroke="rgba(52,211,153,0.3)" stroke-width="0.8"/>
-            <text x="538" y="97" text-anchor="middle" fill="#34D399" font-size="11" font-weight="700">STEP 1 — foglie</text>
+            <rect x="480" y="82" width="148" height="22" rx="5" fill="rgba(52,211,153,0.1)" stroke="rgba(52,211,153,0.3)" stroke-width="0.8"/>
+            <text x="554" y="97" text-anchor="middle" fill="#34D399" font-size="11" font-weight="700">STEP 1 — foglie</text>
 
-            <rect x="470" y="202" width="136" height="22" rx="5" fill="rgba(167,139,250,0.1)" stroke="rgba(167,139,250,0.3)" stroke-width="0.8"/>
-            <text x="538" y="217" text-anchor="middle" fill="#A78BFA" font-size="11" font-weight="700">STEP 2 — intermedi</text>
+            <rect x="480" y="222" width="148" height="22" rx="5" fill="rgba(167,139,250,0.1)" stroke="rgba(167,139,250,0.3)" stroke-width="0.8"/>
+            <text x="554" y="237" text-anchor="middle" fill="#A78BFA" font-size="11" font-weight="700">STEP 2 — intermedi</text>
 
-            <rect x="470" y="332" width="136" height="22" rx="5" fill="rgba(110,231,255,0.1)" stroke="rgba(110,231,255,0.3)" stroke-width="0.8"/>
-            <text x="538" y="347" text-anchor="middle" fill="#6EE7FF" font-size="11" font-weight="700">STEP 3 — radice</text>
+            <rect x="480" y="382" width="148" height="22" rx="5" fill="rgba(110,231,255,0.1)" stroke="rgba(110,231,255,0.3)" stroke-width="0.8"/>
+            <text x="554" y="397" text-anchor="middle" fill="#6EE7FF" font-size="11" font-weight="700">STEP 3 — radice</text>
 
-            <!-- Grandchild A1 (STEP 1 - top) -->
-            <rect x="60" y="80" width="180" height="56" rx="10" fill="#0a1930" stroke="#34D399" stroke-opacity="0.6" stroke-width="1.5"/>
-            <text x="150" y="102" text-anchor="middle" fill="#EAF0FF" font-size="13" font-weight="600">Nodo A1 (foglia)</text>
-            <text x="150" y="120" text-anchor="middle" fill="#34D399" font-size="11">status = <tspan font-weight="700">3</tspan> → agg = <tspan font-weight="700">3</tspan></text>
-            <text x="150" y="134" text-anchor="middle" fill="#8899bb" font-size="9">properties aggiornate in Fase 6</text>
+            <!-- ── LEVEL 1: Grandchild A1 (foglia, top) ── -->
+            <rect x="80" y="76" width="200" height="58" rx="10" fill="#0a1930" stroke="#34D399" stroke-opacity="0.6" stroke-width="1.5"/>
+            <text x="180" y="100" text-anchor="middle" fill="#EAF0FF" font-size="13" font-weight="600">Nodo A1 (foglia)</text>
+            <text x="180" y="118" text-anchor="middle" fill="#34D399" font-size="11">status = <tspan font-weight="700">3</tspan> → agg = <tspan font-weight="700">3</tspan></text>
 
-            <!-- Child A (STEP 2 - middle left) -->
-            <rect x="30" y="200" width="180" height="56" rx="10" fill="#0a1930" stroke="#A78BFA" stroke-opacity="0.55" stroke-width="1.5"/>
-            <text x="120" y="222" text-anchor="middle" fill="#EAF0FF" font-size="13" font-weight="600">Nodo A</text>
-            <text x="120" y="240" text-anchor="middle" fill="#8899bb" font-size="11">agg recalc = <tspan fill="#6EE7FF" font-weight="700">?</tspan></text>
-            <text x="120" y="254" text-anchor="middle" fill="#8899bb" font-size="10">max(2, child.agg)</text>
+            <!-- ── Cyan arrow: A1 result flows down to A ── -->
+            <line x1="180" y1="134" x2="140" y2="210" stroke="#6EE7FF" stroke-width="2.2" marker-end="url(#s8-arr-dn)"/>
+            <text x="188" y="176" fill="#6EE7FF" font-size="10" font-weight="600">agg=3 ↓</text>
 
-            <!-- Child B (STEP 2 - middle right) -->
-            <rect x="260" y="200" width="180" height="56" rx="10" fill="#0a1930" stroke="#A78BFA" stroke-opacity="0.55" stroke-width="1.5"/>
-            <text x="350" y="222" text-anchor="middle" fill="#EAF0FF" font-size="13" font-weight="600">Nodo B</text>
-            <text x="350" y="240" text-anchor="middle" fill="#8899bb" font-size="11">agg = <tspan fill="#34D399" font-weight="700">1</tspan> (foglia)</text>
+            <!-- ── LEVEL 2: Child A + Child B ── -->
+            <rect x="30" y="216" width="200" height="58" rx="10" fill="#0a1930" stroke="#A78BFA" stroke-opacity="0.55" stroke-width="1.5"/>
+            <text x="130" y="240" text-anchor="middle" fill="#EAF0FF" font-size="13" font-weight="600">Nodo A</text>
+            <text x="130" y="258" text-anchor="middle" fill="#8899bb" font-size="11">agg recalc = max(2, 3) = <tspan fill="#6EE7FF" font-weight="700">3</tspan></text>
 
-            <!-- Root (STEP 3 - bottom) -->
-            <rect x="140" y="330" width="180" height="56" rx="10" fill="#0a1930" stroke="#6EE7FF" stroke-opacity="0.7" stroke-width="2"/>
-            <text x="230" y="352" text-anchor="middle" fill="#EAF0FF" font-size="13" font-weight="600">Root</text>
-            <text x="230" y="370" text-anchor="middle" fill="#8899bb" font-size="11">agg recalc = <tspan fill="#6EE7FF" font-weight="700">?</tspan></text>
-            <text x="230" y="384" text-anchor="middle" fill="#8899bb" font-size="10">max(own, children.agg)</text>
+            <rect x="280" y="216" width="180" height="58" rx="10" fill="#0a1930" stroke="#A78BFA" stroke-opacity="0.55" stroke-width="1.5"/>
+            <text x="370" y="240" text-anchor="middle" fill="#EAF0FF" font-size="13" font-weight="600">Nodo B</text>
+            <text x="370" y="258" text-anchor="middle" fill="#8899bb" font-size="11">agg = <tspan fill="#34D399" font-weight="700">1</tspan> (foglia)</text>
 
-            <!-- Tree structure lines (grey dashed) -->
-            <line x1="150" y1="136" x2="130" y2="200" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-dasharray="4,3"/>
-            <line x1="140" y1="256" x2="190" y2="330" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-dasharray="4,3"/>
-            <line x1="330" y1="256" x2="270" y2="330" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-dasharray="4,3"/>
+            <!-- ── Cyan arrows: A and B results flow down to Root ── -->
+            <line x1="150" y1="274" x2="200" y2="370" stroke="#6EE7FF" stroke-width="2.2" marker-end="url(#s8-arr-dn)"/>
+            <text x="152" y="328" fill="#6EE7FF" font-size="10" font-weight="600">agg↓</text>
 
-            <!-- Upward propagation arrows (cyan) -->
-            <!-- A1 → A -->
-            <line x1="140" y1="194" x2="148" y2="142" stroke="#6EE7FF" stroke-width="2.5" marker-end="url(#s8-arr-up)"/>
-            <text x="108" y="170" fill="#6EE7FF" font-size="10">agg = 3</text>
+            <line x1="360" y1="274" x2="300" y2="370" stroke="#6EE7FF" stroke-width="2.2" marker-end="url(#s8-arr-dn)"/>
+            <text x="348" y="328" fill="#6EE7FF" font-size="10" font-weight="600">agg↓</text>
 
-            <!-- A → Root -->
-            <line x1="165" y1="322" x2="145" y2="262" stroke="#6EE7FF" stroke-width="2.5" marker-end="url(#s8-arr-up)"/>
-            <text x="128" y="296" fill="#6EE7FF" font-size="10">agg↑</text>
-
-            <!-- B → Root -->
-            <line x1="290" y1="322" x2="340" y2="262" stroke="#6EE7FF" stroke-width="2.5" marker-end="url(#s8-arr-up)"/>
-            <text x="332" y="296" fill="#6EE7FF" font-size="10">agg↑</text>
+            <!-- ── LEVEL 3: Root ── -->
+            <rect x="150" y="376" width="200" height="58" rx="10" fill="#0a1930" stroke="#6EE7FF" stroke-opacity="0.7" stroke-width="2"/>
+            <text x="250" y="400" text-anchor="middle" fill="#EAF0FF" font-size="13" font-weight="600">Root</text>
+            <text x="250" y="418" text-anchor="middle" fill="#8899bb" font-size="11">agg recalc = max(own, 3, 1) = <tspan fill="#6EE7FF" font-weight="700">?</tspan></text>
 
             <!-- Query label -->
-            <rect x="60" y="400" width="370" height="32" rx="8" fill="rgba(0,0,0,0.25)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-            <text x="245" y="414" text-anchor="middle" fill="#8899bb" font-size="10" font-family="ui-monospace, monospace">SELECT parent_id, MAX(aggregated_status)</text>
-            <text x="245" y="427" text-anchor="middle" fill="#8899bb" font-size="10" font-family="ui-monospace, monospace">GROUP BY parent_id — per ogni livello</text>
+            <rect x="70" y="450" width="370" height="32" rx="8" fill="rgba(0,0,0,0.25)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <text x="255" y="464" text-anchor="middle" fill="#8899bb" font-size="10" font-family="ui-monospace, monospace">SELECT parent_id, MAX(aggregated_status)</text>
+            <text x="255" y="477" text-anchor="middle" fill="#8899bb" font-size="10" font-family="ui-monospace, monospace">GROUP BY parent_id — per ogni livello</text>
           </svg>
         </div>
         <p class="diagram-caption">Diagramma 8 — Il ricalcolo procede per livelli dal basso verso l'alto: prima le foglie (step 1), poi i nodi intermedi (step 2), infine la radice (step 3).</p>
