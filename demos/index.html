@@ -20,6 +20,7 @@
         <a data-nav href="/">Home</a>
         <a data-nav class="active" href="/demos/">Systems</a>
         <a data-nav href="/about/">About Me</a>
+        <a class="nav-cta" data-sovereign-matrix-link href="/api/sovereign-matrix" target="_blank" rel="noopener noreferrer">Sovereign AI Demo<span class="sr-only"> (opens in a new tab)</span></a>
       </nav>
     </div>
   </header>
@@ -29,6 +30,18 @@
       <h2>Systems</h2>
 
       <div class="grid">
+
+        <article class="card col-12 sovereign-demo-card">
+          <span class="badge header live">Interactive demo</span>
+          <h3>Enterprise Sovereign AI Decision Matrix</h3>
+          <p>
+            An enterprise AI control plane demonstrating deterministic multi-agent workflows,
+            sovereign inference, policy routing, live telemetry, audit lineage, and operator approvals.
+          </p>
+          <div class="actions">
+            <a class="btn primary" data-sovereign-matrix-link href="/api/sovereign-matrix" target="_blank" rel="noopener noreferrer">Open Mission Control<span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a>
+          </div>
+        </article>
 
         <article class="card col-6">
           <h3>EHD Research — World-Directed Welfare <span class="badge">Research · arXiv 2026</span></h3>
@@ -243,5 +256,6 @@
   </main>
 
   <script src="/build-info.js"></script>
+  <script type="module" src="/sovereign-matrix.js"></script>
 </body>
 </html>

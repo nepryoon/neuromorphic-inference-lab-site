@@ -19,11 +19,23 @@
       <nav class="navlinks" aria-label="Primary navigation">
         <a data-nav class="active" href="/">Home</a>
         <a data-nav href="/about/">About Me</a>
+        <a class="nav-cta" data-sovereign-matrix-link href="/api/sovereign-matrix" target="_blank" rel="noopener noreferrer">Sovereign AI Demo<span class="sr-only"> (opens in a new tab)</span></a>
       </nav>
     </div>
   </header>
 
   <main class="container">
+    <section class="hero" aria-labelledby="sovereign-demo-title">
+      <p class="kicker">Interactive enterprise AI governance</p>
+      <h1 class="h1" id="sovereign-demo-title">Enterprise Sovereign AI Decision Matrix</h1>
+      <p class="sub">
+        Inspect governed agent execution, model routing, cost telemetry, and Human-in-the-Loop approvals in real time.
+      </p>
+      <div class="actions hero-actions">
+        <a class="btn primary" data-sovereign-matrix-link href="/api/sovereign-matrix" target="_blank" rel="noopener noreferrer">Launch Sovereign AI Demo<span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a>
+      </div>
+    </section>
+
     <section class="section">
       <h2>Projects</h2>
 
@@ -286,5 +298,6 @@
   </main>
 
   <script src="/build-info.js"></script>
+  <script type="module" src="/sovereign-matrix.js"></script>
 </body>
 </html>
