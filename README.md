@@ -122,6 +122,24 @@ This site is static HTML. Use any static server:
 
 Open: http://localhost:8080
 
+### Sovereign AI demo destination
+
+The homepage hero, responsive navigation, and Systems catalogue link to the Enterprise
+Sovereign AI Decision Matrix. The public destination defaults to
+`https://matrix.neuromorphicinference.com` and can be overridden for preview or staging
+deployments with:
+
+```bash
+NEXT_PUBLIC_SOVEREIGN_MATRIX_URL=https://matrix-preview.example.com
+```
+
+Set the variable in Cloudflare Pages for deployed environments, or copy `.env.example`
+to `.dev.vars` when using Wrangler locally. Overrides must be HTTPS URLs without embedded
+credentials; invalid values safely use the production default. To verify locally, run
+`npx wrangler pages dev .`, open `http://localhost:8788`, and inspect the “Launch Sovereign
+AI Demo” link. A plain static server uses the production default because Pages Functions
+are not available.
+
 > Note: Cloudflare Pages Functions won’t run in a plain static server.
 
 ### Option B — With Pages Functions (recommended)
