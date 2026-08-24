@@ -352,6 +352,36 @@ pre{
   justify-content:flex-end;
 }
 
+/* About page */
+.about-hero .sub{ max-width: 88ch; }
+.about-tagline{
+  margin: 0 0 16px;
+  color: rgba(110,231,255,.92);
+  font-weight: 700;
+  letter-spacing: .03em;
+}
+.about-boundary{
+  padding-left: 12px;
+  border-left: 3px solid rgba(110,231,255,.55);
+}
+.about-method{
+  color: var(--txt) !important;
+  font-weight: 700;
+}
+.about-text-link{
+  color: var(--a1);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.about-text-link:hover{ text-decoration-thickness: 2px; }
+.about-education{ margin-top: 0; }
+.about-transparency{ border-color: rgba(167,139,250,.28); }
+.about-actions .btn{ min-height: 44px; }
+
+@media (max-width: 640px){
+  .about-actions .btn{ width:100%; }
+}
+
 /* --- Demo form grid --- */
 .demo-form,
 .inference-form,
