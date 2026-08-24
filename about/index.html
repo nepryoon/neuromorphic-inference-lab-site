@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>About Me</title>
-  <meta name="description" content="Solution Architect specialising in AI/MLOps and LLMOps. I design auditable, human-in-the-loop LLM systems for regulated environments — from RAG pipelines to production governance." />
+  <title>Luca Lillo | Enterprise AI &amp; GenAI Solution Architect</title>
+  <meta name="description" content="Chief Technology Officer specialising in enterprise AI, GenAI and psychology-informed LLM multi-agent architecture, governance and evaluation." />
+  <link rel="canonical" href="https://www.neuromorphicinference.com/about/" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
 </head>
@@ -14,121 +15,121 @@
     <div class="inner">
       <a class="brand" href="/" aria-label="Neuromorphic Inference Lab home">
         <img src="/logo.svg" alt="Neuromorphic Inference Lab" />
-        <span style="color: #AAAAAA;">Neuromorphic Inference Lab</span>
+        <span>Neuromorphic Inference Lab</span>
       </a>
 
       <nav class="navlinks" aria-label="Primary navigation">
         <a data-nav href="/">Home</a>
-        <a data-nav href="/about/" data-active="true">About Me</a>
+        <a data-nav href="/about/" aria-current="page">About Me</a>
       </nav>
     </div>
   </header>
 
   <main class="container">
-    <section class="hero">
-      <p class="kicker">About Me</p>
-      <h1 class="h1" style="color: #AAAAAA;">Solution Architect &bull; AI/MLOps & LLMOps &bull; Auditable LLM Systems for Regulated Environments</h1>
-      <p style="text-align: left; color: #AAAAAA; padding-bottom: 12px;">
-        I help organisations deploy LLM systems they can actually trust — auditable, governed, and built around human oversight rather than around it. As Solution Architect at Sistemi e Automazione, I design and deliver AI/ML solutions for enterprise and public-sector clients across Italy, with a focus on retrieval-augmented generation, LLM orchestration, and MLOps/LLMOps practices that hold up under real operational and regulatory scrutiny. My approach is shaped by a clear principle: in high-stakes environments, AI must assist human judgment, not replace it. I design pipelines where models generate structured insights, scenarios and analyses, while domain experts retain control over interpretation and final decisions — translating into traceable retrieval, validation layers, evaluation harnesses with regression gates, and governance logging aligned with the risk-based approach of the EU AI Act. The technical foundation: PyTorch, FastAPI, LangChain, LlamaIndex, Docker, Kubernetes, Terraform and AWS. The applied background: 17+ years in the energy sector (Enel Group), where I learned that production reliability is not a feature you add at the end. In parallel, I run the Neuromorphic Inference Lab, an open-source initiative where I prototype governance tooling and publish applied research on LLM agent oversight.
-      </p>
+    <section class="hero about-hero" aria-labelledby="about-title">
+      <p class="kicker">Luca Lillo · Chief Technology Officer</p>
+      <h1 class="h1" id="about-title">Enterprise AI &amp; GenAI Solution Architect specialising in LLM Multi-Agent Systems</h1>
+      <p class="about-tagline">Psychology-Informed Governance | Evidence-Led Evaluation</p>
+      <p class="sub">I design and govern enterprise AI systems where decisions must remain explainable, testable and accountable. I currently serve as Chief Technology Officer at Sistemi &amp; Automazione S.p.A., combining technology direction, engineering governance and organisational leadership with a distinctive specialisation in the architecture, governance and evaluation of LLM multi-agent systems.</p>
+      <p class="sub">My work examines how topology, role design, authority, information flow, dissent, verification and human oversight affect decision quality. My foundation includes eighteen years at Enel Group across enterprise technology, electricity-distribution systems, transformation, programme delivery and capability development. My dedicated AI specialisation is recent, chiefly from 2025.</p>
+    </section>
 
-      <div class="actions">
-        <a class="btn primary" href="/">View projects</a>
-        <a class="btn" href="https://github.com/nepryoon" target="_blank" rel="noopener">GitHub</a>
+    <section class="section" aria-labelledby="psychology-title">
+      <h2 id="psychology-title">Psychology-informed multi-agent systems</h2>
+      <div class="card col-12">
+        <p>Formal training in Psychological Sciences informs a non-anthropomorphic engineering lens on authority bias, conformity, groupthink, social loafing and confidence dominance. I do not treat language models as people or assume that they possess human motives. I translate these concepts into observable failure hypotheses, structural controls and evaluation designs.</p>
+        <p>Proposed interests include separating procedural from epistemic authority; structured dissent and falsifiable objections; blind review and external verification; role permutation and agent ablation; adversarial-leader testing; and compute-equivalent single-agent baselines. Measurement targets task correctness, dissent robustness, cascading error, traceability and cost.</p>
+        <p class="about-boundary"><strong>Scope:</strong> these are conceptual and experimental designs under development. They are not a validated framework or completed benchmark.</p>
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" aria-labelledby="method-title">
+      <h2 id="method-title">Research-led engineering method</h2>
       <div class="grid">
-        <article class="card col-12">
-          <h3 style="text-align: center; color: #AAAAAA;">Background</h3>
-          <ul>
-            <li style="text-align: left; color: #AAAAAA; padding-bottom: 12px;">Currently serving as <strong>Solution Architect at Sistemi e Automazione</strong>, designing and delivering AI/ML solutions for enterprise and public-sector clients across Italy — with a focus on auditable LLM systems, MLOps/LLMOps governance, and EU AI Act-aligned architectures.</li>
-            <li style="text-align: left; color: #AAAAAA; padding-bottom: 12px;">Authored and published <strong>"Can LLM Agents Care About the World? Introducing Exocentric Homeostatic Deliberation (EHD)"</strong> (ResearchGate, 2026) — a formal control framework for world-directed agent welfare, operationalised in the EHD-Watch monitoring system.</li>
-            <li style="text-align: left; color: #AAAAAA; padding-bottom: 12px;">Engineered and deployed a production-grade RAG service on AWS (ECS / ALB / ECR): implemented hybrid retrieval with dense reranking, citation/audit trails, and an evaluation harness with regression-style quality gates — <strong>achieving sub-200 ms P95 inference latency</strong> at launch.</li>
-            <li style="text-align: left; color: #AAAAAA; padding-bottom: 12px;">Architected an end-to-end ML delivery platform: designed SQL-based data extraction pipelines with automated validation checks, curated model-ready datasets, and established reproducible build artefacts using DVC and Docker — <strong>reducing data processing cycle time by 30% within three months</strong>.</li>
-            <li style="text-align: left; color: #AAAAAA; padding-bottom: 12px;">Implemented a full CI/CD pipeline (GitHub Actions) with automated unit, integration, and acceptance tests; enforced accuracy/latency trade-off thresholds as mandatory quality gates before every production promotion.</li>
-            <li style="text-align: left; color: #AAAAAA; padding-bottom: 12px;">Established release discipline through versioned runbooks, blue/green rollback patterns, Kubernetes-compatible health-check probes, and operational telemetry (structured logs, Prometheus metrics) — <strong>achieving zero unplanned downtime</strong> across all releases.</li>
-            <li style="text-align: left; color: #AAAAAA; padding-bottom: 12px;">Exposed versioned inference endpoints via FastAPI, containerised all runtimes with Docker, and adopted Terraform for repeatable infrastructure provisioning across environments.</li>
-            <li style="text-align: left; color: #AAAAAA; padding-bottom: 12px;">Designed and operationalised end-to-end predictive analytics systems for LV/MV grid operations at Enel: architected SQL + Python pipelines ingesting <strong>5 TB+ of operational data</strong>, engineered domain-specific features, and delivered batch inference workflows sustaining <strong>99.9% operational uptime</strong>.</li>
-            <li style="text-align: left; color: #AAAAAA; padding-bottom: 12px;">Built and standardised a data quality framework (schema validation, referential-integrity checks, automated refresh logic) that unified KPI definitions across teams and <strong>reduced decision-making latency by 40%</strong> through monitoring-friendly dashboards.</li>
-            <li style="text-align: left; color: #AAAAAA; padding-bottom: 12px;">Orchestrated fault-detection modelling lifecycle from raw sensor data through feature engineering, model selection (AUC/F1 evaluation), and deployment of batch inference jobs integrated with operational monitoring systems.</li>
-            <li style="text-align: left; color: #AAAAAA; padding-bottom: 12px;">Scaled and led a technical unit of 10+ engineers within six months; established execution cadences, incident-response runbooks, and delivery-predictability frameworks that reduced mean-time-to-recovery (MTTR) for grid incidents.</li>
-            <li style="text-align: left; color: #AAAAAA; padding-bottom: 12px;">Received internal <strong>Enel Innovation Award (2017)</strong> for designing an AR-enabled smart helmet prototype to monitor subcontractor work quality and enhance operational safety compliance.</li>
-          </ul>
-        </article>
-
         <article class="card col-6">
-          <h3 style="text-align: center;">Technical Skills</h3>
-          <table style="width: 100%; text-align: left; border-collapse: collapse;">
-            <tbody>
-              <tr>
-                <td style="vertical-align: top; padding-right: 15px; padding-bottom: 5px;"><strong>Architecture & Governance</strong></td>
-                <td style="padding-bottom: 5px; color: #AAAAAA;">Solution architecture for AI/ML systems, EU AI Act risk-based design, human-in-the-loop workflows, audit trails, governance logging, release governance for production LLMs</td>
-              </tr>
-              <tr>
-                <td style="vertical-align: top; padding-right: 15px; padding-bottom: 5px;"><strong>GenAI / LLMOps</strong></td>
-                <td style="padding-bottom: 5px; color: #AAAAAA;">RAG pipelines (retrieval, reranking, hybrid search), prompt engineering, evaluation harnesses (regression-style checks), guardrails, citation &amp; audit trails, LangChain, LlamaIndex, vector databases</td>
-              </tr>
-              <tr>
-                <td style="vertical-align: top; padding-right: 15px; padding-bottom: 5px;"><strong>Machine Learning</strong></td>
-                <td style="padding-bottom: 5px; color: #AAAAAA;">scikit-learn, PyTorch, TensorFlow; feature engineering, model validation, error analysis, calibration, AUC / F1 / PR-AUC, hyperparameter optimisation, model selection</td>
-              </tr>
-              <tr>
-                <td style="vertical-align: top; padding-right: 15px; padding-bottom: 5px;"><strong>MLOps / Platform</strong></td>
-                <td style="padding-bottom: 5px; color: #AAAAAA;">FastAPI, Flask, Docker, Kubernetes (CKA in progress), CI/CD (GitHub Actions, GitLab CI), MLflow (experiment tracking &amp; model registry), DVC, monitoring (Prometheus, logs/metrics), runbooks, rollback patterns, health checks</td>
-              </tr>
-              <tr>
-                <td style="vertical-align: top; padding-right: 15px; padding-bottom: 5px;"><strong>Data Engineering</strong></td>
-                <td style="padding-bottom: 5px; color: #AAAAAA;">PostgreSQL, ETL/ELT design, data quality validation, dataset curation, batch &amp; streaming ingestion patterns, Apache Airflow (orchestration)</td>
-              </tr>
-              <tr>
-                <td style="vertical-align: top; padding-right: 15px; padding-bottom: 5px;"><strong>Programming</strong></td>
-                <td style="padding-bottom: 5px; color: #AAAAAA;">Python, JavaScript/TypeScript, C, Assembly, SQL, Bash, HTML/CSS, Git</td>
-              </tr>
-              <tr>
-                <td style="vertical-align: top; padding-right: 15px;"><strong>Cloud &amp; Infra</strong></td>
-                <td style="text-align: left; color: #AAAAAA; padding-bottom: 12px;">AWS (ECS, ECR, ALB, S3, Lambda, SageMaker patterns), GCP &amp; Azure familiarity, Terraform (IaC), Kubernetes deployment patterns</td>
-              </tr>
-            </tbody>
-          </table>
+          <h3>Method</h3>
+          <p class="about-method">Question → literature review → explicit assumptions → success and failure criteria → instrumentation → validation.</p>
+          <p>I review recent academic and technical literature, separate evidence, inference and hypothesis, and define evaluation criteria before claiming outcomes. I instrument systems to collect quality, cost, latency and failure evidence, then revise architectural decisions against observed results and documented limitations.</p>
         </article>
-
         <article class="card col-6">
-          <h3 style="text-align: center;">Education</h3>
-          <table style="width: 100%; border-collapse: collapse; border: none;">
-            <tbody>
-              <tr>
-                <td style="text-align: left; padding-bottom: 2px;"><strong>MSc, Data Science and Artificial Intelligence</strong></td>
-                <td style="text-align: right; padding-bottom: 2px;"><em>Aug 2027</em></td>
-              </tr>
-              <tr>
-                <td colspan="2" style="text-align: left; color: #AAAAAA; padding-bottom: 12px;">University of Liverpool — Liverpool, UK</td>
-              </tr>
-              <tr>
-                <td style="text-align: left; padding-bottom: 2px;"><strong>PGC, Data Science and Artificial Intelligence</strong></td>
-                <td style="text-align: right; padding-bottom: 2px;"><em>May 2026</em></td>
-              </tr>
-              <tr>
-                <td colspan="2" style="text-align: left; color: #AAAAAA; padding-bottom: 12px;">University of Liverpool — Liverpool, UK</td>
-              </tr>
-              <tr>
-                <td style="text-align: left; padding-bottom: 2px;"><strong>MSc, Management and Innovation</strong></td>
-                <td style="text-align: right; padding-bottom: 2px;"><em>Dec 2024</em></td>
-              </tr>
-              <tr>
-                <td colspan="2" style="text-align: left; color: #AAAAAA; padding-bottom: 12px;">Mercatorum University — Rome, Italy</td>
-              </tr>
-              <tr>
-                <td style="text-align: left; padding-bottom: 2px;"><strong>BSc, Psychological Sciences and Techniques</strong></td>
-                <td style="text-align: right; padding-bottom: 2px;"><em>Feb 2023</em></td>
-              </tr>
-              <tr>
-                <td colspan="2" style="text-align: left; color: #AAAAAA;">Mercatorum University — Rome, Italy</td>
-              </tr>
-            </tbody>
-          </table>
+          <h3>Applied governance</h3>
+          <p>Luca authored Sistemi &amp; Automazione’s internal guidelines for AI-assisted software development, translating recent academic literature into practical controls for requirements, architecture, implementation, testing, traceability, validation and human accountability.</p>
+          <p class="about-boundary"><strong>Boundary:</strong> these are internal guidelines, not a public or industry standard, nor an independently validated framework.</p>
         </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="leadership-title">
+      <h2 id="leadership-title">Enterprise leadership</h2>
+      <div class="grid">
+        <article class="card col-6">
+          <h3>Chief Technology Officer</h3>
+          <p><strong>Sistemi &amp; Automazione S.p.A. · June 2026–present · Rome, Italy</strong></p>
+          <p>Responsible for technology direction, engineering and project governance, technology selection, software-delivery quality, organisational design, supplier qualification, and technical review of proposals and contracts. The remit includes five direct reports and fifteen additional contributors coordinated through functional reporting lines.</p>
+        </article>
+        <article class="card col-6">
+          <h3>Enterprise foundation</h3>
+          <p>Eighteen years across enterprise technology, electricity-distribution systems, digital transformation, programme delivery, operational-intelligence initiatives and capability development.</p>
+          <p class="about-boundary"><strong>Experience boundary:</strong> dedicated AI specialisation is recent, chiefly from 2025.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="evidence-title">
+      <h2 id="evidence-title">Selected evidence</h2>
+      <div class="grid">
+        <article class="card col-4">
+          <div class="tags"><span class="tag">Deployed reference PoC</span></div>
+          <h3>Enterprise Sovereign AI Decision Matrix</h3>
+          <p>A bounded and governed agent workflow demonstrating sovereignty-aware model routing, human approval, decision lineage and execution telemetry.</p>
+          <p class="about-boundary"><strong>Limitation:</strong> a fixed, typed workflow with governed model invocation—not an autonomous general-purpose multi-agent runtime, restart-safe distributed executor or multi-tenant production platform.</p>
+          <p><a class="about-text-link" href="https://github.com/nepryoon/enterprise-sovereign-ai-matrix" target="_blank" rel="noopener noreferrer">Inspect the Decision Matrix repository<span class="sr-only"> (opens in a new tab)</span></a> · <a class="about-text-link" href="https://matrix.neuromorphicinference.com/" target="_blank" rel="noopener noreferrer">Open the reference demonstration<span class="sr-only"> (opens in a new tab)</span></a></p>
+        </article>
+        <article class="card col-4">
+          <div class="tags"><span class="tag">Runnable architecture PoC</span></div>
+          <h3>IADF Platform</h3>
+          <p>A policy-governed core for AI-assisted software delivery using contract-first schemas, explicit state transitions, PostgreSQL leasing, data-residency and cost-aware routing, and fail-closed controls.</p>
+          <p class="about-boundary"><strong>Limitation:</strong> an inspectable architecture/core PoC, not a complete production software factory.</p>
+          <p><a class="about-text-link" href="https://github.com/nepryoon/iadf-platform" target="_blank" rel="noopener noreferrer">Inspect the IADF Platform repository<span class="sr-only"> (opens in a new tab)</span></a></p>
+        </article>
+        <article class="card col-4">
+          <div class="tags"><span class="tag">Open-source ML portfolio application</span></div>
+          <h3>MV Grid Fault Risk</h3>
+          <p>A portfolio workflow covering temporal validation, reproducible training and evaluation, MLflow artefacts, Docker packaging and GitHub automation.</p>
+          <p class="about-boundary"><strong>Limitation:</strong> the separate live FastAPI demonstration endpoint is rule-based. It is not an Enel production system or evidence of continuous trained-model serving.</p>
+          <p><a class="about-text-link" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener noreferrer">Inspect the MV Grid Fault Risk repository<span class="sr-only"> (opens in a new tab)</span></a></p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="education-title">
+      <h2 id="education-title">Education</h2>
+      <div class="card col-12">
+        <ul class="clean about-education">
+          <li>MSc Artificial Intelligence — University of Liverpool — in progress; expected August 2027</li>
+          <li>PGCert Data Science and Artificial Intelligence — University of Liverpool — academic requirements completed; formal award pending</li>
+          <li>Master’s Degree in Management and Innovation — completed</li>
+          <li>Bachelor’s Degree in Psychological Sciences and Techniques — completed</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="transparency-title">
+      <h2 id="transparency-title">Transparency and scope</h2>
+      <div class="card col-12 about-transparency">
+        <p>Neuromorphic Inference Lab is an independent open-source initiative. I define architectures and specifications, direct AI-assisted implementation, review code and tests, and remain accountable for validation, limitations and deployment decisions.</p>
+        <p>Public evidence currently comprises inspectable architectural patterns, bounded PoCs and conceptual evaluation designs. I do not present this work as customer production ownership, a general-purpose autonomous multi-agent runtime or an empirically validated research framework.</p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="contact-title">
+      <h2 id="contact-title">Mobility and contact</h2>
+      <p class="lead">Italian/EU citizen · No German visa sponsorship required · Open to relocation anywhere in Germany following an accepted offer</p>
+      <div class="actions about-actions">
+        <a class="btn primary" href="/demos/">Explore Selected Systems</a>
+        <a class="btn" href="https://github.com/nepryoon" target="_blank" rel="noopener noreferrer">View GitHub<span class="sr-only"> (opens in a new tab)</span></a>
+        <a class="btn" href="https://www.linkedin.com/in/nepryoon" target="_blank" rel="noopener noreferrer">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a>
+        <a class="btn" href="mailto:lilloluca@gmail.com">Discuss an Opportunity</a>
       </div>
     </section>
 
