@@ -9,6 +9,7 @@
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
   <style>
+    /* Spaziatura base per la Hero */
     .about-hero {
       margin-bottom: 2rem;
     }
@@ -16,11 +17,24 @@
       padding-left: 0;
       padding-right: 0;
     }
-    /* FIX: Neutralizza l'offset negativo della classe kicker nel CSS principale */
+    
+    /* FIX DEFINITIVO: Neutralizza qualsiasi offset, rientro o pseudo-elemento del kicker */
     .about-hero .kicker {
       margin-left: 0 !important;
       padding-left: 0 !important;
+      text-indent: 0 !important;
+      position: static !important;
+      transform: none !important;
     }
+    
+    /* Disattiva eventuali contenuti o spazi invisibili generati da style.css prima del testo */
+    .about-hero .kicker::before {
+      content: none !important;
+      display: none !important;
+      width: 0 !important;
+      margin: 0 !important;
+    }
+
     .about-hero .sub {
       max-width: 80ch;
     }
