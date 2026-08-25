@@ -9,34 +9,15 @@
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
   <style>
-    /* Spaziatura base per la Hero */
     .about-hero {
       margin-bottom: 2rem;
     }
-    .about-hero .col-12 {
-      padding-left: 0;
-      padding-right: 0;
-    }
-    
-    /* FIX DEFINITIVO: Neutralizza qualsiasi offset, rientro o pseudo-elemento del kicker */
-    .about-hero .kicker {
-      margin-left: 0 !important;
-      padding-left: 0 !important;
-      text-indent: 0 !important;
-      position: static !important;
-      transform: none !important;
-    }
-    
-    /* Disattiva eventuali contenuti o spazi invisibili generati da style.css prima del testo */
-    .about-hero .kicker::before {
-      content: none !important;
-      display: none !important;
-      width: 0 !important;
-      margin: 0 !important;
-    }
-
     .about-hero .sub {
       max-width: 80ch;
+    }
+    /* Rimuove un eventuale margine eccessivo in cima all'h1 dentro la card */
+    .about-hero h1 {
+      margin-top: 0.5rem; 
     }
   </style>
 </head>
@@ -59,7 +40,7 @@
   <main class="container">
     <section class="section about-hero" aria-labelledby="about-title">
       <div class="grid">
-        <div class="col-12">
+        <div class="card col-12">
           <p class="kicker">Luca Lillo · Chief Technology Officer</p>
           <h1 class="h1" id="about-title">Enterprise AI &amp; GenAI Solution Architect specialising in LLM Multi-Agent Systems</h1>
           <p class="about-tagline">Psychology-Informed Governance | Evidence-Led Evaluation</p>
