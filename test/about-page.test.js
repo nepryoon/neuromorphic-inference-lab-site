@@ -21,7 +21,7 @@ test("About page has required document metadata and semantic landmarks", () => {
 });
 
 test("About page IDs and build provenance remain valid", () => {
-  const ids = matches(/\sid="([^"]+)"/g).map((match) => match[1]);
+  const ids = matches(/\s id="([^"]+)"/g).map((match) => match[1]);
   assert.equal(new Set(ids).size, ids.length, "IDs must be unique");
   for (const id of ["build-branch", "build-commit", "build-time"]) {
     assert.equal(ids.filter((candidate) => candidate === id).length, 1, `${id} must occur once`);
@@ -31,15 +31,21 @@ test("About page IDs and build provenance remain valid", () => {
 
 test("About page presents the approved positioning and evidence boundaries", () => {
   const required = [
-    "Luca Lillo · Chief Technology Officer",
-    "Enterprise AI &amp; GenAI Solution Architect specialising in LLM Multi-Agent Systems",
+    "Luca Lillo · Applied AI Engineer &amp; Solution Architect",
+    "Ontology engineering, knowledge graphs and governed LLM agents",
     "Psychology-Informed Governance | Evidence-Led Evaluation",
-    "My dedicated AI specialisation is recent, chiefly from 2025.",
-    "They are not a validated framework or completed benchmark.",
-    "Deployed reference PoC",
+    "From June to September 2026 I was Chief Technology Officer",
+    "up to 30% in some territories (internal before-and-after measure)",
+    "both platforms existed before I joined",
+    "Implementation in development",
+    "Runnable PoC",
+    "PoC with live demo",
     "Runnable architecture PoC",
-    "Open-source ML portfolio application",
-    "academic requirements completed; formal award pending"
+    "Live demos on simulated data",
+    "not peer reviewed",
+    "They are not a validated framework or completed benchmark.",
+    "academic requirements completed; formal award pending",
+    "Open to relocation within the EU"
   ];
   required.forEach((phrase) => assert.ok(html.includes(phrase), `missing required phrase: ${phrase}`));
 });
@@ -58,7 +64,19 @@ test("About page excludes obsolete claims and stale metrics", () => {
     /10\+ engineers/i,
     /CKA in progress/i,
     /published formal control framework/i,
-    /production-grade RAG/i
+    /production-grade RAG/i,
+    /Luca Lillo · Chief Technology Officer/,
+    /Currently,? I serve as Chief Technology Officer/i,
+    /June 2026\s*[–-]\s*present/i,
+    /German visa/i,
+    /relocation across Germany/i,
+    /AI (?:specialisation|focus) (?:is recent|began in 2025)/i,
+    /specialisation in AI began in 2025/i,
+    /Deployed reference PoC/i,
+    /electricity grid automation/i,
+    /trained 1,500/i,
+    /led Grid Blue Sky/i,
+    /signed releases?/i
   ];
   prohibited.forEach((pattern) => assert.doesNotMatch(html, pattern));
 });
