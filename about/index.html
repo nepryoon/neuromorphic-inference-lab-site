@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Luca Lillo | Enterprise AI &amp; GenAI Solution Architect</title>
-  <meta name="description" content="Chief Technology Officer specialising in enterprise AI, GenAI, and psychology-informed LLM multi-agent architecture, governance, and evaluation." />
+  <title>Luca Lillo | Applied AI Engineer &amp; Solution Architect</title>
+  <meta name="description" content="Applied AI engineer and solution architect focused on ontology engineering, knowledge graphs and governed LLM agents, with six years of machine learning in production." />
   <link rel="canonical" href="https://www.neuromorphicinference.com/about/" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
@@ -17,7 +17,7 @@
     }
     /* Rimuove un eventuale margine eccessivo in cima all'h1 dentro la card */
     .about-hero h1 {
-      margin-top: 0.5rem; 
+      margin-top: 0.5rem;
     }
   </style>
 </head>
@@ -41,12 +41,88 @@
     <section class="section about-hero" aria-labelledby="about-title">
       <div class="grid">
         <div class="card col-12">
-          <p>Luca Lillo · Chief Technology Officer</p>
-          <h1 class="h1" id="about-title">Enterprise AI &amp; GenAI Solution Architect specialising in LLM Multi-Agent Systems</h1>
+          <p>Luca Lillo · Applied AI Engineer &amp; Solution Architect</p>
+          <h1 class="h1" id="about-title">Ontology engineering, knowledge graphs and governed LLM agents</h1>
           <p class="about-tagline">Psychology-Informed Governance | Evidence-Led Evaluation</p>
-          <p>I design and govern enterprise AI systems where decisions must be clear, testable, and accountable. Currently, I serve as Chief Technology Officer, combining technical leadership, engineering governance, and team management with a focus on building, governing, and evaluating LLM multi-agent systems.</p>
-          <p>My work explores how agent structure, role design, authority, information flow, structured dissent, and human oversight impact decision quality. My background includes 18 years at Enel Group across enterprise technology, electricity distribution, digital transformation, and programme delivery. My dedicated focus on AI began in 2025.</p>
+          <p>I design and build AI systems where decisions must stay explainable, testable and accountable: LLM agents, retrieval-augmented generation (RAG), knowledge graphs and ontologies, with human oversight built in from the start. My core technical focus is ontology engineering: I model domains as ontologies and knowledge graphs, and I build AI agents that use that data only through typed, governed queries and tools.</p>
+          <p>I have almost 20 years of experience, 18 of them at Enel Group, and I have led teams since 2008. From June to September 2026 I was Chief Technology Officer and Head of Research and Innovation at Sistemi &amp; Automazione. Today I run Neuromorphic Inference Lab and I am studying for an MSc in Artificial Intelligence at the University of Liverpool.</p>
         </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="production-title">
+      <h2 id="production-title">Production experience</h2>
+      <div class="grid">
+        <article class="card col-6">
+          <h3>Machine learning in production</h3>
+          <p><strong>Enel Group · 2017–2023</strong></p>
+          <p>In a six-person Agile team, I co-built and maintained for six years a machine learning platform in production on AWS for predictive maintenance and investment targeting, from requirements to production, adoption and ongoing operation. I selected Databricks, personally developed the platform’s entire ETL layer and did the modelling: feature selection, XGBoost training and evaluation, and thresholds for operational use.</p>
+          <p class="about-boundary"><strong>Result:</strong> the platform contributed to reducing average customer interruption minutes by up to 30% in some territories (internal before-and-after measure).</p>
+        </article>
+        <article class="card col-6">
+          <h3>Platforms in production, managed as CTO</h3>
+          <p><strong>Sistemi &amp; Automazione · June 2026 – September 2026</strong></p>
+          <p>I managed two platforms in production: a graph-analysis platform with a multi-agent tool that users could query about the graph data, and a due-diligence platform with about 60 connectors to different data sources. I handled their production issues end to end.</p>
+          <p class="about-boundary"><strong>Boundary:</strong> both platforms existed before I joined. I managed them; I did not build them.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="ontology-title">
+      <h2 id="ontology-title">Ontology engineering and knowledge graphs</h2>
+      <div class="grid">
+        <div class="card col-12">
+          <p>I define scope with established methods (NeOn, METHONTOLOGY, Ontology 101) and competency questions. I model with OWL 2 and property graphs, and I query with Cypher and SQL/PGQ. I have worked with Neo4j and Graph Data Science, TigerGraph, ArangoDB and Apache Jena Fuseki, and with GraphRAG libraries, LLM-based entity and relation extraction, and entity resolution.</p>
+          <p>I use the ontology as a governance layer: it defines which data, queries and actions are allowed. In OCOR, my current project, the ontology is kept as code and compiled into a versioned canonical model, and AI agents work only through typed, policy-filtered queries and tools.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="evidence-title">
+      <h2 id="evidence-title">Selected evidence</h2>
+      <div class="grid">
+        <article class="card col-6">
+          <div class="tags"><span class="tag">Implementation in development</span></div>
+          <h3>OCOR</h3>
+          <p>A sovereign, vendor-neutral semantic core that connects ontology definitions, evidence, governed decisions and controlled actions. I designed its ontology-as-code metamodel and built its ontology compiler: it type-checks YAML or JSON ontology sources, rejects unresolved or cyclic references, and turns each release into a deterministic, content-addressed canonical model with a semantic diff and a compatibility class. A breaking release is rejected without a migration plan. AI agents use only typed, policy-filtered named queries and typed tools, with budgets and a kill switch.</p>
+          <p class="about-boundary"><strong>Limitation:</strong> an implementation in development on a wholly synthetic scenario, not a production system. Qualification is in progress.</p>
+          <p><a class="about-text-link" href="https://github.com/nepryoon/ocor-detailed-design" target="_blank" rel="noopener noreferrer">View OCOR repository<span class="sr-only"> (opens in a new tab)</span></a></p>
+        </article>
+        <article class="card col-6">
+          <div class="tags"><span class="tag">Runnable PoC</span></div>
+          <h3>Enterprise Code Intelligence</h3>
+          <p>Graph-RAG over a codebase, with event-driven updates and vector, full-text and graph retrieval. Services in Python, Go and Rust; Neo4j, Qdrant, OpenSearch, Kafka and Debezium, PostgreSQL, Redis.</p>
+          <p class="about-boundary"><strong>Limitation:</strong> a runnable proof of concept, not a production service.</p>
+          <p><a class="about-text-link" href="https://github.com/nepryoon/eci" target="_blank" rel="noopener noreferrer">View Enterprise Code Intelligence repository<span class="sr-only"> (opens in a new tab)</span></a></p>
+        </article>
+        <article class="card col-6">
+          <div class="tags"><span class="tag">PoC with live demo</span></div>
+          <h3>Enterprise Sovereign AI Decision Matrix</h3>
+          <p>A governed AI workflow that routes the model call to a provider by data-sovereignty rules, requires human approval, records every decision and tracks latency, token use and cost. Next.js, FastAPI, LangGraph, PostgreSQL.</p>
+          <p class="about-boundary"><strong>Limitation:</strong> a fixed, typed workflow with governed model calls, demonstrated on synthetic data with one real routed model call. It is not a general-purpose multi-agent runtime or a multi-tenant production platform.</p>
+          <p><a class="about-text-link" href="https://github.com/nepryoon/enterprise-sovereign-ai-matrix" target="_blank" rel="noopener noreferrer">View Decision Matrix repository<span class="sr-only"> (opens in a new tab)</span></a> · <a class="about-text-link" href="https://matrix.neuromorphicinference.com/" target="_blank" rel="noopener noreferrer">Open live demonstration<span class="sr-only"> (opens in a new tab)</span></a></p>
+        </article>
+        <article class="card col-6">
+          <div class="tags"><span class="tag">Runnable architecture PoC</span></div>
+          <h3>IADF Platform</h3>
+          <p>The core of a policy-governed, AI-assisted software factory: contract-first schemas, an explicit state machine, PostgreSQL leasing, model routing and fail-closed controls. Its four-role agent engine (architect, implementer, adversarial reviewer, diagnostician) takes coding agents from specification to tested code.</p>
+          <p class="about-boundary"><strong>Limitation:</strong> an inspectable core and architecture proof of concept, not a complete production software factory.</p>
+          <p><a class="about-text-link" href="https://github.com/nepryoon/iadf-platform" target="_blank" rel="noopener noreferrer">View IADF Platform repository<span class="sr-only"> (opens in a new tab)</span></a></p>
+        </article>
+        <article class="card col-6">
+          <div class="tags"><span class="tag">Live demos on simulated data</span></div>
+          <h3>Agent demonstrations</h3>
+          <p>In the HR onboarding orchestrator, an agent runs an onboarding workflow across simulated systems through tool calls. In the hiring panel and the innovation board, six agents assess a case from different perspectives. In all three, code validates the agents’ output and a person decides.</p>
+          <p class="about-boundary"><strong>Limitation:</strong> demonstrations on simulated data, not production systems.</p>
+          <p><a class="about-text-link" href="/demos/">Explore the demonstrations</a></p>
+        </article>
+        <article class="card col-6">
+          <div class="tags"><span class="tag">Theoretical preprint</span></div>
+          <h3>Can LLM Agents Care About the World?</h3>
+          <p>A formal control framework (2026) in which an LLM agent judges improvement or deterioration from an external, auditable indicator, with public simulation code.</p>
+          <p class="about-boundary"><strong>Limitation:</strong> a theoretical preprint, not peer reviewed.</p>
+          <p><a class="about-text-link" href="/research/ehd/">Read about the preprint</a> · <a class="about-text-link" href="https://doi.org/10.13140/RG.2.2.25820.55685" target="_blank" rel="noopener noreferrer">ResearchGate, DOI 10.13140/RG.2.2.25820.55685<span class="sr-only"> (opens in a new tab)</span></a></p>
+        </article>
       </div>
     </section>
 
@@ -54,9 +130,9 @@
       <h2 id="psychology-title">Psychology-informed multi-agent systems</h2>
       <div class="grid">
         <div class="card col-12">
-          <p>My academic training in Psychological Sciences gives me an engineering perspective on authority bias, conformity, groupthink, social loafing, and overconfidence. I do not treat language models as humans, nor do I assume they have human intentions. Instead, I translate these cognitive dynamics into concrete failure risks, structural safeguards, and testing strategies.</p>
-          <p>My core research areas include separating procedural control from reasoning authority, embedding structured dissent and falsifiable objections, running blind reviews and external checks, testing agent ablations, and comparing multi-agent setups against single-agent baselines with equal compute. I measure performance based on accuracy, resistance to misleading prompts, error propagation, traceability, and cost.</p>
-          <p class="about-boundary"><strong>Scope:</strong> These are ongoing conceptual and experimental designs, not a validated industry framework or completed benchmark.</p>
+          <p>My academic training in Psychological Sciences gives me an engineering perspective on authority bias, conformity, groupthink, social loafing and overconfidence. I do not treat language models as humans, nor do I assume they have human intentions. Instead, I translate these dynamics into concrete failure risks, structural safeguards and testing strategies.</p>
+          <p>The designs I work on separate procedural control from reasoning authority, embed structured dissent and falsifiable objections, use blind reviews and external checks, test agent ablations, and compare multi-agent setups against single-agent baselines with equal compute. I measure accuracy, resistance to misleading prompts, error propagation, traceability and cost.</p>
+          <p class="about-boundary"><strong>Scope:</strong> these are conceptual and experimental designs. They are not a validated framework or completed benchmark.</p>
         </div>
       </div>
     </section>
@@ -67,55 +143,28 @@
         <article class="card col-6">
           <h3>Method</h3>
           <p class="about-method">Core Question → Literature Review → Stated Assumptions → Success &amp; Failure Criteria → Instrumentation → Validation.</p>
-          <p>I review current academic and technical research, clearly separate proven facts from working hypotheses, and set clear evaluation criteria before claiming results. I instrument systems to monitor quality, cost, latency, and failure rates, refining architectural choices based on real data and known limitations.</p>
+          <p>I separate evidence, inference and hypothesis, and I set evaluation criteria before I claim results. I instrument systems to monitor quality, cost, latency and failure rates, and I revise architectural choices against observed results and known limitations.</p>
         </article>
         <article class="card col-6">
           <h3>Applied governance</h3>
-          <p>I authored Sistemi &amp; Automazione’s internal guidelines for AI-assisted software engineering. These guidelines turn academic findings into practical controls for requirements, architecture, code implementation, testing, traceability, and human accountability.</p>
-          <p class="about-boundary"><strong>Boundary:</strong> These are internal company guidelines, not a public standard or an externally audited framework.</p>
+          <p>As CTO, I authored the company AI policy (EU AI Act, GDPR and Italian Law 132/2025, prepared with a view to ISO/IEC 42001 certification): risk-based classification of AI use, human oversight and graduated autonomy levels for AI agents. I also authored the guidelines for AI-assisted software development, with controls for requirements, testing, traceability and validation.</p>
+          <p class="about-boundary"><strong>Boundary:</strong> these are internal company documents, not a public standard or an externally audited framework.</p>
         </article>
       </div>
     </section>
 
     <section class="section" aria-labelledby="leadership-title">
-      <h2 id="leadership-title">Enterprise leadership</h2>
+      <h2 id="leadership-title">Leadership</h2>
       <div class="grid">
         <article class="card col-6">
-          <h3>Chief Technology Officer</h3>
-          <p><strong>Sistemi &amp; Automazione S.p.A. · June 2026–present · Rome, Italy</strong></p>
-          <p>I lead technical strategy, engineering standards, project governance, technology selection, and software delivery quality. My remit covers organisational design, vendor qualification, and technical reviews for major proposals and contracts. I directly manage 5 team leads and guide 15 additional contributors across functional lines.</p>
+          <h3>Chief Technology Officer &amp; Head of Research and Innovation</h3>
+          <p><strong>Sistemi &amp; Automazione S.p.A. · June 2026 – September 2026 · Rome, Italy</strong></p>
+          <p>I established the technology function, with architecture and research units: 5 direct and 15 functional reports. I assessed the organisation, products and engineering practices in two weeks, proposed a new decision-making process, agreed it with business-area heads and Tech Leads, and defined governance rules for projects and technology choices (RACI).</p>
         </article>
         <article class="card col-6">
-          <h3>Enterprise foundation</h3>
-          <p>I bring 18 years of experience across enterprise systems, electricity grid automation, digital transformation, large-scale programme delivery, and team capability development.</p>
-          <p class="about-boundary"><strong>Experience boundary:</strong> My dedicated technical specialisation in AI began in 2025.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="evidence-title">
-      <h2 id="evidence-title">Selected evidence</h2>
-      <div class="grid">
-        <article class="card col-4">
-          <div class="tags"><span class="tag">Deployed reference PoC</span></div>
-          <h3>Enterprise Sovereign AI Decision Matrix</h3>
-          <p>A controlled agent workflow demonstrating sovereignty-aware model routing, human sign-off, full decision lineage, and runtime telemetry.</p>
-          <p class="about-boundary"><strong>Limitation:</strong> A structured, typed reference workflow with governed model calls—not a general-purpose autonomous runtime or multi-tenant production engine.</p>
-          <p><a class="about-text-link" href="https://github.com/nepryoon/enterprise-sovereign-ai-matrix" target="_blank" rel="noopener noreferrer">View Decision Matrix repository<span class="sr-only"> (opens in a new tab)</span></a> · <a class="about-text-link" href="https://matrix.neuromorphicinference.com/" target="_blank" rel="noopener noreferrer">Open live demonstration<span class="sr-only"> (opens in a new tab)</span></a></p>
-        </article>
-        <article class="card col-4">
-          <div class="tags"><span class="tag">Runnable architecture PoC</span></div>
-          <h3>IADF Platform</h3>
-          <p>A policy-governed foundation for AI-assisted development using schema contracts, explicit state transitions, PostgreSQL leasing, and fail-closed security controls.</p>
-          <p class="about-boundary"><strong>Limitation:</strong> An open architecture and core PoC, not a complete turn-key production platform.</p>
-          <p><a class="about-text-link" href="https://github.com/nepryoon/iadf-platform" target="_blank" rel="noopener noreferrer">View IADF Platform repository<span class="sr-only"> (opens in a new tab)</span></a></p>
-        </article>
-        <article class="card col-4">
-          <div class="tags"><span class="tag">Open-source ML portfolio application</span></div>
-          <h3>MV Grid Fault Risk</h3>
-          <p>A portfolio project featuring temporal validation, reproducible training pipelines, MLflow artefact tracking, Docker packaging, and automated GitHub workflows.</p>
-          <p class="about-boundary"><strong>Limitation:</strong> The accompanying live FastAPI endpoint is rule-based. It is an independent portfolio demonstration, not an Enel production system.</p>
-          <p><a class="about-text-link" href="https://github.com/nepryoon/mv-grid-fault-risk" target="_blank" rel="noopener noreferrer">View MV Grid Fault Risk repository<span class="sr-only"> (opens in a new tab)</span></a></p>
+          <h3>Enel Group</h3>
+          <p><strong>E-Distribuzione S.p.A. · May 2008 – June 2026</strong></p>
+          <p>I created the unit that trains a technical organisation of 1,500 people; at the end of 2025 it ranked first of the 12 training units in Italy for training hours per person. I monitored Grid Blue Sky, Enel Grids’ global digitalisation programme, and reported its progress to the CEO. I led a six-month cross-functional team that turned emerging technologies into roadmaps and investment choices.</p>
         </article>
       </div>
     </section>
@@ -125,10 +174,10 @@
       <div class="grid">
         <div class="card col-12">
           <ul class="clean about-education">
-            <li>MSc in Artificial Intelligence — University of Liverpool (In progress; expected August 2027)</li>
-            <li>PGCert in Data Science and Artificial Intelligence — University of Liverpool (Academic requirements completed; formal award pending)</li>
-            <li>Master’s Degree in Management and Innovation — Completed</li>
-            <li>Bachelor’s Degree in Psychological Sciences and Techniques — Completed</li>
+            <li>MSc Artificial Intelligence — University of Liverpool (in progress; expected August 2027; current average in the Distinction band)</li>
+            <li>Postgraduate Certificate in Data Science and Artificial Intelligence — University of Liverpool (academic requirements completed; formal award pending)</li>
+            <li>MSc Management and Innovation (LM-77) — Universitas Mercatorum</li>
+            <li>BSc Psychological Sciences and Techniques — Universitas Mercatorum</li>
           </ul>
         </div>
       </div>
@@ -138,8 +187,8 @@
       <h2 id="transparency-title">Transparency and scope</h2>
       <div class="grid">
         <div class="card col-12 about-transparency">
-          <p>Neuromorphic Inference Lab is my independent open-source research initiative. I define system architectures and specifications, oversee AI-assisted implementation, review all code and tests, and maintain full accountability for validation, limitations, and deployment choices.</p>
-          <p>My public portfolio showcases inspectable architectural patterns, bounded PoCs, and experimental evaluation designs. I do not represent this work as enterprise client deployments, autonomous multi-agent engines, or peer-validated industry benchmarks.</p>
+          <p>Neuromorphic Inference Lab is my independent open-source initiative. I define architectures and specifications, direct AI-assisted implementation with coding agents (Claude, Codex), review code and tests, and remain accountable for validation, limitations and deployment decisions.</p>
+          <p>The public work shows inspectable patterns, bounded proofs of concept and one implementation in development (OCOR). I do not present it as client production platforms, validated research frameworks or evidence of years operating autonomous multi-agent runtimes at scale.</p>
         </div>
       </div>
     </section>
@@ -148,7 +197,7 @@
       <h2 id="contact-title">Mobility and contact</h2>
       <div class="grid">
         <div class="col-12">
-          <p class="lead">Italian/EU citizen · No German visa sponsorship required · Open to relocation across Germany upon an accepted offer</p>
+          <p class="lead">Italian citizen (EU) · Based in Rome, Italy · Available immediately · Open to relocation within the EU</p>
           <div class="actions about-actions">
             <a class="btn primary" href="/demos/">Explore Selected Systems</a>
             <a class="btn" href="https://github.com/nepryoon" target="_blank" rel="noopener noreferrer">View GitHub<span class="sr-only"> (opens in a new tab)</span></a>
