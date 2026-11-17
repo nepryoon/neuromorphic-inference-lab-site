@@ -4,8 +4,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Research Archive — Neuromorphic Inference Lab</title>
-  <meta name="description" content="Research archive: background notes and experiments (SNN / neuromorphic inference) kept for continuity." />
+  <title>Research — Neuromorphic Inference Lab</title>
+  <meta name="description" content="Research direction of Neuromorphic Inference Lab: context-dependent activation and relevance propagation over knowledge graphs, in software." />
   <link rel="stylesheet" href="/style.css" />
 
   <style>
@@ -103,21 +103,21 @@
   </header>
 
   <main class="wrap">
-    <span class="pill">Archive • Background work • Continuity</span>
-    <h1>Research Archive</h1>
+    <span class="pill">Research direction • Software only</span>
+    <h1>Research direction</h1>
     <p class="sub">
-      This section preserves the original research-oriented identity of the Lab (SNN / neuromorphic inference).
-      It’s intentionally separated from the <a href="/demos" style="text-decoration:underline;">Demos</a> area,
-      where the portfolio shows applied AI systems ready for production contexts.
+      “Neuromorphic Inference” is the name of the Lab and of a research direction: brain-inspired principles
+      for how AI systems activate, connect and update structured knowledge, starting with context-dependent
+      activation and relevance propagation over knowledge graphs. It is software research: no spiking neural
+      networks and no neuromorphic hardware. The applied work is in the <a href="/demos" style="text-decoration:underline;">Demos</a> area.
     </p>
 
     <div class="grid">
       <section class="card">
         <h2>What you’ll find here</h2>
         <ul class="list">
-          <li>Notes and experiments on neuromorphic / spiking approaches.</li>
           <li>Background concepts and reading log.</li>
-          <li>Prototypes that informed the applied system design mindset.</li>
+          <li>A theoretical preprint with public simulation code (below).</li>
         </ul>
 
         <div class="mini-links">
@@ -133,26 +133,27 @@
       <aside class="card">
         <h2>How it connects to the applied work</h2>
         <p>
-          The “neuromorphic” signature in the applied portfolio is not “SNN-only”.
-          It’s the discipline of making inference efficient and reliable:
-          explicit trade-offs, robustness under constraints, and observability.
+          The applied work builds the parts that this direction needs: an explicit knowledge model, governed
+          retrieval and memory, causal inference and agent deliberation, each as a separate, testable component.
+          OCOR (in development) implements these components on a synthetic scenario; graded activation and
+          relevance propagation are not implemented yet.
         </p>
         <ul class="list">
-          <li><strong>Efficiency-first inference</strong>: latency/cost budgets.</li>
-          <li><strong>Robustness</strong>: failure modes & imperfect inputs.</li>
-          <li><strong>Operability</strong>: reproducibility, monitoring hooks.</li>
+          <li><strong>Built and tested</strong>: ontology compiler, governed memory and retrieval, causal scenario runtime, agent kernel (OCOR, in development).</li>
+          <li><strong>Research direction</strong>: context-dependent activation and relevance propagation over knowledge graphs.</li>
+          <li><strong>Not involved</strong>: spiking neural networks, neuromorphic hardware.</li>
         </ul>
 
         <div class="mini-links">
           <a class="mini" href="/evidence">Evidence Index</a>
-          <a class="mini secondary" href="/demos/edgepulse">EdgePulse Case Study</a>
+          <a class="mini secondary" href="https://github.com/nepryoon/ocor" target="_blank" rel="noopener noreferrer">OCOR repository</a>
         </div>
       </aside>
     </div>
 
     <section class="card" style="margin-top:12px">
       <h2>Can LLM Agents Care About the World? World-Directed Welfare and Exocentric Homeostatic Deliberation</h2>
-      <p>Luca Lillo — March 2026 · <em>arXiv preprint (in preparation)</em></p>
+      <p>Luca Lillo — March 2026 · <em>Theoretical preprint, not peer reviewed (ResearchGate, DOI 10.13140/RG.2.2.25820.55685)</em></p>
       <p>
         Proposes exocentric homeostatic deliberation: a framework in which a persistent LLM agent's primary
         welfare is tied to an externally monitored world-state rather than internal operational variables.
@@ -160,7 +161,7 @@
       </p>
       <div class="mini-links">
         <a class="mini" href="/research/ehd/">→ EHD Paper page</a>
-        <a class="mini secondary" href="/demos/ehd-watch/">→ Live demo: EHD-Watch</a>
+        <a class="mini secondary" href="https://github.com/nepryoon/ehd-simulations" target="_blank" rel="noopener noreferrer">→ Simulation code</a>
       </div>
     </section>
 

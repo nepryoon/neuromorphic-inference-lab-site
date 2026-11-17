@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Luca Lillo | Applied AI Engineer &amp; Solution Architect</title>
-  <meta name="description" content="Applied AI engineer and solution architect focused on ontology engineering, knowledge graphs and governed LLM agents, with six years of machine learning in production." />
+  <title>Luca Lillo | AI Architect &amp; Generative AI Engineer</title>
+  <meta name="description" content="AI architect and generative AI engineer focused on ontology and knowledge graph architecture and governed AI agents, with a machine learning platform and a RAG system built and run in production." />
   <link rel="canonical" href="https://www.neuromorphicinference.com/about/" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/style.css" />
@@ -15,7 +15,6 @@
     .about-hero .sub {
       max-width: 80ch;
     }
-    /* Rimuove un eventuale margine eccessivo in cima all'h1 dentro la card */
     .about-hero h1 {
       margin-top: 0.5rem;
     }
@@ -41,11 +40,11 @@
     <section class="section about-hero" aria-labelledby="about-title">
       <div class="grid">
         <div class="card col-12">
-          <p>Luca Lillo · Applied AI Engineer &amp; Solution Architect</p>
-          <h1 class="h1" id="about-title">Ontology engineering, knowledge graphs and governed LLM agents</h1>
+          <p>Luca Lillo · AI Architect &amp; Generative AI Engineer</p>
+          <h1 class="h1" id="about-title">Ontology and knowledge graph architecture for governed AI agents</h1>
           <p class="about-tagline">Psychology-Informed Governance | Evidence-Led Evaluation</p>
-          <p>I design and build AI systems where decisions must stay explainable, testable and accountable: LLM agents, retrieval-augmented generation (RAG), knowledge graphs and ontologies, with human oversight built in from the start. My core technical focus is ontology engineering: I model domains as ontologies and knowledge graphs, and I build AI agents that use that data only through typed, governed queries and tools.</p>
-          <p>I have almost 20 years of experience, 18 of them at Enel Group, and I have led teams since 2008. From June to September 2026 I was Chief Technology Officer and Head of Research and Innovation at Sistemi &amp; Automazione. Today I run Neuromorphic Inference Lab and I am studying for an MSc in Artificial Intelligence at the University of Liverpool.</p>
+          <p>I design AI systems that keep AI decisions explainable, testable and accountable, and I build their core components. In these systems, AI agents work on structured knowledge under explicit rules: they reach data only through typed, policy-filtered queries and tools, with human oversight built in from the start.</p>
+          <p>I have almost 20 years of experience, 18 of them at Enel Group, and I have led teams since 2007. From June to September 2026 I was Chief Technology Officer and Head of Research and Innovation at Sistemi &amp; Automazione. Today I run Neuromorphic Inference Lab, my independent software research initiative, and I am studying for an MSc in Artificial Intelligence at the University of Liverpool.</p>
         </div>
       </div>
     </section>
@@ -60,6 +59,12 @@
           <p class="about-boundary"><strong>Result:</strong> the platform contributed to reducing average customer interruption minutes by up to 30% in some territories (internal before-and-after measure).</p>
         </article>
         <article class="card col-6">
+          <h3>RAG system in production, built as CTO</h3>
+          <p><strong>Sistemi &amp; Automazione · 2026</strong></p>
+          <p>I designed from scratch, deployed into production and maintained an internal retrieval-augmented generation (RAG) system for the development team: it indexed all the code the company managed, and developers used it to ask how about 500 components worked and depended on each other.</p>
+          <p class="about-boundary"><strong>Boundary:</strong> an internal system for the company’s developers. Its technical details and results are covered by confidentiality.</p>
+        </article>
+        <article class="card col-6">
           <h3>Platforms in production, managed as CTO</h3>
           <p><strong>Sistemi &amp; Automazione · June 2026 – September 2026</strong></p>
           <p>I managed two platforms in production: a graph-analysis platform with a multi-agent tool that users could query about the graph data, and a due-diligence platform with about 60 connectors to different data sources. I handled their production issues end to end.</p>
@@ -69,11 +74,11 @@
     </section>
 
     <section class="section" aria-labelledby="ontology-title">
-      <h2 id="ontology-title">Ontology engineering and knowledge graphs</h2>
+      <h2 id="ontology-title">Ontology and knowledge graph architecture</h2>
       <div class="grid">
         <div class="card col-12">
-          <p>I define scope with established methods (NeOn, METHONTOLOGY, Ontology 101) and competency questions. I model with OWL 2 and property graphs, and I query with Cypher and SQL/PGQ. I have worked with Neo4j and Graph Data Science, TigerGraph, ArangoDB and Apache Jena Fuseki, and with GraphRAG libraries, LLM-based entity and relation extraction, and entity resolution.</p>
-          <p>I use the ontology as a governance layer: it defines which data, queries and actions are allowed. In OCOR, my current project, the ontology is kept as code and compiled into a versioned canonical model, and AI agents work only through typed, policy-filtered queries and tools.</p>
+          <p>My core technical focus is knowledge representation. In OCOR (Operational Causal Ontology Runtime), my current project, the ontology is written as code and compiled into a versioned, content-addressed canonical model. Agents reach data only through typed, policy-filtered named queries and tools, so the ontology works as a governance layer: it defines which data, queries and actions are allowed.</p>
+          <p>At OCOR’s W3C boundary, RDF and JSON-LD publication, SHACL Core validation and SPARQL are prototyped on Apache Jena / Fuseki. Its provenance model, which extends W3C PROV-O, is designed.</p>
         </div>
       </div>
     </section>
@@ -84,9 +89,9 @@
         <article class="card col-6">
           <div class="tags"><span class="tag">Implementation in development</span></div>
           <h3>OCOR</h3>
-          <p>A sovereign, vendor-neutral semantic core that connects ontology definitions, evidence, governed decisions and controlled actions. I designed its ontology-as-code metamodel and built its ontology compiler: it type-checks YAML or JSON ontology sources, rejects unresolved or cyclic references, and turns each release into a deterministic, content-addressed canonical model with a semantic diff and a compatibility class. A breaking release is rejected without a migration plan. AI agents use only typed, policy-filtered named queries and typed tools, with budgets and a kill switch.</p>
+          <p>A vendor-neutral semantic core that connects ontology definitions, evidence, governed decisions and controlled actions. I designed its ontology-as-code metamodel. I built its ontology compiler, which turns each ontology version into a deterministic, content-addressed canonical model with a semantic diff and migration checks; a named-query gateway that checks policy before any read; governed agent memory with hybrid retrieval and consolidation that keeps conflicting claims apart; a causal scenario runtime that abstains when an effect is not identifiable; and an agent kernel with typed tools, budgets and a kill switch.</p>
           <p class="about-boundary"><strong>Limitation:</strong> an implementation in development on a wholly synthetic scenario, not a production system. Qualification is in progress.</p>
-          <p><a class="about-text-link" href="https://github.com/nepryoon/ocor-detailed-design" target="_blank" rel="noopener noreferrer">View OCOR repository<span class="sr-only"> (opens in a new tab)</span></a></p>
+          <p><a class="about-text-link" href="https://github.com/nepryoon/ocor" target="_blank" rel="noopener noreferrer">View OCOR repository<span class="sr-only"> (opens in a new tab)</span></a></p>
         </article>
         <article class="card col-6">
           <div class="tags"><span class="tag">Runnable PoC</span></div>
@@ -126,12 +131,22 @@
       </div>
     </section>
 
+    <section class="section" aria-labelledby="direction-title">
+      <h2 id="direction-title">Research direction: Neuromorphic Inference</h2>
+      <div class="grid">
+        <div class="card col-12">
+          <p>“Neuromorphic Inference” is the name of the lab and of a research direction: brain-inspired principles for how AI systems activate, connect and update structured knowledge, starting with context-dependent activation and relevance propagation over knowledge graphs.</p>
+          <p class="about-boundary"><strong>Scope:</strong> software research, with no spiking neural networks and no neuromorphic hardware. These mechanisms are a research direction, not implemented capabilities; OCOR builds the components they would act on.</p>
+        </div>
+      </div>
+    </section>
+
     <section class="section" aria-labelledby="psychology-title">
       <h2 id="psychology-title">Psychology-informed multi-agent systems</h2>
       <div class="grid">
         <div class="card col-12">
           <p>My academic training in Psychological Sciences gives me an engineering perspective on authority bias, conformity, groupthink, social loafing and overconfidence. I do not treat language models as humans, nor do I assume they have human intentions. Instead, I translate these dynamics into concrete failure risks, structural safeguards and testing strategies.</p>
-          <p>The designs I work on separate procedural control from reasoning authority, embed structured dissent and falsifiable objections, use blind reviews and external checks, test agent ablations, and compare multi-agent setups against single-agent baselines with equal compute. I measure accuracy, resistance to misleading prompts, error propagation, traceability and cost.</p>
+          <p>The designs I work on separate procedural control from reasoning authority, embed structured dissent and falsifiable objections, use blind reviews and external checks, test agent ablations, and compare multi-agent setups against single-agent baselines with equal compute. The evaluation designs cover accuracy, resistance to misleading prompts, error propagation, traceability and cost.</p>
           <p class="about-boundary"><strong>Scope:</strong> these are conceptual and experimental designs. They are not a validated framework or completed benchmark.</p>
         </div>
       </div>
@@ -147,7 +162,7 @@
         </article>
         <article class="card col-6">
           <h3>Applied governance</h3>
-          <p>As CTO, I authored the company AI policy (EU AI Act, GDPR and Italian Law 132/2025, prepared with a view to ISO/IEC 42001 certification): risk-based classification of AI use, human oversight and graduated autonomy levels for AI agents. I also authored the guidelines for AI-assisted software development, with controls for requirements, testing, traceability and validation.</p>
+          <p>As CTO, I authored the company AI policy (EU AI Act, GDPR and Italian Law 132/2025, prepared with a view to ISO/IEC 42001 certification): risk-based classification of AI use, human oversight and graduated autonomy levels for AI agents. I also authored the guidelines for AI-assisted software development, with controls for requirements, testing, traceability and validation, and led their adoption with HR.</p>
           <p class="about-boundary"><strong>Boundary:</strong> these are internal company documents, not a public standard or an externally audited framework.</p>
         </article>
       </div>
@@ -164,7 +179,7 @@
         <article class="card col-6">
           <h3>Enel Group</h3>
           <p><strong>E-Distribuzione S.p.A. · May 2008 – June 2026</strong></p>
-          <p>I created the unit that trains a technical organisation of 1,500 people; at the end of 2025 it ranked first of the 12 training units in Italy for training hours per person. I monitored Grid Blue Sky, Enel Grids’ global digitalisation programme, and reported its progress to the CEO. I led a six-month cross-functional team that turned emerging technologies into roadmaps and investment choices.</p>
+          <p>As Head of Training Unit &amp; Trainer, I created the unit that trains a technical organisation of 1,500 people; at the end of 2025 it ranked first of the 12 training units in Italy for training hours per person. As Senior Project Manager &amp; Digital Transformation Lead, I monitored Grid Blue Sky, Enel Grids’ global digitalisation programme, and reported its progress to the CEO. I led a six-month cross-functional team that turned emerging technologies into roadmaps and investment choices.</p>
         </article>
       </div>
     </section>
@@ -175,7 +190,7 @@
         <div class="card col-12">
           <ul class="clean about-education">
             <li>MSc Artificial Intelligence — University of Liverpool (in progress; expected August 2027; current average in the Distinction band)</li>
-            <li>Postgraduate Certificate in Data Science and Artificial Intelligence — University of Liverpool (academic requirements completed; formal award pending)</li>
+            <li>Postgraduate Certificate in Data Science and Artificial Intelligence — University of Liverpool (awarded)</li>
             <li>MSc Management and Innovation (LM-77) — Universitas Mercatorum</li>
             <li>BSc Psychological Sciences and Techniques — Universitas Mercatorum</li>
           </ul>
@@ -187,7 +202,7 @@
       <h2 id="transparency-title">Transparency and scope</h2>
       <div class="grid">
         <div class="card col-12 about-transparency">
-          <p>Neuromorphic Inference Lab is my independent open-source initiative. I define architectures and specifications, direct AI-assisted implementation with coding agents (Claude, Codex), review code and tests, and remain accountable for validation, limitations and deployment decisions.</p>
+          <p>Neuromorphic Inference Lab is my independent software research initiative. Its repositories are public; only some of them carry an open-source licence. I define architectures and specifications, direct AI-assisted implementation with coding agents, read and review the code and tests, and remain accountable for validation, limitations and deployment decisions.</p>
           <p>The public work shows inspectable patterns, bounded proofs of concept and one implementation in development (OCOR). I do not present it as client production platforms, validated research frameworks or evidence of years operating autonomous multi-agent runtimes at scale.</p>
         </div>
       </div>
@@ -197,7 +212,7 @@
       <h2 id="contact-title">Mobility and contact</h2>
       <div class="grid">
         <div class="col-12">
-          <p class="lead">Italian citizen (EU) · Based in Rome, Italy · Available immediately · Open to relocation within the EU</p>
+          <p class="lead">Italian citizen (EU) · Based in Rome, Italy · Available immediately · Open to relocation and to remote roles</p>
           <div class="actions about-actions">
             <a class="btn primary" href="/demos/">Explore Selected Systems</a>
             <a class="btn" href="https://github.com/nepryoon" target="_blank" rel="noopener noreferrer">View GitHub<span class="sr-only"> (opens in a new tab)</span></a>
