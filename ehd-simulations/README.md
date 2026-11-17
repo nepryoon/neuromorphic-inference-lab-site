@@ -6,8 +6,8 @@ Reproducible simulation code for the paper:
 
 > **Can LLM Agents Care About the World? World-Directed Welfare
 > and Exocentric Homeostatic Deliberation**
-> Luca Lillo — University of Liverpool, 2026
-> *arXiv preprint — under submission*
+> Luca Lillo (MSc Artificial Intelligence student, University of Liverpool), 2026
+> *Theoretical preprint, not peer reviewed. ResearchGate, DOI [10.13140/RG.2.2.25820.55685](https://doi.org/10.13140/RG.2.2.25820.55685)*
 
 Paper evidence memo: https://www.neuromorphicinference.com/evidence/
 
@@ -35,7 +35,8 @@ Figures are saved as PDF and PNG in `./figures/`.
              World-Directed Welfare and Exocentric
              Homeostatic Deliberation},
   year   = {2026},
-  note   = {arXiv preprint, under submission}
+  note   = {Preprint, not peer reviewed},
+  doi    = {10.13140/RG.2.2.25820.55685}
 }
 ```
 
