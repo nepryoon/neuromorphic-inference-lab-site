@@ -21,7 +21,7 @@ test("About page has required document metadata and semantic landmarks", () => {
 });
 
 test("About page IDs and build provenance remain valid", () => {
-  const ids = matches(/\s id="([^"]+)"/g).map((match) => match[1]);
+  const ids = matches(/\sid="([^"]+)"/g).map((match) => match[1]);
   assert.equal(new Set(ids).size, ids.length, "IDs must be unique");
   for (const id of ["build-branch", "build-commit", "build-time"]) {
     assert.equal(ids.filter((candidate) => candidate === id).length, 1, `${id} must occur once`);
@@ -31,21 +31,25 @@ test("About page IDs and build provenance remain valid", () => {
 
 test("About page presents the approved positioning and evidence boundaries", () => {
   const required = [
-    "Luca Lillo · Applied AI Engineer &amp; Solution Architect",
-    "Ontology engineering, knowledge graphs and governed LLM agents",
+    "Luca Lillo · AI Architect &amp; Generative AI Engineer",
+    "Ontology and knowledge graph architecture for governed AI agents",
     "Psychology-Informed Governance | Evidence-Led Evaluation",
+    "I have led teams since 2007",
     "From June to September 2026 I was Chief Technology Officer",
     "up to 30% in some territories (internal before-and-after measure)",
+    "deployed into production and maintained an internal retrieval-augmented generation (RAG) system",
     "both platforms existed before I joined",
     "Implementation in development",
+    "href=\"https://github.com/nepryoon/ocor\"",
     "Runnable PoC",
     "PoC with live demo",
     "Runnable architecture PoC",
     "Live demos on simulated data",
     "not peer reviewed",
+    "no spiking neural networks and no neuromorphic hardware",
     "They are not a validated framework or completed benchmark.",
-    "academic requirements completed; formal award pending",
-    "Open to relocation within the EU"
+    "Postgraduate Certificate in Data Science and Artificial Intelligence — University of Liverpool (awarded)",
+    "Open to relocation and to remote roles"
   ];
   required.forEach((phrase) => assert.ok(html.includes(phrase), `missing required phrase: ${phrase}`));
 });
@@ -53,6 +57,7 @@ test("About page presents the approved positioning and evidence boundaries", () 
 test("About page excludes obsolete claims and stale metrics", () => {
   const prohibited = [
     /Solution Architect at Sistemi e Automazione/i,
+    /Applied AI Engineer &amp; Solution Architect/,
     /AI\/MLOps &amp; LLMOps/i,
     /sub-200\s*ms/i,
     /30% processing/i,
@@ -76,7 +81,15 @@ test("About page excludes obsolete claims and stale metrics", () => {
     /electricity grid automation/i,
     /trained 1,500/i,
     /led Grid Blue Sky/i,
-    /signed releases?/i
+    /signed releases?/i,
+    /formal award pending/i,
+    /led teams since 2008/i,
+    /embedded-technology/i,
+    /open-source initiative/i,
+    /ocor-detailed-design/,
+    /arXiv/i,
+    /\bqualified\b/i,
+    /production-ready/i
   ];
   prohibited.forEach((pattern) => assert.doesNotMatch(html, pattern));
 });
